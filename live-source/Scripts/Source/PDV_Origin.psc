@@ -469,7 +469,7 @@ Function SeedDeity(PDV_DeityBase deity, Float startPiety, Bool isRecapture = fal
     StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", 0.0)
 
     if PDV_Manager
-        PDV_Manager.RecomputeTier(deity, False)
+        PDV_Manager.LedgerRuntime.RecomputeTier(deity, False)
     endIf
 
     Trace(1, deity.DeityName + " seeded to " + startPiety + " piety.")

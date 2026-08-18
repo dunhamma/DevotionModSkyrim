@@ -18,20 +18,20 @@ GlobalVariable Property PDV_GLO_DebugLevel Auto
 
 Function BeginLogicalDevotionalAct(String logicalEventId)
     if PDV_Manager
-        PDV_Manager.BeginBroadPantheonEvent(logicalEventId)
+        PDV_Manager.LedgerRuntime.BeginBroadPantheonEvent(logicalEventId)
     endIf
 EndFunction
 
 Bool Function JoinLogicalDevotionalAct(String logicalEventId)
     if PDV_Manager
-        return PDV_Manager.JoinBroadPantheonEvent(logicalEventId)
+        return PDV_Manager.LedgerRuntime.JoinBroadPantheonEvent(logicalEventId)
     endIf
     return False
 EndFunction
 
 Function FlushLogicalDevotionalAct()
     if PDV_Manager
-        PDV_Manager.FlushBroadPantheonEvent()
+        PDV_Manager.LedgerRuntime.FlushBroadPantheonEvent()
     endIf
 EndFunction
 
@@ -105,7 +105,7 @@ Function RouteShrinePrayer(String primaryDeityName, String secondaryDeityName, S
         return
     endIf
 
-    PDV_Manager.HandleShrinePrayer(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel, "eventbus_" + sourceId)
+    PDV_Manager.LedgerRuntime.HandleShrinePrayer(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel, "eventbus_" + sourceId)
     Trace(2, "RouteShrinePrayer complete: " + primaryDeityName + " / " + secondaryDeityName + " / " + tertiaryDeityName)
 EndFunction
 
@@ -116,7 +116,7 @@ Function RouteSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStart
     endIf
 
     PDV_Manager.HandlePlayerSleepStop(playerRef, wasInterrupted, hadSleepStartContext, sleepStartedOutside, "eventbus_sleep")
-    PDV_Manager.HandleCurseStateRefresh("eventbus_sleep")
+    PDV_Manager.LedgerRuntime.HandleCurseStateRefresh("eventbus_sleep")
     Trace(2, "RouteSleepStop complete.")
 EndFunction
 
@@ -126,7 +126,7 @@ Function RouteCurseStateRefresh(String reason)
         return
     endIf
 
-    PDV_Manager.HandleCurseStateRefresh("eventbus_" + reason)
+    PDV_Manager.LedgerRuntime.HandleCurseStateRefresh("eventbus_" + reason)
     Trace(2, "RouteCurseStateRefresh complete: " + reason)
 EndFunction
 
@@ -156,7 +156,7 @@ Function RouteBardPerformance(Int qualityDelta, Bool receivedOvation, Form conte
         return
     endIf
 
-    PDV_Manager.HandleBardPerformance(qualityDelta, receivedOvation, contextForm)
+    PDV_Manager.LedgerRuntime.HandleBardPerformance(qualityDelta, receivedOvation, contextForm)
     Trace(2, "RouteBardPerformance complete: quality " + qualityDelta)
 EndFunction
 
@@ -1637,24 +1637,24 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
-    Bool detachedBroadEvent = !PDV_Manager.ShouldSurfaceLikesDislikesEvent(eventType)
+    Bool detachedBroadEvent = !PDV_Manager.LedgerRuntime.ShouldSurfaceLikesDislikesEvent(eventType)
     String detachedBroadPool = ""
     Float detachedBestPositive = 0.0
     Float detachedWorstNegative = 0.0
     if detachedBroadEvent
-        detachedBroadPool = PDV_Manager.GetActiveBroadPantheonPoolId()
+        detachedBroadPool = PDV_Manager.LedgerRuntime.GetActiveBroadPantheonPoolId()
     endIf
 
     PDV_Manager.HandleBretonActionPracticeSignal(eventType, eventReason)
     if !detachedBroadEvent
-        PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)
+        PDV_Manager.LedgerRuntime.BeginLikesDislikesSurface(eventType, logicalEventId)
     endIf
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
             Float delta = deity.ScoreAction(eventType, actorRef, targetRef)
             if delta != 0.0
-                Float broadDelta = PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason, detachedBroadEvent, detachedBroadPool)
+                Float broadDelta = PDV_Manager.LedgerRuntime.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason, detachedBroadEvent, detachedBroadPool)
                 if broadDelta > detachedBestPositive
                     detachedBestPositive = broadDelta
                 elseIf broadDelta < detachedWorstNegative
@@ -1673,9 +1673,9 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         i += 1
     endWhile
     if detachedBroadEvent
-        PDV_Manager.CommitDetachedBroadPantheonEvent(logicalEventId, detachedBroadPool, detachedBestPositive, detachedWorstNegative, eventType)
+        PDV_Manager.LedgerRuntime.CommitDetachedBroadPantheonEvent(logicalEventId, detachedBroadPool, detachedBestPositive, detachedWorstNegative, eventType)
     else
-        PDV_Manager.FlushLikesDislikesSurface(eventType)
+        PDV_Manager.LedgerRuntime.FlushLikesDislikesSurface(eventType)
     endIf
 
     ; V2: also deepen any OPEN transgressive-Prince paths (separate fan-out; path's own piety).

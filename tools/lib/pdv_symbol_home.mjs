@@ -32,8 +32,10 @@ function load(repoRoot) {
   const rm = JSON.parse(fs.readFileSync(path.join(authoring, "PDV_2_0RegionMap.json"), "utf8"));
   const led = JSON.parse(fs.readFileSync(path.join(authoring, "PDV_2_0Retirement.manifest.json"), "utf8"));
   const byName = {};
+  const family = [MANAGER_SCRIPT];
   for (const m of Object.keys(rm.modules || {})) {
     const script = rm.modules[m].targetScript || m;
+    if (!family.includes(script)) family.push(script);
     for (const f of rm.modules[m].functions || []) {
       byName[f.name.toLowerCase()] = { name: f.name, module: m, script };
     }
@@ -42,7 +44,7 @@ function load(repoRoot) {
   for (const row of led.rows || []) {
     if (row.kind === "function") actionByName[(row.symbol || "").toLowerCase()] = row.action;
   }
-  _cache = { root, byName, actionByName };
+  _cache = { root, byName, actionByName, family };
   return _cache;
 }
 
@@ -71,6 +73,21 @@ export function callTokenPattern(name, repoRoot, flags) {
   const n = esc(name);
   if (!h || h.script === MANAGER_SCRIPT) return new RegExp("\\b" + n + "\\s*\\(", flags);
   return new RegExp("(?:" + esc(h.script) + "\\.)?" + n + "\\s*\\(", flags);
+}
+
+// The manager's decomposition family: the manager plus every module targetScript.
+// A gate that pins a needle to the manager can search this family so the needle
+// tracks a symbol wherever the extraction moved it (durable across future moves).
+export function decompositionFamily(repoRoot) {
+  return load(repoRoot).family.slice();
+}
+
+// Strip backref / forward-ref qualifiers (Manager. / PDV_Manager. / <X>Runtime. /
+// <X>RuntimeService.) so a needle matches regardless of the qualification a symbol
+// picks up when it moves across the module boundary. Same qualifier-agnostic
+// posture as callTokenPattern().
+export function stripQualifiers(s) {
+  return String(s).replace(/\b(?:PDV_Manager|Manager|[A-Za-z_]\w*Runtime(?:Service)?)\./g, "");
 }
 
 // The .psc basename where `Function name` currently lives, read from reality:

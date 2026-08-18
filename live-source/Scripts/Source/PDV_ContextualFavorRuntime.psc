@@ -216,7 +216,7 @@ Int Function ResolveEligibleFavorLane()
         return FAVOR_LANE_NONE
     endIf
 
-    if Manager.GetPatronState() == Manager.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == Manager.PDV_Kyne && Manager.GetTier(Manager.PDV_Kyne) >= Manager.TIER_CHAMPION
+    if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == Manager.PDV_Kyne && Manager.LedgerRuntime.GetTier(Manager.PDV_Kyne) >= Manager.LedgerRuntime.TIER_CHAMPION
         return FAVOR_LANE_KYNE
     endIf
 
@@ -228,7 +228,7 @@ Int Function ResolveEligibleFavorLane()
         return FAVOR_LANE_ALTMER
     endIf
 
-    if Manager.GetPatronState() != Manager.PATRON_STATE_BROAD
+    if Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_BROAD
         return FAVOR_LANE_NONE
     endIf
 

@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
 import { recordActorValueFor } from "./lib/pdv_actor_value_aliases.mjs";
 import { resolveDevotionRoot, devotionSource, devotionPex, devotionEsp } from "./lib/pdv_paths.mjs";
-import { callTokenPattern } from "./lib/pdv_symbol_home.mjs";
+import { callTokenPattern, decompositionFamily, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
@@ -2862,7 +2862,7 @@ class Verifier {
       "Int activeCount = ApplyGenericNeglectFlags()",
       "Int Function ApplyGenericNeglectFlags()",
       "Bool Function IsEligibleForNeglectSelection(PDV_DeityBase deity)",
-      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)",
+      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && GetActiveDeity() == PDV_Kyne)",
       "SyncNordPatronNeglectSpells()",
     ], this.phase16Gap.bind(this));
   }
@@ -2878,7 +2878,7 @@ class Verifier {
       "Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly",
       "Function RunDawnApplyDecay()",
       "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
-      "if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity",
+      "if GetPatronState() == PATRON_STATE_ACTIVE && deity == GetActiveDeity()",
       "StorageUtil.GetIntValue(deityForm, \"PDV.LastDecayAppliedDay\") == currentDay",
       "deity.GetEffectiveDecayMultiplier()",
       "GetCurseGainMultiplier(deity)",
@@ -9836,7 +9836,7 @@ class Verifier {
       "Bool nordBroadLapsed = IsBroadLaneLapsed() && GetPlayerOriginRaceIndex() == ORIGIN_NORD",
       "SyncKyneNeglectSpell(nordBroadLapsed)",
       "SyncNordPatronNeglectSpells()",
-      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)",
+      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && GetActiveDeity() == PDV_Kyne)",
       "Function SyncKyneNeglectSpell(Bool shouldBeActive)",
       "playerRef.AddSpell(PDV_SPEL_Neglect_Kyne, False)",
       "playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)",
@@ -9882,9 +9882,33 @@ class Verifier {
     }
 
     const text = fs.readFileSync(source, "utf8");
+    // Resolver-aware fallback: as functions move out of PDV__ManagerQuest.psc into
+    // deep modules, a needle pinned to the manager may now live in a decomposition
+    // module (or pick up a Manager./LedgerRuntime. qualifier). If the exact check on
+    // the named script fails, retry across the decomposition family with qualifier-
+    // stripped matching so the needle tracks the extraction instead of being hand-
+    // patched per move. Additive: the exact check runs first, so a currently-passing
+    // needle can never be turned into a failure by this fallback.
+    let _familyText = null;
+    const familyContains = (snippet) => {
+      if (_familyText === null) {
+        const fam = decompositionFamily(PROJECT_ROOT);
+        _familyText = fam.includes(scriptName)
+          ? fam
+              .map((s) => {
+                const p = path.join(DEVOTION_SOURCE, `${s}.psc`);
+                return exists(p) ? stripQualifiers(fs.readFileSync(p, "utf8")) : "";
+              })
+              .join("\n")
+          : "";
+      }
+      return _familyText.length > 0 && _familyText.includes(stripQualifiers(snippet));
+    };
     for (const snippet of snippets) {
       if (text.includes(snippet)) {
         this.pass(checkName, `${scriptName}.psc contains ${snippet}.`, source);
+      } else if (familyContains(snippet)) {
+        this.pass(checkName, `${scriptName} decomposition family contains ${snippet} (resolver-aware).`, source);
       } else {
         reportGap(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
       }

@@ -23,32 +23,21 @@ Scriptname PDV__ManagerQuest extends Quest
 
 Import PO3_Events_Form
 
-GlobalVariable Property PDV_GLO_ActivePiety Auto
-GlobalVariable Property PDV_GLO_ActiveTier Auto
-GlobalVariable Property PDV_GLO_ActiveDeityIndex Auto
-GlobalVariable Property PDV_GLO_PatronDeity Auto
-GlobalVariable Property PDV_GLO_PatronState Auto
-GlobalVariable Property PDV_GLO_DebugLevel Auto
 GlobalVariable Property PDV_GLO_OriginRace Auto
 GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto
 GlobalVariable Property PDV_GLO_State_BretonDruidicFork Auto
-PDV_ModePreset Property PDV_ModePresetRef Auto
 
-FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_DaedricPaths_All Auto
 FormList Property PDV_FLST_HoonDing_BreakthroughBosses Auto
 FormList Property PDV_FLST_RedguardAshAbahUndeadClearSites Auto
 FormList Property PDV_FLST_UndeadCryptClearSites Auto
 FormList Property PDV_FLST_KhajiitMoonContemplations Auto
-Faction Property NecromancerFaction Auto
-Faction Property WarlockFaction Auto
 String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2" AutoReadOnly
 PDV_QuestReactionRuntime Property PDV_QuestReactionRuntimeService Auto
 
 PDV_Deity_Kyne Property PDV_Kyne Auto
 PDV_Deity_Talos Property PDV_Talos Auto
 PDV_Deity_Yffre Property PDV_Yffre Auto
-PDV_Deity_Zen Property PDV_Zen Auto
 PDV_Deity_BaanDar Property PDV_BaanDar Auto
 ; Khajiit focused-emphasis deities (Azura/BaanDar are shared cross-race; per-race stance).
 PDV_Deity_Azura Property PDV_Azura Auto
@@ -73,14 +62,6 @@ PDV_Deity_Shor Property PDV_Shor Auto
 PDV_Deity_Tsun Property PDV_Tsun Auto
 PDV_Deity_Stuhn Property PDV_Stuhn Auto
 ; Imperial-owned shared Divines. Nord/Breton reuse these records by stance.
-PDV_Deity_Akatosh Property PDV_Akatosh Auto
-PDV_Deity_Mara Property PDV_Mara Auto
-PDV_Deity_Arkay Property PDV_Arkay Auto
-PDV_Deity_Stendarr Property PDV_Stendarr Auto
-PDV_Deity_Zenithar Property PDV_Zenithar Auto
-PDV_Deity_Dibella Property PDV_Dibella Auto
-PDV_Deity_Julianos Property PDV_Julianos Auto
-PDV_Deity_Kynareth Property PDV_Kynareth Auto
 ; Altmer offer patrons.
 PDV_Deity_AuriEl Property PDV_AuriEl Auto
 PDV_Deity_Magnus Property PDV_Magnus Auto
@@ -133,22 +114,8 @@ Spell Property PDV_SPEL_Neglect_Stuhn Auto
 Spell Property PDV_SPEL_Neglect_Talos Auto
 ; Nord Old Ways patrons added after the per-patron batch (Orkey/Dibella roster). Arkay's neglect
 ; surfaces as "Orkey" in Old Ways context; the property/record key stays Arkay.
-Spell Property PDV_SPEL_Neglect_Arkay Auto
-Spell Property PDV_SPEL_Neglect_Dibella Auto
-Spell Property PDV_SPEL_Disfavor_SkyStormHunt_Light Auto
-Spell Property PDV_SPEL_Disfavor_SkyStormHunt_Sharp Auto
-Spell Property PDV_SPEL_Disfavor_DeathAncestors_Light Auto
-Spell Property PDV_SPEL_Disfavor_DeathAncestors_Sharp Auto
-Spell Property PDV_SPEL_Disfavor_MercyProtection_Light Auto
-Spell Property PDV_SPEL_Disfavor_MercyProtection_Sharp Auto
-Spell Property PDV_SPEL_Disfavor_WarHonor_Light Auto
-Spell Property PDV_SPEL_Disfavor_WarHonor_Sharp Auto
-Spell Property PDV_SPEL_Disfavor_OrderTradeLore_Light Auto
-Spell Property PDV_SPEL_Disfavor_OrderTradeLore_Sharp Auto
 Spell Property PDV_SPEL_Disfavor_MoonLuckShadow_Light Auto
 Spell Property PDV_SPEL_Disfavor_MoonLuckShadow_Sharp Auto
-Spell Property PDV_SPEL_Disfavor_VoidSecrets_Light Auto
-Spell Property PDV_SPEL_Disfavor_VoidSecrets_Sharp Auto
 Spell Property PDV_Bless_Altmer_Orthodox_T1 Auto
 Spell Property PDV_Bless_Altmer_Orthodox_T2 Auto
 Spell Property PDV_Bless_Altmer_AuriEl_T1 Auto
@@ -576,10 +543,6 @@ Message Property PDV_Msg_Argonian_CurseState_VampireCured Auto
 Message Property PDV_Msg_Argonian_CurseState_WerewolfOnset Auto
 Message Property PDV_Msg_Argonian_CurseState_WerewolfCured Auto
 
-Int Property TIER_NONE = 0 AutoReadOnly
-Int Property TIER_SEEKER = 1 AutoReadOnly
-Int Property TIER_DEVOTED = 2 AutoReadOnly
-Int Property TIER_CHAMPION = 3 AutoReadOnly
 
 ; P11: devotional days between recurring ambient lines, per surfacing deity and for the
 ; heritage band. Four is deliberately slow -- this layer exists so a long-held Champion is not
@@ -591,37 +554,14 @@ Int Property AMBIENT_CHAMPION_CADENCE_DAYS = 4 AutoReadOnly
 String Property PDV_BUILD_VERSION = "2.0.0-dev" AutoReadOnly
 
 Int Property FRAMEWORK_SCHEMA_VERSION = 3 AutoReadOnly
-Int Property PATRON_STATE_UNSET = 0 AutoReadOnly
-Int Property PATRON_STATE_BROAD = 1 AutoReadOnly
-Int Property PATRON_STATE_ACTIVE = 2 AutoReadOnly
 
-Float Property PIETY_MAX = 200.0 AutoReadOnly
-Float Property PIETY_DAILY_MAX_DELTA = 4.3 AutoReadOnly
-Float Property DECAY_GRACE_DAYS = 2.0 AutoReadOnly
-Float Property DECAY_PER_DAY = 0.5 AutoReadOnly
-Float Property BROAD_WORSHIP_DECAY_MULTIPLIER = 0.2 AutoReadOnly
-Float Property GAIN_RATE_SCALE = 1.32 AutoReadOnly
 ; Bump when PDV_DeityLikesDislikes.csv OR the stance matrix changes so existing saves reload.
 ; Bumped 16 -> 17 (1.0.3): the Azura CSV-actor fix needs every existing save to reload
 ; its likes/dislikes rows and stance matrix, and that same rebuild is what builds and
 ; seals every deity's participating-event cache (12.4 / C4 in PDV_DeityBase) -- without
 ; it the caches stay unsealed forever on old saves (correct, they fail open, but the
 ; broadcast fan-out keeps paying the full per-deity probe the cache exists to remove).
-Int Property LIKES_DISLIKES_VERSION = 23 AutoReadOnly
 Int Property PRINCE_LD_VERSION = 6 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_NONE = 0 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_SKY_STORM_HUNT = 1 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_DEATH_ANCESTORS = 2 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_MERCY_PROTECTION = 3 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_WAR_HONOR = 4 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_ORDER_TRADE_LORE = 5 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_MOON_LUCK_SHADOW = 6 AutoReadOnly
-Int Property DISFAVOR_DOMAIN_VOID_SECRETS = 7 AutoReadOnly
-Float Property DISFAVOR_LIGHT_MIN_DELTA = 0.5 AutoReadOnly
-Float Property DISFAVOR_SHARP_MIN_DELTA = 1.0 AutoReadOnly
-Float Property DISFAVOR_LIGHT_DURATION_DAYS = 0.0833333 AutoReadOnly
-Float Property DISFAVOR_SHARP_DURATION_DAYS = 0.1666667 AutoReadOnly
-Int Property DISFAVOR_MAX_ACTIVE_DOMAINS = 3 AutoReadOnly
 ; Bump when the Daedric pact model changes so existing saves re-run the migration
 ; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
 ; co-held patron+Prince, keep higher tier, tie -> Prince).
@@ -629,7 +569,6 @@ Int Property DAEDRIC_PACT_VERSION = 3 AutoReadOnly
 ; Separate schema key from PDV.Daedric.PactVersion (owned by MigrateDaedricPactsIfNeeded).
 ; Bump when the consent-gate migration must re-run on existing saves.
 Int Property DAEDRIC_CONSENT_SCHEMA_VERSION = 1 AutoReadOnly
-Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly
 ; --- P10 (2026-08-03): Long Devotion, the post-Champion accrual layer -------------------------
 ; The ladder terminated flat at Champion (85) while PIETY_MAX is 200, so 115 points of headroom
 ; drove nothing, and MaybeShowChampionRewardPresentation is a hard one-shot -- a Champion who
@@ -639,29 +578,12 @@ Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly
 ; accumulator -- would need a second copy of the whole gain pipeline. Rejected.
 ; Marks grant NO SPELL in v1, deliberately: they are recognition plus a decay floor, so the
 ; accrual model can be judged before committing to a T4 reward family per race.
-Float Property LONG_DEVOTION_MARK_STEP = 15.0 AutoReadOnly
-Int Property LONG_DEVOTION_MARK_MAX = 7 AutoReadOnly
 Float Property ORC_RATE_MULT_STRONGHOLD = 1.0 AutoReadOnly
 Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly
 Float Property ORC_RATE_MULT_LEGIONEXILE = 0.6 AutoReadOnly
-Float Property NEGLECT_ACTIVE_PIETY_MAX = 10.0 AutoReadOnly
-Int Property NEGLECT_ACTIVE_CAP = 3 AutoReadOnly
 ; Recency-lapse grace (owner ruling 2026-06-27): neglect bites after this many days of no
 ; devotional act, regardless of piety -- the active patron is decay-shielded so the piety<=10
 ; floor almost never triggers from mere absence. Sits just past DECAY_GRACE_DAYS (2.0).
-Float Property NEGLECT_LAPSE_GRACE_DAYS = 3.0 AutoReadOnly
-Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly
-Float Property COMMITMENT_DECLINE_DELAY_DAYS = 1.0 AutoReadOnly
-Float Property COMMITMENT_REFUSE_COOLDOWN_DAYS = 3.0 AutoReadOnly
-Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 1.0 AutoReadOnly
-Float Property BROAD_PANTHEON_SEEKER_THRESHOLD = 25.0 AutoReadOnly
-Float Property BROAD_PANTHEON_FAITHFUL_THRESHOLD = 50.0 AutoReadOnly
-Float Property BROAD_PANTHEON_POOL_MAX = 50.0 AutoReadOnly
-Float Property BROAD_PANTHEON_DECAY_GRACE_DAYS = 2.0 AutoReadOnly
-Float Property BROAD_PANTHEON_DECAY_PER_DAWN = 0.1 AutoReadOnly
-String Property BROAD_PANTHEON_IMPERIAL = "ImperialDivines" AutoReadOnly
-String Property BROAD_PANTHEON_NORD_OLD = "NordOldWays" AutoReadOnly
-String Property BROAD_PANTHEON_NORD_NINE = "NordNineDivines" AutoReadOnly
 
 ; Transient call-context guard: the home route is valid only as the second half
 ; of a portable prayer performed inside the declared Dunmer home.
@@ -807,6 +729,7 @@ Int Property ARGONIAN_FOCUS_VOID = 2 AutoReadOnly
 PDV_DeityBase _activeDeity
 
 PDV_ContextualFavorRuntime Property FavorRuntime Auto
+PDV_DevotionLedger Property LedgerRuntime Auto
 
 Int Property DebugCommand = 0 Auto
 Int Property DebugIndex = -1 Auto
@@ -903,24 +826,8 @@ Float _qrQueueBroadWorstNegative = 0.0
 ; Likes/dislikes smoke surface accumulator (2026-07-11): event 303 and 366
 ; should score through the generic action router but still leave one visible
 ; toast + Book of Days beat for the whole fan-out.
-Int _ldSurfEventType = -1
-String _ldSurfPosNamesCsv = ""
-String _ldSurfNegNamesCsv = ""
-Int _ldSurfPosCount = 0
-Int _ldSurfNegCount = 0
-Float _ldSurfBestPosAmount = 0.0
-Float _ldSurfBestNegAmount = 0.0
-String _ldSurfBestPosName = ""
-String _ldSurfBestNegName = ""
-String _ldSurfBestPosSymbol = ""
-String _ldSurfBestNegSymbol = ""
 Bool _dawnHadActivity = False
-Int _broadPantheonEventDepth = 0
-String _broadPantheonEventId = ""
 Int _broadPantheonSelfEventSequence = 0
-Float _broadPantheonBestPositive = 0.0
-Float _broadPantheonWorstNegative = 0.0
-String _broadPantheonEventPool = ""
 Bool _khajiitMoonObservationPending = False
 Int _khajiitMoonObservationGeneration = 0
 Float _khajiitMoonObservationStartRealTime = 0.0
@@ -945,25 +852,24 @@ Int _pendingDaedricMilestoneNewTier = 0
 String _pendingDaedricMilestoneReason = ""
 Bool _pendingDaedricMilestoneReplayChampionOffer = False
 Int _pendingDaedricMilestoneDelayTicks = 0
-Int _pendingLikesDislikesEventType = -1
 
 Event OnInit()
     InitializePreflightState()
     EnsurePhase8RuntimeWiring()
     EnsureAkatoshRuntimeIdentity()
-    EnsureCanonicalDeityDisplayNames()
+    LedgerRuntime.EnsureCanonicalDeityDisplayNames()
     EnsureBosmerRuntimeWiring()
     EnsureNordRuntimeWiring()
     RegisterManagerShoutSignals()
-    EnsureLikesDislikesTable()
-    EnsurePrinceLikesDislikesTable()
+    LedgerRuntime.EnsureLikesDislikesTable()
+    LedgerRuntime.EnsurePrinceLikesDislikesTable()
     ; MigrateDaedricPactsIfNeeded / MigrateBroadPantheonPools were removed on V3 (Part A
     ; migration sweep); only the consent-gate migration is carried over from 1.5.0e.
     MigrateDaedricConsentIfNeeded()
     EnsureRecognitionModEvents()
-    RefreshPatronMirrors()
+    LedgerRuntime.RefreshPatronMirrors()
     FavorRuntime.UpdateContextualFavorRuntime()
-    UpdateDisfavorStingRuntime()
+    LedgerRuntime.UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
     EnsureAltmerPracticeFocus()
@@ -1045,23 +951,23 @@ Event OnUpdate()
     _shoutRefreshTicks += 1
     if _shoutRefreshTicks % 10 == 0
         _optimizationDisfavorRuns += 1
-        UpdateDisfavorStingRuntime()
+        LedgerRuntime.UpdateDisfavorStingRuntime()
     endIf
     if _shoutRefreshTicks >= 30
         _optimizationReconcileRuns += 1
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
-        EnsureCanonicalDeityDisplayNames()
+        LedgerRuntime.EnsureCanonicalDeityDisplayNames()
         EnsureBosmerRuntimeWiring()
         EnsureNordRuntimeWiring()
         EnsureSurveyDevotionPower()
         EnsureDunmerAncestralUrn()
         EnsureAltmerPracticeFocus()
         EnsureArgonianHistSapToken()
-        InitCCContent()
+        LedgerRuntime.InitCCContent()
         RegisterManagerShoutSignals()
-        EnsureLikesDislikesTable()
-        EnsurePrinceLikesDislikesTable()
+        LedgerRuntime.EnsureLikesDislikesTable()
+        LedgerRuntime.EnsurePrinceLikesDislikesTable()
         MigrateDaedricConsentIfNeeded()
         EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
@@ -1073,7 +979,7 @@ Event OnUpdate()
     ; baseline (Init flag) handles existing saves where OnInit does not re-run.
     ; Fire at ~06:00 (dawn), not midnight: subtract 0.25 day (6h) before the day-int
     ; truncation so the rollover lands at dawn. 0.25 = 6/24; use 5.0/24.0 for 05:00.
-    Int pdvCurrentDawnDay = GetDevotionalDay()
+    Int pdvCurrentDawnDay = LedgerRuntime.GetDevotionalDay()
     if StorageUtil.GetIntValue(None, "PDV.DawnAuto.Init") == 0
         StorageUtil.SetIntValue(None, "PDV.DawnAuto.Init", 1)
         StorageUtil.SetIntValue(None, "PDV.DawnAuto.LastDay", pdvCurrentDawnDay)
@@ -1082,7 +988,7 @@ Event OnUpdate()
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] Auto-dawn: day rollover to " + pdvCurrentDawnDay + "; running ProcessDawn.")
         endIf
-        ProcessDawn()
+        LedgerRuntime.ProcessDawn()
     endIf
 
     ; Pass 5 Task 2 -- the seven location/context probes drop from 1s to 3s.
@@ -1109,8 +1015,8 @@ Event OnUpdate()
         TryBosmerEldergleamInterior()
         TryBosmerGildergreenProximity()
         TryBosmerYffreTreeStoneProximity()
-        TryCCSaintsRecognition()
-        TryCCFishingDevotion()
+        LedgerRuntime.TryCCSaintsRecognition()
+        LedgerRuntime.TryCCFishingDevotion()
     endIf
 
     if DebugSeedGo != 0
@@ -1131,7 +1037,7 @@ Event OnUpdate()
                 seedCellId = seedCell.GetFormID()
             endIf
             if seedCellId != 0
-                SetArgonianHome(seedPlayer, seedCellId, GetDevotionalDay() + 2, "debug_seed")
+                SetArgonianHome(seedPlayer, seedCellId, LedgerRuntime.GetDevotionalDay() + 2, "debug_seed")
                 Debug.Notification("PDV seed: this cell is now your Argonian home; adaptation cleared, rite clock re-armed.")
             else
                 Debug.Notification("PDV seed: no parent cell; home not declared.")
@@ -1213,24 +1119,24 @@ Function EnsurePhase8RuntimeWiring()
 EndFunction
 
 Function EnsureAkatoshRuntimeIdentity()
-    if !PDV_Akatosh
+    if !LedgerRuntime.PDV_Akatosh
         return
     endIf
 
     Bool repaired = False
 
-    if PDV_Akatosh.DeityName != "Akatosh"
-        PDV_Akatosh.DeityName = "Akatosh"
+    if LedgerRuntime.PDV_Akatosh.DeityName != "Akatosh"
+        LedgerRuntime.PDV_Akatosh.DeityName = "Akatosh"
         repaired = True
     endIf
 
-    if PDV_Akatosh.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
-        PDV_Akatosh.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+    if LedgerRuntime.PDV_Akatosh.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
+        LedgerRuntime.PDV_Akatosh.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
         repaired = True
     endIf
 
-    if PDV_Akatosh.PDV_GLO_OriginRace != PDV_GLO_OriginRace
-        PDV_Akatosh.PDV_GLO_OriginRace = PDV_GLO_OriginRace
+    if LedgerRuntime.PDV_Akatosh.PDV_GLO_OriginRace != PDV_GLO_OriginRace
+        LedgerRuntime.PDV_Akatosh.PDV_GLO_OriginRace = PDV_GLO_OriginRace
         repaired = True
     endIf
 
@@ -1239,54 +1145,7 @@ Function EnsureAkatoshRuntimeIdentity()
     endIf
 EndFunction
 
-Function EnsureCanonicalDeityDisplayNames()
-    Int repaired = 0
-    repaired += RepairDeityRuntimeName(PDV_Kyne, "Kyne")
-    repaired += RepairDeityRuntimeName(PDV_Talos, "Talos")
-    repaired += RepairDeityRuntimeName(PDV_Yffre, "Y'ffre")
-    repaired += RepairDeityRuntimeName(PDV_Zen, "Z'en")
-    repaired += RepairDeityRuntimeName(PDV_BaanDar, "Baan Dar")
-    repaired += RepairDeityRuntimeName(PDV_Azura, "Azura")
-    repaired += RepairDeityRuntimeName(PDV_Khenarthi, "Khenarthi")
-    repaired += RepairDeityRuntimeName(PDV_Rajhin, "Rajhin")
-    repaired += RepairDeityRuntimeName(PDV_Alkosh, "Alkosh")
-    repaired += RepairDeityRuntimeName(PDV_Boethiah, "Boethiah")
-    repaired += RepairDeityRuntimeName(PDV_Mephala, "Mephala")
-    repaired += RepairDeityRuntimeName(PDV_Hist, "The Hist")
-    repaired += RepairDeityRuntimeName(PDV_Sithis, "Sithis")
-    repaired += RepairDeityRuntimeName(PDV_Malacath, "Malacath")
-    repaired += RepairDeityRuntimeName(PDV_Trinimac, "Trinimac")
-    repaired += RepairDeityRuntimeName(PDV_Tuwhacca, "Tu'whacca")
-    repaired += RepairDeityRuntimeName(PDV_HoonDing, "HoonDing")
-    repaired += RepairDeityRuntimeName(PDV_Leki, "Leki")
-    repaired += RepairDeityRuntimeName(PDV_Shor, "Shor")
-    repaired += RepairDeityRuntimeName(PDV_Tsun, "Tsun")
-    repaired += RepairDeityRuntimeName(PDV_Stuhn, "Stuhn")
-    repaired += RepairDeityRuntimeName(PDV_Akatosh, "Akatosh")
-    repaired += RepairDeityRuntimeName(PDV_Mara, "Mara")
-    repaired += RepairDeityRuntimeName(PDV_Arkay, "Arkay")
-    repaired += RepairDeityRuntimeName(PDV_Stendarr, "Stendarr")
-    repaired += RepairDeityRuntimeName(PDV_Zenithar, "Zenithar")
-    repaired += RepairDeityRuntimeName(PDV_Dibella, "Dibella")
-    repaired += RepairDeityRuntimeName(PDV_Julianos, "Julianos")
-    repaired += RepairDeityRuntimeName(PDV_Kynareth, "Kynareth")
-    repaired += RepairDeityRuntimeName(PDV_AuriEl, "Auri-El")
-    repaired += RepairDeityRuntimeName(PDV_Magnus, "Magnus")
-    repaired += RepairDeityRuntimeName(PDV_Xarxes, "Xarxes")
-    repaired += RepairDeityRuntimeName(PDV_Syrabane, "Syrabane")
-    repaired += RepairDaedricPathRuntimeNames()
-    if repaired > 0 && GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Canonical deity display names repaired: " + repaired)
-    endIf
-EndFunction
 
-Int Function RepairDeityRuntimeName(PDV_DeityBase deity, String canonicalName)
-    if !deity || deity.DeityName == canonicalName
-        return 0
-    endIf
-    deity.DeityName = canonicalName
-    return 1
-EndFunction
 
 Int Function RepairDaedricPathRuntimeNames()
     if !PDV_FLST_DaedricPaths_All
@@ -1300,7 +1159,7 @@ Int Function RepairDaedricPathRuntimeNames()
         if namedPath
             String canonicalPathName = CanonicalDaedricPathName(namedPath)
             if canonicalPathName != ""
-                repaired += RepairDeityRuntimeName(namedPath, canonicalPathName)
+                repaired += LedgerRuntime.RepairDeityRuntimeName(namedPath, canonicalPathName)
             endIf
         endIf
         pathIndex += 1
@@ -1354,8 +1213,8 @@ Function EnsureBosmerRuntimeWiring()
             PDV_BosmerPathTrack.TrackName = "BosmerPath"
         endIf
 
-        if PDV_BosmerPathTrack.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
-            PDV_BosmerPathTrack.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+        if PDV_BosmerPathTrack.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
+            PDV_BosmerPathTrack.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
         endIf
 
         if PDV_BosmerPathTrack.StateLabels.Length != 4
@@ -1384,8 +1243,8 @@ Function EnsureNordRuntimeWiring()
         PDV_NordPantheonBaselineTrack.TrackName = "NordPantheonBaseline"
     endIf
 
-    if PDV_NordPantheonBaselineTrack.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
-        PDV_NordPantheonBaselineTrack.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+    if PDV_NordPantheonBaselineTrack.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
+        PDV_NordPantheonBaselineTrack.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
     endIf
 
     if PDV_NordPantheonBaselineTrack.StateLabels.Length != 2
@@ -1448,8 +1307,8 @@ Function EnsureBosmerYffreRuntimeIdentity()
         PDV_Yffre.Stance_Bosmer = PDV_Yffre.STANCE_NATIVE
     endIf
 
-    if PDV_Yffre.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
-        PDV_Yffre.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+    if PDV_Yffre.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
+        PDV_Yffre.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
     endIf
 
     if PDV_Yffre.PDV_GLO_OriginRace != PDV_GLO_OriginRace
@@ -1469,42 +1328,42 @@ Function EnsureBosmerYffreRuntimeIdentity()
 EndFunction
 
 Function EnsureBosmerZenRuntimeIdentity()
-    if !PDV_Zen
+    if !LedgerRuntime.PDV_Zen
         return
     endIf
 
-    if PDV_Zen.DeityName != "Z'en"
-        PDV_Zen.DeityName = "Z'en"
+    if LedgerRuntime.PDV_Zen.DeityName != "Z'en"
+        LedgerRuntime.PDV_Zen.DeityName = "Z'en"
     endIf
 
-    if PDV_Zen.DeityDomain == ""
-        PDV_Zen.DeityDomain = "Exchange, Reciprocity, Restitution"
+    if LedgerRuntime.PDV_Zen.DeityDomain == ""
+        LedgerRuntime.PDV_Zen.DeityDomain = "Exchange, Reciprocity, Restitution"
     endIf
 
-    if PDV_Zen.DeityIndex != 4
-        PDV_Zen.DeityIndex = 4
+    if LedgerRuntime.PDV_Zen.DeityIndex != 4
+        LedgerRuntime.PDV_Zen.DeityIndex = 4
     endIf
 
-    if PDV_Zen.Stance_Bosmer != PDV_Zen.STANCE_NATIVE
-        PDV_Zen.Stance_Bosmer = PDV_Zen.STANCE_NATIVE
+    if LedgerRuntime.PDV_Zen.Stance_Bosmer != LedgerRuntime.PDV_Zen.STANCE_NATIVE
+        LedgerRuntime.PDV_Zen.Stance_Bosmer = LedgerRuntime.PDV_Zen.STANCE_NATIVE
     endIf
 
-    if PDV_Zen.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
-        PDV_Zen.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+    if LedgerRuntime.PDV_Zen.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
+        LedgerRuntime.PDV_Zen.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
     endIf
 
-    if PDV_Zen.PDV_GLO_OriginRace != PDV_GLO_OriginRace
-        PDV_Zen.PDV_GLO_OriginRace = PDV_GLO_OriginRace
+    if LedgerRuntime.PDV_Zen.PDV_GLO_OriginRace != PDV_GLO_OriginRace
+        LedgerRuntime.PDV_Zen.PDV_GLO_OriginRace = PDV_GLO_OriginRace
     endIf
 
-    if PDV_Zen.EligibleStateTrack != PDV_BosmerPathTrack
-        PDV_Zen.EligibleStateTrack = PDV_BosmerPathTrack
+    if LedgerRuntime.PDV_Zen.EligibleStateTrack != PDV_BosmerPathTrack
+        LedgerRuntime.PDV_Zen.EligibleStateTrack = PDV_BosmerPathTrack
     endIf
 
-    if PDV_Zen.EligibleStateValues.Length != 1 || PDV_Zen.EligibleStateValues[0] != BOSMER_PATH_EXCHANGE
+    if LedgerRuntime.PDV_Zen.EligibleStateValues.Length != 1 || LedgerRuntime.PDV_Zen.EligibleStateValues[0] != BOSMER_PATH_EXCHANGE
         Int[] eligibleStates = new Int[1]
         eligibleStates[0] = BOSMER_PATH_EXCHANGE
-        PDV_Zen.EligibleStateValues = eligibleStates
+        LedgerRuntime.PDV_Zen.EligibleStateValues = eligibleStates
     endIf
 EndFunction
 
@@ -1529,8 +1388,8 @@ Function EnsureBosmerBaanDarRuntimeIdentity()
         PDV_BaanDar.Stance_Bosmer = PDV_BaanDar.STANCE_NATIVE
     endIf
 
-    if PDV_BaanDar.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
-        PDV_BaanDar.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+    if PDV_BaanDar.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
+        PDV_BaanDar.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
     endIf
 
     if PDV_BaanDar.PDV_GLO_OriginRace != PDV_GLO_OriginRace
@@ -1620,8 +1479,8 @@ Function EnsureTalosRuntimeIdentity()
         repaired = True
     endIf
 
-    if PDV_Talos.PDV_GLO_DebugLevel != PDV_GLO_DebugLevel
-        PDV_Talos.PDV_GLO_DebugLevel = PDV_GLO_DebugLevel
+    if PDV_Talos.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
+        PDV_Talos.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
         repaired = True
     endIf
 
@@ -1646,62 +1505,12 @@ Event OnPlayerShoutAttack(Shout akShout)
     Trace(2, "Quest shout fallback observed.")
 EndEvent
 
-Function AwardPiety(PDV_DeityBase deity, Float amount, String reason = "")
-    AwardPietyInternal(deity, amount, True, reason)
-EndFunction
 
-Float Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int eventType, String reason = "", Bool deferBroadPantheon = False, String detachedBroadPool = "")
-    Bool ownsSurface = False
-    if ShouldSurfaceLikesDislikesEvent(eventType) && _ldSurfEventType != eventType
-        BeginLikesDislikesSurface(eventType)
-        ownsSurface = True
-    endIf
-
-    Int previousEventType = _pendingLikesDislikesEventType
-    _pendingLikesDislikesEventType = eventType
-    Float appliedAmount = AwardPietyInternal(deity, amount, True, reason, True, !deferBroadPantheon)
-    _pendingLikesDislikesEventType = previousEventType
-    AccumulateLikesDislikesSurface(deity, amount, eventType)
-
-    if ownsSurface
-        FlushLikesDislikesSurface(eventType)
-    endIf
-
-    if deferBroadPantheon && appliedAmount != 0.0 && detachedBroadPool != "" && IsDeityEligibleForBroadPantheon(deity, detachedBroadPool)
-        return appliedAmount
-    endIf
-    return 0.0
-EndFunction
 
 ; Authoria bard-performance signal. Quality is the SGT expertise delta (1-8);
 ; Become a Bard-only performances enter at quality 1. The daily repeat
 ; multiplier is the global devotional anti-farm budget, while PlayerEvents
 ; separately enforces one award per tavern per devotional day.
-Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form contextForm)
-    if !PDV_Dibella
-        return
-    endIf
-
-    if qualityDelta < 1
-        qualityDelta = 1
-    elseIf qualityDelta > 8
-        qualityDelta = 8
-    endIf
-
-    Float repeatMultiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BardPerformance")
-    if repeatMultiplier <= 0.0
-        Trace(2, "Bard performance decayed out for today; no Dibella award.")
-        return
-    endIf
-
-    Float qualityMultiplier = 0.75 + (qualityDelta as Float * 0.125)
-    if receivedOvation
-        qualityMultiplier += 0.25
-    endIf
-
-    AwardCuratedSignalScaled(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, contextForm, repeatMultiplier * qualityMultiplier)
-    Trace(2, "Bard performance routed quality=" + qualityDelta + " ovation=" + receivedOvation + " multiplier=" + (repeatMultiplier * qualityMultiplier))
-EndFunction
 
 ; V3 Quest Reaction callback seam. The runtime owns catalogs, persistence,
 ; scheduling, and job lifecycle; Manager owns scoring and final presentation.
@@ -1713,7 +1522,7 @@ Function PrepareQueuedQuestReactionTransaction()
     ResetQueuedQuestReactionSurface()
     _qrQueueNeedsCurseRefresh = False
     _qrQueueNeedsBretonRewardSync = False
-    _qrQueueBroadPool = GetActiveBroadPantheonPoolId()
+    _qrQueueBroadPool = LedgerRuntime.GetActiveBroadPantheonPoolId()
     _qrQueueBroadBestPositive = 0.0
     _qrQueueBroadWorstNegative = 0.0
 EndFunction
@@ -1723,7 +1532,7 @@ Function BeginQueuedQuestReactionSlice()
 EndFunction
 
 Function ApplyQueuedQuestReactionCell(String deityName, String valence, String intensity, String magnitude, String sourceTag, Form sourceForm)
-    ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, False, sourceForm)
+    LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, False, sourceForm)
 EndFunction
 
 Function EndQueuedQuestReactionSlice()
@@ -1735,10 +1544,10 @@ Function FinalizeQueuedQuestReaction(String sourceModName, String reactionKey)
     FlushQueuedQuestReactionSurface(sourceModName, reactionKey)
     CommitQueuedQuestReactionBroad(reactionKey)
     if _qrQueueNeedsCurseRefresh
-        HandleCurseStateRefresh("quest_reaction_queue")
+        LedgerRuntime.HandleCurseStateRefresh("quest_reaction_queue")
     endIf
     if _qrQueueNeedsBretonRewardSync
-        SyncFirstTierRaceRewardRuntime()
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     endIf
     RequestPanelRefresh()
 EndFunction
@@ -1757,7 +1566,7 @@ Function ApplyQuestReactionFaucet(String faucetKey, Form sourceForm)
     String intensity = JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".intensity")
     String magnitude = JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".magnitude")
     String sourceTag = JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".tag")
-    ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, True, sourceForm)
+    LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, True, sourceForm)
 
     ; Namira lifesteal: feeding on the dead restores the Namira-pathed faithful. The
     ; old boon's HealRateMult (rate on Requiem's ~0 base) was swallowed; the sustain
@@ -1779,8 +1588,8 @@ Function TryNamiraFeedHeal()
         return
     endIf
 
-    Int namiraTier = GetTier(namira)
-    if namiraTier < TIER_SEEKER
+    Int namiraTier = LedgerRuntime.GetTier(namira)
+    if namiraTier < LedgerRuntime.TIER_SEEKER
         return
     endIf
 
@@ -1791,9 +1600,9 @@ Function TryNamiraFeedHeal()
     endIf
 
     Float feedHeal = 20.0
-    if namiraTier >= TIER_CHAMPION
+    if namiraTier >= LedgerRuntime.TIER_CHAMPION
         feedHeal = 40.0
-    elseIf namiraTier >= TIER_DEVOTED
+    elseIf namiraTier >= LedgerRuntime.TIER_DEVOTED
         feedHeal = 30.0
     endIf
     feedHeal = feedHeal * feedMultiplier
@@ -1835,145 +1644,6 @@ Bool Function IsQueuedQuestReactionCellCheapSkip(String deityName, String valenc
     return !IsQuestReactionDeityReachable(deity)
 EndFunction
 
-Function ApplyDeityReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Bool isFaucet, Form sourceForm)
-    PDV_DeityBase deity = GetQuestReactionDeity(deityName)
-    if !deity
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] QuestReaction skipped unknown deity: " + deityName)
-        endIf
-        return
-    endIf
-
-    Float amount = GetQuestReactionBaseValue(magnitude, intensity)
-    if amount == 0.0
-        return
-    endIf
-
-    if valence == "-"
-        amount = amount * -1.0
-    endIf
-
-    if isFaucet && !MarkQuestReactionFaucet(deityName, sourceTag, sourceForm)
-        if GetDebugLevel() >= 2
-            Debug.Trace("[PDV] QuestReaction faucet repeat blocked: " + deityName + " " + sourceTag)
-        endIf
-        return
-    endIf
-
-    String stance = GetQuestReactionStance(deityName, deity)
-    if stance == "CURSE"
-        StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastCurse", deityName + "." + sourceTag)
-        if _qrQueueTransactionActive
-            _qrQueueNeedsCurseRefresh = True
-        else
-            HandleCurseStateRefresh("quest_reaction_" + deityName)
-        endIf
-        if GetDebugLevel() >= 3 || (!_qrQueueTransactionActive && GetDebugLevel() >= 1)
-            Debug.Trace("[PDV] QuestReaction curse routed: " + deityName + " " + sourceTag)
-        endIf
-        return
-    endIf
-
-    if stance == "TABOO" || stance == "HOSTILE"
-        ; Preserve authored taboo/hostile displeasure for a god whose face
-        ; remains in the origin roster, even when it is outside the Nord's
-        ; selected baseline. Positive values become stigma; background favor
-        ; from ordinary native/foreign cells never crosses that lane.
-        if !IsQuestReactionDeityReachable(deity) && !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
-            if GetDebugLevel() >= 3
-                Debug.Trace("[PDV] QuestReaction skipped unreachable taboo/hostile deity: " + deityName + " " + sourceTag)
-            endIf
-            return
-        endIf
-
-        if amount > 0.0
-            ApplyQuestReactionStigma(deity, amount, sourceTag)
-            HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
-            ; A taboo deity reaction is a real negative piety award (paths take
-            ; stigma instead, which is not piety) -- fold it into the quest-fire
-            ; surface as displeasure so the loss is not invisible.
-            if !isFaucet && magnitude != "meta" && !(deity as PDV_DaedricPathBase)
-                AccumulateQuestReactionSurface(deity, amount * -1.0, magnitude)
-            endIf
-        else
-            ApplyQuestReactionPiety(deity, amount, "taboo_" + sourceTag)
-            HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
-            if !isFaucet && magnitude != "meta"
-                AccumulateQuestReactionSurface(deity, amount, magnitude)
-            endIf
-        endIf
-        return
-    endIf
-
-    ; Reachability gate (2026-07-05): a FOREIGN/TOLERATED quest reaction for a god
-    ; outside the player's origin roster (and not a Daedric path) writes piety no
-    ; surface can ever read back -- the dashboard filters by
-    ; IsDashboardDeityInOriginRoster and the formal commitment offer path is
-    ; origin-gated, so the piety, driver ring, and signal-day writes are dead state.
-    ; Skip the award entirely; generic acts (ScoreFromTable), the dashboard, and
-    ; offers already hard-gate the same way. Daedric paths stay scored: a pre-pact
-    ; path with piety renders as "watching", so path piety has a live consumer.
-    ; Roster deities with a TOLERATED/FOREIGN stance (visible-but-foreign) keep
-    ; their reduced-rate award below.
-    if stance == "FOREIGN" || stance == "TOLERATED"
-        if !IsQuestReactionDeityReachable(deity)
-            if GetDebugLevel() >= 3
-                Debug.Trace("[PDV] QuestReaction skipped unreachable foreign deity: " + deityName + " " + sourceTag)
-            endIf
-            return
-        endIf
-    endIf
-
-    ; Native/reachable stances used to fall straight through after the
-    ; FOREIGN/TOLERATED guard above. That let the Nord dashboard union roster
-    ; award Old Ways piety while Nine Divines was selected (and vice versa).
-    ; Keep the final guard beside the award so old snapshots and direct callers
-    ; cannot reintroduce an out-of-lane positive reaction after ingress compacts
-    ; it away.
-    if !IsQuestReactionDeityReachable(deity)
-        if GetDebugLevel() >= 3
-            Debug.Trace("[PDV] QuestReaction skipped inactive lane deity: " + deityName + " " + sourceTag)
-        endIf
-        return
-    endIf
-
-    Float multiplier = GetQuestReactionStanceMultiplier(stance)
-
-    Float appliedReactionAmount = amount * multiplier
-    ; Milestone surfacing (below) owns the top-left toast for a landed base-cell
-    ; reaction, so mute AwardPiety's generic active-patron favor pulse across the
-    ; award to avoid a double toast. The panel driver ring is still fed inside
-    ; AwardPiety regardless.
-    _suppressAwardFavorToast = True
-    ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
-    _suppressAwardFavorToast = False
-    HandleBretonQuestTagPracticeSignal(sourceTag, appliedReactionAmount > 0.0, deityName + "." + sourceTag)
-
-    ; Milestone surfacing (2026-07-05): a base quest-reaction cell is a milestone-grade
-    ; beat, so a landed reaction feeds the per-quest surface accumulator; the quest
-    ; fire flushes ONE toast + ONE Book of Days beat for all its cells (owner ruling
-    ; after the first per-cell build toasted 6 gods per assassination stage). Excluded,
-    ; by design, from that loud surface:
-    ;   - behavioral faucets (isFaucet): cannibalism / forbidden-knowledge signals, not
-    ;     quests; they keep their daily/once caps and quiet-Ledger driver row.
-    ;   - meta faucets (magnitude "meta"): thin-coverage background lanes that can fire
-    ;     several at once per quest; surfacing them would burst. They already carry
-    ;     bespoke humanized driver-row copy.
-    ; The reachability gate above already dropped off-roster gods, so only gods the
-    ; player actually follows reach this surface.
-    if !isFaucet && magnitude != "meta"
-        AccumulateQuestReactionSurface(deity, appliedReactionAmount, magnitude)
-    endIf
-
-    ; Bridge: a positive quest reaction for a Khajiit-focus deity also tilts which
-    ; moon-path leads, so the matrix's existing Baan Dar / Rajhin / Alkosh /
-    ; Khenarthi / Azurah cells drive the focused-emphasis system. Piety is already
-    ; awarded above; this adds focus weight only. Behavior-driven focus per the
-    ; LOCKED Khajiit design sheet.
-    if amount > 0.0 && IsKhajiitOrigin()
-        BridgeKhajiitMatrixFocus(deityName, magnitude)
-    endIf
-EndFunction
 
 ; --- Quest-fire surface accumulator -------------------------------------------------
 ; One quest fire = one toast + one Book of Days beat, however many deities its cells
@@ -2004,7 +1674,7 @@ Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, Strin
     ; awarded upstream -- this gates DISPLAY only. Off-roster Aedric gods are already
     ; dropped by the reachability gate, so this leaves race-aligned gods untouched.
     PDV_DaedricPathBase daedricSurfacePath = deity as PDV_DaedricPathBase
-    if daedricSurfacePath && daedricSurfacePath.GetStoredTier() < TIER_SEEKER
+    if daedricSurfacePath && daedricSurfacePath.GetStoredTier() < LedgerRuntime.TIER_SEEKER
         return
     endIf
     if _qrQueueTransactionActive
@@ -2233,177 +1903,12 @@ Function TraceQuestReactionToastResult(String reactionKey, Bool toastSent)
     endIf
 EndFunction
 
-Bool Function ShouldSurfaceLikesDislikesEvent(Int eventType)
-    return eventType == 303 || eventType == 366
-EndFunction
 
-Function ResetLikesDislikesSurface()
-    _ldSurfEventType = -1
-    _ldSurfPosNamesCsv = ""
-    _ldSurfNegNamesCsv = ""
-    _ldSurfPosCount = 0
-    _ldSurfNegCount = 0
-    _ldSurfBestPosAmount = 0.0
-    _ldSurfBestNegAmount = 0.0
-    _ldSurfBestPosName = ""
-    _ldSurfBestNegName = ""
-    _ldSurfBestPosSymbol = ""
-    _ldSurfBestNegSymbol = ""
-EndFunction
 
-Function BeginLikesDislikesSurface(Int eventType, String parentLogicalEventId = "")
-    Bool joinedParentEvent = False
-    if parentLogicalEventId != ""
-        joinedParentEvent = JoinBroadPantheonEvent(parentLogicalEventId)
-    endIf
-    if !joinedParentEvent
-        BeginBroadPantheonEvent("likes_dislikes_" + eventType + "_" + Utility.GetCurrentGameTime())
-    endIf
-    if !ShouldSurfaceLikesDislikesEvent(eventType)
-        return
-    endIf
 
-    ResetLikesDislikesSurface()
-    _ldSurfEventType = eventType
-EndFunction
 
-Function AccumulateLikesDislikesSurface(PDV_DeityBase deity, Float amount, Int eventType)
-    if !ShouldSurfaceLikesDislikesEvent(eventType) || !deity || amount == 0.0
-        return
-    endIf
 
-    if _ldSurfEventType != eventType
-        BeginLikesDislikesSurface(eventType)
-    endIf
 
-    String deityName = GetPublicDeityDisplayName(deity)
-    if amount > 0.0
-        if _ldSurfPosNamesCsv != ""
-            _ldSurfPosNamesCsv = _ldSurfPosNamesCsv + "|"
-        endIf
-        _ldSurfPosNamesCsv = _ldSurfPosNamesCsv + deityName
-        _ldSurfPosCount += 1
-        if amount > _ldSurfBestPosAmount
-            _ldSurfBestPosAmount = amount
-            _ldSurfBestPosName = deityName
-            _ldSurfBestPosSymbol = GetPrismaSymbolForDeity(deity)
-        endIf
-    else
-        if _ldSurfNegNamesCsv != ""
-            _ldSurfNegNamesCsv = _ldSurfNegNamesCsv + "|"
-        endIf
-        _ldSurfNegNamesCsv = _ldSurfNegNamesCsv + deityName
-        _ldSurfNegCount += 1
-        if amount < _ldSurfBestNegAmount
-            _ldSurfBestNegAmount = amount
-            _ldSurfBestNegName = deityName
-            _ldSurfBestNegSymbol = GetPrismaSymbolForDeity(deity)
-        endIf
-    endIf
-EndFunction
-
-Function FlushLikesDislikesSurface(Int eventType)
-    ; Altmer lore reads receive a dedicated sacred-text acknowledgement when a
-    ; curated source applies. Keep the generic piety fan-out real, but do not
-    ; let its catch-all surface compete with that specific moment.
-    if IsAltmerOrigin() && eventType == 342
-        ResetLikesDislikesSurface()
-        FlushBroadPantheonEvent()
-        return
-    endIf
-
-    if !ShouldSurfaceLikesDislikesEvent(eventType)
-        FlushBroadPantheonEvent()
-        return
-    endIf
-
-    if _ldSurfPosCount == 0 && _ldSurfNegCount == 0
-        ResetLikesDislikesSurface()
-        FlushBroadPantheonEvent()
-        return
-    endIf
-
-    Int nowDay = Utility.GetCurrentGameTime() as Int
-    if _ldSurfNegCount == 0
-        String posMsg = _ldSurfBestPosName + " marks the act."
-        if _ldSurfPosCount == 2
-            posMsg = JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " mark the act."
-        elseIf _ldSurfPosCount > 2
-            posMsg = _ldSurfBestPosName + " and " + (_ldSurfPosCount - 1) + " others mark the act."
-        endIf
-        SendPrismaToast(_ldSurfBestPosSymbol, "good", "A deed noticed", posMsg)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act.", nowDay, "favor.act", _ldSurfBestPosSymbol, False, 1, "A deed noticed")
-    elseIf _ldSurfPosCount == 0
-        String negMsg = _ldSurfBestNegName + " takes offense at the act."
-        if _ldSurfNegCount == 2
-            negMsg = JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " take offense at the act."
-        elseIf _ldSurfNegCount > 2
-            negMsg = _ldSurfBestNegName + " and " + (_ldSurfNegCount - 1) + " others take offense at the act."
-        endIf
-        SendPrismaToast(_ldSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense at the act.", nowDay, "favor.loss", _ldSurfBestNegSymbol, False, 1, "A deed ill-received")
-    else
-        Bool positiveLeads = _ldSurfBestPosAmount >= (_ldSurfBestNegAmount * -1.0)
-        String mixedTone = "good"
-        String mixedSymbol = _ldSurfBestPosSymbol
-        String mixedBodTone = "favor.act"
-        if !positiveLeads
-            mixedTone = "warning"
-            mixedSymbol = _ldSurfBestNegSymbol
-            mixedBodTone = "favor.loss"
-        endIf
-        SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _ldSurfBestPosName + " marks the act; " + _ldSurfBestNegName + " takes offense.")
-        AppendBookOfDaysEntry(JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act; " + JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, 1, "A deed weighed")
-    endIf
-
-    Trace(1, "Likes/dislikes surface flushed: event " + eventType + ", positive " + _ldSurfPosCount + ", negative " + _ldSurfNegCount)
-    ResetLikesDislikesSurface()
-    FlushBroadPantheonEvent()
-EndFunction
-
-Function SurfaceDebugDislikeEvent(PDV_DeityBase deity, Float amount, Int eventType)
-    if !deity || amount >= 0.0
-        return
-    endIf
-
-    String deityName = GetPublicDeityDisplayName(deity)
-    String symbolName = GetPrismaSymbolForDeity(deity)
-    Int nowDay = Utility.GetCurrentGameTime() as Int
-    SendPrismaToast(symbolName, "warning", "A deed ill-received", deityName + " takes offense at the act.")
-    AppendBookOfDaysEntry(deityName + " took offense at the act.", nowDay, "favor.loss", symbolName, False, 1, "A deed ill-received")
-    Trace(1, "Debug dislike surface flushed: " + deity.DeityName + " event " + eventType)
-EndFunction
-
-Bool Function ConsumeShrinePrayerCredit(PDV_DeityBase deity, String sourceId)
-    if !deity
-        return False
-    endIf
-
-    ; B13 / fix-plan 4.1 -- the day-0 false block. This compared a StorageUtil int that
-    ; DEFAULTS TO 0 against raw game day 0, so on the first in-game day of a new save every
-    ; shrine-prayer credit for every deity was refused. Fixed the way the rest of the tree
-    ; already does it (fix-plan 4.2): the shared 06:00 devotional day in the zero-reserved
-    ; +2 encoding, where the stamp is >= 1 by construction and 0 unambiguously means unset.
-    ; NOT via ReadZeroReservedDevotionalDayStamp: that helper migrates a legacy +1 DEVOTIONAL
-    ; stamp, and the value stored here was a raw wall-clock day. A stale wall-clock day can
-    ; never equal a same-day devotional stamp (it would have to be two days in the future),
-    ; so existing saves migrate silently with no false block and no false grant.
-    Int todayStamp = GetDevotionalDay() + 2
-    String deityKey = deity.DeityName
-    if deityKey == ""
-        deityKey = "" + deity.GetFormID()
-    endIf
-    String guardKey = "PDV.Signal.ShrinePrayer." + deityKey
-    if StorageUtil.GetIntValue(None, guardKey) == todayStamp
-        if GetDebugLevel() >= 2
-            Debug.Trace("[PDV] Shrine prayer daily cap blocked " + deityKey + " from " + sourceId)
-        endIf
-        return False
-    endIf
-
-    StorageUtil.SetIntValue(None, guardKey, todayStamp)
-    return True
-EndFunction
 
 ; Maps a quest-reaction deity name to its Khajiit focused-emphasis value, or
 ; KHAJIIT_FOCUS_NONE if the deity is not one of the five Khajiit focus paths.
@@ -2511,7 +2016,7 @@ Int Function GetActiveLunarFavoredFocus()
     endIf
 
     PDV_DeityBase deity = GetKhajiitEmphasisDeity(presidingFocus)
-    if !deity || GetPiety(deity) < 25.0
+    if !deity || LedgerRuntime.GetPiety(deity) < 25.0
         return KHAJIIT_FOCUS_NONE
     endIf
 
@@ -2546,7 +2051,7 @@ Function SyncKhajiitPhaseBlessing()
 
     Int focusValue = 1
     while focusValue <= 5
-        SyncRaceRewardSpell(playerRef, GetKhajiitPhaseBlessing(focusValue), False, "retired Khajiit phase blessing " + GetKhajiitFocusLabel(focusValue))
+        LedgerRuntime.SyncRaceRewardSpell(playerRef, GetKhajiitPhaseBlessing(focusValue), False, "retired Khajiit phase blessing " + GetKhajiitFocusLabel(focusValue))
         focusValue += 1
     endWhile
 EndFunction
@@ -2560,48 +2065,48 @@ Bool Function IsKhajiitLatticeResonating()
         return False
     endIf
     PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
-    return deity && GetPiety(deity) >= 25.0
+    return deity && LedgerRuntime.GetPiety(deity) >= 25.0
 EndFunction
 
 Spell Function GetKhajiitFocusedRewardSpell(Int focusValue, Int tierValue)
     if focusValue == KHAJIIT_FOCUS_KHENARTHI
-        if tierValue >= TIER_CHAMPION
+        if tierValue >= LedgerRuntime.TIER_CHAMPION
             return PDV_Bless_Khajiit_Khenarthi_T3
-        elseIf tierValue == TIER_DEVOTED
+        elseIf tierValue == LedgerRuntime.TIER_DEVOTED
             return PDV_Bless_Khajiit_Khenarthi_T2
-        elseIf tierValue == TIER_SEEKER
+        elseIf tierValue == LedgerRuntime.TIER_SEEKER
             return PDV_Bless_Khajiit_Khenarthi_T1
         endIf
     elseIf focusValue == KHAJIIT_FOCUS_AZURAH
-        if tierValue >= TIER_CHAMPION
+        if tierValue >= LedgerRuntime.TIER_CHAMPION
             return PDV_Bless_Khajiit_Azurah_T3
-        elseIf tierValue == TIER_DEVOTED
+        elseIf tierValue == LedgerRuntime.TIER_DEVOTED
             return PDV_Bless_Khajiit_Azurah_T2
-        elseIf tierValue == TIER_SEEKER
+        elseIf tierValue == LedgerRuntime.TIER_SEEKER
             return PDV_Bless_Khajiit_Azurah_T1
         endIf
     elseIf focusValue == KHAJIIT_FOCUS_BAANDAR
-        if tierValue >= TIER_CHAMPION
+        if tierValue >= LedgerRuntime.TIER_CHAMPION
             return PDV_Bless_Khajiit_BaanDar_T3
-        elseIf tierValue == TIER_DEVOTED
+        elseIf tierValue == LedgerRuntime.TIER_DEVOTED
             return PDV_Bless_Khajiit_BaanDar_T2
-        elseIf tierValue == TIER_SEEKER
+        elseIf tierValue == LedgerRuntime.TIER_SEEKER
             return PDV_Bless_Khajiit_BaanDar_T1
         endIf
     elseIf focusValue == KHAJIIT_FOCUS_RAJHIN
-        if tierValue >= TIER_CHAMPION
+        if tierValue >= LedgerRuntime.TIER_CHAMPION
             return PDV_Bless_Khajiit_Rajhin_T3
-        elseIf tierValue == TIER_DEVOTED
+        elseIf tierValue == LedgerRuntime.TIER_DEVOTED
             return PDV_Bless_Khajiit_Rajhin_T2
-        elseIf tierValue == TIER_SEEKER
+        elseIf tierValue == LedgerRuntime.TIER_SEEKER
             return PDV_Bless_Khajiit_Rajhin_T1
         endIf
     elseIf focusValue == KHAJIIT_FOCUS_ALKOSH
-        if tierValue >= TIER_CHAMPION
+        if tierValue >= LedgerRuntime.TIER_CHAMPION
             return PDV_Bless_Khajiit_Alkosh_T3
-        elseIf tierValue == TIER_DEVOTED
+        elseIf tierValue == LedgerRuntime.TIER_DEVOTED
             return PDV_Bless_Khajiit_Alkosh_T2
-        elseIf tierValue == TIER_SEEKER
+        elseIf tierValue == LedgerRuntime.TIER_SEEKER
             return PDV_Bless_Khajiit_Alkosh_T1
         endIf
     endIf
@@ -2614,7 +2119,7 @@ Function RefreshKhajiitFocusedRewardForResonance(Actor playerRef)
     if !playerRef || !deity
         return
     endIf
-    Spell rewardSpell = GetKhajiitFocusedRewardSpell(focusValue, GetTier(deity))
+    Spell rewardSpell = GetKhajiitFocusedRewardSpell(focusValue, LedgerRuntime.GetTier(deity))
     if rewardSpell && playerRef.HasSpell(rewardSpell)
         playerRef.RemoveSpell(rewardSpell)
         playerRef.AddSpell(rewardSpell, False)
@@ -2659,20 +2164,20 @@ Function SyncKhajiitPortentPower(Actor playerRef)
         return
     endIf
     PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
-    Bool shouldHave = GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && focusDeity == PDV_Azura && GetTier(focusDeity) >= TIER_CHAMPION && playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
-    SyncRaceRewardSpell(playerRef, PDV_Power_Khajiit_AzurahPortent, shouldHave, "Azurah Portent power")
+    Bool shouldHave = GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && focusDeity == PDV_Azura && LedgerRuntime.GetTier(focusDeity) >= LedgerRuntime.TIER_CHAMPION && playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Power_Khajiit_AzurahPortent, shouldHave, "Azurah Portent power")
 EndFunction
 
 Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
     if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_AZURAH
         return False
     endIf
-    if !PDV_Azura || GetTier(PDV_Azura) < TIER_CHAMPION || !PDV_Bless_Khajiit_Azurah_T3 || !playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
+    if !PDV_Azura || LedgerRuntime.GetTier(PDV_Azura) < LedgerRuntime.TIER_CHAMPION || !PDV_Bless_Khajiit_Azurah_T3 || !playerRef.HasSpell(PDV_Bless_Khajiit_Azurah_T3)
         SyncKhajiitPortentPower(playerRef)
         return False
     endIf
 
-    Int currentDay = GetDevotionalDay() + 2
+    Int currentDay = LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, "PDV.Khajiit.AzurahPortent.Day") == currentDay
         if PDV_SND_Khajiit_AzurahPortentFizzle
             PDV_SND_Khajiit_AzurahPortentFizzle.Play(playerRef)
@@ -2695,7 +2200,7 @@ Bool Function CanExecuteKhajiitBaanDarRescue(Actor playerRef)
     if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != KHAJIIT_FOCUS_BAANDAR
         return False
     endIf
-    if !PDV_BaanDar || GetTier(PDV_BaanDar) < TIER_CHAMPION || !PDV_Bless_Khajiit_BaanDar_T3
+    if !PDV_BaanDar || LedgerRuntime.GetTier(PDV_BaanDar) < LedgerRuntime.TIER_CHAMPION || !PDV_Bless_Khajiit_BaanDar_T3
         return False
     endIf
     return playerRef.HasSpell(PDV_Bless_Khajiit_BaanDar_T3)
@@ -2773,7 +2278,7 @@ Function ProcessKhajiitAlkoshWordDrip()
     StorageUtil.SetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen", wordsSeen + awarded)
     Trace(2, "Khajiit Alkosh word-of-power drip awarded " + awarded + " of " + newWords + " new words")
     SendPrismaShiftToast("Words marked", "Alkosh orders new words.", GetKhajiitFocusSymbol(KHAJIIT_FOCUS_ALKOSH))
-    RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
+    LedgerRuntime.RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
 EndFunction
 
 ; Compatibility no-op. God strength modifies the focused reward through Lattice
@@ -2799,7 +2304,7 @@ PDV_DeityBase Function GetQuestReactionDeity(String deityName)
         return cachedDeity
     endIf
 
-    PDV_DeityBase deity = GetDeityByName(deityName)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByName(deityName)
     if !deity && PDV_FLST_DaedricPaths_All
         Int i = 0
         Int count = PDV_FLST_DaedricPaths_All.GetSize()
@@ -2884,7 +2389,7 @@ Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
     if deity as PDV_DaedricPathBase
         return True
     endIf
-    if IsGrandfatheredOffRosterPatron(deity)
+    if LedgerRuntime.IsGrandfatheredOffRosterPatron(deity)
         return True
     endIf
 
@@ -2896,16 +2401,6 @@ Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
     return IsDashboardDeityInOriginRoster(deity, originRace)
 EndFunction
 
-Bool Function IsGrandfatheredOffRosterPatron(PDV_DeityBase deity)
-    if !deity || deity as PDV_DaedricPathBase
-        return False
-    endIf
-    if GetPatronState() != PATRON_STATE_ACTIVE || deity != _activeDeity || IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
-        return False
-    endIf
-    String stance = GetQuestReactionStance(GetPublicDeityDisplayName(deity), deity)
-    return stance == "FOREIGN" || stance == "TOLERATED"
-EndFunction
 
 Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reason)
     Form deityForm = GetDeityFormOrNone(deity)
@@ -2916,7 +2411,7 @@ Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reaso
     ; The caller already applied the matrix stance multiplier. Preserve track,
     ; eligibility, curse, survival, and mode modifiers without double-scaling
     ; FOREIGN/TOLERATED through the record stance again.
-    AwardPietyInternal(deity, amount, True, reason, False)
+    LedgerRuntime.AwardPietyInternal(deity, amount, True, reason, False)
     StorageUtil.SetStringValue(deityForm, "PDV.QuestReaction.LastReason", reason)
     if !_qrQueueTransactionActive
         RequestPanelRefresh()
@@ -2947,7 +2442,7 @@ Bool Function MarkQuestReactionFaucet(String deityName, String sourceTag, Form s
         return True
     endIf
 
-    Int currentDayStamp = GetDevotionalDay() + 2
+    Int currentDayStamp = LedgerRuntime.GetDevotionalDay() + 2
     String dayKey = capKey + ".Day"
     if StorageUtil.GetIntValue(None, dayKey) == currentDayStamp
         return False
@@ -3228,7 +2723,7 @@ Function SurfaceTransition(String eventClass, String surfaceKey, String directio
     if repeatable
         ; fix-plan 4.2: scope the repeatable guard by the devotional day so a transition
         ; cannot re-surface twice across a midnight the player slept through.
-        guard = guard + "." + (GetDevotionalDay() + 2)
+        guard = guard + "." + (LedgerRuntime.GetDevotionalDay() + 2)
     endIf
     if StorageUtil.GetIntValue(None, guard) == 1
         return
@@ -3290,9 +2785,9 @@ String Function ResolveTransitionJournalLine(String eventClass, String surfaceKe
     endIf
 
     if eventClass == "offer" && direction == "accept"
-        return BuildCommitmentOfferAcceptJournalLine(deityIndex)
+        return LedgerRuntime.BuildCommitmentOfferAcceptJournalLine(deityIndex)
     elseIf eventClass == "offer" && direction == "refuse"
-        return BuildCommitmentOfferRefuseJournalLine(deityIndex)
+        return LedgerRuntime.BuildCommitmentOfferRefuseJournalLine(deityIndex)
     elseIf eventClass == "reorientation" && direction == "shift"
         return BuildReorientationJournalLine(surfaceKey)
     elseIf eventClass == "tier" && direction == "reach"
@@ -3335,79 +2830,17 @@ EndFunction
 
 String Function BuildTierReachJournalLine(String surfaceKey, Int deityIndex)
     String deityName = GetJournalDeityName(deityIndex)
-    String tierLabel = ExtractTierLabelFromSurfaceKey(surfaceKey)
+    String tierLabel = LedgerRuntime.ExtractTierLabelFromSurfaceKey(surfaceKey)
     if tierLabel == ""
         tierLabel = "a deeper standing"
     endIf
     return "Your devotion to " + deityName + " has reached " + tierLabel + "."
 EndFunction
 
-String Function ExtractTierLabelFromSurfaceKey(String surfaceKey)
-    if PDV_DevotionRules.StringContainsToken(surfaceKey, "Champion")
-        return "Champion"
-    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Devoted")
-        return "Devoted"
-    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Seeker")
-        return "Seeker"
-    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Faithful")
-        return "Faithful"
-    elseIf PDV_DevotionRules.StringContainsToken(surfaceKey, "Observant")
-        return "Observant"
-    endIf
-    return ""
-EndFunction
 
-String Function BuildCommitmentOfferAcceptJournalLine(Int deityIndex)
-    String patron = GetJournalDeityName(deityIndex)
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_DUNMER
-        return "The Reclamation deepens in you. You named " + patron + " as your focus."
-    elseIf originRace == ORIGIN_ALTMER
-        return "The foundation narrows to a single disciplined road. You named " + patron + " your focus."
-    elseIf originRace == ORIGIN_REDGUARD
-        return "The sect's broad worship narrows to one charge. You took " + patron + " as your own."
-    endIf
-    return "The broad faith narrows to one; " + patron + " has named you their own."
-EndFunction
 
-String Function BuildCommitmentOfferAcceptToastLine(PDV_DeityBase deity)
-    String patron = GetPublicDeityDisplayName(deity)
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_DUNMER
-        return "The ash-prayer has a name: " + patron + "."
-    elseIf originRace == ORIGIN_ALTMER
-        return "You name " + patron + " your focus."
-    elseIf originRace == ORIGIN_REDGUARD
-        return "You walk under " + patron + " now."
-    endIf
-    return patron + " has named you their own."
-EndFunction
 
-String Function BuildCommitmentOfferRefuseJournalLine(Int deityIndex)
-    String patron = GetJournalDeityName(deityIndex)
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_DUNMER
-        return "The Reclamation holds as it was. You set " + patron + " aside, and " + patron + " will not ask again."
-    elseIf originRace == ORIGIN_ALTMER
-        return "The foundation stands as it was. You kept to it alone, and " + patron + " will not ask again."
-    elseIf originRace == ORIGIN_REDGUARD
-        return "The sect's broad worship holds as it was. You set " + patron + "'s charge aside; " + patron + " will not ask again."
-    endIf
-    return "The broad faith stays whole; you turned " + patron + " away, and " + patron + " will not ask again."
-EndFunction
 
-String Function BuildCommitmentOfferRefuseToastLine(PDV_DeityBase deity)
-    String patron = GetPublicDeityDisplayName(deity)
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_DUNMER
-        return "You set " + patron + " aside."
-    elseIf originRace == ORIGIN_ALTMER
-        return "You keep to the foundation."
-    elseIf originRace == ORIGIN_REDGUARD
-        return "You keep to the sect."
-    endIf
-    return "You turned " + patron + " away."
-EndFunction
 
 String Function BuildReorientationJournalLine(String surfaceKey)
     Int originRace = GetPlayerOriginRaceIndex()
@@ -3420,7 +2853,7 @@ String Function BuildReorientationJournalLine(String surfaceKey)
 EndFunction
 
 String Function GetJournalDeityName(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if deity
         return GetPublicDeityDisplayName(deity)
     endIf
@@ -3431,7 +2864,7 @@ EndFunction
 ; deity, else the generic journal mark.
 String Function ResolveTransitionJournalSymbol(String eventClass, Int deityIndex)
     if deityIndex >= 0
-        PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+        PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
         if deity
             return GetPrismaSymbolForDeity(deity)
         endIf
@@ -3449,7 +2882,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     endIf
 
     Int originRace = GetPlayerOriginRaceIndex()
-    Bool pantheonBroadPresentation = IsPantheonBroadPoolPresentationActive(originRace)
+    Bool pantheonBroadPresentation = LedgerRuntime.IsPantheonBroadPoolPresentationActive(originRace)
     String originLabel = "Unknown"
     if originRace >= 0
         originLabel = GetOriginRaceLabel(originRace)
@@ -3459,7 +2892,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     String symbolName = "journal"
     Float piety = 0.0
     Float pietyToday = 0.0
-    Int tierValue = TIER_NONE
+    Int tierValue = LedgerRuntime.TIER_NONE
     String tierLabelOverride = ""
     Float championThreshold = 85.0
 
@@ -3475,7 +2908,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
             symbolName = "daedric"
         endIf
         piety = panelPact.GetStoredPiety()
-        pietyToday = GetPietyToday(panelPact)
+        pietyToday = LedgerRuntime.GetPietyToday(panelPact)
         tierValue = panelPact.GetStoredTier()
         if panelPact.ThresholdChampion > 0.0
             championThreshold = panelPact.ThresholdChampion
@@ -3483,11 +2916,11 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     elseIf _activeDeity
         titleText = GetPublicDeityDisplayName(_activeDeity)
         symbolName = GetPrismaSymbolForDeity(_activeDeity)
-        piety = GetPiety(_activeDeity)
-        pietyToday = GetPietyToday(_activeDeity)
-        tierValue = GetTier(_activeDeity)
+        piety = LedgerRuntime.GetPiety(_activeDeity)
+        pietyToday = LedgerRuntime.GetPietyToday(_activeDeity)
+        tierValue = LedgerRuntime.GetTier(_activeDeity)
         if IsFocusedPantheonBoonSuspended()
-            tierValue = TIER_NONE
+            tierValue = LedgerRuntime.TIER_NONE
             tierLabelOverride = "Wavering"
         endIf
         if _activeDeity.ThresholdChampion > 0.0
@@ -3501,7 +2934,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         symbolName = GetPanelQuasiPatronSymbol(originRace)
         tierLabelOverride = GetPanelQuasiPatronTierLabel(originRace)
         Int broadTier = GetBroadLaneTierForOrigin(originRace)
-        if pantheonBroadPresentation || broadTier > TIER_NONE
+        if pantheonBroadPresentation || broadTier > LedgerRuntime.TIER_NONE
             titleText = GetBroadLaneDisplayName(originRace)
             symbolName = GetBroadLaneSymbol(originRace)
             tierValue = broadTier
@@ -3509,14 +2942,14 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
             piety = GetBroadLaneStandingValue(originRace)
             pietyToday = GetBroadLaneScratchValue(originRace)
         endIf
-        if PDV_GLO_ActivePiety
-            if !pantheonBroadPresentation && broadTier <= TIER_NONE
-                piety = PDV_GLO_ActivePiety.GetValue()
+        if LedgerRuntime.PDV_GLO_ActivePiety
+            if !pantheonBroadPresentation && broadTier <= LedgerRuntime.TIER_NONE
+                piety = LedgerRuntime.PDV_GLO_ActivePiety.GetValue()
             endIf
         endIf
-        if PDV_GLO_ActiveTier
-            if !pantheonBroadPresentation && broadTier <= TIER_NONE
-                tierValue = PDV_GLO_ActiveTier.GetValueInt()
+        if LedgerRuntime.PDV_GLO_ActiveTier
+            if !pantheonBroadPresentation && broadTier <= LedgerRuntime.TIER_NONE
+                tierValue = LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
             endIf
         endIf
         if originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
@@ -3551,12 +2984,12 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         nextText = "Focused boon returns at 50 piety"
     elseIf panelCommitment == None && originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
         nextText = GetArgonianCulturalNextThresholdText(piety)
-    elseIf panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
+    elseIf panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > LedgerRuntime.TIER_NONE)
         nextText = GetBroadLaneNextThresholdText(originRace)
     endIf
     j = j + ",\"nextText\":\"" + PDV_DevotionRules.JsonSafeString(nextText) + "\""
     j = j + ",\"piety\":" + piety
-    if panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
+    if panelCommitment == None && (pantheonBroadPresentation || GetBroadLaneTierForOrigin(originRace) > LedgerRuntime.TIER_NONE)
         if originRace == ORIGIN_BRETON
             j = j + ",\"pietyLabel\":\"" + PDV_DevotionRules.JsonSafeString("" + GetBroadLaneServiceCount(originRace) + " practice points") + "\""
         elseIf originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_NORD
@@ -3571,7 +3004,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
     j = j + ",\"todayMood\":\"" + PDV_DevotionRules.JsonSafeString(GetPanelTodayMood(pietyToday)) + "\""
     j = j + ",\"driftLabel\":\"" + PDV_DevotionRules.JsonSafeString(GetPanelDriftLabel()) + "\""
     j = j + ",\"originRace\":\"" + PDV_DevotionRules.JsonSafeString(originLabel) + "\""
-    j = j + ",\"patronState\":\"" + PDV_DevotionRules.JsonSafeString(GetPatronStateLabel()) + "\""
+    j = j + ",\"patronState\":\"" + PDV_DevotionRules.JsonSafeString(LedgerRuntime.GetPatronStateLabel()) + "\""
     j = j + ",\"acts\":[" + GetPanelActsJson() + "]"
     j = j + ",\"rites\":[" + GetPanelRitesJson() + "]"
     j = j + ",\"relations\":[" + GetPanelRelationsJson() + "]"
@@ -3618,16 +3051,16 @@ String Function GetDashboardJson()
         shown += 1
     endIf
 
-    if PDV_FLST_AllDeities
+    if LedgerRuntime.PDV_FLST_AllDeities
         Int i = 0
-        Int count = PDV_FLST_AllDeities.GetSize()
+        Int count = LedgerRuntime.PDV_FLST_AllDeities.GetSize()
         while i < count
-            PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+            PDV_DeityBase deity = LedgerRuntime.PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
             if deity && deity != tracked && IsDashboardDeityInOriginRoster(deity, originRace)
                 Form deityForm = deity as Form
                 Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
                 Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
-                if piety > 0.0 || pietyToday != 0.0 || IsNeglectFlagActive(deity) || HasRecentPietyMovement(deityForm)
+                if piety > 0.0 || pietyToday != 0.0 || LedgerRuntime.IsNeglectFlagActive(deity) || LedgerRuntime.HasRecentPietyMovement(deityForm)
                     gods = AppendDashboardGod(gods, deity, "pantheon")
                     shown += 1
                 endIf
@@ -3647,15 +3080,15 @@ Bool Function IsDashboardDeityInOriginRoster(PDV_DeityBase deity, Int originRace
     endIf
 
     if originRace == ORIGIN_NORD
-        return deity == PDV_Kyne || deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar
+        return deity == PDV_Kyne || deity == LedgerRuntime.PDV_Kynareth || deity == PDV_Talos || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Zenithar
     elseIf originRace == ORIGIN_IMPERIAL
-        return deity == PDV_Kynareth || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar
+        return deity == LedgerRuntime.PDV_Kynareth || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Zenithar
     elseIf originRace == ORIGIN_BRETON
-        return deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre
+        return deity == LedgerRuntime.PDV_Kynareth || deity == PDV_Talos || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre
     elseIf originRace == ORIGIN_ALTMER
         return deity == PDV_AuriEl || deity == PDV_Magnus || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
     elseIf originRace == ORIGIN_BOSMER
-        return deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_BaanDar || deity == PDV_Zen
+        return deity == PDV_Yffre || deity == PDV_AuriEl || deity == PDV_Xarxes || deity == PDV_BaanDar || deity == LedgerRuntime.PDV_Zen
     elseIf originRace == ORIGIN_DUNMER
         return deity == PDV_Azura || deity == PDV_Boethiah || deity == PDV_Mephala
     elseIf originRace == ORIGIN_KHAJIIT
@@ -3680,11 +3113,11 @@ String Function AppendDashboardGod(String acc, PDV_DeityBase deity, String syste
     String entry = "{\"god\":\"" + PDV_DevotionRules.JsonSafeString(GetPublicDeityDisplayName(deity)) + "\""
     entry = entry + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(GetPrismaSymbolForDeity(deity)) + "\""
     entry = entry + ",\"system\":\"" + PDV_DevotionRules.JsonSafeString(system) + "\""
-    entry = entry + ",\"state\":\"" + PDV_DevotionRules.JsonSafeString(GetGodRollupState(deity)) + "\""
+    entry = entry + ",\"state\":\"" + PDV_DevotionRules.JsonSafeString(LedgerRuntime.GetGodRollupState(deity)) + "\""
     entry = entry + ",\"pietyToday\":" + pietyToday
     entry = entry + ",\"piety\":" + piety
     entry = entry + ",\"tier\":" + tier
-    entry = entry + ",\"drivers\":[" + GetDeityDriversJson(deity) + "]"
+    entry = entry + ",\"drivers\":[" + LedgerRuntime.GetDeityDriversJson(deity) + "]"
     entry = entry + ",\"week\":[" + BuildWeekNetJson(deityForm) + "]}"
 
     if acc != ""
@@ -3695,27 +3128,6 @@ EndFunction
 
 ; Raw recent-driver entries (newest-last) for one deity. The dashboard aggregates by
 ; reason client-side; each entry carries its signed delta and gain/loss direction.
-String Function GetDeityDriversJson(PDV_DeityBase deity)
-    Form deityForm = deity as Form
-    Int count = StorageUtil.StringListCount(deityForm, "PDV.Driver.Reasons")
-    String out = ""
-    Int i = 0
-    while i < count
-        String reason = StorageUtil.StringListGet(deityForm, "PDV.Driver.Reasons", i)
-        Float delta = StorageUtil.FloatListGet(deityForm, "PDV.Driver.Deltas", i)
-        String dir = "gain"
-        if delta < 0.0
-            dir = "loss"
-        endIf
-        String entry = "{\"reason\":\"" + PDV_DevotionRules.JsonSafeString(reason) + "\",\"count\":1,\"net\":" + delta + ",\"dir\":\"" + dir + "\"}"
-        if out != ""
-            out = out + ","
-        endIf
-        out = out + entry
-        i += 1
-    endWhile
-    return out
-EndFunction
 
 ; Dedicated 7-slot daily-net ring for the Weekly tab. Kept separate from the driver
 ; ring (which caps at 6 FIFO entries and can't reliably span 7 days). One write per
@@ -3735,28 +3147,6 @@ EndFunction
 ; before the reset) plus the rolling driver log windowed to 7 days (catches a
 ; day whose gains and losses netted to zero in the ring). Owner ruling
 ; 2026-07-05: the panel must account for every negative and positive point set.
-Bool Function HasRecentPietyMovement(Form deityForm)
-    Int n = StorageUtil.FloatListCount(deityForm, "PDV.Week.Net")
-    Int i = 0
-    while i < n
-        if StorageUtil.FloatListGet(deityForm, "PDV.Week.Net", i) != 0.0
-            return True
-        endIf
-        i += 1
-    endWhile
-
-    Int today = Utility.GetCurrentGameTime() as Int
-    Int driverDays = StorageUtil.IntListCount(deityForm, "PDV.Driver.Days")
-    Int k = 0
-    while k < driverDays
-        if today - StorageUtil.IntListGet(deityForm, "PDV.Driver.Days", k) <= 7
-            return True
-        endIf
-        k += 1
-    endWhile
-
-    return False
-EndFunction
 
 ; week[] for the Weekly tab: stored daily nets (oldest->newest) plus the live,
 ; not-yet-folded day appended as the newest point. The UI keeps only the last 7.
@@ -3782,7 +3172,7 @@ String Function GetPanelInstrumentJson(Int originRace, Bool hasActiveDeity, Int 
     String kindText = GetPanelInstrumentKind(originRace, hasActiveDeity)
     Float primary = 0.0
     if kindText == "broad"
-        primary = PDV_DevotionRules.ClampValue(piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)
+        primary = PDV_DevotionRules.ClampValue(piety / LedgerRuntime.BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)
     elseIf kindText == "cultural"
         primary = PDV_DevotionRules.ClampValue(piety / 75.0, 0.0, 1.0)
     elseIf kindText == "piety"
@@ -3834,7 +3224,7 @@ String Function GetPanelInstrumentKind(Int originRace, Bool hasActiveDeity)
     if hasActiveDeity
         return "piety"
     endIf
-    if IsPantheonBroadPoolPresentationActive(originRace) || GetBroadLaneTierForOrigin(originRace) > TIER_NONE
+    if LedgerRuntime.IsPantheonBroadPoolPresentationActive(originRace) || GetBroadLaneTierForOrigin(originRace) > LedgerRuntime.TIER_NONE
         return "broad"
     endIf
     if originRace == ORIGIN_KHAJIIT
@@ -3873,7 +3263,7 @@ EndFunction
 String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Float piety)
     if kindText == "broad"
         if originRace == ORIGIN_IMPERIAL || originRace == ORIGIN_NORD
-            return "{\"standing\":" + PDV_DevotionRules.FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + ",\"scratch\":" + PDV_DevotionRules.FormatTwoDecimals(GetBroadLaneScratchValue(originRace)) + ",\"pool\":\"" + PDV_DevotionRules.JsonSafeString(GetActiveBroadPantheonPoolId()) + "\",\"baseline\":\"" + PDV_DevotionRules.JsonSafeString(GetBroadLaneDisplayName(originRace)) + "\"}"
+            return "{\"standing\":" + PDV_DevotionRules.FormatTwoDecimals(GetBroadLaneStandingValue(originRace)) + ",\"scratch\":" + PDV_DevotionRules.FormatTwoDecimals(GetBroadLaneScratchValue(originRace)) + ",\"pool\":\"" + PDV_DevotionRules.JsonSafeString(LedgerRuntime.GetActiveBroadPantheonPoolId()) + "\",\"baseline\":\"" + PDV_DevotionRules.JsonSafeString(GetBroadLaneDisplayName(originRace)) + "\"}"
         endIf
         return "{\"acts\":" + GetBroadLaneServiceCount(originRace) + "}"
     endIf
@@ -3889,7 +3279,7 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
         String standing = "Lunar Lattice"
         PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(focus)
         if focusDeity
-            standing = GetPublicTierBand(GetTier(focusDeity))
+            standing = GetPublicTierBand(LedgerRuntime.GetTier(focusDeity))
         endIf
         String focusLabel = GetKhajiitFocusLabel(focus)
         String strengthLabel = GetKhajiitFocusLabel(GetLunarPresidingFocus(phase))
@@ -3906,7 +3296,7 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
             voidActive = PDV_ArgonianHistSubstrate.IsVoidFullyActive()
         endIf
         Float culturalMetric = 0.0
-        Int culturalTier = TIER_NONE
+        Int culturalTier = LedgerRuntime.TIER_NONE
         if PDV_ArgonianHistSubstrate
             culturalMetric = PDV_ArgonianHistSubstrate.GetMetric()
             culturalTier = PDV_ArgonianHistSubstrate.GetSubstrateTier()
@@ -3954,7 +3344,7 @@ String Function GetPanelPatronNote()
         endIf
         return "A pact binds you; lesser devotions fall quiet."
     endIf
-    if IsBroadWorshipActive()
+    if LedgerRuntime.IsBroadWorshipActive()
         return "You keep the broad rites of your people, with no single patron yet named."
     endIf
     if IsFocusedPantheonBoonSuspended()
@@ -3984,7 +3374,7 @@ String Function GetPanelDriftLabel()
     if GetActiveDaedricPactPath()
         return "Steady"
     endIf
-    if GetPatronState() == PATRON_STATE_ACTIVE
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE
         return "Steady"
     endIf
     return "Quiet"
@@ -3996,7 +3386,7 @@ String Function GetPanelActsJson()
     if actsPact
         items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("daedric", "neutral", "Keep the pact", "Act in keeping with " + actsPact.DeityName + " to hold this pact."))
     elseIf _activeDeity
-        Float today = GetPietyToday(_activeDeity)
+        Float today = LedgerRuntime.GetPietyToday(_activeDeity)
         if today != 0.0
             String tone = "good"
             if today < 0.0
@@ -4099,7 +3489,7 @@ String Function GetPanelRelationsJson()
         items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("sithis", voidTone, "Void relation", GetArgonianVoidStrengthLabel(PDV_ArgonianHistSubstrate.GetVoidRelation())))
     endIf
 
-    if IsBroadWorshipActive()
+    if LedgerRuntime.IsBroadWorshipActive()
         items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("", "neutral", "", "You keep the broad rites of your people, with no single patron named."))
     endIf
 
@@ -4112,7 +3502,7 @@ EndFunction
 
 String Function GetPanelDebugJson()
     String j = "{\"Favor\":\"" + PDV_DevotionRules.JsonSafeString(FavorRuntime.GetPlayerMcmFavorLine()) + "\""
-    j = j + ",\"Neglect\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerMcmNeglectLine()) + "\""
+    j = j + ",\"Neglect\":\"" + PDV_DevotionRules.JsonSafeString(LedgerRuntime.GetPlayerMcmNeglectLine()) + "\""
     j = j + ",\"Curse\":\"" + PDV_DevotionRules.JsonSafeString(GetPlayerCursePublicLabel()) + "\""
     j = j + "}"
     return j
@@ -4217,11 +3607,11 @@ String Function GetArgonianCulturalPracticeLabel()
         return "Practice quiet"
     endIf
     Int tierValue = PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    if tierValue >= TIER_CHAMPION
+    if tierValue >= LedgerRuntime.TIER_CHAMPION
         return "Rooted Adaptation"
-    elseIf tierValue >= TIER_DEVOTED
+    elseIf tierValue >= LedgerRuntime.TIER_DEVOTED
         return "River-Kept Practice"
-    elseIf tierValue >= TIER_SEEKER
+    elseIf tierValue >= LedgerRuntime.TIER_SEEKER
         return "Root Memory"
     endIf
     return "Practice quiet"
@@ -4310,75 +3700,8 @@ Bool Function IsP2BookNoticeReason(String reason)
     return PDV_DevotionRules.StringContainsToken(reason, "po3_book")
 EndFunction
 
-Function AwardCuratedSignal(PDV_DeityBase deity, Int signalType, Form contextRef)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] AwardCuratedSignal skipped: no deity supplied.")
-        endIf
-        return
-    endIf
 
-    Float delta = deity.ScoreCuratedSignal(signalType, contextRef)
-    if delta == 0.0
-        if GetDebugLevel() >= 3
-            Debug.Trace("[PDV] AwardCuratedSignal: " + deity.DeityName + " ignored signal " + signalType)
-        endIf
-        return
-    endIf
 
-    AwardPiety(deity, delta, CuratedSignalDriverReason(deity, signalType))
-
-    if GetDebugLevel() >= 2
-        Debug.Trace("[PDV] AwardCuratedSignal: " + deity.DeityName + " signal " + signalType + " delta " + delta)
-    endIf
-EndFunction
-
-Function AwardCuratedSignalScaled(PDV_DeityBase deity, Int signalType, Form contextRef, Float multiplier)
-    if multiplier <= 0.0
-        return
-    endIf
-
-    if multiplier == 1.0
-        AwardCuratedSignal(deity, signalType, contextRef)
-        return
-    endIf
-
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] AwardCuratedSignalScaled skipped: no deity supplied.")
-        endIf
-        return
-    endIf
-
-    Float delta = deity.ScoreCuratedSignal(signalType, contextRef)
-    if delta == 0.0
-        if GetDebugLevel() >= 3
-            Debug.Trace("[PDV] AwardCuratedSignalScaled: " + deity.DeityName + " ignored signal " + signalType)
-        endIf
-        return
-    endIf
-
-    Float scaledDelta = delta * multiplier
-    AwardPiety(deity, scaledDelta, CuratedSignalDriverReason(deity, signalType))
-
-    if GetDebugLevel() >= 2
-        Debug.Trace("[PDV] AwardCuratedSignalScaled: " + deity.DeityName + " signal " + signalType + " delta " + scaledDelta + " multiplier " + multiplier)
-    endIf
-EndFunction
-
-Function AwardCuratedSignalByIndex(Int deityIndex, Int signalType)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
-    if !deity
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] AwardCuratedSignalByIndex failed: no deity with index " + deityIndex)
-        endIf
-        return
-    endIf
-
-    AwardCuratedSignal(deity, signalType, None)
-EndFunction
 
 Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     PDV_DaedricPathBase path = GetDaedricPathAtListIndex(pathIndex)
@@ -4407,7 +3730,7 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     endIf
     ; Feed the offer recency gate (HasRecentCommitmentSignalDays) so the formal Prince
     ; offer can fire once enough distinct signal-days accrue.
-    RecordCommitmentSignalDay(path)
+    LedgerRuntime.RecordCommitmentSignalDay(path)
 
     Int tierBefore = path.GetStoredTier()
     path.AddCommitmentSignal(sourceId)
@@ -4540,7 +3863,7 @@ String Function DebugRunSignalFloorSmokeScenario(Int scenarioIndex)
     if scenarioIndex <= 0
         String reloadText = DebugReloadQuestMatrix()
         StorageUtil.SetIntValue(None, "PDV.LD.Version", 0)
-        EnsureLikesDislikesTable()
+        LedgerRuntime.EnsureLikesDislikesTable()
         Trace(1, "SignalFloorSmoke debug reload completed.")
         return "Signal-floor baseline reloaded. " + reloadText
     elseIf scenarioIndex == 1
@@ -4609,7 +3932,7 @@ EndFunction
 
 String Function DebugRouteSignalFloorLikesDislikes()
     StorageUtil.SetIntValue(None, "PDV.LD.Version", 0)
-    EnsureLikesDislikesTable()
+    LedgerRuntime.EnsureLikesDislikesTable()
     DebugFireDislike(GetQuestReactionDeity("Kyne"), 303)
     DebugFireDislike(GetQuestReactionDeity("Arkay"), 366)
     Trace(1, "SignalFloorSmoke LD v15 debug fired events 303 and 366.")
@@ -4655,29 +3978,8 @@ Bool Function IsBlockedDaedricSourceId(String sourceId)
     return sourceId == "" || sourceId == "generic" || sourceId == "generic_combat" || sourceId == "generic_helping" || sourceId == "generic_spellcasting" || sourceId == "ordinary_travel" || sourceId == "ordinary_friendship" || sourceId == "ordinary_service" || sourceId == "debug_generic" || sourceId == "mcm_generic_probe" || sourceId == "eventbus_201_mcm_generic_probe"
 EndFunction
 
-Float Function GetPiety(PDV_DeityBase deity)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        return 0.0
-    endIf
-    return StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-EndFunction
 
-Float Function GetPietyToday(PDV_DeityBase deity)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        return 0.0
-    endIf
-    return StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
-EndFunction
 
-Int Function GetTier(PDV_DeityBase deity)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        return TIER_NONE
-    endIf
-    return StorageUtil.GetFloatValue(deityForm, "PDV.Tier") as Int
-EndFunction
 
 ; @module: FAVOR-prereq
 ; Public accessor so extracted modules (FAVOR) can read the active patron deity
@@ -4687,31 +3989,8 @@ PDV_DeityBase Function GetActiveDeity()
     return _activeDeity
 EndFunction
 
-Int Function GetActiveDeityIndex()
-    if _activeDeity
-        return _activeDeity.DeityIndex
-    endIf
-    return -1
-EndFunction
 
-Int Function GetDeityCount()
-    if !PDV_FLST_AllDeities
-        return 0
-    endIf
-    return PDV_FLST_AllDeities.GetSize()
-EndFunction
 
-PDV_DeityBase Function GetDeityAtListIndex(Int listIndex)
-    if listIndex < 0 || !PDV_FLST_AllDeities
-        return None
-    endIf
-
-    if listIndex >= PDV_FLST_AllDeities.GetSize()
-        return None
-    endIf
-
-    return PDV_FLST_AllDeities.GetAt(listIndex) as PDV_DeityBase
-EndFunction
 
 Int Function GetDaedricPathCount()
     if !PDV_FLST_DaedricPaths_All
@@ -4745,7 +4024,7 @@ PDV_DaedricPathBase Function GetActiveDaedricPactPath()
     Int count = GetDaedricPathCount()
     while i < count
         PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
-        if path && path.GetDeityForm() == activeForm && path.GetStoredTier() > TIER_NONE
+        if path && path.GetDeityForm() == activeForm && path.GetStoredTier() > LedgerRuntime.TIER_NONE
             return path
         endIf
         i += 1
@@ -4764,7 +4043,7 @@ PDV_DaedricPathBase Function GetTopPrePactDaedricPath()
     Int count = GetDaedricPathCount()
     while i < count
         PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
-        if path && path.GetStoredTier() == TIER_NONE
+        if path && path.GetStoredTier() == LedgerRuntime.TIER_NONE
             Float piety = path.GetStoredPiety()
             ; Only a Prince past the pre-pact notice threshold surfaces (panel "watching"
             ; badge + the "taken notice" beat). Below it, the Prince accrues in silence.
@@ -4871,7 +4150,7 @@ Function ProcessPendingDaedricPrePactNotices()
         return
     endIf
 
-    if topPath.GetStoredTier() != TIER_NONE || topPath.GetStoredPiety() < topPath.DAEDRIC_PREPACT_NOTICE_PIETY
+    if topPath.GetStoredTier() != LedgerRuntime.TIER_NONE || topPath.GetStoredPiety() < topPath.DAEDRIC_PREPACT_NOTICE_PIETY
         return
     endIf
 
@@ -4917,133 +4196,41 @@ Function ProcessPendingDaedricActivation()
     endIf
 EndFunction
 
-PDV_DeityBase Function GetDeityByName(String deityName)
-    if deityName == "" || !PDV_FLST_AllDeities
-        return None
-    endIf
 
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-    while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-        if deity && deity.DeityName == deityName
-            return deity
-        endIf
-        i += 1
-    endWhile
 
-    return None
-EndFunction
 
-Float Function GetPietyByIndex(Int deityIndex)
-    return GetPiety(GetDeityByIndex(deityIndex))
-EndFunction
 
-PDV_DeityBase Function GetShrinePrayerDeityByName(String deityName)
-    if deityName == ""
-        return None
-    endIf
-
-    if deityName == "Kyne"
-        return PDV_Kyne
-    elseIf deityName == "Kynareth"
-        return PDV_Kynareth
-    elseIf deityName == "Khenarthi"
-        return PDV_Khenarthi
-    elseIf deityName == "Akatosh"
-        return PDV_Akatosh
-    elseIf deityName == "Auri-El" || deityName == "Auriel"
-        return PDV_AuriEl
-    elseIf deityName == "Alkosh"
-        return PDV_Alkosh
-    elseIf deityName == "Arkay"
-        return PDV_Arkay
-    elseIf deityName == "Tu'whacca" || deityName == "Tuwhacca"
-        return PDV_Tuwhacca
-    elseIf deityName == "Zenithar"
-        return PDV_Zenithar
-    elseIf deityName == "Z'en" || deityName == "Zen"
-        return PDV_Zen
-    elseIf deityName == "Mara"
-        return PDV_Mara
-    elseIf deityName == "Dibella"
-        return PDV_Dibella
-    elseIf deityName == "Julianos"
-        return PDV_Julianos
-    elseIf deityName == "Stendarr"
-        return PDV_Stendarr
-    elseIf deityName == "Talos"
-        return PDV_Talos
-    endIf
-
-    return GetDeityByName(deityName)
-EndFunction
-
-Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel, String sourceId)
-    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && !IsImperialVampireStateActive() && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Talos")
-        StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
-        Trace(1, "Imperial broad Talos roster unlocked by explicit prayer: " + sourceId)
-    endIf
-    BeginBroadPantheonEvent("shrine_prayer_" + sourceId)
-    Bool awarded = False
-    awarded = AwardShrinePrayerToDeityName(primaryDeityName, shrineLabel, sourceId) || awarded
-    awarded = AwardShrinePrayerToDeityName(secondaryDeityName, shrineLabel, sourceId) || awarded
-    awarded = AwardShrinePrayerToDeityName(tertiaryDeityName, shrineLabel, sourceId) || awarded
-    FlushBroadPantheonEvent()
-
-    if awarded
-        HandleSubstrateShrinePrayer(primaryDeityName, secondaryDeityName, tertiaryDeityName, sourceId)
-        String label = ResolveShrinePrayerJournalLabel(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel)
-        AppendBookOfDaysEntry("You offered prayer at " + label + "'s shrine.", Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, "Shrine prayer answered")
-    endIf
-EndFunction
-
-Function HandleSubstrateShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String sourceId)
-    Int origin = GetPlayerOriginRaceIndex()
-    if origin == ORIGIN_IMPERIAL && PDV_ImperialAncestorSubstrate && !IsImperialVampireStateActive()
-        PDV_DeityBase primary = GetShrinePrayerDeityByName(primaryDeityName)
-        PDV_DeityBase secondary = GetShrinePrayerDeityByName(secondaryDeityName)
-        PDV_DeityBase tertiary = GetShrinePrayerDeityByName(tertiaryDeityName)
-        if IsDeityEligibleForBroadPantheon(primary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(secondary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(tertiary, BROAD_PANTHEON_IMPERIAL)
-            AwardImperialAncestorSpinePulse(1.0, "divine_prayer_" + sourceId)
-        endIf
-    elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
-        if GetShrinePrayerDeityByName(primaryDeityName) == PDV_AuriEl || GetShrinePrayerDeityByName(secondaryDeityName) == PDV_AuriEl || GetShrinePrayerDeityByName(tertiaryDeityName) == PDV_AuriEl
-            AwardAltmerAncestorSpinePulse(1.0, "auriel_shrine_rite_" + sourceId)
-        endIf
-    endIf
-EndFunction
 
 String Function ResolveShrinePrayerJournalLabel(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel)
     Int originRace = GetPlayerOriginRaceIndex()
 
-    if originRace == ORIGIN_NORD && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Kyne")
+    if originRace == ORIGIN_NORD && LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Kyne")
         return "Kyne"
     endIf
 
     if originRace == ORIGIN_KHAJIIT
-        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Khenarthi")
+        if LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Khenarthi")
             return "Khenarthi"
         endIf
-        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Alkosh")
+        if LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Alkosh")
             return "Alkosh"
         endIf
     endIf
 
-    if originRace == ORIGIN_ALTMER && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Auri-El")
+    if originRace == ORIGIN_ALTMER && LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Auri-El")
         return "Auri-El"
     endIf
 
     if originRace == ORIGIN_BOSMER
-        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Auri-El")
+        if LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Auri-El")
             return "Auri-El"
         endIf
-        if ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Z'en")
+        if LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Z'en")
             return "Z'en"
         endIf
     endIf
 
-    if originRace == ORIGIN_REDGUARD && ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Tu'whacca")
+    if originRace == ORIGIN_REDGUARD && LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Tu'whacca")
         return "Tu'whacca"
     endIf
 
@@ -5053,143 +4240,19 @@ String Function ResolveShrinePrayerJournalLabel(String primaryDeityName, String 
     return NormalizePublicDeityDisplayText(primaryDeityName)
 EndFunction
 
-Bool Function ShrinePrayerHasAlias(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String aliasName)
-    return primaryDeityName == aliasName || secondaryDeityName == aliasName || tertiaryDeityName == aliasName
-EndFunction
 
-Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel, String sourceId)
-    PDV_DeityBase deity = GetShrinePrayerDeityByName(deityName)
-    if !deity
-        if deityName != "" && GetDebugLevel() >= 1
-            Debug.Trace("[PDV] Shrine prayer skipped unknown deity alias " + deityName + " source " + sourceId)
-        endIf
-        return False
-    endIf
 
-    ; Divine shrine prayers are ambient world clicks; only emit PDV piety/journal
-    ; movement when that deity belongs to the player's cultural roster. An
-    ; off-roster patron restored from an older save remains eligible at the
-    ; reduced foreign rate so the relationship is not stranded.
-    Bool grandfatheredPatron = IsGrandfatheredOffRosterPatron(deity)
-    if !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex()) && !grandfatheredPatron
-        if GetDebugLevel() >= 2
-            Debug.Trace("[PDV] Shrine prayer skipped outside origin roster: " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
-        endIf
-        return False
-    endIf
-
-    if !ConsumeShrinePrayerCredit(deity, sourceId)
-        return False
-    endIf
-
-    Float shrineAmount = 2.0
-    if grandfatheredPatron
-        shrineAmount = shrineAmount * GetQuestReactionStanceMultiplier(GetQuestReactionStance(GetPublicDeityDisplayName(deity), deity))
-    endIf
-    AwardPietyInternal(deity, shrineAmount, True, "shrine_prayer_" + sourceId, !grandfatheredPatron)
-    if GetDebugLevel() >= 2
-        Debug.Trace("[PDV] Shrine prayer awarded " + deity.DeityName + " from " + shrineLabel + " source " + sourceId)
-    endIf
-    return True
-EndFunction
-
-Float Function GetPietyTodayByIndex(Int deityIndex)
-    return GetPietyToday(GetDeityByIndex(deityIndex))
-EndFunction
 
 Function SetDebugLevel(Int levelValue)
-    if PDV_GLO_DebugLevel
-        PDV_GLO_DebugLevel.SetValue(PDV_DevotionRules.ClampInt(levelValue, 0, 3) as Float)
+    if LedgerRuntime.PDV_GLO_DebugLevel
+        LedgerRuntime.PDV_GLO_DebugLevel.SetValue(PDV_DevotionRules.ClampInt(levelValue, 0, 3) as Float)
     endIf
 EndFunction
 
-Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False)
-    if newDeity == _activeDeity
-        return
-    endIf
 
-    ; Selection boundary: ordinary deity commitments must belong to the
-    ; cultural roster or a currently valid formal-offer lane. This retains
-    ; Imperial Talos and Breton Hidden Art's dynamic eligibility while blocking
-    ; accidental off-roster assignment. RestoreActiveDeityFromStoredPatron
-    ; deliberately bypasses this setter for save-safe grandfathering.
-    if newDeity && !allowOffRosterDebug && !IsDashboardDeityInOriginRoster(newDeity, GetPlayerOriginRaceIndex()) && !UsesFormalCommitmentOffersForDeity(newDeity)
-        Trace(1, "SetActiveDeity blocked off-roster commitment to " + newDeity.DeityName)
-        return
-    endIf
 
-    ; Exclusivity (data-layer): committing a patron severs an active Prince pact.
-    ; Guarded on newDeity != None so SetActiveDeity(None) (the patron-teardown path,
-    ; incl. the Prince-commit sever above) cannot re-enter this and double-clear.
-    if newDeity != None
-        PDV_DaedricPathBase priorPact = GetActiveDaedricPactPath()
-        if priorPact
-            priorPact.ClearLiveDaedricPactSpells()
-            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-            SurfaceSwitchSeverance("prince_to_patron", priorPact.DeityName)
-        endIf
-    endIf
 
-    if _activeDeity
-        _activeDeity.OnPatronEnd()
-    endIf
 
-    _activeDeity = newDeity
-    FavorRuntime.ClearActiveFavor("patron_state_change")
-
-    if _activeDeity
-        EnsureDeityState(_activeDeity)
-        _activeDeity.OnPatronStart()
-        SetPatronState(PATRON_STATE_ACTIVE)
-    else
-        SetPatronState(PATRON_STATE_UNSET)
-    endIf
-
-    UpdatePatronDeityGlobal()
-    RefreshPatronMirrors()
-    RequestPanelRefresh()
-EndFunction
-
-Function SetBroadWorship()
-    if _activeDeity
-        _activeDeity.OnPatronEnd()
-    endIf
-
-    _activeDeity = None
-    FavorRuntime.ClearActiveFavor("patron_state_change")
-    SetPatronState(PATRON_STATE_BROAD)
-    UpdatePatronDeityGlobal()
-    RefreshPatronMirrors()
-    RequestPanelRefresh()
-EndFunction
-
-Int Function GetPatronState()
-    Int storedState = StorageUtil.GetIntValue(None, "PDV.PatronState")
-    if storedState == PATRON_STATE_BROAD || storedState == PATRON_STATE_ACTIVE
-        return storedState
-    endIf
-
-    if _activeDeity
-        return PATRON_STATE_ACTIVE
-    endIf
-
-    return PATRON_STATE_UNSET
-EndFunction
-
-String Function GetPatronStateLabel()
-    Int patronState = GetPatronState()
-    if patronState == PATRON_STATE_ACTIVE
-        return "Active patron"
-    elseIf patronState == PATRON_STATE_BROAD
-        return "Broad worship"
-    endIf
-
-    return "Unset"
-EndFunction
-
-Bool Function IsBroadWorshipActive()
-    return GetPatronState() == PATRON_STATE_BROAD
-EndFunction
 
 Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStartContext, Bool sleepStartedOutside, String reason)
     if wasInterrupted
@@ -5307,8 +4370,8 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
             ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
             if eventType == 331 && PDV_Magnus && ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
-                AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
-                SurfaceReservedSignal(PDV_Magnus, "The design holds", "marks an enchantment made as the art demands.")
+                LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+                LedgerRuntime.SurfaceReservedSignal(PDV_Magnus, "The design holds", "marks an enchantment made as the art demands.")
             endIf
         elseIf eventType == 340 || eventType == 341 || eventType == 342
             Float studyMetricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
@@ -5321,7 +4384,7 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT
             ; dawn to decide whether the ledger noticed yesterday. Independent of the spine credit
             ; above -- the stamp records that study HAPPENED, whether or not it claimed the day.
-            StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", GetDevotionalDay() + 2)
+            StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", LedgerRuntime.GetDevotionalDay() + 2)
         endIf
     endIf
 EndFunction
@@ -5366,9 +4429,9 @@ Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
     ; default-0 CandidateDay against raw game day 0 -- the same day-0 class as B13's shrine
     ; credit, here silently refusing the first candidacy sleep of a new save. Devotional
     ; +2 stamp: never 0, and it no longer splits one night's sleep across two days.
-    Int today = GetDevotionalDay() + 2
+    Int today = LedgerRuntime.GetDevotionalDay() + 2
     Int candidateId = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateFormID")
-    Int candidateDay = ReadZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
+    Int candidateDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
     Int candidateCount = StorageUtil.GetIntValue(None, keyPrefix + ".CandidateCount")
 
     if candidateId != sleepCellId
@@ -5379,7 +4442,7 @@ Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
 
     candidateCount += 1
     StorageUtil.SetIntValue(None, keyPrefix + ".CandidateFormID", sleepCellId)
-    WriteZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp(keyPrefix + ".CandidateDay")
     StorageUtil.SetIntValue(None, keyPrefix + ".CandidateCount", candidateCount)
 
     if candidateCount < 3
@@ -5505,7 +4568,7 @@ Function ApplyOrcTrialOfIron(Actor playerRef, Int index)
     StorageUtil.SetFloatValue(None, "PDV.OrcTrial.LastRiteTime", Utility.GetCurrentGameTime())
     ; Surface in both Prisma spaces: a small Malacath pulse (Ledger driver; the 7-day
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    AwardPiety(PDV_Malacath, 0.5, "Took up the Trial of Iron")
+    LedgerRuntime.AwardPiety(PDV_Malacath, 0.5, "Took up the Trial of Iron")
     AppendBookOfDaysEntry("You took up a discipline in the Trial of Iron. The Code is held in iron.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
     SendPrismaToast("malacath", "good", "Trial of Iron", "You take up a discipline of the Code. The Trial of Iron holds you to it.")
     Trace(2, "Orc Trial of Iron discipline applied: " + index)
@@ -5655,7 +4718,7 @@ Function ApplyRedguardRemembering(Actor playerRef, Int index)
     StorageUtil.SetFloatValue(None, "PDV.RedRemember.LastRiteTime", Utility.GetCurrentGameTime())
     ; Surface in both Prisma spaces: a small Tu'whacca pulse (Ledger driver; the 7-day
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    AwardPiety(PDV_Tuwhacca, 0.5, "Took up the Remembering of Names")
+    LedgerRuntime.AwardPiety(PDV_Tuwhacca, 0.5, "Took up the Remembering of Names")
     AppendBookOfDaysEntry("You remembered a name of the old line. The dead are kept in the telling.", Utility.GetCurrentGameTime() as Int, "substrate.act", "tu-whacca", False)
     SendPrismaToast("tuwhacca", "good", "Remembering of Names", "The observance settles into you.")
     Trace(2, "Redguard Remembering observance applied: " + index)
@@ -5743,7 +4806,7 @@ Bool Function TryAltmerDisciplinesRite(Actor playerRef, String reason)
 
     ; GetDevotionalDay can be -1 before the first 06:00 boundary. Reserve zero
     ; exactly as the shared substrate stamp does so a first-day decline sticks.
-    Int todayStamp = GetDevotionalDay() + 2
+    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
     Int lastDeclineStamp = StorageUtil.GetIntValue(None, "PDV.Alt.Disc.LastDeclineDay")
     if lastDeclineStamp > 0 && (todayStamp - lastDeclineStamp) < 3
         return false
@@ -5784,7 +4847,7 @@ Function ApplyAltmerDiscipline(Actor playerRef, Int index)
     StorageUtil.SetFloatValue(None, "PDV.Alt.Disc.LastRiteTime", Utility.GetCurrentGameTime())
     ; Surface in both Prisma spaces: a small Auri-El pulse (Ledger driver; the 7-day
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    AwardPiety(PDV_AuriEl, 0.5, "Set a Discipline of Return")
+    LedgerRuntime.AwardPiety(PDV_AuriEl, 0.5, "Set a Discipline of Return")
     AppendBookOfDaysEntry("You set a discipline of the Return. The road back is walked daily.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False)
     SendPrismaToast("auriel", "good", "Discipline of Return", "It holds while you hold to the path.")
     Trace(2, "Altmer Discipline of Return applied: " + index)
@@ -5878,7 +4941,7 @@ Function HandleAltmerSleepEvents(Actor playerRef, String reason)
     if PDV_Magnus
         if _activeDeity == PDV_Magnus
             AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
-        elseIf GetTier(PDV_Magnus) >= TIER_SEEKER
+        elseIf LedgerRuntime.GetTier(PDV_Magnus) >= LedgerRuntime.TIER_SEEKER
             AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier * 0.5)
         endIf
     endIf
@@ -5907,11 +4970,11 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
     if GetBretonTraditionValue() != BRETON_TRADITION_HIDDEN_ART
         return
     endIf
-    if PDV_Julianos
-        AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    if LedgerRuntime.PDV_Julianos
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Julianos, LedgerRuntime.PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     endIf
-    if PDV_Mara
-        AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
+    if LedgerRuntime.PDV_Mara
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
     AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, "event_314", "sleep_in_bed_" + reason)
     SurfaceP2AmbientProgressNotice("Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
@@ -5964,7 +5027,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
 
     ; Every bed cadence uses the shared 06:00 devotional day, encoded with
     ; +2 so day zero cannot be mistaken for an unset legacy value.
-    Int todayStamp = GetDevotionalDay() + 2
+    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
     Int declaredId = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclaredFormID")
     if declaredId != 0 && sleepCellId == declaredId
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
@@ -5972,12 +5035,12 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
         HandleArgonianBedOfChoiceReturn("declared_" + reason)
         if PDV_SPEL_ArgonianRootedRest && StorageUtil.GetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount") >= 12
-            Int rootedRestStamp = GetDevotionalDay() + 2
-            if ReadZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay") != rootedRestStamp
-                WriteZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay")
+            Int rootedRestStamp = LedgerRuntime.GetDevotionalDay() + 2
+            if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay") != rootedRestStamp
+                LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay")
                 PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
                 SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
-                Trace(1, "[PDV][ARGONIAN_ROOTED_REST] granted day=" + GetDevotionalDay())
+                Trace(1, "[PDV][ARGONIAN_ROOTED_REST] granted day=" + LedgerRuntime.GetDevotionalDay())
             else
                 Trace(2, "Argonian Rooted Rest suppressed: already granted this devotional day")
             endIf
@@ -6228,7 +5291,7 @@ Function AwardArgonianSacredWater(Int siteFormId)
     PDV_ArgonianHistSubstrate.StampHistMaintenance("sacred_water_" + siteFormId)
     PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_sacred_water", "sacred_water_" + siteFormId)
     if PDV_Hist
-        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
     endIf
     Debug.MessageBox("The water remembers. For one slow breath you stand in the marsh again, and the root speaks your name.")
     SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
@@ -6292,8 +5355,8 @@ Function TryArgonianNearWaterMaintenance()
         return
     endIf
 
-    Int pdvEncodedWaterDay = GetDevotionalDay() + 2
-    if ReadZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay") == pdvEncodedWaterDay
+    Int pdvEncodedWaterDay = LedgerRuntime.GetDevotionalDay() + 2
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay") == pdvEncodedWaterDay
         return
     endIf
 
@@ -6316,7 +5379,7 @@ Function TryArgonianNearWaterMaintenance()
         return
     endIf
 
-    WriteZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay")
     StorageUtil.SetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime", 0.0)
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianNearWater")
     Float metricBefore = PDV_ArgonianHistSubstrate.GetMetric()
@@ -6325,7 +5388,7 @@ Function TryArgonianNearWaterMaintenance()
     RefreshArgonianHistPosture("near_water")
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     if PDV_Hist
-        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
     SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The water remembers you.", "journal", GetArgonianCulturalPracticeLabel())
     RequestPanelRefresh()
@@ -6347,7 +5410,7 @@ Function HandleArgonianSapVision()
     PDV_ArgonianHistSubstrate.StampHistMaintenance("sleeping_tree_sap")
     PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_hist", "sleeping_tree_sap")
     if PDV_Hist
-        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
     endIf
     Debug.MessageBox("The sap is strange and far from home, but it resonates, and the Hist stirs within.")
     Trace(2, "Sleeping Tree Sap vision fired.")
@@ -6417,13 +5480,13 @@ Function HandleArgonianShadowscaleKill(Actor playerRef)
     endIf
 
     ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if ReadZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay") == (LedgerRuntime.GetDevotionalDay() + 2)
         return
     endIf
 
     PDV_SPEL_ArgonianShadowscaleVeil.Cast(playerRef, playerRef)
     SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
-    WriteZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay")
     Trace(2, "Shadowscale veil fired on sneak kill.")
 EndFunction
 
@@ -6432,8 +5495,8 @@ EndFunction
 Function TryArgonianPostureDream(String reason)
     ; fix-plan 4.2: the dream cadence is sleep-triggered, so a raw-midnight day boundary
     ; crossed mid-sleep was exactly the case that let it fire two nights running.
-    Int today = GetDevotionalDay() + 2
-    Int lastDreamDay = ReadZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
+    Int today = LedgerRuntime.GetDevotionalDay() + 2
+    Int lastDreamDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
     if lastDreamDay > 0 && (today - lastDreamDay) < 2
         return
     endIf
@@ -6453,7 +5516,7 @@ Function TryArgonianPostureDream(String reason)
     String dreamText = PDV_ArgonianHistSubstrate.GetDreamTextForPosture(posture)
     SendPrismaSubstrateToast("ArgonianHist", "dream", dreamText, "hist", PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     StorageUtil.SetIntValue(None, "PDV.ArgDream.Armed", 0)
-    WriteZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
     Trace(2, "Argonian posture dream fired (" + PDV_ArgonianHistSubstrate.GetHistPostureLabel() + ", " + reason + ")")
 EndFunction
 
@@ -6494,13 +5557,13 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
     ; fix-plan 4.2: the hearth decline cadence is a devotional-day cadence like every
     ; other sleep rite, not a raw-midnight one -- a midnight crossed mid-sleep must not
     ; shorten the 3-day re-prompt window. ReadZeroReserved migrates the legacy +1 stamp.
-    Int todayStamp = GetDevotionalDay() + 2
+    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
     Int declaredId = StorageUtil.GetIntValue(None, "PDV.BosHearth.DeclaredCell")
     if declaredId == 0
         if !PDV_MESG_BosmerMarkHearth
             return false
         endIf
-        Int declinedDay = ReadZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
+        Int declinedDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
         if declinedDay > 0 && (todayStamp - declinedDay) < 3
             return false
         endIf
@@ -6517,7 +5580,7 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount"))
             SendPrismaToast("yffre", "good", "Hearth declared", "This is where your stories come home now.")
         else
-            WriteZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
+            LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
         endIf
         return true
     endIf
@@ -6668,8 +5731,8 @@ EndFunction
 ; bookkeeping keys.
 Function TryBosmerPathDream(String reason)
     ; fix-plan 4.2: sleep-triggered cadence -- devotional day, not raw midnight.
-    Int today = GetDevotionalDay() + 2
-    Int lastDreamDay = ReadZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
+    Int today = LedgerRuntime.GetDevotionalDay() + 2
+    Int lastDreamDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
     if lastDreamDay > 0 && (today - lastDreamDay) < 2
         return
     endIf
@@ -6685,7 +5748,7 @@ Function TryBosmerPathDream(String reason)
 
     SendPrismaToast("yffre", "neutral", "Green dream", GetBosmerDreamText(GetBosmerPathState()))
     StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 0)
-    WriteZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
     Trace(2, "Bosmer path dream fired (" + reason + ")")
 EndFunction
 
@@ -6937,12 +6000,12 @@ Function TryBosmerScalesAtRest(Actor playerRef)
     endIf
 
     ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if ReadZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay") == (LedgerRuntime.GetDevotionalDay() + 2)
         return
     endIf
 
     PDV_SPEL_BosmerScalesAtRest.Cast(playerRef, playerRef)
-    WriteZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay")
     SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
     Trace(2, "Bosmer Scales at Rest fired.")
 EndFunction
@@ -6975,12 +6038,12 @@ Function TryBosmerBaanDarGap(Actor playerRef)
     endIf
 
     ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if ReadZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay") == (LedgerRuntime.GetDevotionalDay() + 2)
         return
     endIf
 
     PDV_SPEL_BosmerBaanDarGap.Cast(playerRef, playerRef)
-    WriteZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay")
     HandleBosmerBanditRoadReversal("baandar_gap_low_health")
     SendPrismaToast("baandar", "good", "Baan Dar opens the gap", "Run.")
     Trace(2, "Bosmer Baan Dar Opens the Gap fired.")
@@ -7004,7 +6067,7 @@ Function TryArgonianSithisNearDeathBurst(Actor playerRef)
     endIf
 
     ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if ReadZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay") == (LedgerRuntime.GetDevotionalDay() + 2)
         return
     endIf
 
@@ -7013,7 +6076,7 @@ Function TryArgonianSithisNearDeathBurst(Actor playerRef)
     ; Requiem, so pair it with a felt flat stamina restore (TryOrcCodeHolds
     ; pattern) - the Void lends an instant surge you can actually spend.
     playerRef.RestoreActorValue("Stamina", 100.0)
-    WriteZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay")
     HandleArgonianVoidSignal("near_death_burst")
     Trace(2, "Argonian Sithis near-death burst fired.")
 EndFunction
@@ -7026,11 +6089,11 @@ Function TryOrcCodeHolds(Actor playerRef)
         return
     endIf
 
-    Int malacathTier = TIER_NONE
+    Int malacathTier = LedgerRuntime.TIER_NONE
     if PDV_Malacath
-        malacathTier = GetTier(PDV_Malacath)
+        malacathTier = LedgerRuntime.GetTier(PDV_Malacath)
     endIf
-    if malacathTier < TIER_SEEKER
+    if malacathTier < LedgerRuntime.TIER_SEEKER
         return
     endIf
 
@@ -7039,7 +6102,7 @@ Function TryOrcCodeHolds(Actor playerRef)
     ; payloads fanned from the same HandlePlayerBelowHealthGate -- are once per DAY. An
     ; uncapped 40-60 HP (+30 stamina) clutch save every fight is a different power budget
     ; from what the design says it is. Same LastDay guard, same devotional-day encoding.
-    if ReadZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay") == (LedgerRuntime.GetDevotionalDay() + 2)
         Trace(2, "Orc Code Holds suppressed: already spent this devotional day.")
         return
     endIf
@@ -7049,13 +6112,13 @@ Function TryOrcCodeHolds(Actor playerRef)
     ; combat exit -- so it can actually save the player. Its old
     ; HealRate spell is not cast because Requiem swallows rate-mult healing on a
     ; near-zero base; the actual health save is a flat RestoreActorValue. Requiem-proof.
-    if malacathTier >= TIER_DEVOTED && PDV_SPEL_OrcCodeHolds_Devoted
+    if malacathTier >= LedgerRuntime.TIER_DEVOTED && PDV_SPEL_OrcCodeHolds_Devoted
         playerRef.RestoreActorValue("Stamina", 30.0)
         playerRef.RestoreActorValue("Health", 60.0)
     elseIf PDV_SPEL_OrcCodeHolds
         playerRef.RestoreActorValue("Health", 40.0)
     endIf
-    WriteZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay")
 
     ; B12's second half asked for a Cast() of PDV_SPEL_OrcCodeHolds* "so the rescue has
     ; feedback". Checked against the records: 071534 and 071536 are both Type=Ability,
@@ -7067,7 +6130,7 @@ Function TryOrcCodeHolds(Actor playerRef)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCodeHolds")
     if multiplier > 0.0
-        AwardPiety(PDV_Malacath, 0.5 * multiplier)
+        LedgerRuntime.AwardPiety(PDV_Malacath, 0.5 * multiplier)
     endIf
     StorageUtil.AdjustIntValue(None, "PDV.Orc.CodeHolds.Count", 1)
     Trace(2, "Orc Code Holds fired.")
@@ -7146,7 +6209,7 @@ Function HandleGreenPactViolation(String reason)
 
     AdjustBosmerGreenPactCompliance(-15, reason)
     if PDV_Yffre
-        AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
+        LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
         SendPrismaToast(GetPrismaSymbolForDeity(PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
         SurfaceTransition("creed", "Green Pact", "drop", PDV_Yffre.DeityIndex, "absence", True)
     endIf
@@ -7166,7 +6229,7 @@ Function HandleBosmerLivingStorySignal(String reason)
 
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_LIVING_STORY, reason)
     if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-        AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None, multiplier)
     endIf
 EndFunction
 
@@ -7181,8 +6244,8 @@ Function HandleBosmerExchangeSignal(String reason)
     endIf
 
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_EXCHANGE, reason)
-    if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_EXCHANGE && PDV_Zen
-        AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_EXCHANGE, None, multiplier)
+    if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_EXCHANGE && LedgerRuntime.PDV_Zen
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zen, LedgerRuntime.PDV_Zen.SIGNAL_EXCHANGE, None, multiplier)
     endIf
 
     TryBosmerScalesAtRest(Game.GetPlayer())
@@ -7200,7 +6263,7 @@ Function HandleBosmerBanditRoadSignal(String reason)
 
     PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_BANDIT_ROAD, reason)
     if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
     endIf
 EndFunction
 
@@ -7215,7 +6278,7 @@ Function HandleBosmerPactPositiveSignal(String reason)
     if IsBosmerPactBound()
         AdjustBosmerGreenPactCompliance(5, reason)
         if PDV_Yffre && multiplier > 0.0
-            AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None, multiplier)
         endIf
         return
     endIf
@@ -7223,11 +6286,11 @@ Function HandleBosmerPactPositiveSignal(String reason)
     if multiplier > 0.0
         Int currentPath = PDV_BosmerPathTrack.GetCurrentState()
         if currentPath == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-            AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-        elseIf currentPath == BOSMER_PATH_EXCHANGE && PDV_Zen
-            AwardCuratedSignalScaled(PDV_Zen, PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+        elseIf currentPath == BOSMER_PATH_EXCHANGE && LedgerRuntime.PDV_Zen
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zen, LedgerRuntime.PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
         elseIf currentPath == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-            AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
         endIf
     endIf
 EndFunction
@@ -7432,7 +6495,7 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
     ; day with the same zero-reserved +2 encoding the Argonian bed rite uses, so a
     ; midnight crossed mid-sleep can no longer shorten the decline window or split one
     ; night's sleep across two "days". ReadZeroReserved migrates the legacy +1 stamps.
-    Int todayStamp = GetDevotionalDay() + 2
+    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
     Int declaredId = StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID")
     if StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID") != 0
         if sleepCellId == declaredId && StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") > 0
@@ -7453,7 +6516,7 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
         return
     endIf
 
-    Int declinedDay = ReadZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
+    Int declinedDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
     if declinedDay > 0 && (todayStamp - declinedDay) < 3
         return
     endIf
@@ -7462,7 +6525,7 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
     if declaredId != 0
         Int candidateId = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateFormID")
         Int candidateCount = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateCount")
-        Int candidateDay = ReadZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
+        Int candidateDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
         ; B13 / fix-plan 4.6. CandidateDay was written four times and read zero times, so
         ; the re-declare counter climbed on EVERY sleep -- sleep three times in one night
         ; and the "mark a new home" prompt fired instantly. Gate the increment on the day
@@ -7474,7 +6537,7 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
             candidateCount += 1
         endIf
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", candidateCount)
-        WriteZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
+        LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
         shouldPrompt = candidateCount >= 3
     endIf
 
@@ -7493,7 +6556,7 @@ Function HandleDunmerSleepEvents(Actor playerRef, String reason)
     if pressed == 0
         SetDunmerHome(sleepCellId, todayStamp, reason)
     else
-        WriteZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
+        LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
         StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
@@ -7645,8 +6708,8 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
     Float nowTime = Utility.GetCurrentGameTime()
     Int phaseIndex = GetKhajiitMoonPhaseFromGameDay(nowTime)
     Int focusValue = GetLunarPresidingFocus(phaseIndex)
-    Int tierBefore = TIER_NONE
-    Int tierAfter = TIER_NONE
+    Int tierBefore = LedgerRuntime.TIER_NONE
+    Int tierAfter = LedgerRuntime.TIER_NONE
     Float metricBefore = 0.0
     Float metricAfter = 0.0
     if PDV_KhajiitLunarSubstrate
@@ -7658,13 +6721,13 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
     endIf
 
     Bool firstRiteToday = False
-    Int todayStamp = GetDevotionalDay() + 2
-    if ReadZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay") != todayStamp
+    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay") != todayStamp
         firstRiteToday = True
-        WriteZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay")
+        LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay")
         PDV_DeityBase presidingDeity = GetKhajiitEmphasisDeity(focusValue)
         if presidingDeity
-            AwardPietyInternal(presidingDeity, 0.4, True, "observe_moons_power")
+            LedgerRuntime.AwardPietyInternal(presidingDeity, 0.4, True, "observe_moons_power")
         endIf
         StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", nowTime)
         ; Preserve the common actual-delta accounting path without emitting a
@@ -7895,7 +6958,7 @@ Function HandleKhajiitRoadHome(String reason)
     Float grantedMetric = PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI, KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
     if PDV_Khenarthi
-        AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
     endIf
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
 
@@ -7904,9 +6967,9 @@ Function HandleKhajiitRoadHome(String reason)
     ; practice already spent that budget, the rest is still acknowledged without
     ; implying that it granted more substrate progress.
     String presentationDayKey = "PDV.Khajiit.RoadHome.PresentationDay"
-    Int todayStamp = GetDevotionalDay() + 2
-    if ReadZeroReservedDevotionalDayStamp(presentationDayKey) != todayStamp
-        WriteZeroReservedDevotionalDayStamp(presentationDayKey)
+    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp(presentationDayKey) != todayStamp
+        LedgerRuntime.WriteZeroReservedDevotionalDayStamp(presentationDayKey)
         if grantedMetric > 0.0
             SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
         else
@@ -7997,7 +7060,7 @@ Function HandleKhajiitRajhinElegantTheft(String reason)
     ; Night theft is shadow-coded behavior; it accrues toward the ShadowDrift boundary.
     RecordKhajiitShadowEvidence("rajhin_night_theft_" + reason)
     SendPrismaShiftToast("Elegant theft", "Rajhin purrs.", GetKhajiitFocusSymbol(KHAJIIT_FOCUS_RAJHIN))
-    RecordRecentDevotionEvent("Rajhin: theft with style")
+    LedgerRuntime.RecordRecentDevotionEvent("Rajhin: theft with style")
 EndFunction
 
 Function HandleKhajiitAlkoshDragonOrder(String reason)
@@ -8046,7 +7109,7 @@ Function HandleKhajiitAlkoshNamedDragon(String reason)
 
     Float multiplier = RecordKhajiitFocusSignal(KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh named dragon", reason)
     if PDV_Alkosh
-        AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
     endIf
     AwardKhajiitSubstrateSubstitute("khajiit_alkosh_milestone", reason)
     Trace(1, "Khajiit Alkosh named-dragon beat routed (" + reason + ")")
@@ -8083,7 +7146,7 @@ Function HandleKhajiitBaanDarReversal(String reason)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
     AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_BAANDAR, KHAJIIT_FOCUS_SIGNAL_DELTA * 2.0 * multiplier, reason)
     if PDV_BaanDar
-        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
     endIf
     AwardKhajiitSubstrateSubstitute("khajiit_baandar_reversal", reason)
     Trace(1, "Khajiit Baan Dar near-fatal reversal routed (" + reason + ")")
@@ -8128,15 +7191,15 @@ EndFunction
 ; substrate/focus-weight signal). Each concrete deity defines its own small pulse signal.
 Function PulseKhajiitFocusPiety(Int focusValue, Float multiplier)
     if focusValue == KHAJIIT_FOCUS_KHENARTHI && PDV_Khenarthi
-        AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
     elseIf focusValue == KHAJIIT_FOCUS_AZURAH && PDV_Azura
-        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
     elseIf focusValue == KHAJIIT_FOCUS_BAANDAR && PDV_BaanDar
-        AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_ROAD_TRICK, None, multiplier)
     elseIf focusValue == KHAJIIT_FOCUS_RAJHIN && PDV_Rajhin
-        AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None, multiplier)
     elseIf focusValue == KHAJIIT_FOCUS_ALKOSH && PDV_Alkosh
-        AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_DRAGON_ORDER, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Alkosh, PDV_Alkosh.SIGNAL_DRAGON_ORDER, None, multiplier)
     endIf
 EndFunction
 
@@ -8147,7 +7210,7 @@ Function HandleKhajiitAzurahDesecration(String reason)
     if !IsKhajiitOrigin() || !PDV_Azura
         return
     endIf
-    AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
+    LedgerRuntime.AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None)
     Trace(2, "Khajiit Azurah desecration routed (" + reason + ")")
 EndFunction
 
@@ -8155,41 +7218,11 @@ Function HandleKhajiitKhenarthiCaravanHarm(String reason)
     if !IsKhajiitOrigin() || !PDV_Khenarthi
         return
     endIf
-    AwardCuratedSignal(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_HARM, None)
+    LedgerRuntime.AwardCuratedSignal(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_HARM, None)
     Trace(2, "Khajiit Khenarthi caravan-harm routed (" + reason + ")")
 EndFunction
 
-String Function GetReservedSignalSurfaceName(PDV_DeityBase deity)
-    if !deity
-        return ""
-    endIf
-    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
-        if deity == PDV_Boethiah
-            return "Boethra"
-        elseIf deity == PDV_Mephala
-            return "Mafala"
-        elseIf deity == PDV_Azura
-            return "Azurah"
-        endIf
-    endIf
-    return GetPublicDeityDisplayName(deity)
-EndFunction
 
-Function SurfaceReservedSignal(PDV_DeityBase deity, String titleText, String actionText)
-    if !deity || titleText == "" || actionText == ""
-        return
-    endIf
-    String deityName = GetReservedSignalSurfaceName(deity)
-    String bodyText = actionText
-    if deityName != ""
-        bodyText = deityName + " " + actionText
-    endIf
-    String symbolName = GetPrismaSymbolForDeity(deity)
-    SendPrismaToast(symbolName, "good", titleText, bodyText)
-    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "favor.act", symbolName, False, 1, titleText)
-    RecordRecentDevotionEvent(bodyText)
-    RequestPanelRefresh()
-EndFunction
 
 ; Positive twin of the caravan-harm route: defending or supporting a caravan.
 ; Repeatable, so unlike the anti-creed handlers it is daily-capped on the pulse.
@@ -8202,9 +7235,9 @@ Function HandleKhajiitKhenarthiCaravanAid(String reason)
         Trace(2, "Khajiit Khenarthi caravan-aid blocked by daily cap (" + reason + ")")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_AID, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Khenarthi, PDV_Khenarthi.SIGNAL_CARAVAN_AID, None, multiplier)
     AwardKhajiitSubstrateSubstitute("khajiit_caravan_defense", reason)
-    SurfaceReservedSignal(PDV_Khenarthi, "Caravan defended", "marks the caravan road kept safe.")
+    LedgerRuntime.SurfaceReservedSignal(PDV_Khenarthi, "Caravan defended", "marks the caravan road kept safe.")
     Trace(2, "Khajiit Khenarthi caravan-aid routed (" + reason + ")")
 EndFunction
 
@@ -8219,9 +7252,9 @@ Function HandleKhajiitRajhinLegendMade(String reason)
         Trace(2, "Khajiit Rajhin legend-made blocked by daily cap (" + reason + ")")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_LEGEND_MADE, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Rajhin, PDV_Rajhin.SIGNAL_LEGEND_MADE, None, multiplier)
     AwardKhajiitSubstrateSubstitute("khajiit_rajhin_notable_theft", reason)
-    SurfaceReservedSignal(PDV_Rajhin, "Legend made", "marks a theft worth remembering.")
+    LedgerRuntime.SurfaceReservedSignal(PDV_Rajhin, "Legend made", "marks a theft worth remembering.")
     Trace(2, "Khajiit Rajhin legend-made routed (" + reason + ")")
 EndFunction
 
@@ -8242,8 +7275,8 @@ Function HandleMephalaWebWoven(String reason)
         Trace(2, "Mephala web-woven blocked by daily cap (" + reason + ")")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_WEB_WOVEN, None, multiplier)
-    SurfaceReservedSignal(PDV_Mephala, "Web woven", "marks a web woven in shadow.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_WEB_WOVEN, None, multiplier)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Mephala, "Web woven", "marks a web woven in shadow.")
     Trace(2, "Mephala web-woven routed (" + reason + ")")
 EndFunction
 
@@ -8256,8 +7289,8 @@ Function HandleBoethiahHonorableDuel(String reason)
         Trace(2, "Boethiah honorable-duel blocked by daily cap (" + reason + ")")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_HONORABLE_DUEL, None, multiplier)
-    SurfaceReservedSignal(PDV_Boethiah, "Duel honored", "marks a trial honorably won.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_HONORABLE_DUEL, None, multiplier)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Boethiah, "Duel honored", "marks a trial honorably won.")
     Trace(2, "Boethiah honorable-duel routed (" + reason + ")")
 EndFunction
 
@@ -8270,8 +7303,8 @@ Function HandleNordTsunAdversitySurvived(String reason)
         Trace(2, "Tsun adversity blocked by daily cap (" + reason + ")")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED, None, multiplier)
-    SurfaceReservedSignal(PDV_Tsun, "Adversity survived", "marks a hard fight endured to its end.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED, None, multiplier)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Tsun, "Adversity survived", "marks a hard fight endured to its end.")
     Trace(2, "Tsun adversity-survived routed (" + reason + ")")
 EndFunction
 
@@ -8284,8 +7317,8 @@ Function HandleLekiHonorableDuel(String reason)
         Trace(2, "Leki honorable-duel blocked by daily cap (" + reason + ")")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_HONORABLE_DUEL, None, multiplier)
-    SurfaceReservedSignal(PDV_Leki, "Duel honored", "marks single combat honorably won.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_HONORABLE_DUEL, None, multiplier)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Leki, "Duel honored", "marks single combat honorably won.")
     Trace(2, "Leki honorable-duel routed (" + reason + ")")
 EndFunction
 
@@ -8298,8 +7331,8 @@ Function HandleTalosWorshipperRescued(String reason)
         return
     endIf
     StorageUtil.SetIntValue(None, "PDV.Signal.TalosWorshipperRescue.Done", 1)
-    AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_PROTECT_WORSHIPPER, None, 1.0)
-    SurfaceReservedSignal(PDV_Talos, "A worshipper protected", "marks one of the faithful carried out of Thalmor hands.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_PROTECT_WORSHIPPER, None, 1.0)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Talos, "A worshipper protected", "marks one of the faithful carried out of Thalmor hands.")
     Trace(1, "Talos protect-worshipper routed (" + reason + ")")
 EndFunction
 
@@ -8307,7 +7340,7 @@ Function HandleKhajiitRajhinBotchedTheft(String reason)
     if !IsKhajiitOrigin() || !PDV_Rajhin
         return
     endIf
-    AwardCuratedSignal(PDV_Rajhin, PDV_Rajhin.SIGNAL_BOTCHED_THEFT, None)
+    LedgerRuntime.AwardCuratedSignal(PDV_Rajhin, PDV_Rajhin.SIGNAL_BOTCHED_THEFT, None)
     Trace(2, "Khajiit Rajhin botched-theft routed (" + reason + ")")
 EndFunction
 
@@ -8315,7 +7348,7 @@ Function HandleKhajiitAlkoshChaosAid(String reason)
     if !IsKhajiitOrigin() || !PDV_Alkosh
         return
     endIf
-    AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_CHAOS_AID, None)
+    LedgerRuntime.AwardCuratedSignal(PDV_Alkosh, PDV_Alkosh.SIGNAL_CHAOS_AID, None)
     Trace(2, "Khajiit Alkosh chaos-aid routed (" + reason + ")")
 EndFunction
 
@@ -8356,7 +7389,7 @@ Function HandlePaarthurnaxKill(Form sourceForm, String reason)
 EndFunction
 
 Function ApplyPaarthurnaxKillReaction(String deityName, String intensity, Form sourceForm, String valence = "-")
-    ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_kill", False, sourceForm)
+    LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_kill", False, sourceForm)
 EndFunction
 
 Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
@@ -8393,14 +7426,14 @@ Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
 EndFunction
 
 Function ApplyPaarthurnaxSpareReaction(String deityName, String intensity, Form sourceForm, String valence = "+")
-    ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_spare", False, sourceForm)
+    LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, "small", "paarthurnax_spare", False, sourceForm)
 EndFunction
 
 Function HandleKhajiitBaanDarBetrayal(String reason)
     if !IsKhajiitOrigin() || !PDV_BaanDar
         return
     endIf
-    AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_BETRAYAL, None)
+    LedgerRuntime.AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_BETRAYAL, None)
     Trace(2, "Khajiit Baan Dar betrayal routed (" + reason + ")")
 EndFunction
 
@@ -8645,7 +7678,7 @@ Function HandleArgonianHistMaintenance(String reason)
     ; Double-route: the substrate carries the reward gating; a small honest +1 Hist pulse keeps
     ; the universal piety layer (decay/neglect/creed-loss) honest.
     if PDV_Hist
-        AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
@@ -8701,7 +7734,7 @@ Function HandleArgonianVoidSignal(String reason)
     Int tierAfter = PDV_ArgonianHistSubstrate.GetSubstrateTier()
     ; Void piety belongs to Sithis only after the relation is explicitly active.
     if PDV_Sithis && PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        AwardCuratedSignalScaled(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Sithis, PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
     endIf
     ; Void overreach: leaning deep into the Void (fully active) while Hist maintenance has
     ; lapsed below its non-curse floor is the curated major loss for the Hist.
@@ -8798,7 +7831,7 @@ Bool Function IsArgonianMolagBalDominationPressureActive()
         return False
     endIf
 
-    return molagPath.GetStoredTier() >= TIER_SEEKER
+    return molagPath.GetStoredTier() >= LedgerRuntime.TIER_SEEKER
 EndFunction
 
 ; Organic stronghold forge (2026-07-15, D1#11 fix): Story Manager craft events at
@@ -8836,8 +7869,8 @@ Function HandleOrcLocationChange(Location newLocation)
 
     if PDV_Malacath && PDV_OrcLifeModeTrack && PDV_OrcLifeModeTrack.GetCurrentState() == ORC_LIFE_MODE_LEGION_EXILE && StorageUtil.GetIntValue(None, "PDV.Signal.MalacathExileReturn.Done") != 1
         StorageUtil.SetIntValue(None, "PDV.Signal.MalacathExileReturn.Done", 1)
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_EXILE_RETURN, None, 1.0)
-        SurfaceReservedSignal(PDV_Malacath, "Burden carried home", "marks the Exile's return to a stronghold hearth.")
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_EXILE_RETURN, None, 1.0)
+        LedgerRuntime.SurfaceReservedSignal(PDV_Malacath, "Burden carried home", "marks the Exile's return to a stronghold hearth.")
         Trace(1, "Malacath exile-return banked (location_stronghold)")
     endIf
 
@@ -9109,49 +8142,49 @@ EndFunction
 
 Function AwardOrcStrongholdForgeSignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, None, multiplier)
     endIf
 EndFunction
 
 Function AwardOrcBloodKinSignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BLOOD_KIN, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BLOOD_KIN, None, multiplier)
     endIf
 EndFunction
 
 Function AwardOrcCityDignitySignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CITY_DIGNITY, None, multiplier)
     endIf
 EndFunction
 
 Function AwardOrcLegionServiceSignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_LEGION_SERVICE, None, multiplier)
     endIf
 EndFunction
 
 Function AwardOrcSelfMadeCommunitySignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_SELF_MADE_COMMUNITY, None, multiplier)
     endIf
 EndFunction
 
 Function AwardOrcBroadConductSignal(Float multiplier)
     if PDV_Malacath
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROAD_CONDUCT, None, multiplier)
     endIf
 EndFunction
 
 Function AwardOrcOathBreakSignal()
     if PDV_Malacath
-        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_OATH_BREAK, None)
+        LedgerRuntime.AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_OATH_BREAK, None)
     endIf
 EndFunction
 
 Function AwardOrcFourHoldsVisitSignal()
     if PDV_Malacath
-        AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_FOUR_HOLDS_VISIT, None)
+        LedgerRuntime.AwardCuratedSignal(PDV_Malacath, PDV_Malacath.SIGNAL_FOUR_HOLDS_VISIT, None)
     endIf
 EndFunction
 
@@ -9160,7 +8193,7 @@ Function AwardOrcAncestorSpineSignal(Float multiplier, String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_ANCESTOR_SPINE, None, multiplier)
     StorageUtil.AdjustFloatValue(None, "PDV.Orc.AncestorSpine", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Orc.AncestorSpineSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastAncestorSpineReason", reason)
@@ -9214,7 +8247,7 @@ EndFunction
 
 Bool Function ConsumeDailyOrcNotice(String noticeKey)
     ; fix-plan 4.2: devotional day, so a notice cannot re-fire at raw midnight.
-    Int dayIndex = GetDevotionalDay() + 2
+    Int dayIndex = LedgerRuntime.GetDevotionalDay() + 2
     String storageKey = "PDV.Orc.Notice." + noticeKey + ".Day"
     if StorageUtil.GetIntValue(None, storageKey, -1) == dayIndex
         return False
@@ -9590,7 +8623,7 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
         if _qrQueueTransactionActive
             _qrQueueNeedsCurseRefresh = True
         else
-            HandleCurseStateRefresh("quest_reaction_" + deityName)
+            LedgerRuntime.HandleCurseStateRefresh("quest_reaction_" + deityName)
         endIf
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] UndeadCryptClear curse routed: " + deityName)
@@ -9633,11 +8666,11 @@ Bool Function IsRedguardNamedNecromancerBurden(Actor victimActor)
         return False
     endIf
 
-    if NecromancerFaction && victimActor.IsInFaction(NecromancerFaction)
+    if LedgerRuntime.NecromancerFaction && victimActor.IsInFaction(LedgerRuntime.NecromancerFaction)
         return True
     endIf
 
-    if WarlockFaction && victimActor.IsInFaction(WarlockFaction)
+    if LedgerRuntime.WarlockFaction && victimActor.IsInFaction(LedgerRuntime.WarlockFaction)
         return True
     endIf
 
@@ -9664,20 +8697,20 @@ Function TryRedguardTuwhaccaDeathRiteHeal(String reason)
         return
     endIf
 
-    Int tuwhaccaTier = GetTier(PDV_Tuwhacca)
-    if tuwhaccaTier < TIER_DEVOTED
+    Int tuwhaccaTier = LedgerRuntime.GetTier(PDV_Tuwhacca)
+    if tuwhaccaTier < LedgerRuntime.TIER_DEVOTED
         return
     endIf
 
     ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if ReadZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay") == (LedgerRuntime.GetDevotionalDay() + 2)
         Trace(2, "Redguard Tu'whacca death-rite heal suppressed (already restored today).")
         return
     endIf
-    WriteZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay")
 
     Float deathRiteHeal = 30.0
-    if tuwhaccaTier >= TIER_CHAMPION
+    if tuwhaccaTier >= LedgerRuntime.TIER_CHAMPION
         deathRiteHeal = 50.0
     endIf
     Actor playerRef = Game.GetPlayer()
@@ -9781,8 +8814,8 @@ Function HandleRedguardVampireReentryComplete(String reason)
     if !PDV_Tuwhacca || !IsQuestReactionDeityReachable(PDV_Tuwhacca)
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY, None, 1.0)
-    SurfaceReservedSignal(PDV_Tuwhacca, "The cycle restored", "marks the return through Tu'whacca after the curse.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY, None, 1.0)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Tuwhacca, "The cycle restored", "marks the return through Tu'whacca after the curse.")
     Trace(1, "Tu'whacca vampire re-entry completed (" + reason + ")")
 EndFunction
 
@@ -9851,7 +8884,7 @@ EndFunction
 
 Function AwardRedguardCrownSignal(Float multiplier, String reason)
     if PDV_Tuwhacca
-        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None, multiplier)
     endIf
     AwardRedguardAncestorSpinePietyPulse(multiplier, "crown_tomb_" + reason)
 EndFunction
@@ -9863,7 +8896,7 @@ Function AwardRedguardForebearSignal(Float multiplier)
     ; (HandleHoonDingBreakthroughKill), so the old blunt weekly cap is retired. Leki's
     ; sword-singing remains the focused-patron beat on the road.
     if _activeDeity == PDV_Leki && PDV_Leki
-        AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None, multiplier)
     endIf
 EndFunction
 
@@ -9914,20 +8947,20 @@ Function HandleHoonDingBreakthroughKill(Form victimForm, Int eventType)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_HoonDing, PDV_HoonDing.SIGNAL_MAKE_WAY, victimForm, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_HoonDing, PDV_HoonDing.SIGNAL_MAKE_WAY, victimForm, multiplier)
     Trace(2, "HoonDing make-way fired: breakthrough " + traceLabel + " kill multiplier=" + multiplier)
 EndFunction
 
 Function AwardRedguardAshAbahSignal(Float multiplier, String reason)
     if PDV_Tuwhacca
-        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None, multiplier)
     endIf
     AwardRedguardAncestorSpinePietyPulse(multiplier, "ashabah_death_duty_" + reason)
 EndFunction
 
 Function AwardRedguardFarShoresSignal(Float multiplier, String reason)
     if PDV_Tuwhacca
-        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None, multiplier)
     endIf
     AwardRedguardAncestorSpinePietyPulse(multiplier, "far_shores_" + reason)
 EndFunction
@@ -9938,7 +8971,7 @@ Function AwardRedguardAncestorSpinePietyPulse(Float multiplier, String reason)
     endIf
 
     if PDV_Tuwhacca
-        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
     endIf
     StorageUtil.AdjustFloatValue(None, "PDV.Redguard.AncestorSpine", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Redguard.AncestorSpineSourceCount", 1)
@@ -10114,21 +9147,21 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
     endIf
 
     if sectValue == REDGUARD_SECT_CROWN
-        if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_CHAMPION
+        if PDV_Tuwhacca && LedgerRuntime.GetTier(PDV_Tuwhacca) >= LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Crown, "The Crown way has become more than memory. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_FOREBEAR
-        if PDV_HoonDing && GetTier(PDV_HoonDing) >= TIER_CHAMPION
+        if PDV_HoonDing && LedgerRuntime.GetTier(PDV_HoonDing) >= LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Forebear, "The Forebear way has become more than adaptation. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == REDGUARD_SECT_ASHABAH
-        if PDV_Tuwhacca && GetTier(PDV_Tuwhacca) >= TIER_CHAMPION
+        if PDV_Tuwhacca && LedgerRuntime.GetTier(PDV_Tuwhacca) >= LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_AshAbah, "The Ash'abah duty has become more than necessity. It is a public shape of your devotion.", False)
             AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
             SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
@@ -10143,7 +9176,7 @@ EndFunction
 ; The universal surface above keeps the toast, the Book of Days entry and the Ledger feed; this
 ; only adds the authored modal on top. Suppressing the generic surface would silence all three.
 Function MaybeShowNordKyneChampionEntry(PDV_DeityBase deity, Int newTier)
-    if newTier < TIER_CHAMPION
+    if newTier < LedgerRuntime.TIER_CHAMPION
         return
     endIf
     if GetPlayerOriginRaceIndex() != ORIGIN_NORD
@@ -10270,7 +9303,7 @@ Function EvaluateKhajiitFocusedEmphasis()
     endIf
 
     PDV_DeityBase bestDeity = GetKhajiitEmphasisDeity(bestFocus)
-    if !bestDeity || GetPiety(bestDeity) < 25.0
+    if !bestDeity || LedgerRuntime.GetPiety(bestDeity) < 25.0
         return
     endIf
 
@@ -10436,7 +9469,7 @@ Function HandleTalosShrineDefiance(String reason)
     endIf
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.TalosShrineDefiance")
     if PDV_Talos
-        AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
     else
         Trace(1, "Talos shrine defiance skipped: PDV_Talos missing.")
     endIf
@@ -10499,7 +9532,7 @@ Function HandleAltmerLorkhanPressure(Int pressureTier, String sourceId)
             lorkhanDeity = PDV_AuriEl
         endIf
         if lorkhanDeity
-            AwardPiety(lorkhanDeity, -lorkhanPenalty)
+            LedgerRuntime.AwardPiety(lorkhanDeity, -lorkhanPenalty)
             Trace(2, "Altmer Lorkhan penalty applied: -" + lorkhanPenalty + " to " + lorkhanDeity.DeityName)
         endIf
     endIf
@@ -10718,7 +9751,7 @@ Function ResolveAltmerCrisis(Bool reassertOrthodoxy, String reason)
         ; ConsumeDailyRepeatMultiplier, so both can land on the same day -- intended: a crisis
         ; resolution is a rare, heavy moment.
         if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacCrisisOrthodoxy")
-            AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 2.0)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 2.0)
         endIf
     endIf
 EndFunction
@@ -10736,10 +9769,10 @@ Bool Function RecordAltmerCrisisReassertEvidence(String reason)
 
     ; fix-plan 4.2: one evidence day per DEVOTIONAL day -- the crisis resolves on a
     ; three-day count that dawn processing reads, so it must share dawn's boundary.
-    if ReadZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day") == (LedgerRuntime.GetDevotionalDay() + 2)
         return False
     endIf
-    WriteZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day")
 
     Int evidenceDays = StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisEvidence.Days") + 1
     StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Days", evidenceDays)
@@ -10818,21 +9851,21 @@ EndFunction
 ; dawn pulse (parity gap closed 2026-07-15). Once per dawn cycle, the daily rite
 ; also keeps faith with an active Magnus or Xarxes patron.
 Function AwardActiveAltmerHeritageMemorySignal()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER || GetPatronState() != PATRON_STATE_ACTIVE
+    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER || LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE
         return
     endIf
 
     ; fix-plan 4.2: the doc-comment above already calls this "once per dawn cycle" --
     ; it now actually uses the dawn day rather than raw midnight.
-    if ReadZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day") == (LedgerRuntime.GetDevotionalDay() + 2)
         return
     endIf
-    WriteZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day")
 
     if _activeDeity == PDV_Magnus && PDV_Magnus
-        AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
     elseIf _activeDeity == PDV_Xarxes && PDV_Xarxes
-        AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
     endIf
 EndFunction
 
@@ -10891,9 +9924,9 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
         AwardAltmerAncestorSpinePulse(multiplier, reason)
     endIf
     if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacOrthodoxPressure")
-        AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE, None, 1.0)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE, None, 1.0)
         if !IsP2BookNoticeReason(reason)
-            SurfaceReservedSignal(PDV_Trinimac, "Orthodoxy upheld", "marks a costly defense of ancestral doctrine.")
+            LedgerRuntime.SurfaceReservedSignal(PDV_Trinimac, "Orthodoxy upheld", "marks a costly defense of ancestral doctrine.")
         endIf
     endIf
     if ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
@@ -10924,7 +9957,7 @@ Function HandleAltmerTrinimacOrthodoxy(String reason)
 
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.TrinimacFallenGodOrthodoxy")
     if multiplier > 0.0
-        AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
     endIf
     SurfaceP2BookReadNotice(reason, "Trinimac remembered", "Trinimac is named as he was, not as he was made.")
 
@@ -10951,8 +9984,8 @@ Function HandleAltmerTrinimacCivilizationDefense(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_CIVILIZATION_DEFENDED, None, 1.0)
-    SurfaceReservedSignal(PDV_Trinimac, "The project defended", "marks the ordered world held against a threat.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_CIVILIZATION_DEFENDED, None, 1.0)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Trinimac, "The project defended", "marks the ordered world held against a threat.")
 EndFunction
 
 ; --- P9 (2026-08-03): Syrabane's four wired signals -------------------------------------------
@@ -11002,23 +10035,23 @@ Int Function HandleAltmerPracticeFocus(String reason)
 
     ; Then the active lane's own signal. Deliberately routed to the PATRON's lane rather than a
     ; fixed deity: the point is that practice feeds whatever you actually worship.
-    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity
         if _activeDeity == PDV_Magnus && PDV_Magnus
-            AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
         elseIf _activeDeity == PDV_Xarxes && PDV_Xarxes
-            AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.0)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.0)
         elseIf _activeDeity == PDV_Trinimac && PDV_Trinimac
-            AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 1.0)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 1.0)
         elseIf _activeDeity == PDV_Syrabane && PDV_Syrabane
-            AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
         elseIf _activeDeity == PDV_AuriEl && PDV_AuriEl
-            AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
         endIf
     elseIf PDV_AuriEl
         ; No patron, or broad worship: the foundation takes it. This is the ONLY arm that credits
         ; Auri-El without him being chosen, and it requires a deliberate act -- unlike the free
         ; dawn pulse P18 removed.
-        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
     endIf
 
     Trace(2, "Altmer practice focus routed (" + reason + ")")
@@ -11027,7 +10060,7 @@ EndFunction
 
 ; 0 = prayer pose (foundation and martial lanes), 1 = reading pose (scholar lanes).
 Int Function GetAltmerPracticeIdleKind()
-    if GetPatronState() != PATRON_STATE_ACTIVE || !_activeDeity
+    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity
         return 0
     endIf
     if _activeDeity == PDV_Magnus || _activeDeity == PDV_Xarxes || _activeDeity == PDV_Syrabane
@@ -11078,8 +10111,8 @@ Function HandleAltmerSyrabaneCureWard(String reason)
     if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneCureWard")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING, None, 1.0)
-    SurfaceReservedSignal(PDV_Syrabane, "The sickness lifts", "marks a curse turned aside before it took root.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING, None, 1.0)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Syrabane, "The sickness lifts", "marks a curse turned aside before it took root.")
 EndFunction
 
 Function HandleAltmerSyrabaneProtectiveWard(String reason)
@@ -11089,8 +10122,8 @@ Function HandleAltmerSyrabaneProtectiveWard(String reason)
     if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneProtectiveWarding")
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
-    SurfaceReservedSignal(PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it reached you.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it reached you.")
 EndFunction
 
 ; Weekly, not daily -- the detector already gates on a near-fatal mage fight with a kill, so the
@@ -11099,8 +10132,8 @@ Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
     if !IsSyrabaneSignalEligible()
         return
     endIf
-    AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
-    SurfaceReservedSignal(PDV_Syrabane, "Arcane duel survived", "marks a hostile mage outlasted and put down.")
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
+    LedgerRuntime.SurfaceReservedSignal(PDV_Syrabane, "Arcane duel survived", "marks a hostile mage outlasted and put down.")
 EndFunction
 
 ; The three vanilla ward tomes. Learning a Ward IS magical containment -- the most on-theme source
@@ -11111,19 +10144,19 @@ Function HandleAltmerSyrabaneContainment(String reason)
     endIf
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.SyrabaneMagicalContainment")
     if multiplier > 0.0
-        AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
     endIf
     SurfaceP2BookReadNotice(reason, "The first warding", "Syrabane opens the apprentice's art to you.")
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
     if PDV_DevotionRules.StringContainsToken(reason, "magnus") && PDV_Magnus
-        AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
         return
     endIf
 
     if PDV_AuriEl
-        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, multiplier)
     endIf
 EndFunction
 
@@ -11141,14 +10174,14 @@ EndFunction
 ; it must NOT contain "xarxes" or it routes the award to the wrong god.
 Function AwardAltmerOrthodoxSignal(String reason, Float multiplier)
     if PDV_DevotionRules.StringContainsToken(reason, "xarxes") && PDV_Xarxes
-        AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
         return
     endIf
 
     ; Hard daily cap. This lane carried only the 0.7^n repeat-decay multiplier and no ceiling, so
     ; a delta-3.0 signal could pay out repeatedly within one day as soon as a source existed.
     if PDV_AuriEl && ConsumeOncePerDaySignal("PDV.Signal.AuriElOrthodoxyAffirmation")
-        AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
     endIf
 EndFunction
 
@@ -11385,7 +10418,7 @@ Int Function TryAwardAltmerMagicMilestone(String skillName, Float skillValue, In
 
     StorageUtil.SetIntValue(None, milestoneKey, 1)
     StorageUtil.SetIntValue(None, "PDV.Altmer.LastMagicMilestoneThreshold", threshold)
-    AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_MAGIC_MILESTONE, None, 4.0)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_MAGIC_MILESTONE, None, 4.0)
     return 1
 EndFunction
 
@@ -11579,7 +10612,7 @@ Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, Stri
         return
     endIf
 
-    if !PDV_FLST_AllDeities
+    if !LedgerRuntime.PDV_FLST_AllDeities
         Trace(1, "Shout attack skipped: deity roster missing.")
         return
     endIf
@@ -11591,23 +10624,23 @@ Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, Stri
     endIf
 
     Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
+    Int count = LedgerRuntime.PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
-    BeginBroadPantheonEvent("shout_attack_" + eventType + "_" + reason)
+    LedgerRuntime.BeginBroadPantheonEvent("shout_attack_" + eventType + "_" + reason)
 
     while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+        PDV_DeityBase deity = LedgerRuntime.PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
             Float delta = deity.ScoreAction(eventType, playerRef as Form, shoutUsed as Form)
             if delta != 0.0
-                AwardPietyFromLikesDislikes(deity, delta * multiplier, eventType, reason)
+                LedgerRuntime.AwardPietyFromLikesDislikes(deity, delta * multiplier, eventType, reason)
                 scoredCount += 1
             endIf
         endIf
 
         i += 1
     endWhile
-    FlushBroadPantheonEvent()
+    LedgerRuntime.FlushBroadPantheonEvent()
 
     Trace(2, "Shout attack routed: event " + eventType + ", scored deities " + scoredCount + " (" + reason + ")")
 EndFunction
@@ -11628,157 +10661,27 @@ Bool Function ShouldSuppressDuplicateShoutAttack()
     return False
 EndFunction
 
-Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        return TIER_NONE
-    endIf
-
-    EnsureDeityState(deity)
-
-    Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-    Int oldTier = StorageUtil.GetFloatValue(deityForm, "PDV.Tier") as Int
-    Int newTier = ComputeTierFromPiety(deity, piety)
-    if newTier < oldTier && piety >= (ThresholdForTier(deity, oldTier) - TIER_DOWN_HYSTERESIS)
-        newTier = oldTier
-    endIf
-
-    RefreshPassiveDecayFloorForDeity(deity, newTier)
-
-    if newTier != oldTier
-        StorageUtil.SetFloatValue(deityForm, "PDV.Tier", newTier as Float)
-        StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", Utility.GetCurrentGameTime())
-
-        ; P10 (2026-08-03): a demotion clears the one-shot notice for the tier just LOST, so a
-        ; later re-climb can surface again. Without this, a Champion who decayed to Devoted and
-        ; fought all the way back to 85 got TOTAL SILENCE -- NotifyTierUp's key was already
-        ; burned and never cleared by anything. This fixes it for EVERY race, not just Altmer.
-        if newTier < oldTier
-            StorageUtil.SetIntValue(None, "PDV.TierNoticeShown." + deity.DeityIndex + "." + oldTier, 0)
-            ; P10 parity for the authored Nord/Kyne recognition (2026-08-07). Its own one-shot key
-            ; is NOT the tier notice, so without this a Nord who fell from Champion and climbed back
-            ; got the toast and Book entry again but never the modal -- the exact "total silence on a
-            ; re-climb" bug the block above exists to prevent, reintroduced one surface lower.
-            if oldTier >= TIER_CHAMPION && PDV_Kyne && deity == PDV_Kyne
-                StorageUtil.SetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne", 0)
-            endIf
-        endIf
-
-        Bool isFocusedEmphasis = IsKhajiitOrigin() && deity == GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
-
-        ; Reward/mirror hooks fire only for the patron / focused-emphasis deity.
-        if deity == _activeDeity
-            deity.OnTierChange(oldTier, newTier)
-            RefreshPatronMirrors()
-        elseIf isFocusedEmphasis
-            deity.OnTierChange(oldTier, newTier)
-        endIf
-
-        ; Universal milestone surfacing: notice + toast + Book of Days entry for EVERY
-        ; tier reach -- including broad-worship / pantheon gods with no single patron.
-        ; A Nord keeping the whole pantheon (no _activeDeity, not Khajiit emphasis)
-        ; previously got nothing here; now each god's milestone is marked. NotifyTierUp's
-        ; per-(deity,tier) guard prevents duplicate notices; the band in surfaceKey scopes
-        ; the journal guard so Seeker/Devoted/Champion each log once, Champion pinned.
-        if surfaceTierUp && newTier > oldTier
-            if ShouldSuppressImperialTalosTierSurface(deity)
-                Trace(2, "Tier reach surface suppressed for Imperial Talos while Concordat blocks offers.")
-            elseIf ShouldSuppressBretonFocusedChampionTierSurface(deity, newTier)
-                Trace(2, "Tier reach surface suppressed for Breton resonant Champion; tradition reward presentation owns it.")
-            elseIf NotifyTierUp(deity, newTier)
-                StorageUtil.SetFormValue(None, "PDV.BookOfDays.LastTierDeity", deityForm)
-                StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
-                SendPrismaEventToast("tier", deity, "", GetPublicTierBand(newTier), "")
-                SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
-                MaybeShowNordKyneChampionEntry(deity, newTier)
-            endIf
-        endIf
-
-        RequestPanelRefresh()
-    elseIf deity == _activeDeity
-        RefreshPatronMirrors()
-    endIf
-
-    return newTier
-EndFunction
 
 ; One-shot guard when a tracked deity advances a tier.
 ; --- P10: Long Devotion accessors ------------------------------------------------------------
 ; Pure derivation over existing piety. Marks land at 100/115/130/145/160/175/190 for a standard
 ; 85-threshold deity, capped at LONG_DEVOTION_MARK_MAX so a 200-piety patron cannot run away.
-Int Function GetDevotionMarks(PDV_DeityBase deity)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        return 0
-    endIf
-
-    Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-    if piety < deity.ThresholdChampion
-        return 0
-    endIf
-
-    Int marks = ((piety - deity.ThresholdChampion) / LONG_DEVOTION_MARK_STEP) as Int
-    return PDV_DevotionRules.ClampInt(marks, 0, LONG_DEVOTION_MARK_MAX)
-EndFunction
 
 ; Ratchets MarkHigh (which gates the decay floor) and surfaces each mark exactly once.
 ; The ratchet is deliberately one-way: a patron who slips back below a mark keeps the floor they
 ; earned, so the floor cannot flap on and off with ordinary decay.
-Function MaybeSurfaceDevotionMark(PDV_DeityBase deity)
-    if !deity || GetTier(deity) < TIER_CHAMPION
-        return
-    endIf
-
-    Int marks = GetDevotionMarks(deity)
-    if marks < 1
-        return
-    endIf
-
-    String highKey = "PDV.LongDevotion.MarkHigh." + deity.DeityIndex
-    if marks > StorageUtil.GetIntValue(None, highKey)
-        StorageUtil.SetIntValue(None, highKey, marks)
-    endIf
-
-    String shownKey = "PDV.LongDevotion.MarkShown." + deity.DeityIndex + "." + marks
-    if StorageUtil.GetIntValue(None, shownKey) == 1
-        return
-    endIf
-    StorageUtil.SetIntValue(None, shownKey, 1)
-
-    String deityName = GetPublicDeityDisplayName(deity)
-    AppendBookOfDaysEntry(deityName + " marks devotion held long past the day it was proven.", Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
-    Trace(1, "Long Devotion mark " + marks + " surfaced for " + deity.DeityName)
-EndFunction
 
 ; Dawn tick. Only the patron / focused-emphasis deity accrues marks -- the same scope the reward
 ; and mirror hooks already use, so a broad worshipper's whole pantheon does not each start
 ; ratcheting floors.
-Function RunDawnRefreshDevotionMarks()
-    if _activeDeity
-        MaybeSurfaceDevotionMark(_activeDeity)
-    endIf
-EndFunction
 
-Bool Function NotifyTierUp(PDV_DeityBase deity, Int newTier)
-    if !deity || newTier <= TIER_NONE
-        return False
-    endIf
-
-    String shownKey = "PDV.TierNoticeShown." + deity.DeityIndex + "." + newTier
-    if StorageUtil.GetIntValue(None, shownKey) == 1
-        return False
-    endIf
-
-    StorageUtil.SetIntValue(None, shownKey, 1)
-    return True
-EndFunction
 
 String Function GetTierStandingLabel(Int tier)
-    if tier >= TIER_CHAMPION
+    if tier >= LedgerRuntime.TIER_CHAMPION
         return "Champion"
-    elseIf tier >= TIER_DEVOTED
+    elseIf tier >= LedgerRuntime.TIER_DEVOTED
         return "Devoted"
-    elseIf tier >= TIER_SEEKER
+    elseIf tier >= LedgerRuntime.TIER_SEEKER
         return "Seeker"
     endIf
     return "Unrecognized"
@@ -11789,33 +10692,16 @@ EndFunction
 ; bands; GetCurrentStandingLabel / GetTierStandingLabel keep the internal
 ; Seeker/Champion words for dev/MCM/code and the separate Daedric path naming.
 String Function GetPublicTierBand(Int tier)
-    if tier >= TIER_CHAMPION
+    if tier >= LedgerRuntime.TIER_CHAMPION
         return "Devoted"
-    elseIf tier >= TIER_DEVOTED
+    elseIf tier >= LedgerRuntime.TIER_DEVOTED
         return "Faithful"
-    elseIf tier >= TIER_SEEKER
+    elseIf tier >= LedgerRuntime.TIER_SEEKER
         return "Observant"
     endIf
     return "Distant"
 EndFunction
 
-Function RefreshPatronMirrors()
-    if !_activeDeity
-        PDV_GLO_ActivePiety.SetValue(0.0)
-        PDV_GLO_ActiveTier.SetValue(TIER_NONE as Float)
-        PDV_GLO_ActiveDeityIndex.SetValue(-1.0)
-        SyncNpcReligiousRecognition()
-        return
-    endIf
-
-    EnsureDeityState(_activeDeity)
-    Form deityForm = _activeDeity as Form
-
-    PDV_GLO_ActivePiety.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Piety"))
-    PDV_GLO_ActiveTier.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Tier"))
-    PDV_GLO_ActiveDeityIndex.SetValue(_activeDeity.DeityIndex as Float)
-    SyncNpcReligiousRecognition()
-EndFunction
 
 Function InitializePreflightState()
     if StorageUtil.GetIntValue(None, "PDV.FrameworkSchemaVersion") != FRAMEWORK_SCHEMA_VERSION
@@ -11823,93 +10709,28 @@ Function InitializePreflightState()
         Trace(2, "Framework schema version recorded as " + FRAMEWORK_SCHEMA_VERSION)
     endIf
 
-    if GetPatronState() == PATRON_STATE_ACTIVE
-        RestoreActiveDeityFromStoredPatron()
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE
+        LedgerRuntime.RestoreActiveDeityFromStoredPatron()
         if !_activeDeity
-            SetPatronState(PATRON_STATE_UNSET)
+            LedgerRuntime.SetPatronState(LedgerRuntime.PATRON_STATE_UNSET)
         else
-            SyncPatronStateGlobal()
-            RefreshPatronMirrors()
+            LedgerRuntime.SyncPatronStateGlobal()
+            LedgerRuntime.RefreshPatronMirrors()
         endIf
     else
-        SyncPatronStateGlobal()
+        LedgerRuntime.SyncPatronStateGlobal()
     endIf
 EndFunction
 
-Function SetPatronState(Int patronState)
-    Int normalizedState = patronState
-    if normalizedState != PATRON_STATE_BROAD && normalizedState != PATRON_STATE_ACTIVE
-        normalizedState = PATRON_STATE_UNSET
-    endIf
 
-    StorageUtil.SetIntValue(None, "PDV.PatronState", normalizedState)
-    SyncPatronStateGlobal()
-EndFunction
-
-Function SyncPatronStateGlobal()
-    if PDV_GLO_PatronState
-        PDV_GLO_PatronState.SetValue(GetPatronState() as Float)
-    endIf
-EndFunction
 
 ; --- Likes/dislikes table loader (v0: hand-authored from PDV_DeityLikesDislikes.csv) ---
 ; Resolves deities by DeityName over PDV_FLST_AllDeities and writes the PDV.LD.<evt>.{D,C,O}
 ; keys read by PDV_DeityBase.ScoreFromTable. Origin-gated overlay rows write to
 ; PDV.LD.<evt>.O<origin>.{D,C,O}. Version-gated so existing saves reload on a bump.
 ; PRODUCTIONIZE: regenerate this from the CSV via an author tool before scaling to all 48 actors.
-Function EnsureLikesDislikesTable()
-    if StorageUtil.GetIntValue(None, "PDV.LD.Version") == LIKES_DISLIKES_VERSION
-        return
-    endIf
-    LoadLikesDislikesTable()
-    StorageUtil.SetIntValue(None, "PDV.LD.Version", LIKES_DISLIKES_VERSION)
-EndFunction
 
-Function LoadLikesDislikesTable()
-    if !PDV_FLST_AllDeities
-        return
-    endIf
-    Int ldIndex = 0
-    Int ldCount = PDV_FLST_AllDeities.GetSize()
-    while ldIndex < ldCount
-        PDV_DeityBase ldDeity = PDV_FLST_AllDeities.GetAt(ldIndex) as PDV_DeityBase
-        if ldDeity
-            ; 12.4. Reset -> fill (inside WriteLD) -> seal, in lockstep with the rows
-            ; themselves, so the participating-event cache can never disagree with what
-            ; is actually in StorageUtil. Seal only after LoadRowsForDeity returns.
-            ldDeity.ResetLikesDislikesEventCache()
-            ClearRowsForDeity(ldDeity)
-            LoadRowsForDeity(ldDeity)
-            ldDeity.SealLikesDislikesEventCache()
-            ApplyStancesForDeity(ldDeity)
-        endIf
-        ldIndex += 1
-    endWhile
-    if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Likes/dislikes table + stances loaded (version " + LIKES_DISLIKES_VERSION + ").")
-    endIf
-EndFunction
 
-Function WriteLD(PDV_DeityBase deity, Int eventType, Float delta, Int dailyCap, Float cooldownDays, Int originGate)
-    Form ldForm = deity as Form
-    String ldPrefix = "PDV.LD." + eventType
-    ; 12.4. Record the event on the deity's participating-event cache. Deliberately the
-    ; FIRST thing this function does, and outside the origin-gate branch below, so an
-    ; origin-gated overlay row is recorded under the same base event type ScoreFromTable
-    ; tests -- there is no way to write a row without recording it.
-    deity.NoteLikesDislikesEvent(eventType)
-    if originGate >= 0
-        String originPrefix = ldPrefix + ".O" + originGate
-        StorageUtil.SetFloatValue(ldForm, originPrefix + ".D", delta)
-        StorageUtil.SetIntValue(ldForm, originPrefix + ".C", dailyCap)
-        StorageUtil.SetFloatValue(ldForm, originPrefix + ".O", cooldownDays)
-        return
-    endIf
-
-    StorageUtil.SetFloatValue(ldForm, ldPrefix + ".D", delta)
-    StorageUtil.SetIntValue(ldForm, ldPrefix + ".C", dailyCap)
-    StorageUtil.SetFloatValue(ldForm, ldPrefix + ".O", cooldownDays)
-EndFunction
 
 ; Clear a deity's entire PDV.LD.* row set before LoadRowsForDeity rewrites it.
 ; Without this, a row REMOVED from the table (e.g. sithis kill-hostile) leaves
@@ -11918,79 +10739,13 @@ EndFunction
 ; every event the table uses, then rewriting, makes removals actually take.
 ; MAINTENANCE: GetLikesDislikesEventTypes() must list every event id used in
 ; LoadRowsForDeity (plus any fully-retired id), or a removed row will not clear.
-Function ClearRowsForDeity(PDV_DeityBase deity)
-    Form ldForm = deity as Form
-    Int[] ldEvents = GetLikesDislikesEventTypes()
-    Int ldIndex = 0
-    while ldIndex < ldEvents.Length
-        String ldPrefix = "PDV.LD." + ldEvents[ldIndex]
-        StorageUtil.UnsetFloatValue(ldForm, ldPrefix + ".D")
-        StorageUtil.UnsetIntValue(ldForm, ldPrefix + ".C")
-        StorageUtil.UnsetFloatValue(ldForm, ldPrefix + ".O")
-        Int originIndex = ORIGIN_NORD
-        while originIndex <= ORIGIN_REDGUARD
-            String originPrefix = ldPrefix + ".O" + originIndex
-            StorageUtil.UnsetFloatValue(ldForm, originPrefix + ".D")
-            StorageUtil.UnsetIntValue(ldForm, originPrefix + ".C")
-            StorageUtil.UnsetFloatValue(ldForm, originPrefix + ".O")
-            originIndex += 1
-        endWhile
-        ldIndex += 1
-    endWhile
-EndFunction
 
-Int[] Function GetLikesDislikesEventTypes()
-    Int[] ldEvents = new Int[35]
-    ldEvents[0] = 1
-    ldEvents[1] = 2
-    ldEvents[2] = 3
-    ldEvents[3] = 4
-    ldEvents[4] = 40
-    ldEvents[5] = 300
-    ldEvents[6] = 301
-    ldEvents[7] = 302
-    ldEvents[8] = 304
-    ldEvents[9] = 313
-    ldEvents[10] = 314
-    ldEvents[11] = 330
-    ldEvents[12] = 331
-    ldEvents[13] = 332
-    ldEvents[14] = 333
-    ldEvents[15] = 334
-    ldEvents[16] = 335
-    ldEvents[17] = 340
-    ldEvents[18] = 341
-    ldEvents[19] = 342
-    ldEvents[20] = 343
-    ldEvents[21] = 344
-    ldEvents[22] = 345
-    ldEvents[23] = 350
-    ldEvents[24] = 351
-    ldEvents[25] = 360
-    ldEvents[26] = 361
-    ldEvents[27] = 362
-    ldEvents[28] = 364
-    ldEvents[29] = 365
-    ldEvents[30] = 368
-    ldEvents[31] = 315
-    ldEvents[32] = 303
-    ldEvents[33] = 366
-    ldEvents[34] = 305
-    return ldEvents
-EndFunction
 
 ; --- V2 transgressive-Prince path-gated likes/dislikes (separate from the V1 PDV.LD.* table) ---
 ; The 12 transgressive Princes are PDV_DaedricPath_* actors (not in PDV_FLST_AllDeities), so the
 ; V1 fan-out never touches them. This loads their rows into PDV.PLD.* on the path form and, for an
 ; OPEN (committed) path only, deepens that path's OWN piety on a scored act. Version-gated by
 ; PRINCE_LD_VERSION. Source: PDV_DeityLikesDislikes_Princes_V2.csv via tools/pdv_princeld_gen.mjs.
-Function EnsurePrinceLikesDislikesTable()
-    if StorageUtil.GetIntValue(None, "PDV.PLD.Version") == PRINCE_LD_VERSION
-        return
-    endIf
-    LoadPrinceLikesDislikesTable()
-    StorageUtil.SetIntValue(None, "PDV.PLD.Version", PRINCE_LD_VERSION)
-EndFunction
 
 ; Consent-gate migration. Legacy saves could hold an active Prince pact committed before
 ; the consent latch existed. Such a pact would keep piety capped at 84 forever (ClampPiety
@@ -12022,24 +10777,6 @@ Function MigrateDaedricConsentIfNeeded()
     RequestPanelRefresh()
 EndFunction
 
-Function LoadPrinceLikesDislikesTable()
-    if !PDV_FLST_DaedricPaths_All
-        return
-    endIf
-    Int pldIndex = 0
-    Int pldCount = PDV_FLST_DaedricPaths_All.GetSize()
-    while pldIndex < pldCount
-        PDV_DaedricPathBase pldPath = PDV_FLST_DaedricPaths_All.GetAt(pldIndex) as PDV_DaedricPathBase
-        if pldPath
-            ClearPrinceRowsForPath(pldPath)
-            LoadPrinceRowsForPath(pldPath)
-        endIf
-        pldIndex += 1
-    endWhile
-    if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Prince V2 path table loaded (version " + PRINCE_LD_VERSION + ").")
-    endIf
-EndFunction
 
 Function WritePLD(PDV_DaedricPathBase path, Int eventType, Float delta, Int dailyCap, Float cooldownDays)
     Form pldForm = path as Form
@@ -12315,437 +11052,7 @@ Function LoadPrinceRowsForPath(PDV_DaedricPathBase path)
     endIf
 EndFunction
 
-Function LoadRowsForDeity(PDV_DeityBase deity)
-    String ldName = deity.DeityName
-    if ldName == "kyne"
-        WriteLD(deity, 1, -0.5, 2, 0.0, -1)
-        WriteLD(deity, 2, 0.5, 0, 0.0, -1)
-        WriteLD(deity, 40, 0.35, 3, 0.0208, -1)
-        WriteLD(deity, 343, 1.0, 2, 0.5, -1)
-        WriteLD(deity, 313, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 345, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 302, 1.0, 1, 0.5, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 303, -0.5, 3, 0.0, -1)
-    elseIf ldName == "akatosh"
-        WriteLD(deity, 302, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 301, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 368, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 351, 0.75, 1, 0.5, 2)
-        WriteLD(deity, 362, -0.75, 2, 0.5, 2)
-    elseIf ldName == "Arkay"
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 350, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 301, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 368, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 300, 0.75, 3, 0.0, 2)
-        WriteLD(deity, 366, -1.5, 1, 1.0, -1)
-    elseIf ldName == "Mara"
-        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 333, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 314, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 332, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 362, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 351, 0.5, 2, 0.0, -1)
-        WriteLD(deity, 333, 0.5, 3, 0.0, 2)
-        WriteLD(deity, 314, 0.35, 2, 0.5, 2)
-        WriteLD(deity, 362, -0.5, 3, 0.0, 2)
-        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
-    elseIf ldName == "Stendarr"
-        WriteLD(deity, 301, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 368, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 365, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 362, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 361, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 351, 0.75, 1, 0.5, -1)
-        WriteLD(deity, 351, 0.75, 1, 0.5, 2)
-        WriteLD(deity, 366, -1.5, 1, 1.0, -1)
-    elseIf ldName == "Zenithar"
-        WriteLD(deity, 330, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 332, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 362, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 360, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 361, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 333, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 351, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 368, -0.75, 2, 0.5, -1)
-    elseIf ldName == "Julianos"
-        WriteLD(deity, 340, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 341, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 331, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 332, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 362, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 361, -0.25, 3, 0.0, -1)
-    elseIf ldName == "Dibella"
-        WriteLD(deity, 331, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 330, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 333, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 332, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
-    elseIf ldName == "Kynareth"
-        WriteLD(deity, 313, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 345, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 332, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 350, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 343, 1.0, 2, 0.5, -1)
-        WriteLD(deity, 301, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 368, -1.0, 1, 0.5, -1)
-        WriteLD(deity, 334, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.25, 2, 0.5, 2)
-        WriteLD(deity, 303, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
-    elseIf ldName == "Talos"
-        WriteLD(deity, 343, 1.0, 2, 0.5, -1)
-        WriteLD(deity, 345, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 2, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 302, 1.5, 1, 1.0, -1)
-        WriteLD(deity, 362, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 351, 0.5, 2, 0.5, 0)
-        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
-    elseIf ldName == "Shor"
-        WriteLD(deity, 343, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, 0)
-        WriteLD(deity, 2, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 302, 1.0, 1, 0.5, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 362, -0.5, 3, 0.0, -1)
-    elseIf ldName == "Tsun"
-        WriteLD(deity, 2, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 343, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 350, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 302, 0.75, 1, 0.5, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 301, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 368, -1.0, 2, 0.5, -1)
-    elseIf ldName == "Stuhn"
-        WriteLD(deity, 2, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, -2.0, 1, 1.0, -1)
-        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 300, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 362, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 360, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.75, 2, 0.5, 0)
-        WriteLD(deity, 351, 0.5, 2, 0.5, 0)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-    elseIf ldName == "auri-el"
-        WriteLD(deity, 344, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.35, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 304, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 368, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 365, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 364, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
-    elseIf ldName == "magnus"
-        WriteLD(deity, 341, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 331, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 332, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 368, -0.75, 1, 0.5, -1)
-        WriteLD(deity, 341, 0.75, 2, 0.5, 2)
-        WriteLD(deity, 342, 0.5, 3, 0.0, 2)
-        WriteLD(deity, 331, 0.35, 2, 0.5, 2)
-        WriteLD(deity, 365, -1.25, 1, 1.0, 2)
-        WriteLD(deity, 366, -0.5, 3, 0.0, -1)
-    elseIf ldName == "xarxes"
-        WriteLD(deity, 342, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 340, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 341, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, 0.4, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 368, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 345, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-    elseIf ldName == "trinimac"
-        WriteLD(deity, 301, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 2, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 368, -2.0, 1, 1.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 302, 1.0, 1, 0.5, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 330, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 362, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 2, 0.35, 3, 0.0, 3)
-        WriteLD(deity, 368, -1.5, 1, 1.0, 3)
-        WriteLD(deity, 304, -1.0, 2, 0.5, 3)
-    elseIf ldName == "Y'ffre"
-        WriteLD(deity, 313, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 330, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 333, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.75, 2, 0.5, 2)
-        WriteLD(deity, 334, 0.25, 3, 0.0, 2)
-        WriteLD(deity, 331, -0.35, 3, 0.0, 2)
-        WriteLD(deity, 303, 0.25, 3, 0.0, 2)
-        WriteLD(deity, 333, 0.5, 3, 0.0, 2)
-        WriteLD(deity, 300, 0.5, 3, 0.0, 2)
-        WriteLD(deity, 350, 0.5, 3, 0.0, 2)
-        WriteLD(deity, 365, -1.0, 2, 0.5, 2)
-        WriteLD(deity, 364, -0.5, 3, 0.0, 2)
-    elseIf ldName == "Z'en"
-        WriteLD(deity, 333, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 330, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 332, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 340, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 362, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 331, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 360, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 364, -0.5, 3, 0.0, -1)
-    elseIf ldName == "Baan Dar"
-        WriteLD(deity, 360, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 362, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 345, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 364, 0.5, 2, 0.0, -1)
-        WriteLD(deity, 330, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 351, -0.25, 2, 0.5, -1)
-    elseIf ldName == "khenarthi"
-        WriteLD(deity, 345, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 302, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 350, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 313, 0.5, 3, 0.0, 6)
-        WriteLD(deity, 350, 0.5, 3, 0.0, 6)
-        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
-    elseIf ldName == "rajhin"
-        WriteLD(deity, 362, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 360, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 345, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 360, 0.35, 3, 0.0, 6)
-        WriteLD(deity, 304, -0.75, 2, 0.5, 6)
-        WriteLD(deity, 366, -0.5, 3, 0.0, -1)
-    elseIf ldName == "alkosh"
-        WriteLD(deity, 302, 1.5, 1, 1.0, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 364, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 361, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 301, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 368, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-    elseIf ldName == "azura"
-        WriteLD(deity, 313, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 368, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 345, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 365, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 366, -1.0, 2, 0.5, -1)
-    elseIf ldName == "Boethiah"
-        WriteLD(deity, 2, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 344, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 368, 1.5, 1, 1.0, -1)
-        WriteLD(deity, 350, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 360, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 1, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 362, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 333, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 351, -0.25, 2, 0.5, -1)
-        WriteLD(deity, 305, -0.25, 2, 0.5, -1)
-    elseIf ldName == "Mephala"
-        WriteLD(deity, 360, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 362, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, 1.0, 2, 0.5, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 368, 1.5, 1, 1.0, -1)
-        WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 2, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 350, -0.5, 2, 0.0, -1)
-        WriteLD(deity, 313, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 366, 0.35, 3, 0.0, -1)
-    elseIf ldName == "The Hist"
-        WriteLD(deity, 313, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 333, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 334, 0.25, 3, 0.0, 7)
-        WriteLD(deity, 314, 0.25, 1, 0.0, -1)
-        WriteLD(deity, 332, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 334, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, -0.25, 3, 0.0, -1)
-    elseIf ldName == "sithis"
-        WriteLD(deity, 304, 1.0, 2, 0.5, -1)
-        WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 315, -0.25, 1, 0.0, -1)
-        WriteLD(deity, 364, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 350, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 302, 1.0, 1, 0.5, -1)
-        WriteLD(deity, 360, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 330, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 331, -0.5, 3, 0.0, -1)
-        WriteLD(deity, 304, 0.35, 1, 1.0, 7)
-        WriteLD(deity, 351, -0.25, 2, 0.5, 7)
-        WriteLD(deity, 366, 0.5, 3, 0.0, -1)
-    elseIf ldName == "Malacath"
-        WriteLD(deity, 330, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 330, 0.25, 3, 0.0, 8)
-        WriteLD(deity, 2, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 1, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 301, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 362, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 302, 0.75, 1, 0.5, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
-    elseIf ldName == "Tu'whacca"
-        WriteLD(deity, 300, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 300, 0.25, 3, 0.0, 9)
-        WriteLD(deity, 314, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 342, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 365, -1.5, 1, 1.0, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 301, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 368, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 366, -1.5, 1, 1.0, -1)
-    elseIf ldName == "Leki"
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 330, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 304, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 362, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 302, 1.0, 1, 0.5, -1)
-        WriteLD(deity, 340, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 364, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 360, -0.25, 3, 0.0, -1)
-    elseIf ldName == "HoonDing"
-        WriteLD(deity, 302, 1.5, 1, 1.0, -1)
-        WriteLD(deity, 344, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 345, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 343, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 304, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 313, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 360, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 361, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 315, -0.25, 3, 0.0, -1)
-        WriteLD(deity, 365, -0.75, 2, 0.5, -1)
-        WriteLD(deity, 366, -0.75, 2, 0.5, -1)
-    elseIf ldName == "Syrabane"
-        WriteLD(deity, 332, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 334, 0.25, 3, 0.0, -1)
-        WriteLD(deity, 341, 0.35, 3, 0.0, -1)
-        WriteLD(deity, 301, 0.5, 3, 0.0, -1)
-        WriteLD(deity, 300, 0.25, 3, 0.5, -1)
-        WriteLD(deity, 342, 0.2, 2, 0.0, -1)
-        WriteLD(deity, 350, 0.75, 2, 0.5, -1)
-        WriteLD(deity, 365, -1.25, 1, 1.0, -1)
-        WriteLD(deity, 368, -1.25, 1, 1.0, -1)
-        WriteLD(deity, 304, -1.25, 2, 0.5, -1)
-        WriteLD(deity, 364, -1.0, 2, 0.5, -1)
-        WriteLD(deity, 362, -0.25, 3, 0.0, -1)
-    endIf
-EndFunction
 
-Function ApplyStances(PDV_DeityBase deity, Int sNord, Int sImperial, Int sBreton, Int sAltmer, Int sBosmer, Int sDunmer, Int sKhajiit, Int sArgonian, Int sOrc, Int sRedguard)
-    deity.Stance_Nord = sNord
-    deity.Stance_Imperial = sImperial
-    deity.Stance_Breton = sBreton
-    deity.Stance_Altmer = sAltmer
-    deity.Stance_Bosmer = sBosmer
-    deity.Stance_Dunmer = sDunmer
-    deity.Stance_Khajiit = sKhajiit
-    deity.Stance_Argonian = sArgonian
-    deity.Stance_Orc = sOrc
-    deity.Stance_Redguard = sRedguard
-EndFunction
 
 ; Runtime record-compatible projection of the canonical matrix. Existing saves bake VMAD
 ; property values at first quest init and never re-read them, so ESP changes only reach new
@@ -12753,127 +11060,8 @@ EndFunction
 ; TOLERATED/CURSE cannot be represented by PDV_DeityBase's four integer values and project
 ; to FOREIGN here: generic deeds stay closed while quest reactions read the richer JSON label.
 ; NATIVE=0 FOREIGN=1 TABOO=2 HOSTILE=3; order Nord,Imp,Bret,Alt,Bos,Dun,Kha,Arg,Orc,Red.
-Function ApplyStancesForDeity(PDV_DeityBase deity)
-    String sName = deity.DeityName
-    if sName == "kyne"
-        ApplyStances(deity, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Talos"
-        ApplyStances(deity, 0, 1, 0, 3, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Shor"
-        ApplyStances(deity, 0, 1, 3, 3, 1, 1, 1, 1, 1, 3)
-    elseIf sName == "Tsun"
-        ApplyStances(deity, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Stuhn"
-        ApplyStances(deity, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Kynareth"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Mara"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "akatosh"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Arkay"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Stendarr"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Julianos"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Dibella"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Zenithar"
-        ApplyStances(deity, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "magnus"
-        ApplyStances(deity, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1)
-    elseIf sName == "Y'ffre"
-        ApplyStances(deity, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1)
-    elseIf sName == "auri-el"
-        ApplyStances(deity, 1, 1, 1, 0, 0, 1, 1, 1, 3, 1)
-    elseIf sName == "xarxes"
-        ApplyStances(deity, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1)
-    ; Azura's stance branch read "azurah" while the canonical runtime name is "Azura"
-    ; (trailing h; Papyrus == is case-insensitive so lowercase alone was never the
-    ; problem), so her per-race stance matrix never applied. Dual-check both spellings.
-    elseIf sName == "Azura" || sName == "Azurah"
-        ApplyStances(deity, 2, 2, 1, 2, 1, 0, 0, 1, 2, 1)
-    elseIf sName == "Boethiah"
-        ApplyStances(deity, 2, 2, 2, 3, 2, 0, 1, 1, 3, 1)
-    elseIf sName == "Mephala"
-        ApplyStances(deity, 2, 2, 1, 2, 1, 0, 1, 1, 2, 1)
-    elseIf sName == "Baan Dar"
-        ApplyStances(deity, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1)
-    elseIf sName == "rajhin"
-        ApplyStances(deity, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1)
-    elseIf sName == "alkosh"
-        ApplyStances(deity, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1)
-    elseIf sName == "khenarthi"
-        ApplyStances(deity, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1)
-    elseIf sName == "Tu'whacca"
-        ApplyStances(deity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
-    elseIf sName == "Leki"
-        ApplyStances(deity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
-    elseIf sName == "HoonDing"
-        ApplyStances(deity, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
-    elseIf sName == "Malacath"
-        ApplyStances(deity, 1, 2, 1, 2, 1, 2, 1, 1, 0, 3)
-    elseIf sName == "The Hist"
-        ApplyStances(deity, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1)
-    elseIf sName == "sithis"
-        ApplyStances(deity, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2)
-    elseIf sName == "trinimac"
-        ApplyStances(deity, 1, 1, 1, 0, 1, 1, 1, 1, 2, 1)
-    elseIf sName == "Z'en"
-        ApplyStances(deity, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1)
-    elseIf sName == "Syrabane"
-        ; Added 2026-08-02. Syrabane shipped with NO Stance_* properties at all on
-        ; 07164C:Devotion.esp (4 props where every sibling carries 14), so Stance_Altmer
-        ; fell to the PDV_DeityBase default of 1 = STANCE_FOREIGN. That made
-        ; IsRaceNativeForPlayer() false, which makes ScoreFromTable early-out -- every
-        ; likes/dislikes row for him would have scored 0.0, and his curated signals would
-        ; have landed at the 0.5x foreign multiplier. Values are from
-        ; references/phase4/PDV_StanceMatrix.csv: Altmer NATIVE, all others FOREIGN.
-        ApplyStances(deity, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1)
-    endIf
-EndFunction
 
-Bool _dawnRosterMissingLogged = false
 
-Function ProcessDawn()
-    if !PDV_FLST_AllDeities
-        ; D1 sweep. This used to log unconditionally on EVERY dawn -- once per in-game day,
-        ; forever, on a broken install. Latched to once per session: the condition is fatal
-        ; and worth a line in the log even with debug off, but it does not change, so
-        ; repeating it daily only buries whatever else the user is trying to read.
-        if !_dawnRosterMissingLogged
-            _dawnRosterMissingLogged = true
-            Debug.Trace("[PDV] ProcessDawn: PDV_FLST_AllDeities not assigned. Dawn processing is disabled for this session.")
-        endIf
-        return
-    endIf
-
-    EnsureAkatoshRuntimeIdentity()
-    RunDawnAwardAltmerAuriElDawn()
-    RunDawnAwardAltmerXarxesRecord()
-    RunDawnRefreshDevotionMarks()
-    RunDawnConsolidateScratch()
-    ProcessBroadPantheonDawn()
-    EvaluateKhajiitFocusedEmphasis()
-    RunDawnConsolidateDaedricWeek()
-    RunDawnRefreshTrackStates()
-    EvaluateAltmerCrisisAtDawn()
-    RunDawnApplyDecayNoop()
-    RunDawnApplySpellAndNeglectLayersNoop()
-    RunDawnProcessCommitmentOffersNoop()
-    RunDawnNotifyNoop()
-    RunDawnBookOfDays()
-    RunDawnChampionAmbient()
-    SyncKhajiitRuntimeState()
-    ProcessKhajiitAlkoshWordDrip()
-    DisarmDunmerAncestorWatch()
-    RequestPanelRefresh()
-
-    if GetDebugLevel() >= 1
-        Debug.Trace("[PDV] ProcessDawn complete.")
-    endIf
-EndFunction
 
 ; --- Book of Days dawn pass ---
 ; Ages out old entries (even on a silent day), records any per-race PRIMARY mode change
@@ -12906,97 +11094,14 @@ EndFunction
 ;
 ; Text only. No piety, no metric, no state change, nothing to farm: the MCM notification toggle
 ; gates it and the cadence stamp bounds it.
-Function RunDawnChampionAmbient()
-    if !NotificationsEnabled() || IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-
-    RunDawnChampionDeityAmbient()
-    RunDawnAltmerHeritageAmbient()
-EndFunction
 
 ; The surfacing deity is the active patron -- the same scope RunDawnRefreshDevotionMarks uses for
 ; Long Devotion marks, so the ambient voice and the mark ladder always agree about whose season is
 ; being counted. A worshipper with no patron gets the heritage arm below instead.
-Function RunDawnChampionDeityAmbient()
-    PDV_DeityBase deity = _activeDeity
-    if !deity || GetTier(deity) < TIER_CHAMPION
-        return
-    endIf
-
-    String cadenceKey = "PDV.Ambient.Champion." + deity.DeityIndex + ".Day"
-    Int todayStamp = GetDevotionalDay() + 2
-    Int lastStamp = ReadZeroReservedDevotionalDayStamp(cadenceKey)
-    if lastStamp > 0 && (todayStamp - lastStamp) < AMBIENT_CHAMPION_CADENCE_DAYS
-        return
-    endIf
-
-    ; The deep variant needs a mark actually earned. Without that gate the alternation would show
-    ; the "you have kept this for seasons" line to somebody who reached Champion four days ago.
-    String countKey = "PDV.Ambient.Champion." + deity.DeityIndex + ".Count"
-    Int shown = StorageUtil.GetIntValue(None, countKey)
-    Bool deep = (shown % 2) == 1 && StorageUtil.GetIntValue(None, "PDV.LongDevotion.MarkHigh." + deity.DeityIndex) >= 1
-    if !ShowChampionAmbientForDeity(deity, deep)
-        return
-    endIf
-
-    WriteZeroReservedDevotionalDayStamp(cadenceKey)
-    StorageUtil.SetIntValue(None, countKey, shown + 1)
-    String variantLabel = "standing"
-    if deep
-        variantLabel = "long-devotion"
-    endIf
-    Trace(2, "Champion ambient surfaced for " + deity.DeityName + " (" + variantLabel + ")")
-EndFunction
 
 ; Returns False for a deity that ships no ambient records, so the cadence stamp is never spent on
 ; a surfacing that did not happen -- a deity given records later starts speaking immediately
 ; instead of waiting out a phantom cooldown.
-Bool Function ShowChampionAmbientForDeity(PDV_DeityBase deity, Bool deep)
-    if deity == PDV_AuriEl
-        if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return, "You have met every dawn. Auri-El has counted them all.")
-        else
-            ShowAltmerNotification(PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn, "The dawn answers you now, as it answered your ancestors.")
-        endIf
-        return True
-    elseIf deity == PDV_Magnus
-        if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay, "Magnus has watched you study for a long time now.")
-        else
-            ShowAltmerNotification(PDV_Notif_Altmer_Magnus_ChampionAmbient_Study, "The spells come easily today. Your study shows.")
-        endIf
-        return True
-    elseIf deity == PDV_Xarxes
-        if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage, "Xarxes has kept the record of your whole life.")
-        else
-            ShowAltmerNotification(PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record, "Xarxes has written your name into the record.")
-        endIf
-        return True
-    elseIf deity == PDV_Trinimac
-        if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword, "Your sword arm is steady. Trinimac made it so.")
-        else
-            ShowAltmerNotification(PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch, "You have held the line, and Trinimac saw it.")
-        endIf
-        return True
-    elseIf deity == PDV_Syrabane
-        if deep
-            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard, "Syrabane has warded you so long you forget it is there.")
-        else
-            ShowAltmerNotification(PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward, "Syrabane's ward is on you, quiet and steady.")
-        endIf
-        return True
-    elseIf deity == PDV_Kyne
-        ; Kyne keeps her existing one-shot at the moment of the reach; this is the recurring layer
-        ; on top of it, not a replacement. She ships one ambient record, so both slots speak it.
-        ShowNordNotification(PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
-        return True
-    endIf
-
-    return False
-EndFunction
 
 ; The heritage arm is deity-agnostic: it speaks for the inheritance every Altmer keeps, so it
 ; reaches a broad worshipper with no patron at all. The fall line is a one-shot on the transition
@@ -13008,17 +11113,17 @@ Function RunDawnAltmerHeritageAmbient()
     endIf
 
     String highKey = "PDV.Ambient.Heritage.WasHigh"
-    if PDV_AltmerAncestorSubstrate.GetSubstrateTier() >= TIER_CHAMPION
+    if PDV_AltmerAncestorSubstrate.GetSubstrateTier() >= LedgerRuntime.TIER_CHAMPION
         StorageUtil.SetIntValue(None, highKey, 1)
 
         String cadenceKey = "PDV.Ambient.Heritage.Day"
-        Int todayStamp = GetDevotionalDay() + 2
-        Int lastStamp = ReadZeroReservedDevotionalDayStamp(cadenceKey)
+        Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
+        Int lastStamp = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(cadenceKey)
         if lastStamp > 0 && (todayStamp - lastStamp) < AMBIENT_CHAMPION_CADENCE_DAYS
             return
         endIf
 
-        WriteZeroReservedDevotionalDayStamp(cadenceKey)
+        LedgerRuntime.WriteZeroReservedDevotionalDayStamp(cadenceKey)
         ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageExemplar, "You keep the old Altmer way, and you keep it well.")
     elseIf StorageUtil.GetIntValue(None, highKey) == 1
         StorageUtil.SetIntValue(None, highKey, 0)
@@ -13029,12 +11134,12 @@ EndFunction
 Function EmitBookOfDaysBroadLaneTierChange(Int today)
     Int originRace = GetPlayerOriginRaceIndex()
     Int broadTier = GetBroadLaneTierForOrigin(originRace)
-    if broadTier <= TIER_NONE
+    if broadTier <= LedgerRuntime.TIER_NONE
         return
     endIf
 
-    Int tier = TIER_SEEKER
-    while tier <= broadTier && tier <= TIER_DEVOTED
+    Int tier = LedgerRuntime.TIER_SEEKER
+    while tier <= broadTier && tier <= LedgerRuntime.TIER_DEVOTED
         String guard = "PDV.BookOfDays.BroadLaneTierShown." + originRace + "." + tier
         if StorageUtil.GetIntValue(None, guard) != 1
             StorageUtil.SetIntValue(None, guard, 1)
@@ -13168,7 +11273,7 @@ Function RunDawnAwardAltmerAuriElDawn()
         return
     endIf
 
-    Int dawnDayStamp = GetDevotionalDay() + 2
+    Int dawnDayStamp = LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay") == dawnDayStamp
         return
     endIf
@@ -13205,7 +11310,7 @@ Function RunDawnAwardAltmerXarxesRecord()
         return
     endIf
 
-    Int dawnDayStamp = GetDevotionalDay() + 2
+    Int dawnDayStamp = LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay") == dawnDayStamp
         return
     endIf
@@ -13218,70 +11323,10 @@ Function RunDawnAwardAltmerXarxesRecord()
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay", dawnDayStamp)
-    AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.5)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.5)
     Trace(2, "Altmer Xarxes record-kept routed for devotional day " + (dawnDayStamp - 2))
 EndFunction
 
-Function RunDawnConsolidateScratch()
-    _dawnHadActivity = False
-    StorageUtil.StringListClear(None, "PDV.BookOfDays.TodayFed")
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-
-    while i < count
-        Form deityForm = PDV_FLST_AllDeities.GetAt(i)
-        PDV_DeityBase deity = deityForm as PDV_DeityBase
-
-        ; Dawn skip (2026-07-05): a deity outside the origin roster with zero
-        ; scratch and zero standing has nothing to consolidate and no surface
-        ; that reads its Week ring or tier -- skip the per-dawn writes for it.
-        ; Old saves with pre-gate foreign piety still consolidate (piety > 0
-        ; falls through to the full body).
-        Bool dawnSkip = False
-        if deity && !IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
-            if StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday") == 0.0 && StorageUtil.GetFloatValue(deityForm, "PDV.Piety") == 0.0
-                dawnSkip = True
-            endIf
-        endIf
-
-        if deity && !dawnSkip
-            EnsureDeityState(deity)
-
-            Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
-            Float scaledToday = pietyToday * GAIN_RATE_SCALE
-            Float dailyCap = PIETY_DAILY_MAX_DELTA
-            if PDV_ModePresetRef
-                dailyCap = dailyCap * PDV_ModePresetRef.DailyCapScalar()
-            endIf
-            Float clampedToday = PDV_DevotionRules.ClampValue(scaledToday, -dailyCap, dailyCap)
-            if clampedToday > 0.0
-                clampedToday = clampedToday * GetOrcLifeModeGainMultiplier(deity)
-                clampedToday = clampedToday * GetImperialCurseGainMultiplier(deity)
-                ; Record the gods fed today so the dawn digest can name them.
-                RecordBookOfDaysFedName(GetPublicDeityDisplayName(deity))
-            endIf
-            Float oldPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-            Float newPiety = PDV_DevotionRules.ClampValue(oldPiety + clampedToday, 0.0, PIETY_MAX)
-
-            StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
-            ; Feed the Weekly tab's 7-day ring with this day's net before clearing it.
-            PushWeekNet(deityForm, pietyToday)
-            StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-            if clampedToday != 0.0
-                StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", Utility.GetCurrentGameTime())
-                _dawnHadActivity = True
-            endIf
-
-            Int newTier = RecomputeTier(deity)
-
-            if GetDebugLevel() >= 2
-                Debug.Trace("[PDV] ProcessDawn: " + deity.DeityName + " piety " + oldPiety + " -> " + newPiety + ", today " + pietyToday + " scaled to " + scaledToday + " clamped/applied to " + clampedToday + ", tier now " + newTier)
-            endIf
-        endIf
-
-        i += 1
-    endWhile
-EndFunction
 
 ; Daedric Princes apply piety immediately (no per-day fold into PDV.Piety), so this
 ; only rolls the day's tally into the Weekly ring and clears it -- it must NOT touch
@@ -13310,254 +11355,20 @@ Function RunDawnConsolidateDaedricWeek()
     endWhile
 EndFunction
 
-Function RunDawnApplyDecayNoop()
-    RunDawnApplyDecay()
-EndFunction
 
-Function RunDawnRefreshTrackStates()
-    HandleCurseStateRefresh("dawn")
 
-    if PDV_ConcordatStandingTrack
-        PDV_ConcordatStandingTrack.RefreshState()
-    endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
-        RunDawnRefreshImperialAncestor()
-    endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
-        EvaluateKhajiitFocusedEmphasis()
-        RefreshKhajiitLunarPosture("dawn")
-    endIf
 
-    if IsArgonianOrigin()
-        RunDawnRefreshArgonianHist()
-    endIf
 
-    if IsAltmerOrigin()
-        String oldAltmerBand = GetAltmerCommittedAlignmentJournalBand()
-        if PDV_ThalmorAlignmentTrack
-            PDV_ThalmorAlignmentTrack.RefreshState()
-            MaybeSurfaceAltmerAlignmentBandChange(oldAltmerBand, "dawn")
-        endIf
-        RunDawnRefreshAltmerAncestor()
-        SyncAltmerDisciplines(Game.GetPlayer())
-    endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_NORD
-        RunDawnRefreshNordAncestor()
-    endIf
 
-    if IsOrcOrigin()
-        EvaluateOrcLifeModeAtDawn()
-        SyncOrcTrialOfIron(Game.GetPlayer())
-    endIf
 
-    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON
-        RunDawnRefreshBretonAncestor()
-        DecayBretonWitchcraftExposureAtDawn()
-        DecayBretonDruidicStandingAtDawn()
-    endIf
 
-    if IsBosmerOrigin() && PDV_BosmerPathTrack
-        EnsureBosmerCurrentPathFallback()
-        EvaluateBosmerForcedReckoning()
-        SyncBosmerNaming(Game.GetPlayer())
-        ArmBosmerDreamOnPathChange()
-    endIf
-
-    if IsRedguardOrigin() && PDV_RedguardSectTrack
-        SyncRedguardRemembering(Game.GetPlayer())
-    endIf
-EndFunction
-
-Function RunDawnApplySpellAndNeglectLayersNoop()
-    RunDawnApplySpellAndNeglectLayers()
-EndFunction
-
-Function RunDawnProcessCommitmentOffersNoop()
-    RunDawnProcessCommitmentOffers()
-EndFunction
-
-Function RunDawnNotifyNoop()
-    RunDawnNotify()
-EndFunction
-
-Function RunDawnApplyDecay()
-    if !PDV_FLST_AllDeities
-        return
-    endIf
-
-    Float nowTime = Utility.GetCurrentGameTime()
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-    while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-        if deity
-            ApplyDecayToDeity(deity, nowTime)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
-Function RunDawnApplySpellAndNeglectLayers()
-    if IsBroadWorshipActive()
-        ClearAllNeglectFlags()
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", 0)
-        ; Broad-lane lapse neglect (owner ruling 2026-06-27): a broad / full-pantheon worshipper who
-        ; goes quiet for a few days feels gentle neglect too, not just focused patrons. Nord broad
-        ; (Old Ways / Nine Divines) reuses the Kyne weather spell as its broad-lane neglect for now;
-        ; per-race broad-lane neglect spells are a follow-on. Other races: no broad spell yet.
-        Bool nordBroadLapsed = IsBroadLaneLapsed() && GetPlayerOriginRaceIndex() == ORIGIN_NORD
-        SyncKyneNeglectSpell(nordBroadLapsed)
-        SyncNordPatronNeglectSpells()
-        if nordBroadLapsed && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
-            SendPrismaToast("journal", "warning", "Devotion quiet", "The gods feel distant as your devotion goes quiet.")
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", PDV_DevotionRules.BoolToInt(nordBroadLapsed))
-        FavorRuntime.UpdateContextualFavorRuntime()
-        SyncFirstTierRaceRewardRuntime()
-        return
-    endIf
-
-    if GetPatronState() != PATRON_STATE_ACTIVE || !_activeDeity
-        ClearAllNeglectFlags()
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", 0)
-        StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", 0)
-        SyncKyneNeglectSpell(False)
-        SyncNordPatronNeglectSpells()
-        FavorRuntime.UpdateContextualFavorRuntime()
-        SyncFirstTierRaceRewardRuntime()
-        return
-    endIf
-
-    ClearAllNeglectFlags()
-    Int activeCount = ApplyGenericNeglectFlags()
-    ; Recency lapse (owner ruling 2026-06-27): the active patron bites after a few quiet days even
-    ; though it is decay-shielded and rarely reaches the piety<=10 floor from absence. Force-flag it
-    ; on lapse so the existing patron-spell (Kyne) + toast logic below fires. Non-Kyne patrons get
-    ; the toast now; their own flat neglect spell is a follow-on (per-patron Nord neglect).
-    if IsPatronLapsed(_activeDeity) && !IsNeglectFlagActive(_activeDeity)
-        SetNeglectFlag(_activeDeity, True)
-        activeCount += 1
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", activeCount)
-    ; Owner ruling 2026-06-26: committing to a patron fades other gods' neglect. Kyne's
-    ; weather-neglect now fires only when Kyne is the player's own active patron; any
-    ; non-Kyne focus (any tier) suppresses it. Broad worship already had no Kyne penalty.
-    SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)
-    SyncNordPatronNeglectSpells()
-    FavorRuntime.UpdateContextualFavorRuntime()
-
-    Bool patronNeglected = IsNeglectFlagActive(_activeDeity)
-    Int priorPatronToastState = StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState")
-    if patronNeglected && priorPatronToastState == 0
-        SendPrismaEventToast("neglect", _activeDeity, "", "", "")
-        SurfaceTransition("neglect", _activeDeity.DeityName, "drop", _activeDeity.DeityIndex, "absence")
-    elseIf !patronNeglected && priorPatronToastState == 1
-        SurfaceTransition("neglect", _activeDeity.DeityName, "recover", _activeDeity.DeityIndex, "renewal")
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", PDV_DevotionRules.BoolToInt(patronNeglected))
-    SyncFirstTierRaceRewardRuntime()
-EndFunction
-
-Function RunDawnProcessCommitmentOffers()
-    if IsBosmerOrigin()
-        EvaluateBosmerPathSuggestion()
-        return
-    endIf
-
-    RefreshCommitmentOfferQualificationGuards()
-    EvaluateFormalCommitmentOffer()
-EndFunction
-
-Function RefreshCommitmentOfferQualificationGuards()
-    if !PDV_FLST_AllDeities
-        return
-    endIf
-
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-    while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-        if UsesFormalCommitmentOffersForDeity(deity) && GetPiety(deity) < COMMITMENT_OFFER_THRESHOLD
-            StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 0)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
-Function RunDawnNotify()
-    SendPrismaEventToast("dawn", None, "", "", "", _dawnHadActivity)
-    RefreshDiegeticMedallion("dawn")
-    Trace(2, "Pattern summary: " + DebugGetPatternProvingSummary())
-EndFunction
-
-Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
-    if !deity
-        return
-    endIf
-
-    if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity
-        return
-    endIf
-
-    EnsureDeityState(deity)
-    Form deityForm = deity as Form
-    Float lastEventTime = StorageUtil.GetFloatValue(deityForm, "PDV.LastEventGameTime")
-    if lastEventTime == 0.0
-        return
-    endIf
-
-    Float decayGraceDays = DECAY_GRACE_DAYS
-    if PDV_ModePresetRef
-        decayGraceDays = decayGraceDays * PDV_ModePresetRef.GraceScalar()
-    endIf
-
-    if (nowTime - lastEventTime) < decayGraceDays
-        return
-    endIf
-
-    Float currentPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-    if currentPiety <= 0.0
-        return
-    endIf
-
-    ; fix-plan 4.2: decay is applied BY the dawn pass, so its once-per-day guard must
-    ; use the dawn day. On raw midnight a sleep through 00:00 could let the same dawn
-    ; cycle decay twice (or skip a day) relative to the pass that drives it.
-    Int currentDay = GetDevotionalDay() + 2
-    if StorageUtil.GetIntValue(deityForm, "PDV.LastDecayAppliedDay") == currentDay
-        return
-    endIf
-
-    Float multiplier = 1.0
-    if IsBroadWorshipActive()
-        multiplier = BROAD_WORSHIP_DECAY_MULTIPLIER
-    endIf
-
-    Float decayScalar = 1.0
-    if PDV_ModePresetRef
-        decayScalar = PDV_ModePresetRef.DecayScalar()
-    endIf
-    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity) * decayScalar)
-    Float floorValue = GetDecayFloorForDeity(deity, currentPiety)
-    if newPiety < floorValue
-        newPiety = floorValue
-    endIf
-
-    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", currentDay)
-
-    if newPiety != currentPiety
-        StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
-        RecomputeTier(deity)
-        Trace(2, "Decay applied to " + deity.DeityName + ": " + currentPiety + " -> " + newPiety)
-    endIf
-EndFunction
 
 Int Function GetDebugLevel()
-    if PDV_GLO_DebugLevel
-        return PDV_GLO_DebugLevel.GetValueInt()
+    if LedgerRuntime.PDV_GLO_DebugLevel
+        return LedgerRuntime.PDV_GLO_DebugLevel.GetValueInt()
     endIf
     return 0
 EndFunction
@@ -13572,13 +11383,13 @@ Function RunDebugCommand()
     elseIf commandId == 2
         DebugResetDeityByIndex(deityIndex)
     elseIf commandId == 3
-        ForceSetActiveDeityByIndex(deityIndex)
+        LedgerRuntime.ForceSetActiveDeityByIndex(deityIndex)
     elseIf commandId == 4
-        ForceSetPietyToday(amount)
+        LedgerRuntime.ForceSetPietyToday(amount)
     elseIf commandId == 5
-        ProcessDawn()
+        LedgerRuntime.ProcessDawn()
     elseIf commandId == 6
-        ForceSetPiety(amount)
+        LedgerRuntime.ForceSetPiety(amount)
     elseIf commandId == 7
         DebugAwardCuratedSignalByIndex(deityIndex, DebugSignalType)
     elseIf commandId == 8
@@ -13604,7 +11415,7 @@ Function DebugClosePrismaSurfaces()
 EndFunction
 
 Function DebugSyncRewardsOnly()
-    RunDawnApplySpellAndNeglectLayers()
+    LedgerRuntime.RunDawnApplySpellAndNeglectLayers()
     _panelDirty = False
     DebugClosePrismaSurfaces()
     if GetDebugLevel() >= 1
@@ -13612,52 +11423,11 @@ Function DebugSyncRewardsOnly()
     endIf
 EndFunction
 
-Function ForceSetPiety(Float amount)
-    if !_activeDeity
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] ForceSetPiety skipped: no active patron.")
-        endIf
-        return
-    endIf
 
-    Form deityForm = _activeDeity as Form
-    StorageUtil.SetFloatValue(deityForm, "PDV.Piety", PDV_DevotionRules.ClampValue(amount, 0.0, PIETY_MAX))
-    RecomputeTier(_activeDeity, False)
-    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
-        EvaluateKhajiitFocusedEmphasis()
-        SyncKhajiitRuntimeState()
-    endIf
-EndFunction
 
-Function ForceSetActiveDeityByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
-    if !deity && deityIndex != -1
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] ForceSetActiveDeityByIndex failed: no deity with index " + deityIndex)
-        endIf
-        return
-    endIf
-
-    SetActiveDeity(deity, True)
-    ; Resync the race reward families immediately (mirrors DebugForceSetPietyByIndex):
-    ; without this a debug patron override surfaces every toast/panel/Survey cue but
-    ; grants no reward spells until the next dawn pass -- reads as "rewards not wired".
-    SyncFirstTierRaceRewardRuntime()
-EndFunction
-
-Function ForceSetPietyToday(Float amount)
-    if !_activeDeity
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] ForceSetPietyToday skipped: no active patron.")
-        endIf
-        return
-    endIf
-
-    StorageUtil.SetFloatValue(_activeDeity as Form, "PDV.PietyToday", amount)
-EndFunction
 
 Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugForceSetPietyByIndex failed: no deity with index " + deityIndex)
@@ -13666,11 +11436,11 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
     endIf
 
     Form deityForm = deity as Form
-    StorageUtil.SetFloatValue(deityForm, "PDV.Piety", PDV_DevotionRules.ClampValue(amount, 0.0, PIETY_MAX))
+    StorageUtil.SetFloatValue(deityForm, "PDV.Piety", PDV_DevotionRules.ClampValue(amount, 0.0, LedgerRuntime.PIETY_MAX))
     ; Surface the tier change so a debug-forced tier reach is testable (notice + toast +
     ; Book of Days entry). Only fires on an UP-crossing from a lower tier -- if the deity
     ; is already at/above the target, reset it first, or use the piety-today + dawn path.
-    RecomputeTier(deity, True)
+    LedgerRuntime.RecomputeTier(deity, True)
     if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
         EvaluateKhajiitFocusedEmphasis()
     endIf
@@ -13678,11 +11448,11 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
     ; Imperial/Altmer focused patron, etc.) actually grants on the seed. RecomputeTier only
     ; fires OnTierChange (Boon slots), not SyncFirstTierRaceRewardRuntime -- without this a
     ; debug piety seed reads a false 0 on the HP bar until a dawn pass.
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
 EndFunction
 
 Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugForceSetPietyTodayByIndex failed: no deity with index " + deityIndex)
@@ -13694,7 +11464,7 @@ Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)
 EndFunction
 
 Function DebugPrimeDecayGraceByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugPrimeDecayGraceByIndex failed: no deity with index " + deityIndex)
@@ -13707,14 +11477,14 @@ Function DebugPrimeDecayGraceByIndex(Int deityIndex)
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", nowTime)
-    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", GetDevotionalDay() + 1)
+    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", LedgerRuntime.GetDevotionalDay() + 1)
     StorageUtil.SetFloatValue(deityForm, "PDV.PassiveDecayFloor", 0.0)
-    RecomputeTier(deity)
+    LedgerRuntime.RecomputeTier(deity)
     Trace(1, "Decay grace primed for " + deity.DeityName + ": " + DebugGetDecaySummaryByIndex(deityIndex))
 EndFunction
 
 Function DebugPrimeDecayEligibleByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugPrimeDecayEligibleByIndex failed: no deity with index " + deityIndex)
@@ -13726,20 +11496,20 @@ Function DebugPrimeDecayEligibleByIndex(Int deityIndex)
     Float nowTime = Utility.GetCurrentGameTime()
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-    StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", nowTime - DECAY_GRACE_DAYS - 1.0)
-    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", GetDevotionalDay() + 1)
+    StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", nowTime - LedgerRuntime.DECAY_GRACE_DAYS - 1.0)
+    StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", LedgerRuntime.GetDevotionalDay() + 1)
     StorageUtil.SetFloatValue(deityForm, "PDV.PassiveDecayFloor", 0.0)
-    RecomputeTier(deity)
+    LedgerRuntime.RecomputeTier(deity)
     Trace(1, "Decay eligible primed for " + deity.DeityName + ": " + DebugGetDecaySummaryByIndex(deityIndex))
 EndFunction
 
 Function DebugRunDecayPass()
-    RunDawnApplyDecay()
+    LedgerRuntime.RunDawnApplyDecay()
     Trace(1, "Decay pass debug run.")
 EndFunction
 
 Function DebugRunDecayProofDaysByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugRunDecayProofDaysByIndex failed: no deity with index " + deityIndex)
@@ -13754,18 +11524,18 @@ Function DebugRunDecayProofDaysByIndex(Int deityIndex)
         StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 20.0)
     endIf
     StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-    StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", nowTime - DECAY_GRACE_DAYS - 1.0)
-    RecomputeTier(deity)
+    StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", nowTime - LedgerRuntime.DECAY_GRACE_DAYS - 1.0)
+    LedgerRuntime.RecomputeTier(deity)
 
     Int i = 0
     while i < 400
         currentPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-        Float floorValue = GetDecayFloorForDeity(deity, currentPiety)
+        Float floorValue = LedgerRuntime.GetDecayFloorForDeity(deity, currentPiety)
         if currentPiety <= floorValue
             i = 400
         else
             StorageUtil.SetIntValue(deityForm, "PDV.LastDecayAppliedDay", ((nowTime + i) as Int) - 1)
-            ApplyDecayToDeity(deity, nowTime + i)
+            LedgerRuntime.ApplyDecayToDeity(deity, nowTime + i)
         endIf
         i += 1
     endWhile
@@ -13773,27 +11543,27 @@ Function DebugRunDecayProofDaysByIndex(Int deityIndex)
 EndFunction
 
 Function DebugAwardCuratedSignalByIndex(Int deityIndex, Int signalType)
-    AwardCuratedSignalByIndex(deityIndex, signalType)
+    LedgerRuntime.AwardCuratedSignalByIndex(deityIndex, signalType)
 EndFunction
 
 String Function DebugGetPietyMapString()
-    if !PDV_FLST_AllDeities
+    if !LedgerRuntime.PDV_FLST_AllDeities
         return "No deity roster is assigned."
     endIf
 
     Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
+    Int count = LedgerRuntime.PDV_FLST_AllDeities.GetSize()
     String output = ""
     Int shown = 0
 
     ; Only list deities that have moved (stored piety, scratch piety, or a tier), so the
     ; message box stays short and readable instead of dumping the whole roster at zero.
     while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+        PDV_DeityBase deity = LedgerRuntime.PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
-            Float piety = GetPiety(deity)
-            Float today = GetPietyToday(deity)
-            Int tier = GetTier(deity)
+            Float piety = LedgerRuntime.GetPiety(deity)
+            Float today = LedgerRuntime.GetPietyToday(deity)
+            Int tier = LedgerRuntime.GetTier(deity)
             if piety != 0.0 || today != 0.0 || tier != 0
                 String entry = deity.DeityName + ": tier=" + tier + " piety=" + piety + " scratch=" + today
                 if output == ""
@@ -13815,14 +11585,14 @@ String Function DebugGetPietyMapString()
 EndFunction
 
 Function DebugClearActiveDeity()
-    SetActiveDeity(None)
+    LedgerRuntime.SetActiveDeity(None)
     ; Strip the now-unfocused patron's reward spells immediately (same dawn-lag class
     ; as ForceSetActiveDeityByIndex).
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
 EndFunction
 
 Function DebugSetBroadWorship()
-    SetBroadWorship()
+    LedgerRuntime.SetBroadWorship()
 EndFunction
 
 ; Debug: seed the player's race broad-worship lane to its T2 reward so the reward/UI
@@ -13830,10 +11600,10 @@ EndFunction
 ; frozen migration counters are never written. Breton seeds its separate active
 ; tradition to 50 practice points. This is not pacing proof.
 Function DebugSeedBroadLane()
-    SetBroadWorship()
+    LedgerRuntime.SetBroadWorship()
     Int origin = GetPlayerOriginRaceIndex()
     if origin == ORIGIN_IMPERIAL
-        SetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL, BROAD_PANTHEON_FAITHFUL_THRESHOLD, "debug_seed_broad_lane")
+        LedgerRuntime.SetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_IMPERIAL, LedgerRuntime.BROAD_PANTHEON_FAITHFUL_THRESHOLD, "debug_seed_broad_lane")
     elseIf origin == ORIGIN_BRETON
         SetBretonPracticeCount(GetBretonTraditionValue(), BRETON_PRACTICE_DEVOTED_POINTS)
     elseIf origin == ORIGIN_ORC
@@ -13844,7 +11614,7 @@ Function DebugSeedBroadLane()
     else
         Trace(1, "DebugSeedBroadLane: origin " + origin + " has no broad-lane accumulator wired here (Nord/others not yet covered).")
     endIf
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     Trace(1, "DebugSeedBroadLane seeded broad lane for origin " + origin + ".")
 EndFunction
@@ -13856,7 +11626,7 @@ String Function DebugGetBretonPracticeSummary()
 
     Int traditionValue = GetBretonTraditionValue()
     Int practicePoints = GetBretonPracticeCount(traditionValue)
-    Int today = GetDevotionalDay() + 2
+    Int today = LedgerRuntime.GetDevotionalDay() + 2
     Int pointDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
     Int pointsToday = 0
     if pointDay == today
@@ -13874,9 +11644,9 @@ String Function DebugSetBretonPracticePoints(Int practicePoints)
 
     Int traditionValue = GetBretonTraditionValue()
     SetBretonPracticeCount(traditionValue, practicePoints)
-    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", GetDevotionalDay() + 2)
+    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", LedgerRuntime.GetDevotionalDay() + 2)
     StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", 0)
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     Trace(1, "DebugSetBretonPracticePoints: tradition " + traditionValue + " -> " + PDV_DevotionRules.ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS) + ".")
     return DebugGetBretonPracticeSummary()
@@ -13916,7 +11686,7 @@ String Function DebugGetOriginDiagnostic()
 EndFunction
 
 Function DebugResetDeityByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugResetDeityByIndex failed: no deity with index " + deityIndex)
@@ -13929,13 +11699,13 @@ Function DebugResetDeityByIndex(Int deityIndex)
 
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", 0.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
-    StorageUtil.SetFloatValue(deityForm, "PDV.Tier", TIER_NONE as Float)
+    StorageUtil.SetFloatValue(deityForm, "PDV.Tier", LedgerRuntime.TIER_NONE as Float)
     StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", 0.0)
     StorageUtil.SetFloatValue(deityForm, "PDV.PassiveDecayFloor", 0.0)
 
     if deity == _activeDeity
-        deity.OnTierChange(oldTier, TIER_NONE)
-        RefreshPatronMirrors()
+        deity.OnTierChange(oldTier, LedgerRuntime.TIER_NONE)
+        LedgerRuntime.RefreshPatronMirrors()
     endIf
     if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         EvaluateKhajiitFocusedEmphasis()
@@ -13979,63 +11749,11 @@ EndFunction
     that chain is only NOW actually synchronous. See the Pass 4 changelog note
     on 7.2 for why that still does not make the SM receivers safe to change.
    ===================================================================== /;
-Function BeginBroadPantheonEvent(String logicalEventId)
-    ; Papyrus may schedule independent event stacks on this quest. Do not let a
-    ; second logical act borrow the first stack's temporary accumulator.
-    ;
-    ; DELIBERATELY NOT the Authoria 7.1 "containment" rewrite (1.0.3 review). That
-    ; change dropped this wait and instead folded a second concurrent act into the
-    ; live event as a nested depth. It is cheaper -- this is a 100 Hz busy loop for
-    ; up to two real seconds -- but it MERGES two genuinely simultaneous acts into
-    ; one broad-lane entry, and the second act's deltas are then judged against the
-    ; FIRST act's pool. The broad-pantheon contract requires the opposite: distinct
-    ; logical events serialize, and a stalled owner FAILS CLOSED (scope discarded)
-    ; rather than silently absorbing the newcomer. pdv_broad_pantheon_audit asserts
-    ; this shape (source.concurrent-event-serialization); do not "optimize" it away
-    ; without changing the contract first.
-    Float waitStarted = Utility.GetCurrentRealTime()
-    while _broadPantheonEventDepth > 0 && _broadPantheonEventId != logicalEventId
-        Utility.WaitMenuMode(0.01)
-        if Utility.GetCurrentRealTime() - waitStarted >= 2.0
-            Trace(1, "[PDV][BROAD_SCOPE_ABORT] discarded stalled logical event " + _broadPantheonEventId + " before " + logicalEventId)
-            ClearBroadPantheonEventScope()
-        endIf
-    endWhile
-    if _broadPantheonEventDepth == 0
-        _broadPantheonEventId = logicalEventId
-        _broadPantheonEventPool = GetActiveBroadPantheonPoolId()
-        _broadPantheonBestPositive = 0.0
-        _broadPantheonWorstNegative = 0.0
-    endIf
-    _broadPantheonEventDepth += 1
-EndFunction
 
-Bool Function JoinBroadPantheonEvent(String logicalEventId)
-    if logicalEventId == "" || _broadPantheonEventDepth <= 0 || _broadPantheonEventId != logicalEventId
-        Trace(1, "[PDV][BROAD_SCOPE_MISMATCH] cannot join " + logicalEventId + " while " + _broadPantheonEventId + " is active")
-        return False
-    endIf
-    _broadPantheonEventDepth += 1
-    return True
-EndFunction
 
-Function AccumulateBroadPantheonDelta(PDV_DeityBase deity, Float appliedDelta)
-    if _broadPantheonEventDepth <= 0 || _broadPantheonEventPool == "" || !deity
-        return
-    endIf
-    if !IsDeityEligibleForBroadPantheon(deity, _broadPantheonEventPool)
-        return
-    endIf
-
-    if appliedDelta > 0.0 && appliedDelta > _broadPantheonBestPositive
-        _broadPantheonBestPositive = appliedDelta
-    elseIf appliedDelta < 0.0 && appliedDelta < _broadPantheonWorstNegative
-        _broadPantheonWorstNegative = appliedDelta
-    endIf
-EndFunction
 
 Function AccumulateQueuedQuestReactionBroadDelta(PDV_DeityBase deity, Float appliedDelta)
-    if _qrQueueBroadPool == "" || !deity || !IsDeityEligibleForBroadPantheon(deity, _qrQueueBroadPool)
+    if _qrQueueBroadPool == "" || !deity || !LedgerRuntime.IsDeityEligibleForBroadPantheon(deity, _qrQueueBroadPool)
         return
     endIf
     if appliedDelta > 0.0 && appliedDelta > _qrQueueBroadBestPositive
@@ -14054,17 +11772,17 @@ Function CommitQueuedQuestReactionBroad(String reactionKey)
     endIf
     if _qrQueueBroadPool != "" && chosenDelta != 0.0
         Float nowTime = Utility.GetCurrentGameTime()
-        if !IsRecentBroadPantheonEventDuplicate(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
-            CatchUpBroadPantheonDecayBeforeCurrentDay(_qrQueueBroadPool)
-            if GetBroadPantheonScratch(_qrQueueBroadPool) == 0.0
-                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(_qrQueueBroadPool))
+        if !LedgerRuntime.IsRecentBroadPantheonEventDuplicate(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
+            LedgerRuntime.CatchUpBroadPantheonDecayBeforeCurrentDay(_qrQueueBroadPool)
+            if LedgerRuntime.GetBroadPantheonScratch(_qrQueueBroadPool) == 0.0
+                LedgerRuntime.WriteZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonScratchDayKey(_qrQueueBroadPool))
             endIf
-            StorageUtil.AdjustFloatValue(None, GetBroadPantheonScratchKey(_qrQueueBroadPool), chosenDelta)
-            StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(_qrQueueBroadPool), "quest_" + reactionKey)
-            StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(_qrQueueBroadPool), nowTime)
-            RememberBroadPantheonEvent(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
+            StorageUtil.AdjustFloatValue(None, LedgerRuntime.GetBroadPantheonScratchKey(_qrQueueBroadPool), chosenDelta)
+            StorageUtil.SetStringValue(None, LedgerRuntime.GetBroadPantheonLastEventKey(_qrQueueBroadPool), "quest_" + reactionKey)
+            StorageUtil.SetFloatValue(None, LedgerRuntime.GetBroadPantheonLastEventTimeKey(_qrQueueBroadPool), nowTime)
+            LedgerRuntime.RememberBroadPantheonEvent(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
             if chosenDelta > 0.0
-                WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(_qrQueueBroadPool))
+                LedgerRuntime.WriteZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonLastGainDayKey(_qrQueueBroadPool))
             endIf
         endIf
     endIf
@@ -14073,763 +11791,68 @@ Function CommitQueuedQuestReactionBroad(String reactionKey)
     _qrQueueBroadWorstNegative = 0.0
 EndFunction
 
-Function FlushBroadPantheonEvent()
-    if _broadPantheonEventDepth > 1
-        _broadPantheonEventDepth -= 1
-        return
-    endIf
-
-    Float chosenDelta = 0.0
-    if _broadPantheonBestPositive > 0.0
-        chosenDelta = _broadPantheonBestPositive
-    elseIf _broadPantheonWorstNegative < 0.0
-        chosenDelta = _broadPantheonWorstNegative
-    endIf
-
-    ApplyBroadPantheonEventResult(_broadPantheonEventPool, _broadPantheonEventId, chosenDelta)
-
-    ClearBroadPantheonEventScope()
-EndFunction
 
 ; Generic non-presented actions can spend several seconds scoring the full deity
 ; roster. Their broad result is carried in caller-local variables so that work
 ; never owns the Manager's shared temporary scope across the fan-out.
-Function CommitDetachedBroadPantheonEvent(String logicalEventId, String poolId, Float bestPositive, Float worstNegative, Int eventType)
-    Float chosenDelta = 0.0
-    if bestPositive > 0.0
-        chosenDelta = bestPositive
-    elseIf worstNegative < 0.0
-        chosenDelta = worstNegative
-    endIf
-    if logicalEventId == ""
-        logicalEventId = "likes_dislikes_" + eventType + "_" + Utility.GetCurrentGameTime()
-    endIf
-    ApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)
-EndFunction
 
-Function ApplyBroadPantheonEventResult(String poolId, String logicalEventId, Float chosenDelta)
-    if poolId == "" || logicalEventId == "" || chosenDelta == 0.0
-        return
-    endIf
 
-    Float nowTime = Utility.GetCurrentGameTime()
-    Bool duplicateEvent = IsRecentBroadPantheonEventDuplicate(poolId, logicalEventId, nowTime)
-    if duplicateEvent
-        return
-    endIf
 
-    CatchUpBroadPantheonDecayBeforeCurrentDay(poolId)
-    if GetBroadPantheonScratch(poolId) == 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
-    endIf
-    StorageUtil.AdjustFloatValue(None, GetBroadPantheonScratchKey(poolId), chosenDelta)
-    StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(poolId), logicalEventId)
-    StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(poolId), nowTime)
-    RememberBroadPantheonEvent(poolId, logicalEventId, nowTime)
-    if chosenDelta > 0.0
-        WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
-    endIf
-EndFunction
 
-Function ClearBroadPantheonEventScope()
-    _broadPantheonEventDepth = 0
-    _broadPantheonEventId = ""
-    _broadPantheonEventPool = ""
-    _broadPantheonBestPositive = 0.0
-    _broadPantheonWorstNegative = 0.0
-EndFunction
 
-Bool Function IsRecentBroadPantheonEventDuplicate(String poolId, String logicalEventId, Float nowTime)
-    if logicalEventId == ""
-        return False
-    endIf
-    String idKey = GetBroadPantheonRecentEventIdsKey(poolId)
-    String timeKey = GetBroadPantheonRecentEventTimesKey(poolId)
-    Int count = StorageUtil.StringListCount(None, idKey)
-    Int index = count - 1
-    while index >= 0
-        if StorageUtil.StringListGet(None, idKey, index) == logicalEventId
-            Float priorTime = StorageUtil.FloatListGet(None, timeKey, index)
-            if priorTime > 0.0 && (nowTime - priorTime) < 0.02
-                return True
-            endIf
-        endIf
-        index -= 1
-    endWhile
-    return False
-EndFunction
 
-Function RememberBroadPantheonEvent(String poolId, String logicalEventId, Float nowTime)
-    String idKey = GetBroadPantheonRecentEventIdsKey(poolId)
-    String timeKey = GetBroadPantheonRecentEventTimesKey(poolId)
-    while StorageUtil.StringListCount(None, idKey) >= 8
-        StorageUtil.StringListRemoveAt(None, idKey, 0)
-        StorageUtil.FloatListRemoveAt(None, timeKey, 0)
-    endWhile
-    StorageUtil.StringListAdd(None, idKey, logicalEventId, True)
-    StorageUtil.FloatListAdd(None, timeKey, nowTime, True)
-EndFunction
 
-String Function GetActiveBroadPantheonPoolId()
-    if GetPatronState() != PATRON_STATE_BROAD
-        return ""
-    endIf
-    Int origin = GetPlayerOriginRaceIndex()
-    if origin == ORIGIN_IMPERIAL
-        if IsImperialVampireStateActive()
-            return ""
-        endIf
-        return BROAD_PANTHEON_IMPERIAL
-    elseIf origin == ORIGIN_NORD
-        if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-            return BROAD_PANTHEON_NORD_NINE
-        endIf
-        return BROAD_PANTHEON_NORD_OLD
-    endIf
-    return ""
-EndFunction
 
-Bool Function IsDeityEligibleForBroadPantheon(PDV_DeityBase deity, String poolId)
-    if !deity
-        return False
-    endIf
-    if poolId == BROAD_PANTHEON_IMPERIAL
-        if deity == PDV_Talos
-            return StorageUtil.GetIntValue(None, "PDV.Imperial.TalosBroadUnlocked") == 1
-        endIf
-        return deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth || deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Zenithar
-    elseIf poolId == BROAD_PANTHEON_NORD_OLD
-        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Dibella || deity == PDV_Talos
-    elseIf poolId == BROAD_PANTHEON_NORD_NINE
-        return deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth || deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Zenithar || deity == PDV_Talos
-    endIf
-    return False
-EndFunction
 
-Float Function GetBroadPantheonStanding(String poolId)
-    if poolId == ""
-        return 0.0
-    endIf
-    return StorageUtil.GetFloatValue(None, GetBroadPantheonStandingKey(poolId))
-EndFunction
 
-Float Function GetBroadPantheonScratch(String poolId)
-    if poolId == ""
-        return 0.0
-    endIf
-    return StorageUtil.GetFloatValue(None, GetBroadPantheonScratchKey(poolId))
-EndFunction
 
-Function SetBroadPantheonStanding(String poolId, Float standing, String reason = "")
-    if poolId == ""
-        return
-    endIf
-    StorageUtil.SetFloatValue(None, GetBroadPantheonStandingKey(poolId), PDV_DevotionRules.ClampValue(standing, 0.0, BROAD_PANTHEON_POOL_MAX))
-    StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(poolId), reason)
-EndFunction
 
-Function ResetBroadPantheonPool(String poolId)
-    SetBroadPantheonStanding(poolId, 0.0, "debug_reset")
-    StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(poolId), 0.0)
-    StorageUtil.SetIntValue(None, GetBroadPantheonScratchDayKey(poolId), 0)
-    StorageUtil.SetIntValue(None, GetBroadPantheonScratchDayKey(poolId) + ".Encoding", 2)
-    StorageUtil.SetIntValue(None, GetBroadPantheonLastGainDayKey(poolId), 0)
-    WriteZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
-    StorageUtil.SetFloatValue(None, GetBroadPantheonLastEventTimeKey(poolId), 0.0)
-    StorageUtil.StringListClear(None, GetBroadPantheonRecentEventIdsKey(poolId))
-    StorageUtil.FloatListClear(None, GetBroadPantheonRecentEventTimesKey(poolId))
-    SyncBroadPantheonRewards(Game.GetPlayer())
-EndFunction
 
-Function ProcessBroadPantheonDawn()
-    Float signedCap = PIETY_DAILY_MAX_DELTA
-    if PDV_ModePresetRef
-        signedCap = signedCap * PDV_ModePresetRef.DailyCapScalar()
-    endIf
-    ; Every pool is processed, including a suppressed pool outside activePool,
-    ; so commitment and Nord baseline switching never pause the
-    ; BROAD_PANTHEON_DECAY_PER_DAWN inactivity rule.
-    ProcessOneBroadPantheonDawn(BROAD_PANTHEON_IMPERIAL, signedCap)
-    ProcessOneBroadPantheonDawn(BROAD_PANTHEON_NORD_OLD, signedCap)
-    ProcessOneBroadPantheonDawn(BROAD_PANTHEON_NORD_NINE, signedCap)
-    SyncBroadPantheonRewards(Game.GetPlayer())
-EndFunction
 
-Function ProcessOneBroadPantheonDawn(String poolId, Float signedCap)
-    ProcessBroadPantheonThroughDay(poolId, GetDevotionalDay(), signedCap, "dawn")
-EndFunction
 
-Function ProcessBroadPantheonThroughDay(String poolId, Int targetDay, Float signedCap, String reason)
-    Int processedStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
-    Int lastProcessedDay = targetDay - 1
-    if processedStamp <= 0
-        ; Existing saves process the target dawn once without inventing older
-        ; retroactive inactivity before this runtime knew the key.
-        lastProcessedDay = targetDay - 1
-    else
-        lastProcessedDay = processedStamp - 2
-    endIf
-    if targetDay <= lastProcessedDay
-        return
-    endIf
 
-    Float standing = GetBroadPantheonStanding(poolId)
-    Float standingBeforeProcessing = standing
-    Float scratch = GetBroadPantheonScratch(poolId)
-    Int scratchStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
-    Int scratchDay = targetDay
-    if scratchStamp > 0
-        scratchDay = scratchStamp - 2
-    endIf
-    Bool scratchEligible = scratch != 0.0 && scratchDay <= targetDay
-    Float applied = 0.0
-    if scratchEligible
-        applied = PDV_DevotionRules.ClampValue(scratch * GAIN_RATE_SCALE, 0.0 - signedCap, signedCap)
-        if applied != 0.0
-            standing = PDV_DevotionRules.ClampValue(standing + applied, 0.0, BROAD_PANTHEON_POOL_MAX)
-            SetBroadPantheonStanding(poolId, standing, reason + "_fold")
-            if applied > 0.0 && ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId)) <= 0
-                StorageUtil.SetIntValue(None, GetBroadPantheonLastGainDayKey(poolId), scratchDay + 2)
-                StorageUtil.SetIntValue(None, GetBroadPantheonLastGainDayKey(poolId) + ".Encoding", 2)
-            endIf
-        endIf
-        StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(poolId), 0.0)
-        StorageUtil.SetIntValue(None, GetBroadPantheonScratchDayKey(poolId), 0)
-    endIf
 
-    if standing > 0.0
-        Int lastGainStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
-        Int lastGainDay = lastGainStamp - 2
-        Int firstDecayDay = lastProcessedDay + 1
-        ; A folded positive or negative scratch is an activity day.  It may
-        ; change standing, but can never also suffer inactivity decay.
-        if scratchEligible && firstDecayDay <= scratchDay
-            firstDecayDay = scratchDay + 1
-        endIf
-        if lastGainStamp > 0 && firstDecayDay <= lastGainDay + (BROAD_PANTHEON_DECAY_GRACE_DAYS as Int)
-            firstDecayDay = lastGainDay + (BROAD_PANTHEON_DECAY_GRACE_DAYS as Int) + 1
-        endIf
-        Int elapsedDecayDays = targetDay - firstDecayDay + 1
-        if elapsedDecayDays > 0
-            SetBroadPantheonStanding(poolId, standing - (BROAD_PANTHEON_DECAY_PER_DAWN * elapsedDecayDays), reason + "_inactive_decay")
-        endIf
-    endIf
-    StorageUtil.SetIntValue(None, GetBroadPantheonLastProcessedDayKey(poolId), targetDay + 2)
-    StorageUtil.SetIntValue(None, GetBroadPantheonLastProcessedDayKey(poolId) + ".Encoding", 2)
-    ; Debug boundary seeds are deliberately silent.  A broad transition becomes
-    ; player-facing only when real signed scratch settles at dawn.
-    if applied > 0.0 && poolId == GetActiveBroadPantheonPoolId()
-        MaybeSendBroadPantheonTierToast(poolId, standingBeforeProcessing, GetBroadPantheonStanding(poolId))
-    endIf
-    Trace(1, "[PDV][BROAD_CATCHUP] pool=" + poolId + " through=" + targetDay + " applied=" + applied + " standing=" + GetBroadPantheonStanding(poolId))
-EndFunction
 
-Int Function GetBroadPantheonTierForStanding(Float standing)
-    if standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
-        return TIER_DEVOTED
-    elseIf standing >= BROAD_PANTHEON_SEEKER_THRESHOLD
-        return TIER_SEEKER
-    endIf
-    return TIER_NONE
-EndFunction
 
-Function MaybeSendBroadPantheonTierToast(String poolId, Float previousStanding, Float currentStanding)
-    Int previousTier = GetBroadPantheonTierForStanding(previousStanding)
-    Int currentTier = GetBroadPantheonTierForStanding(currentStanding)
-    if currentTier <= previousTier
-        return
-    endIf
 
-    Int originRace = GetPlayerOriginRaceIndex()
-    if poolId != GetActiveBroadPantheonPoolId() || !HasBroadLanePresentation(originRace)
-        return
-    endIf
 
-    String familyName = GetBroadLaneDisplayName(originRace)
-    String tierName = GetBroadLaneStandingLabel(originRace, currentTier)
-    SendPrismaBroadPantheonTierToast(familyName, tierName, GetBroadLaneSymbol(originRace))
-EndFunction
 
-Bool Function SendPrismaBroadPantheonTierToast(String familyName, String tierName, String symbolName)
-    String j = "{\"mode\":\"toast\",\"toast\":{\"event\":\"pantheon\""
-    j = j + ",\"pantheon\":\"" + PDV_DevotionRules.JsonSafeString(familyName) + "\""
-    j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierName) + "\""
-    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
-    j = j + "}}"
-    return SendPrismaToastPayloadOrFallback(j, "", familyName + " has reached " + tierName + ".", True)
-EndFunction
 
-Function CatchUpBroadPantheonDecayBeforeCurrentDay(String poolId)
-    Int targetDay = GetDevotionalDay() - 1
-    Float signedCap = PIETY_DAILY_MAX_DELTA
-    if PDV_ModePresetRef
-        signedCap = signedCap * PDV_ModePresetRef.DailyCapScalar()
-    endIf
-    ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "pre_event_catchup")
-EndFunction
 
-String Function GetBroadPantheonStandingKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".Standing"
-EndFunction
 
-String Function GetBroadPantheonScratchKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".Scratch"
-EndFunction
 
-String Function GetBroadPantheonScratchDayKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".ScratchDay"
-EndFunction
 
-String Function GetBroadPantheonLastEventKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".LastEvent"
-EndFunction
-
-String Function GetBroadPantheonLastEventTimeKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".LastEventTime"
-EndFunction
-
-String Function GetBroadPantheonRecentEventIdsKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".RecentEventIds"
-EndFunction
-
-String Function GetBroadPantheonRecentEventTimesKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".RecentEventTimes"
-EndFunction
-
-String Function GetBroadPantheonLastGainDayKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".LastGainDay"
-EndFunction
-
-String Function GetBroadPantheonLastProcessedDayKey(String poolId)
-    return "PDV.BroadPantheon." + poolId + ".LastProcessedDay"
-EndFunction
-
-Int Function GetDevotionalDay()
-    Float shiftedTime = Utility.GetCurrentGameTime() - 0.25
-    Int truncatedDay = shiftedTime as Int
-    if shiftedTime < 0.0 && shiftedTime != (truncatedDay as Float)
-        return truncatedDay - 1
-    endIf
-    return truncatedDay
-EndFunction
 
 ; Manager-owned daily stamps use the same zero-reserved encoding as substrates.
 ; Existing +1 stamps are migrated once per key through a sibling encoding flag.
-Int Function ReadZeroReservedDevotionalDayStamp(String keyName)
-    ; Legacy ".Encoding < 2" +1-stamp fixup removed (not-save-safe: a fresh save only ever
-    ; carries the +2 write scheme). The +2 WriteZeroReservedDevotionalDayStamp scheme stays
-    ; live -- gates compare == GetDevotionalDay()+2.
-    return StorageUtil.GetIntValue(None, keyName)
-EndFunction
 
-Function WriteZeroReservedDevotionalDayStamp(String keyName)
-    StorageUtil.SetIntValue(None, keyName, GetDevotionalDay() + 2)
-    StorageUtil.SetIntValue(None, keyName + ".Encoding", 2)
-EndFunction
 
 
 Bool Function IsImperialVampireStateActive()
     return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
 EndFunction
 
-Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "", Bool applyStanceMultiplier = True, Bool trackBroadPantheon = True)
-    Bool queuedQuestReaction = _qrQueueTransactionActive
-    Bool ownsBroadEvent = trackBroadPantheon && !queuedQuestReaction && _broadPantheonEventDepth == 0
-    if ownsBroadEvent
-        _broadPantheonSelfEventSequence += 1
-        if _broadPantheonSelfEventSequence <= 0
-            _broadPantheonSelfEventSequence = 1
-        endIf
-        String eventLabel = reason
-        if eventLabel == ""
-            eventLabel = "piety"
-        endIf
-        BeginBroadPantheonEvent(eventLabel + "_auto_" + _broadPantheonSelfEventSequence)
-    endIf
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        if GetDebugLevel() >= 1
-            Debug.Trace("[PDV] AwardPiety skipped: no deity supplied.")
-        endIf
-        if ownsBroadEvent
-            FlushBroadPantheonEvent()
-        endIf
-        return 0.0
-    endIf
 
-    EnsureDeityState(deity)
 
-    Int stance = deity.GetStanceForPlayer()
-    Float appliedAmount = RunGainPipeline(deity, amount, stance, applyStanceMultiplier)
-    if queuedQuestReaction
-        AccumulateQueuedQuestReactionBroadDelta(deity, appliedAmount)
-    elseIf trackBroadPantheon
-        AccumulateBroadPantheonDelta(deity, appliedAmount)
-    endIf
 
-    StorageUtil.AdjustFloatValue(deityForm, "PDV.PietyToday", appliedAmount)
-    if appliedAmount != 0.0
-        StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", Utility.GetCurrentGameTime())
-    endIf
-    if appliedAmount > 0.0
-        RecordCommitmentSignalDay(deity)
-        ; Global "last devotional act" stamp for broad-lane lapse neglect (IsBroadLaneLapsed);
-        ; the broad lane has no single patron, so it tracks any positive pantheon act.
-        StorageUtil.SetFloatValue(None, "PDV.Devotion.LastActTime", Utility.GetCurrentGameTime())
-    endIf
-    if allowRivalry && appliedAmount < 0.0 && _pendingLikesDislikesEventType >= 0
-        ApplyDisfavorSting(deity, appliedAmount, reason)
-    endIf
 
-    ; Attribution: any deity with visible piety movement must carry the reason into
-    ; its recent-driver ring. The dashboard shows every deity with PietyToday, so
-    ; gating this to the active patron leaves broad-pantheon gains unexplained.
-    if appliedAmount != 0.0
-        RecordDeityDriver(deity, reason, appliedAmount)
-    endIf
 
-    if GetDebugLevel() >= 2 && !queuedQuestReaction
-        Debug.Trace("[PDV] AwardPiety: " + deity.DeityName + " raw " + amount + ", applied " + appliedAmount + ", stance " + stance + ", today=" + StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday"))
-    endIf
 
-    if appliedAmount > 0.0 && deity == _activeDeity && !_suppressAwardFavorToast
-        SendPrismaEventToast("favor", deity, "", "", "")
-    endIf
 
-    if allowRivalry && appliedAmount > 0.0 && stance == deity.STANCE_HOSTILE
-        ApplyRivalryPenalties(deity, appliedAmount)
-    endIf
 
-    if appliedAmount != 0.0 && !queuedQuestReaction
-        RequestPanelRefresh()
-    endIf
-    ; B7 / fix-plan 4.3. This is the one place that knows whether the proposed delta
-    ; survived RunGainPipeline. PDV_DeityBase.ScoreRepeatableAction now only PEEKS at
-    ; the daily cap and cooldown and queues the bookkeeping; it is spent here, and only
-    ; when piety actually landed. A multiplied-to-zero award (curse, ineligibility,
-    ; stigma, survival context, lunar misalignment, mode preset) no longer burns the
-    ; cap slot and starts the cooldown for nothing. Covers all three ScoreAction
-    ; consumers -- ActionRouter, EventBus and HandleShoutAttack -- because every one of
-    ; them routes its nonzero delta straight into AwardPietyFromLikesDislikes.
-    if appliedAmount != 0.0
-        deity.CommitPendingRepeatableActions()
-    else
-        deity.DiscardPendingRepeatableActions()
-    endIf
-    ; A Khajiit focus may already have the required behavioral lead when this
-    ; piety movement crosses Seeker. Evaluate here as well as on weight changes
-    ; so emergence cannot lag until the next unrelated action.
-    if appliedAmount != 0.0 && IsKhajiitOrigin() && GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
-        EvaluateKhajiitFocusedEmphasis()
-    endIf
-    if ownsBroadEvent
-        FlushBroadPantheonEvent()
-    endIf
-    return appliedAmount
-EndFunction
 
-Function ApplyDisfavorSting(PDV_DeityBase deity, Float appliedAmount, String sourceTag)
-    if !deity || appliedAmount >= 0.0 || _pendingLikesDislikesEventType < 0
-        return
-    endIf
 
-    Float baseDelta = GetDislikeBaseDeltaForEvent(deity, _pendingLikesDislikesEventType)
-    if baseDelta >= 0.0
-        return
-    endIf
 
-    Float absDelta = 0.0 - baseDelta
-    if absDelta <= DISFAVOR_LIGHT_MIN_DELTA
-        return
-    endIf
 
-    if !HasDisfavorStanding(deity)
-        Trace(3, "Disfavor sting skipped: no standing for " + deity.DeityName)
-        return
-    endIf
 
-    Int domainValue = DomainForDeity(deity)
-    if domainValue == DISFAVOR_DOMAIN_NONE
-        Trace(2, "Disfavor sting skipped: no domain for " + deity.DeityName)
-        return
-    endIf
 
-    if IsDisfavorRepeatSuppressed(deity, domainValue, _pendingLikesDislikesEventType)
-        Trace(3, "Disfavor sting suppressed for repeat " + deity.DeityName + " / " + GetDisfavorDomainLabel(domainValue))
-        return
-    endIf
 
-    UpdateDisfavorStingRuntime()
 
-    Bool domainAlreadyActive = IsDisfavorDomainActive(domainValue)
-    if !domainAlreadyActive && CountActiveDisfavorStings() >= DISFAVOR_MAX_ACTIVE_DOMAINS
-        Trace(2, "Disfavor sting suppressed by active-domain cap for " + GetDisfavorDomainLabel(domainValue))
-        return
-    endIf
 
-    Bool sharpBand = absDelta > DISFAVOR_SHARP_MIN_DELTA
-    Spell targetSpell = GetDisfavorSpell(domainValue, sharpBand)
-    if !targetSpell
-        Trace(1, "Disfavor sting skipped: missing spell for " + GetDisfavorDomainLabel(domainValue))
-        return
-    endIf
 
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
 
-    ClearDisfavorDomainSpellOnly(playerRef, domainValue)
-    playerRef.AddSpell(targetSpell, False)
-    StorageUtil.SetIntValue(None, GetDisfavorActiveKey(domainValue), 1)
-    StorageUtil.SetFloatValue(None, GetDisfavorExpiryKey(domainValue), Utility.GetCurrentGameTime() + GetDisfavorDurationDays(sharpBand))
-    StorageUtil.SetStringValue(None, GetDisfavorBandKey(domainValue), GetDisfavorBandLabel(sharpBand))
-    MarkDisfavorRepeatUsed(deity, domainValue, _pendingLikesDislikesEventType)
-    Trace(1, "Disfavor sting applied: " + deity.DeityName + " -> " + GetDisfavorDomainLabel(domainValue) + " " + GetDisfavorBandLabel(sharpBand) + " (" + sourceTag + ")")
-EndFunction
 
-Float Function GetDislikeBaseDeltaForEvent(PDV_DeityBase deity, Int eventType)
-    if !deity
-        return 0.0
-    endIf
 
-    if !IsGenericLikesDislikesDeityReachable(deity)
-        return 0.0
-    endIf
-
-    Form deityForm = deity as Form
-    String tableKeyPrefix = "PDV.LD." + eventType
-    Float baseDelta = StorageUtil.GetFloatValue(deityForm, tableKeyPrefix + ".D")
-    if baseDelta < 0.0
-        return baseDelta
-    endIf
-
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace >= 0
-        Float originDelta = StorageUtil.GetFloatValue(deityForm, tableKeyPrefix + ".O" + originRace + ".D")
-        if originDelta < 0.0
-            return originDelta
-        endIf
-    endIf
-
-    return 0.0
-EndFunction
-
-Bool Function HasDisfavorStanding(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-    if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity
-        return True
-    endIf
-    return GetPiety(deity) >= 25.0
-EndFunction
-
-Bool Function IsDisfavorRepeatSuppressed(PDV_DeityBase deity, Int domainValue, Int eventType)
-    Int currentDay = GetDisfavorDayIndex()
-    return StorageUtil.GetIntValue(deity as Form, GetDisfavorRepeatDayKey(domainValue, eventType), -1) == currentDay
-EndFunction
-
-Function MarkDisfavorRepeatUsed(PDV_DeityBase deity, Int domainValue, Int eventType)
-    if !deity
-        return
-    endIf
-    StorageUtil.SetIntValue(deity as Form, GetDisfavorRepeatDayKey(domainValue, eventType), GetDisfavorDayIndex())
-EndFunction
-
-Int Function GetDisfavorDayIndex()
-    return GetDevotionalDay() + 2
-EndFunction
-
-Int Function DomainForDeity(PDV_DeityBase deity)
-    if deity == PDV_Kyne || deity == PDV_Kynareth || deity == PDV_Khenarthi || deity == PDV_HoonDing
-        return DISFAVOR_DOMAIN_SKY_STORM_HUNT
-    elseIf deity == PDV_Arkay || deity == PDV_Tuwhacca || deity == PDV_Xarxes || deity == PDV_Magnus
-        return DISFAVOR_DOMAIN_DEATH_ANCESTORS
-    elseIf deity == PDV_Mara || deity == PDV_Stendarr || deity == PDV_Dibella || deity == PDV_Stuhn
-        return DISFAVOR_DOMAIN_MERCY_PROTECTION
-    elseIf deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Talos || deity == PDV_Leki || deity == PDV_Trinimac || deity == PDV_Malacath
-        return DISFAVOR_DOMAIN_WAR_HONOR
-    elseIf deity == PDV_Zenithar || deity == PDV_Julianos || deity == PDV_Akatosh || deity == PDV_Zen || deity == PDV_Yffre || deity == PDV_AuriEl
-        return DISFAVOR_DOMAIN_ORDER_TRADE_LORE
-    elseIf deity == PDV_Azura || deity == PDV_Rajhin || deity == PDV_BaanDar || deity == PDV_Alkosh
-        return DISFAVOR_DOMAIN_MOON_LUCK_SHADOW
-    elseIf deity == PDV_Sithis || deity == PDV_Mephala || deity == PDV_Hist || deity == PDV_Boethiah
-        return DISFAVOR_DOMAIN_VOID_SECRETS
-    endIf
-
-    return DISFAVOR_DOMAIN_NONE
-EndFunction
-
-Function UpdateDisfavorStingRuntime()
-    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_SKY_STORM_HUNT)
-    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_DEATH_ANCESTORS)
-    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_MERCY_PROTECTION)
-    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_WAR_HONOR)
-    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_ORDER_TRADE_LORE)
-    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_MOON_LUCK_SHADOW)
-    ClearDisfavorIfExpired(DISFAVOR_DOMAIN_VOID_SECRETS)
-EndFunction
-
-Function ClearDisfavorIfExpired(Int domainValue)
-    if !IsDisfavorDomainActive(domainValue)
-        return
-    endIf
-
-    Float expiresAt = StorageUtil.GetFloatValue(None, GetDisfavorExpiryKey(domainValue))
-    if expiresAt > 0.0 && Utility.GetCurrentGameTime() < expiresAt
-        return
-    endIf
-
-    ClearDisfavorDomain(domainValue, "expired")
-EndFunction
-
-Function ClearDisfavorDomain(Int domainValue, String reason)
-    Actor playerRef = Game.GetPlayer()
-    if playerRef
-        ClearDisfavorDomainSpellOnly(playerRef, domainValue)
-    endIf
-    StorageUtil.SetIntValue(None, GetDisfavorActiveKey(domainValue), 0)
-    StorageUtil.SetFloatValue(None, GetDisfavorExpiryKey(domainValue), 0.0)
-    StorageUtil.SetStringValue(None, GetDisfavorBandKey(domainValue), "")
-    Trace(2, "Disfavor sting cleared: " + GetDisfavorDomainLabel(domainValue) + " (" + reason + ")")
-EndFunction
-
-Function ClearDisfavorDomainSpellOnly(Actor playerRef, Int domainValue)
-    if !playerRef
-        return
-    endIf
-
-    Spell lightSpell = GetDisfavorSpell(domainValue, False)
-    Spell sharpSpell = GetDisfavorSpell(domainValue, True)
-    if lightSpell && playerRef.HasSpell(lightSpell)
-        playerRef.RemoveSpell(lightSpell)
-    endIf
-    if sharpSpell && playerRef.HasSpell(sharpSpell)
-        playerRef.RemoveSpell(sharpSpell)
-    endIf
-EndFunction
-
-Bool Function IsDisfavorDomainActive(Int domainValue)
-    return StorageUtil.GetIntValue(None, GetDisfavorActiveKey(domainValue)) == 1
-EndFunction
-
-Int Function CountActiveDisfavorStings()
-    Int activeCount = 0
-    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_SKY_STORM_HUNT)
-        activeCount += 1
-    endIf
-    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_DEATH_ANCESTORS)
-        activeCount += 1
-    endIf
-    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_MERCY_PROTECTION)
-        activeCount += 1
-    endIf
-    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_WAR_HONOR)
-        activeCount += 1
-    endIf
-    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_ORDER_TRADE_LORE)
-        activeCount += 1
-    endIf
-    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_MOON_LUCK_SHADOW)
-        activeCount += 1
-    endIf
-    if IsDisfavorDomainActive(DISFAVOR_DOMAIN_VOID_SECRETS)
-        activeCount += 1
-    endIf
-    return activeCount
-EndFunction
-
-Spell Function GetDisfavorSpell(Int domainValue, Bool sharpBand)
-    if domainValue == DISFAVOR_DOMAIN_SKY_STORM_HUNT
-        if sharpBand
-            return PDV_SPEL_Disfavor_SkyStormHunt_Sharp
-        endIf
-        return PDV_SPEL_Disfavor_SkyStormHunt_Light
-    elseIf domainValue == DISFAVOR_DOMAIN_DEATH_ANCESTORS
-        if sharpBand
-            return PDV_SPEL_Disfavor_DeathAncestors_Sharp
-        endIf
-        return PDV_SPEL_Disfavor_DeathAncestors_Light
-    elseIf domainValue == DISFAVOR_DOMAIN_MERCY_PROTECTION
-        if sharpBand
-            return PDV_SPEL_Disfavor_MercyProtection_Sharp
-        endIf
-        return PDV_SPEL_Disfavor_MercyProtection_Light
-    elseIf domainValue == DISFAVOR_DOMAIN_WAR_HONOR
-        if sharpBand
-            return PDV_SPEL_Disfavor_WarHonor_Sharp
-        endIf
-        return PDV_SPEL_Disfavor_WarHonor_Light
-    elseIf domainValue == DISFAVOR_DOMAIN_ORDER_TRADE_LORE
-        if sharpBand
-            return PDV_SPEL_Disfavor_OrderTradeLore_Sharp
-        endIf
-        return PDV_SPEL_Disfavor_OrderTradeLore_Light
-    elseIf domainValue == DISFAVOR_DOMAIN_MOON_LUCK_SHADOW
-        if sharpBand
-            return PDV_SPEL_Disfavor_MoonLuckShadow_Sharp
-        endIf
-        return PDV_SPEL_Disfavor_MoonLuckShadow_Light
-    elseIf domainValue == DISFAVOR_DOMAIN_VOID_SECRETS
-        if sharpBand
-            return PDV_SPEL_Disfavor_VoidSecrets_Sharp
-        endIf
-        return PDV_SPEL_Disfavor_VoidSecrets_Light
-    endIf
-
-    return None
-EndFunction
-
-Float Function GetDisfavorDurationDays(Bool sharpBand)
-    if sharpBand
-        return DISFAVOR_SHARP_DURATION_DAYS
-    endIf
-    return DISFAVOR_LIGHT_DURATION_DAYS
-EndFunction
-
-String Function GetDisfavorBandLabel(Bool sharpBand)
-    if sharpBand
-        return "sharp"
-    endIf
-    return "light"
-EndFunction
-
-String Function GetDisfavorDomainLabel(Int domainValue)
-    if domainValue == DISFAVOR_DOMAIN_SKY_STORM_HUNT
-        return "SkyStormHunt"
-    elseIf domainValue == DISFAVOR_DOMAIN_DEATH_ANCESTORS
-        return "DeathAncestors"
-    elseIf domainValue == DISFAVOR_DOMAIN_MERCY_PROTECTION
-        return "MercyProtection"
-    elseIf domainValue == DISFAVOR_DOMAIN_WAR_HONOR
-        return "WarHonor"
-    elseIf domainValue == DISFAVOR_DOMAIN_ORDER_TRADE_LORE
-        return "OrderTradeLore"
-    elseIf domainValue == DISFAVOR_DOMAIN_MOON_LUCK_SHADOW
-        return "MoonLuckShadow"
-    elseIf domainValue == DISFAVOR_DOMAIN_VOID_SECRETS
-        return "VoidSecrets"
-    endIf
-
-    return "None"
-EndFunction
-
-String Function GetDisfavorActiveKey(Int domainValue)
-    return "PDV.Disfavor.Domain." + domainValue + ".Active"
-EndFunction
-
-String Function GetDisfavorExpiryKey(Int domainValue)
-    return "PDV.Disfavor.Domain." + domainValue + ".ExpiresAt"
-EndFunction
-
-String Function GetDisfavorBandKey(Int domainValue)
-    return "PDV.Disfavor.Domain." + domainValue + ".Band"
-EndFunction
-
-String Function GetDisfavorRepeatDayKey(Int domainValue, Int eventType)
-    return "PDV.Disfavor.Repeat." + domainValue + "." + eventType + ".Day"
-EndFunction
 
 ; ---------------------------------------------------------------------------
 ; Debug-only disfavor harness. Called ONLY from the MCM Debug page so a tester
@@ -14848,23 +11871,23 @@ Function DebugFireDislike(PDV_DeityBase deity, Int eventType)
         Trace(1, "DebugFireDislike skipped: no deity.")
         return
     endIf
-    if !IsGenericLikesDislikesDeityReachable(deity)
+    if !LedgerRuntime.IsGenericLikesDislikesDeityReachable(deity)
         Trace(1, "DebugFireDislike: " + deity.DeityName + " is not reachable in the current origin/baseline.")
         return
     endIf
-    Float delta = GetDislikeBaseDeltaForEvent(deity, eventType)
+    Float delta = LedgerRuntime.GetDislikeBaseDeltaForEvent(deity, eventType)
     if delta >= 0.0
         Trace(1, "DebugFireDislike: no dislike row for " + deity.DeityName + " event " + eventType)
         return
     endIf
-    Int domainValue = DomainForDeity(deity)
-    if domainValue != DISFAVOR_DOMAIN_NONE
-        StorageUtil.SetIntValue(deity as Form, GetDisfavorRepeatDayKey(domainValue, eventType), -1)
+    Int domainValue = LedgerRuntime.DomainForDeity(deity)
+    if domainValue != LedgerRuntime.DISFAVOR_DOMAIN_NONE
+        StorageUtil.SetIntValue(deity as Form, LedgerRuntime.GetDisfavorRepeatDayKey(domainValue, eventType), -1)
     endIf
-    Bool nativeSurface = ShouldSurfaceLikesDislikesEvent(eventType)
-    AwardPietyFromLikesDislikes(deity, delta, eventType, "debug_fire_dislike")
+    Bool nativeSurface = LedgerRuntime.ShouldSurfaceLikesDislikesEvent(eventType)
+    LedgerRuntime.AwardPietyFromLikesDislikes(deity, delta, eventType, "debug_fire_dislike")
     if !nativeSurface
-        SurfaceDebugDislikeEvent(deity, delta, eventType)
+        LedgerRuntime.SurfaceDebugDislikeEvent(deity, delta, eventType)
     endIf
     Trace(1, "DebugFireDislike: " + deity.DeityName + " event " + eventType + " delta " + delta)
 EndFunction
@@ -14873,93 +11896,29 @@ EndFunction
 ; ApplyDisfavorSting does, so the eyeball check uses the real spell + real expiry.
 ; Bypasses the standing/repeat/cap gates on purpose (raw MGEF inspection).
 Function DebugApplyDomainSting(Int domainValue, Bool sharp)
-    ApplyDebugDomainSting(domainValue, sharp, False)
+    LedgerRuntime.ApplyDebugDomainSting(domainValue, sharp, False)
 EndFunction
 
 ; Shared core for the debug sting apply. respectCap reproduces ApplyDisfavorSting's
 ; active-domain cap so DebugBurstAntiStack can demonstrate the 4th distinct domain
 ; is suppressed at the cap. Returns True when the sting was applied.
-Bool Function ApplyDebugDomainSting(Int domainValue, Bool sharp, Bool respectCap)
-    if domainValue < DISFAVOR_DOMAIN_SKY_STORM_HUNT || domainValue > DISFAVOR_DOMAIN_VOID_SECRETS
-        Trace(1, "DebugApplyDomainSting skipped: bad domain " + domainValue)
-        return False
-    endIf
-    UpdateDisfavorStingRuntime()
-    Bool domainAlreadyActive = IsDisfavorDomainActive(domainValue)
-    if respectCap && !domainAlreadyActive && CountActiveDisfavorStings() >= DISFAVOR_MAX_ACTIVE_DOMAINS
-        Trace(2, "DebugApplyDomainSting suppressed by active-domain cap: " + GetDisfavorDomainLabel(domainValue))
-        return False
-    endIf
-    Spell targetSpell = GetDisfavorSpell(domainValue, sharp)
-    if !targetSpell
-        Trace(1, "DebugApplyDomainSting skipped: missing spell for " + GetDisfavorDomainLabel(domainValue))
-        return False
-    endIf
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return False
-    endIf
-    ClearDisfavorDomainSpellOnly(playerRef, domainValue)
-    playerRef.AddSpell(targetSpell, False)
-    StorageUtil.SetIntValue(None, GetDisfavorActiveKey(domainValue), 1)
-    StorageUtil.SetFloatValue(None, GetDisfavorExpiryKey(domainValue), Utility.GetCurrentGameTime() + GetDisfavorDurationDays(sharp))
-    StorageUtil.SetStringValue(None, GetDisfavorBandKey(domainValue), GetDisfavorBandLabel(sharp))
-    Trace(1, "DebugApplyDomainSting applied: " + GetDisfavorDomainLabel(domainValue) + " " + GetDisfavorBandLabel(sharp))
-    return True
-EndFunction
 
 ; Clear first, then fire 4 distinct-domain stings (Sky, Death, War, Order) with the
 ; cap respected, so the tester sees 3 active and the 4th suppressed at the cap.
 Function DebugBurstAntiStack()
-    ClearAllDisfavorStings()
-    ApplyDebugDomainSting(DISFAVOR_DOMAIN_SKY_STORM_HUNT, True, True)
-    ApplyDebugDomainSting(DISFAVOR_DOMAIN_DEATH_ANCESTORS, True, True)
-    ApplyDebugDomainSting(DISFAVOR_DOMAIN_WAR_HONOR, True, True)
-    ApplyDebugDomainSting(DISFAVOR_DOMAIN_ORDER_TRADE_LORE, True, True)
-    Trace(1, "DebugBurstAntiStack: " + GetActiveDisfavorSummary())
+    LedgerRuntime.ClearAllDisfavorStings()
+    LedgerRuntime.ApplyDebugDomainSting(LedgerRuntime.DISFAVOR_DOMAIN_SKY_STORM_HUNT, True, True)
+    LedgerRuntime.ApplyDebugDomainSting(LedgerRuntime.DISFAVOR_DOMAIN_DEATH_ANCESTORS, True, True)
+    LedgerRuntime.ApplyDebugDomainSting(LedgerRuntime.DISFAVOR_DOMAIN_WAR_HONOR, True, True)
+    LedgerRuntime.ApplyDebugDomainSting(LedgerRuntime.DISFAVOR_DOMAIN_ORDER_TRADE_LORE, True, True)
+    Trace(1, "DebugBurstAntiStack: " + LedgerRuntime.GetActiveDisfavorSummary())
 EndFunction
 
 ; One-line readout of every active disfavor domain with its band + remaining
 ; game-minutes; "none" when empty. Clears expired stings first so the count is live.
-String Function GetActiveDisfavorSummary()
-    UpdateDisfavorStingRuntime()
-    String summary = ""
-    Int domainValue = DISFAVOR_DOMAIN_SKY_STORM_HUNT
-    while domainValue <= DISFAVOR_DOMAIN_VOID_SECRETS
-        if IsDisfavorDomainActive(domainValue)
-            Float expiresAt = StorageUtil.GetFloatValue(None, GetDisfavorExpiryKey(domainValue))
-            Int remainMinutes = ((expiresAt - Utility.GetCurrentGameTime()) * 24.0 * 60.0) as Int
-            if remainMinutes < 0
-                remainMinutes = 0
-            endIf
-            String band = StorageUtil.GetStringValue(None, GetDisfavorBandKey(domainValue))
-            if band == ""
-                band = "?"
-            endIf
-            if summary != ""
-                summary += "; "
-            endIf
-            summary += GetDisfavorDomainLabel(domainValue) + " " + band + " (~" + remainMinutes + "m)"
-        endIf
-        domainValue += 1
-    endWhile
-    if summary == ""
-        return "Active disfavor: none (0/" + DISFAVOR_MAX_ACTIVE_DOMAINS + ")."
-    endIf
-    return "Active disfavor (" + CountActiveDisfavorStings() + "/" + DISFAVOR_MAX_ACTIVE_DOMAINS + "): " + summary
-EndFunction
 
 ; Remove every active disfavor spell + clear its active/expiry/band keys, reusing
 ; the runtime's own ClearDisfavorDomain so the removal path matches expiry cleanup.
-Function ClearAllDisfavorStings()
-    Int domainValue = DISFAVOR_DOMAIN_SKY_STORM_HUNT
-    while domainValue <= DISFAVOR_DOMAIN_VOID_SECRETS
-        if IsDisfavorDomainActive(domainValue)
-            ClearDisfavorDomain(domainValue, "debug_clear")
-        endIf
-        domainValue += 1
-    endWhile
-EndFunction
 
 ; Debug label helper: does the selected deity dislike this event, at what delta,
 ; into which domain? Lets the MCM button hint tell the tester whether a fire will land.
@@ -14967,30 +11926,18 @@ String Function DebugDislikeSummaryLine(PDV_DeityBase deity, Int eventType)
     if !deity
         return "event " + eventType + " | no deity"
     endIf
-    if !IsGenericLikesDislikesDeityReachable(deity)
+    if !LedgerRuntime.IsGenericLikesDislikesDeityReachable(deity)
         return "event " + eventType + " | " + deity.DeityName + " | not current pantheon"
     endIf
-    Float delta = GetDislikeBaseDeltaForEvent(deity, eventType)
+    Float delta = LedgerRuntime.GetDislikeBaseDeltaForEvent(deity, eventType)
     if delta >= 0.0
         return "event " + eventType + " | " + deity.DeityName + " | no dislike row"
     endIf
-    return "event " + eventType + " | " + deity.DeityName + " | " + delta + " -> " + GetDisfavorDomainLabel(DomainForDeity(deity))
+    return "event " + eventType + " | " + deity.DeityName + " | " + delta + " -> " + LedgerRuntime.GetDisfavorDomainLabel(LedgerRuntime.DomainForDeity(deity))
 EndFunction
 
 ; Per-deity recent-driver ring (the acts that recently moved this god), keyed on the
 ; deity form, capped at 6 FIFO. Powers the dashboard's "recent drivers".
-Function RecordDeityDriver(PDV_DeityBase deity, String reason, Float delta)
-    Form deityForm = deity as Form
-    String humanized = HumanizeDriverReason(reason)
-    while StorageUtil.StringListCount(deityForm, "PDV.Driver.Reasons") >= 6
-        StorageUtil.StringListRemoveAt(deityForm, "PDV.Driver.Reasons", 0)
-        StorageUtil.FloatListRemoveAt(deityForm, "PDV.Driver.Deltas", 0)
-        StorageUtil.IntListRemoveAt(deityForm, "PDV.Driver.Days", 0)
-    endWhile
-    StorageUtil.StringListAdd(deityForm, "PDV.Driver.Reasons", humanized, True)
-    StorageUtil.FloatListAdd(deityForm, "PDV.Driver.Deltas", delta, True)
-    StorageUtil.IntListAdd(deityForm, "PDV.Driver.Days", Utility.GetCurrentGameTime() as Int, True)
-EndFunction
 
 ; Map a raw routing/signal tag to a short player-facing driver phrase. Owner rule:
 ; phrases plainly describe the trigger ("a quest paid in gold"), never flavor copy --
@@ -15295,12 +12242,12 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Yffre.SIGNAL_GREEN_WAY
             return "keeping the Green Way"
         endIf
-    elseIf PDV_Zen && deity == PDV_Zen
-        if signalType == PDV_Zen.SIGNAL_EXCHANGE
+    elseIf LedgerRuntime.PDV_Zen && deity == LedgerRuntime.PDV_Zen
+        if signalType == LedgerRuntime.PDV_Zen.SIGNAL_EXCHANGE
             return "fair exchange"
-        elseIf signalType == PDV_Zen.SIGNAL_CONFIRMATION
+        elseIf signalType == LedgerRuntime.PDV_Zen.SIGNAL_CONFIRMATION
             return "a rite confirming your path"
-        elseIf signalType == PDV_Zen.SIGNAL_SHARED_PACT_MEMORY
+        elseIf signalType == LedgerRuntime.PDV_Zen.SIGNAL_SHARED_PACT_MEMORY
             return "a pact-true deed"
         endIf
     elseIf PDV_BaanDar && deity == PDV_BaanDar
@@ -15451,46 +12398,46 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         elseIf signalType == PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED
             return "abandoning the Reclamations"
         endIf
-    elseIf PDV_Akatosh && deity == PDV_Akatosh
-        if signalType == PDV_Akatosh.SIGNAL_CIVIC_SERVICE
+    elseIf LedgerRuntime.PDV_Akatosh && deity == LedgerRuntime.PDV_Akatosh
+        if signalType == LedgerRuntime.PDV_Akatosh.SIGNAL_CIVIC_SERVICE
             return "civic service"
-        elseIf signalType == PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR
+        elseIf signalType == LedgerRuntime.PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
-    elseIf PDV_Mara && deity == PDV_Mara
-        if signalType == PDV_Mara.SIGNAL_MERCY
+    elseIf LedgerRuntime.PDV_Mara && deity == LedgerRuntime.PDV_Mara
+        if signalType == LedgerRuntime.PDV_Mara.SIGNAL_MERCY
             return "mercy"
-        elseIf signalType == PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR
+        elseIf signalType == LedgerRuntime.PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
-    elseIf PDV_Arkay && deity == PDV_Arkay
-        if signalType == PDV_Arkay.SIGNAL_DEATH_DUTY
+    elseIf LedgerRuntime.PDV_Arkay && deity == LedgerRuntime.PDV_Arkay
+        if signalType == LedgerRuntime.PDV_Arkay.SIGNAL_DEATH_DUTY
             return "death duty"
-        elseIf signalType == PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR
+        elseIf signalType == LedgerRuntime.PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
-    elseIf PDV_Stendarr && deity == PDV_Stendarr
-        if signalType == PDV_Stendarr.SIGNAL_MERCY
+    elseIf LedgerRuntime.PDV_Stendarr && deity == LedgerRuntime.PDV_Stendarr
+        if signalType == LedgerRuntime.PDV_Stendarr.SIGNAL_MERCY
             return "mercy"
-        elseIf signalType == PDV_Stendarr.SIGNAL_LAWFUL_ORDER
+        elseIf signalType == LedgerRuntime.PDV_Stendarr.SIGNAL_LAWFUL_ORDER
             return "upholding law and order"
-        elseIf signalType == PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR
+        elseIf signalType == LedgerRuntime.PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
-    elseIf PDV_Zenithar && deity == PDV_Zenithar
-        if signalType == PDV_Zenithar.SIGNAL_HONEST_WORK
+    elseIf LedgerRuntime.PDV_Zenithar && deity == LedgerRuntime.PDV_Zenithar
+        if signalType == LedgerRuntime.PDV_Zenithar.SIGNAL_HONEST_WORK
             return "honest work"
-        elseIf signalType == PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR
+        elseIf signalType == LedgerRuntime.PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
-    elseIf PDV_Julianos && deity == PDV_Julianos
-        if signalType == PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR
+    elseIf LedgerRuntime.PDV_Julianos && deity == LedgerRuntime.PDV_Julianos
+        if signalType == LedgerRuntime.PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
-    elseIf PDV_Kynareth && deity == PDV_Kynareth
-        if signalType == PDV_Kynareth.SIGNAL_OPEN_SKY
+    elseIf LedgerRuntime.PDV_Kynareth && deity == LedgerRuntime.PDV_Kynareth
+        if signalType == LedgerRuntime.PDV_Kynareth.SIGNAL_OPEN_SKY
             return "deeds under the open sky"
-        elseIf signalType == PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR
+        elseIf signalType == LedgerRuntime.PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
     elseIf PDV_Kyne && deity == PDV_Kyne
@@ -15515,8 +12462,8 @@ String Function HumanizeCuratedSignalReason(PDV_DeityBase deity, Int signalType)
         if signalType == PDV_Shor.SIGNAL_HONORED_DEAD
             return "honoring the dead"
         endIf
-    elseIf PDV_Dibella && deity == PDV_Dibella
-        if signalType == PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR
+    elseIf LedgerRuntime.PDV_Dibella && deity == LedgerRuntime.PDV_Dibella
+        if signalType == LedgerRuntime.PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR
             return "civic service (patron bonus)"
         endIf
     elseIf PDV_Trinimac && deity == PDV_Trinimac
@@ -15549,77 +12496,25 @@ EndFunction
 
 ; Per-god rollup state for the Devotion dashboard, derived only from existing data
 ; (no new scoring). Precedence: neglected > starving > gaining > steady.
-String Function GetGodRollupState(PDV_DeityBase deity)
-    if !deity
-        return "steady"
-    endIf
-    if IsNeglectFlagActive(deity)
-        return "neglected"
-    endIf
-    Form deityForm = deity as Form
-    Float pietyToday = StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
-    Float piety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-    Float lastEvent = StorageUtil.GetFloatValue(deityForm, "PDV.LastEventGameTime")
-    Float now = Utility.GetCurrentGameTime()
-    if pietyToday > 0.5
-        return "gaining"
-    endIf
-    if pietyToday < -0.5
-        return "starving"
-    endIf
-    if piety > 0.0 && lastEvent > 0.0 && (now - lastEvent) >= DECAY_GRACE_DAYS
-        return "starving"
-    endIf
-    return "steady"
-EndFunction
 
 Function HandleWayfarerAkatoshLevel()
-    if !PDV_ModePresetRef || !PDV_ModePresetRef.AllowCheapRepeatables()
+    if !LedgerRuntime.PDV_ModePresetRef || !LedgerRuntime.PDV_ModePresetRef.AllowCheapRepeatables()
         return
     endIf
-    if !PDV_Akatosh
+    if !LedgerRuntime.PDV_Akatosh
         return
     endIf
 
     Float baseAmount = 1.0
-    Float weight = PDV_ModePresetRef.CheapRepeatableWeight()
+    Float weight = LedgerRuntime.PDV_ModePresetRef.CheapRepeatableWeight()
     Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.WayfarerAkatoshLevel")
     Float amount = baseAmount * weight * multiplier
     if amount > 0.0
-        AwardPietyInternal(PDV_Akatosh, amount, True, "wayfarer_akatosh_level")
+        LedgerRuntime.AwardPietyInternal(LedgerRuntime.PDV_Akatosh, amount, True, "wayfarer_akatosh_level")
     endIf
 EndFunction
 
-Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance, Bool applyStanceMultiplier = True)
-    Float appliedAmount = amount
-    if amount > 0.0
-        if applyStanceMultiplier
-            appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplier()
-        else
-            appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplierWithoutStance()
-        endIf
-        appliedAmount = appliedAmount * GetCurseGainMultiplierNoop(deity)
-        appliedAmount = appliedAmount * GetDaedricStigmaGainMultiplierNoop(deity)
-        appliedAmount = appliedAmount * GetSurvivalContextGainMultiplier(deity)
-        if PDV_ModePresetRef
-            appliedAmount = appliedAmount * PDV_ModePresetRef.GainMultiplier()
-        endIf
-    endIf
 
-    return appliedAmount
-EndFunction
-
-Float Function GetReputationGainMultiplierNoop(PDV_DeityBase deity)
-    return GetReputationGainMultiplier(deity)
-EndFunction
-
-Float Function GetCurseGainMultiplierNoop(PDV_DeityBase deity)
-    return GetCurseGainMultiplier(deity)
-EndFunction
-
-Float Function GetDaedricStigmaGainMultiplierNoop(PDV_DeityBase deity)
-    return GetDaedricStigmaGainMultiplier(deity)
-EndFunction
 
 ;/ =====================================================================
     Survival-mod compatibility (CONTEXT ONLY)
@@ -15632,92 +12527,18 @@ EndFunction
     GetModByName / GetFormFromFile and cached, never re-read in the hot path.
     Form evidence: references/vanilla-gameplay/compatibility/PDV_CompatInvestigation_Findings.md
    ===================================================================== /;
-Bool _pdvSurvivalContextInit = False
 Bool _pdvSurvivalModePresent = False
 Bool _pdvSunHelmPresent = False
-GlobalVariable _pdvSurvModeEnabled
-GlobalVariable _pdvSurvHunger
-GlobalVariable _pdvSurvCold
-GlobalVariable _pdvSurvExhaustion
-GlobalVariable _pdvSunHelmEnabled
-GlobalVariable _pdvSunHelmHunger
-GlobalVariable _pdvSunHelmThirst
-GlobalVariable _pdvSunHelmCold
-GlobalVariable _pdvSunHelmFatigue
-
-String Property COMPAT_SURVIVAL_TOGGLE_KEY = "PDV.Compat.SurvivalContextEnabled" AutoReadOnly
-Float Property SURVIVAL_DAMP_PER_SEVERITY = 0.0267 AutoReadOnly
-
-Function InitSurvivalContext()
-    if _pdvSurvivalContextInit
-        return
-    endIf
-    _pdvSurvivalContextInit = True
-
-    if Game.GetModByName("ccQDRSSE001-SurvivalMode.esl") != 255
-        _pdvSurvivalModePresent = True
-        _pdvSurvModeEnabled = Game.GetFormFromFile(0x000826, "ccQDRSSE001-SurvivalMode.esl") as GlobalVariable
-        _pdvSurvHunger = Game.GetFormFromFile(0x00081A, "ccQDRSSE001-SurvivalMode.esl") as GlobalVariable
-        _pdvSurvCold = Game.GetFormFromFile(0x00081B, "ccQDRSSE001-SurvivalMode.esl") as GlobalVariable
-        _pdvSurvExhaustion = Game.GetFormFromFile(0x000816, "ccQDRSSE001-SurvivalMode.esl") as GlobalVariable
-    endIf
-
-    if Game.GetModByName("SunHelmSurvival.esp") != 255
-        _pdvSunHelmPresent = True
-        _pdvSunHelmEnabled = Game.GetFormFromFile(0x02EB63, "SunHelmSurvival.esp") as GlobalVariable
-        _pdvSunHelmHunger = Game.GetFormFromFile(0x00EAAE, "SunHelmSurvival.esp") as GlobalVariable
-        _pdvSunHelmThirst = Game.GetFormFromFile(0x05C472, "SunHelmSurvival.esp") as GlobalVariable
-        _pdvSunHelmCold = Game.GetFormFromFile(0x6A13C5, "SunHelmSurvival.esp") as GlobalVariable
-        _pdvSunHelmFatigue = Game.GetFormFromFile(0x021E3F, "SunHelmSurvival.esp") as GlobalVariable
-    endIf
-EndFunction
-
-Bool Function IsSurvivalContextEnabled()
-    return StorageUtil.GetIntValue(None, COMPAT_SURVIVAL_TOGGLE_KEY, 1) != 0
-EndFunction
-
-Int Function GetSurvivalContextSeverity()
-    if !IsSurvivalContextEnabled()
-        return 0
-    endIf
-
-    InitSurvivalContext()
-
-    Int severity = 0
-
-    if _pdvSurvivalModePresent && _pdvSurvModeEnabled && _pdvSurvModeEnabled.GetValueInt() != 0
-        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSurvHunger))
-        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSurvCold))
-        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSurvExhaustion))
-    endIf
-
-    if _pdvSunHelmPresent && _pdvSunHelmEnabled && _pdvSunHelmEnabled.GetValueInt() != 0
-        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmHunger))
-        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmThirst))
-        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmCold))
-        severity = PDV_DevotionRules.MaxSeverity(severity, PDV_DevotionRules.NeedToSeverity(_pdvSunHelmFatigue))
-    endIf
-
-    return severity
-EndFunction
 
 
 
-Float Function GetSurvivalContextGainMultiplier(PDV_DeityBase deity)
-    Int severity = GetSurvivalContextSeverity()
-    if severity <= 0
-        return 1.0
-    endIf
 
-    Float multiplier = 1.0 - (severity * SURVIVAL_DAMP_PER_SEVERITY)
-    if multiplier < 0.9
-        multiplier = 0.9
-    endIf
-    return multiplier
-EndFunction
+
+
+
 
 String Function GetSurvivalContextStatusLine()
-    InitSurvivalContext()
+    LedgerRuntime.InitSurvivalContext()
 
     String detected = ""
     if _pdvSurvivalModePresent
@@ -15734,11 +12555,11 @@ String Function GetSurvivalContextStatusLine()
         return "No supported survival mod detected"
     endIf
 
-    if !IsSurvivalContextEnabled()
+    if !LedgerRuntime.IsSurvivalContextEnabled()
         return detected + " | integration off"
     endIf
 
-    return detected + " | " + PDV_DevotionRules.SeverityLabel(GetSurvivalContextSeverity())
+    return detected + " | " + PDV_DevotionRules.SeverityLabel(LedgerRuntime.GetSurvivalContextSeverity())
 EndFunction
 
 ;/ =====================================================================
@@ -15749,81 +12570,16 @@ EndFunction
     Devotion.esp record takes a hard dependency on the CC masters.
     Form evidence: references/authoring/PDV_CCIntegration_Findings.md
    ===================================================================== /;
-Bool _pdvCCContentInit = False
 Bool _pdvCCSaintsPresent = False
 Bool _pdvCCFishingPresent = False
-Quest _pdvCCSaintsRestoringOrder
-GlobalVariable _pdvCCFishingIsFishing
-Int _pdvCCFishingLastFlag = 0
 
-String Property COMPAT_CC_TOGGLE_KEY = "PDV.Compat.CCContentEnabled" AutoReadOnly
 
-Function InitCCContent()
-    if _pdvCCContentInit
-        return
-    endIf
-    _pdvCCContentInit = True
 
-    if Game.GetModByName("ccbgssse025-advdsgs.esm") != 255
-        _pdvCCSaintsPresent = True
-        _pdvCCSaintsRestoringOrder = Game.GetFormFromFile(0x000913, "ccbgssse025-advdsgs.esm") as Quest
-    endIf
 
-    if Game.GetModByName("ccbgssse001-fish.esm") != 255
-        _pdvCCFishingPresent = True
-        _pdvCCFishingIsFishing = Game.GetFormFromFile(0x000B26, "ccbgssse001-fish.esm") as GlobalVariable
-    endIf
-EndFunction
 
-Bool Function IsCCContentEnabled()
-    return StorageUtil.GetIntValue(None, COMPAT_CC_TOGGLE_KEY, 1) != 0
-EndFunction
-
-Function TryCCSaintsRecognition()
-    if !IsCCContentEnabled()
-        return
-    endIf
-
-    InitCCContent()
-    if !_pdvCCSaintsPresent || !_pdvCCSaintsRestoringOrder
-        return
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.CC.SaintsRecognized") != 0
-        return
-    endIf
-
-    if _pdvCCSaintsRestoringOrder.GetStageDone(200)
-        PDV_DaedricPath_Sheo sheoPath = GetQuestReactionDeity("Sheogorath") as PDV_DaedricPath_Sheo
-        if sheoPath
-            sheoPath.RecordControlledSignal("cc_saints_restoring_order")
-            StorageUtil.SetIntValue(None, "PDV.CC.SaintsRecognized", 1)
-        endIf
-    endIf
-EndFunction
-
-Function TryCCFishingDevotion()
-    if !IsCCContentEnabled()
-        return
-    endIf
-
-    InitCCContent()
-    if !_pdvCCFishingPresent || !_pdvCCFishingIsFishing
-        return
-    endIf
-
-    Int nowFlag = _pdvCCFishingIsFishing.GetValueInt()
-    if nowFlag != 0 && _pdvCCFishingLastFlag == 0
-        Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.CCFishingKyne")
-        if multiplier > 0.0 && PDV_Kyne
-            AwardPiety(PDV_Kyne, 0.5 * multiplier, "cc_fishing")
-        endIf
-    endIf
-    _pdvCCFishingLastFlag = nowFlag
-EndFunction
 
 String Function GetCCContentStatusLine()
-    InitCCContent()
+    LedgerRuntime.InitCCContent()
 
     String detected = ""
     if _pdvCCSaintsPresent
@@ -15840,7 +12596,7 @@ String Function GetCCContentStatusLine()
         return "No supported CC content detected"
     endIf
 
-    if !IsCCContentEnabled()
+    if !LedgerRuntime.IsCCContentEnabled()
         return detected + " | integration off"
     endIf
 
@@ -15848,13 +12604,6 @@ String Function GetCCContentStatusLine()
 EndFunction
 
 
-Float Function GetReputationGainMultiplier(PDV_DeityBase deity)
-    if !deity
-        return 1.0
-    endIf
-
-    return deity.GetTrackGainMultiplier()
-EndFunction
 
 Float Function GetCurseGainMultiplier(PDV_DeityBase deity)
     if !deity || !PDV_CurseStateService
@@ -15888,102 +12637,15 @@ Float Function GetDaedricStigmaGainMultiplier(PDV_DeityBase deity)
     return 1.0
 EndFunction
 
-Float Function GetReputationDecayMultiplier(PDV_DeityBase deity)
-    if deity
-        return deity.GetTrackDecayMultiplier()
-    endIf
 
-    return 1.0
-EndFunction
 
-Float Function GetDecayFloorForDeity(PDV_DeityBase deity, Float currentPiety)
-    if !deity
-        return 0.0
-    endIf
 
-    if PDV_CurseStateService && PDV_CurseStateService.IsVampire() && deity.IsAedric
-        return 0.0
-    endIf
 
-    Int tierValue = ComputeTierFromPiety(deity, currentPiety)
-    Float storedFloor = StorageUtil.GetFloatValue(deity as Form, "PDV.PassiveDecayFloor")
-    Float currentFloor = GetDecayFloorForTier(deity, tierValue)
-    if storedFloor > currentFloor
-        return storedFloor
-    endIf
 
-    return currentFloor
-EndFunction
 
-Float Function GetDecayFloorForTier(PDV_DeityBase deity, Int tierValue)
-    if !deity
-        return 0.0
-    endIf
-
-    if tierValue >= TIER_CHAMPION
-        ; P10 Long Devotion. A deity carried at least one full mark (15 piety) PAST Champion can
-        ; no longer be idled back out of Champion: its decay floor rises from Devoted to Champion.
-        ;
-        ; THIS IS THE ONLY ARM OF P10 THAT TOUCHES EVERY RACE AND DEITY -- hence the per-deity
-        ; MarkHigh gate. A deity never carried past Champion behaves exactly as before, which is
-        ; what the non-Altmer regression test checks. It cannot GRANT anything:
-        ; RefreshPassiveDecayFloorForDeity only ratchets the stored floor upward, and a floor
-        ; bounds decay rather than awarding piety. Worst case if the design is wrong: a
-        ; long-devoted patron stops decaying below 85, which is the intended statement.
-        if StorageUtil.GetIntValue(None, "PDV.LongDevotion.MarkHigh." + deity.DeityIndex) >= 1
-            return deity.ThresholdChampion
-        endIf
-        return deity.ThresholdDevoted
-    elseIf tierValue >= TIER_DEVOTED
-        return deity.ThresholdSeeker
-    endIf
-
-    return 0.0
-EndFunction
-
-Function RefreshPassiveDecayFloorForDeity(PDV_DeityBase deity, Int tierValue)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        return
-    endIf
-
-    Float tierFloor = GetDecayFloorForTier(deity, tierValue)
-    Float storedFloor = StorageUtil.GetFloatValue(deityForm, "PDV.PassiveDecayFloor")
-    if tierFloor > storedFloor
-        StorageUtil.SetFloatValue(deityForm, "PDV.PassiveDecayFloor", tierFloor)
-    endIf
-EndFunction
-
-Function ClearAllNeglectFlags()
-    Int i = 0
-    Int count = GetDeityCount()
-    while i < count
-        PDV_DeityBase deity = GetDeityAtListIndex(i)
-        if deity
-            SetNeglectFlag(deity, False)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
-Function SetNeglectFlag(PDV_DeityBase deity, Bool isActive)
-    if !deity
-        return
-    endIf
-
-    StorageUtil.SetIntValue(deity as Form, "PDV.Neglect.Active", PDV_DevotionRules.BoolToInt(isActive))
-EndFunction
-
-Bool Function IsNeglectFlagActive(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    return StorageUtil.GetIntValue(deity as Form, "PDV.Neglect.Active") == 1
-EndFunction
 
 Bool Function IsKyneNeglectActive()
-    return IsNeglectFlagActive(PDV_Kyne)
+    return LedgerRuntime.IsNeglectFlagActive(PDV_Kyne)
 EndFunction
 
 Function SyncKyneNeglectSpell(Bool shouldBeActive)
@@ -16006,52 +12668,21 @@ Function SyncKyneNeglectSpell(Bool shouldBeActive)
     endIf
 EndFunction
 
-Bool Function IsPatronLapsed(PDV_DeityBase deity)
-    ; Recency lapse: the active patron is "neglected" after NEGLECT_LAPSE_GRACE_DAYS of no
-    ; devotional act, regardless of piety. The active patron is decay-shielded (ApplyDecayToDeity
-    ; returns early for _activeDeity), so the piety<=10 floor almost never fires from mere absence.
-    ; Mirrors the Imperial civic-lapse model (IsImperialCivicNeglected). Reuses the per-deity
-    ; PDV.LastEventGameTime stamp that decay already consumes.
-    if !deity
-        return False
-    endIf
-    Float lastAct = StorageUtil.GetFloatValue(deity as Form, "PDV.LastEventGameTime")
-    if lastAct <= 0.0
-        return False
-    endIf
-    return (Utility.GetCurrentGameTime() - lastAct) > NEGLECT_LAPSE_GRACE_DAYS
-EndFunction
 
 Bool Function IsBroadLaneLapsed()
     ; Broad-lane recency lapse: a full-pantheon (broad) worshipper who has practiced at least once
     ; and then goes quiet for NEGLECT_LAPSE_GRACE_DAYS feels gentle neglect too. Generalizes the
     ; Imperial civic-lapse model to the broad lane, keyed off the global PDV.Devotion.LastActTime.
-    if !IsBroadWorshipActive()
+    if !LedgerRuntime.IsBroadWorshipActive()
         return False
     endIf
     Float lastAct = StorageUtil.GetFloatValue(None, "PDV.Devotion.LastActTime")
     if lastAct <= 0.0
         return False
     endIf
-    return (Utility.GetCurrentGameTime() - lastAct) > NEGLECT_LAPSE_GRACE_DAYS
+    return (Utility.GetCurrentGameTime() - lastAct) > LedgerRuntime.NEGLECT_LAPSE_GRACE_DAYS
 EndFunction
 
-Function SyncOnePatronNeglectSpell(Actor playerRef, Spell neglectSpell, Bool shouldBeActive)
-    ; None-safe add/remove for one per-patron neglect spell. Guards on the spell so it no-ops while
-    ; the record is unauthored (property still None until the ESP batch fills it).
-    if !playerRef || !neglectSpell
-        return
-    endIf
-    if shouldBeActive
-        if !playerRef.HasSpell(neglectSpell)
-            playerRef.AddSpell(neglectSpell, False)
-        endIf
-    else
-        if playerRef.HasSpell(neglectSpell)
-            playerRef.RemoveSpell(neglectSpell)
-        endIf
-    endIf
-EndFunction
 
 Function SyncNordPatronNeglectSpells()
     ; Per-patron Nord neglect (follow-on, owner ruling 2026-06-27): each focusable NON-Kyne Nord
@@ -16065,127 +12696,17 @@ Function SyncNordPatronNeglectSpells()
         return
     endIf
     Bool isNord = GetPlayerOriginRaceIndex() == ORIGIN_NORD
-    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Shor,  isNord && _activeDeity == PDV_Shor  && IsNeglectFlagActive(PDV_Shor))
-    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Tsun,  isNord && _activeDeity == PDV_Tsun  && IsNeglectFlagActive(PDV_Tsun))
-    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Stuhn, isNord && _activeDeity == PDV_Stuhn && IsNeglectFlagActive(PDV_Stuhn))
-    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Talos, isNord && _activeDeity == PDV_Talos && IsNeglectFlagActive(PDV_Talos))
+    LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Shor,  isNord && _activeDeity == PDV_Shor  && LedgerRuntime.IsNeglectFlagActive(PDV_Shor))
+    LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Tsun,  isNord && _activeDeity == PDV_Tsun  && LedgerRuntime.IsNeglectFlagActive(PDV_Tsun))
+    LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Stuhn, isNord && _activeDeity == PDV_Stuhn && LedgerRuntime.IsNeglectFlagActive(PDV_Stuhn))
+    LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Talos, isNord && _activeDeity == PDV_Talos && LedgerRuntime.IsNeglectFlagActive(PDV_Talos))
     ; Nord Old Ways patrons (Orkey/Dibella roster). _activeDeity keys on the internal Arkay/Dibella
     ; deity, not the "Orkey" display name; the spell record carries the Orkey-facing name.
-    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Arkay,   isNord && _activeDeity == PDV_Arkay   && IsNeglectFlagActive(PDV_Arkay))
-    SyncOnePatronNeglectSpell(playerRef, PDV_SPEL_Neglect_Dibella, isNord && _activeDeity == PDV_Dibella && IsNeglectFlagActive(PDV_Dibella))
+    LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, LedgerRuntime.PDV_SPEL_Neglect_Arkay,   isNord && _activeDeity == LedgerRuntime.PDV_Arkay   && LedgerRuntime.IsNeglectFlagActive(LedgerRuntime.PDV_Arkay))
+    LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, LedgerRuntime.PDV_SPEL_Neglect_Dibella, isNord && _activeDeity == LedgerRuntime.PDV_Dibella && LedgerRuntime.IsNeglectFlagActive(LedgerRuntime.PDV_Dibella))
 EndFunction
 
-Function SyncFirstTierRaceRewardRuntime()
-    Actor playerRef = Game.GetPlayer()
-    Spell activeReward = GetFirstTierRaceRewardSpellForOrigin()
-    ; The origin's first-tier "+10" Health floor grants to an active patron (>= Seeker) OR a
-    ; broad worshipper with accumulated service (IsBroadFloorEligible) -- without the broad arm
-    ; a broad worshipper got nothing until the count-gated Faithful (T2) reward, a 0 -> +20 cliff.
-    Bool shouldBeActive = (IsFirstTierRaceRewardEligible() || IsBroadFloorEligible()) && activeReward
 
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T1, shouldBeActive && activeReward == PDV_Bless_Altmer_Orthodox_T1, "Altmer T1")
-    ; Argonian Hist_T1 is intentionally absent here: SyncArgonianRewards owns it on the substrate
-    ; tier (no-offer). Managing it in this active-patron path too would fight that grant.
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T1, shouldBeActive && activeReward == PDV_Bless_Bosmer_Yffre_T1, "Bosmer T1")
-    ; Breton T1 is intentionally absent here: SyncBretonTraditionRewardFamily owns
-    ; the tradition family T1 on the tradition-breadth tier (v3 12.5, no generic
-    ; broad lane). Managing it in this floor path too would fight that grant.
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T1, shouldBeActive && activeReward == PDV_Bless_Dunmer_Reclamation_T1, "Dunmer T1")
-    ; Khajiit Lunar_T1 is intentionally absent here: PDV_Substrate_KhajiitLunar
-    ; owns it as the Substrate_Mid slot. Managing it in this generic T1 path
-    ; would fight the substrate grant and strip Khajiit Lunar Road.
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T1, shouldBeActive && activeReward == PDV_Bless_Orc_Malacath_T1, "Orc T1")
-    ; Redguard AncestorSpine_T1 is intentionally absent here: descoped 2026-07-16 (the
-    ; Crown/Forebear/Ash'abah sect spine is the sole ancestor layer). The selector returns
-    ; None for Redguard, so activeReward can never equal it -- this line only ever stripped,
-    ; which is dead on a not-save-safe fresh save. The property and reward functions stay for
-    ; gate assertions and the still-live T2 broad-worship path; uninstall teardown still clears it.
-
-    if shouldBeActive
-        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 1)
-        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", GetPlayerOriginRaceIndex())
-    else
-        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 0)
-        StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", -1)
-    endIf
-
-    ; Khajiit is a no-offer race: its emphasis rewards gate on the focused emphasis deity's
-    ; piety tier (not active-patron), and its broad lunar reward is the substrate boon layer.
-    SyncKhajiitEmphasisRewards(playerRef)
-    SyncKhajiitNeglectSpell(IsKhajiitLunarNeglected())
-
-    ; Altmer is an offer race: broad orthodoxy T1 remains on the existing first-tier path while
-    ; focused Auri-El/Magnus/Xarxes families gate on the active patron's tier.
-    SyncAltmerRewards(playerRef)
-    SyncAltmerNeglectSpell(IsAltmerCoherenceNeglected())
-
-    ; Bosmer is path-state gated: Y'ffre broad remains soft/capped, and the active path family
-    ; uses the path scoring deity tier while clearing every other path reward.
-    SyncBosmerRewards(playerRef)
-    SyncBosmerNeglectSpell(IsBosmerPathNeglected())
-
-    ; Breton is tradition-state gated. The chosen tradition selects exactly one focused family;
-    ; the broad tradition reward remains softer and capped at Faithful.
-    SyncBretonRewards(playerRef)
-    SyncBretonNeglectSpell(IsBretonTraditionNeglected())
-
-    ; Dunmer is hybrid: ancestor substrate is always-on identity, while the Reclamation foreground
-    ; remains an active-patron offer lane with one focused patron active at a time.
-    SyncDunmerRewards(playerRef)
-    SyncDunmerNeglectSpell(IsDunmerAncestorNeglected())
-
-    ; Orc is state-enum gated: one life-mode focused family can be active at a time, all under
-    ; Malacath as the single religious spine.
-    SyncOrcRewards(playerRef)
-    SyncOrcNeglectSpell(IsOrcCodeNeglected())
-
-    ; Redguard is state-enum gated: the sect filters the Yokudan lane, then exactly one focused
-    ; patron family can be active at a time.
-    SyncRedguardRewards(playerRef)
-    SyncRedguardNeglectSpell(IsRedguardAncestorDistanceNeglected())
-
-    ; Nord is state-enum gated: the baseline selects Old Ways or Nine Divines, and only a patron
-    ; from that baseline can carry focused rewards. Kyne neglect remains the existing Nord neglect.
-    SyncNordRewards(playerRef)
-
-    ; Argonian is the second no-offer race: rewards gate on the Hist substrate relations + People
-    ; focus + Void-active (not active-patron), so the broad Hist set runs without an offer.
-    SyncArgonianRewards(playerRef)
-    SyncArgonianNeglectSpell(IsArgonianHistNeglected())
-
-    ; Imperial is an offer race: broad civic T1 remains on the existing first-tier path while the
-    ; focused Divine/Talos families gate on the active patron's tier.
-    SyncImperialRewards(playerRef)
-    SyncImperialNeglectSpell(IsImperialCivicNeglected())
-    SyncBroadPantheonRewards(playerRef)
-EndFunction
-
-Function SyncBroadPantheonRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    String activePool = ""
-    Float standing = 0.0
-    if GetPatronState() == PATRON_STATE_BROAD
-        activePool = GetActiveBroadPantheonPoolId()
-        standing = GetBroadPantheonStanding(activePool)
-    endIf
-
-    Bool imperialSeeker = activePool == BROAD_PANTHEON_IMPERIAL && standing >= BROAD_PANTHEON_SEEKER_THRESHOLD && standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
-    Bool imperialFaithful = activePool == BROAD_PANTHEON_IMPERIAL && standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
-    Bool oldWaysSeeker = activePool == BROAD_PANTHEON_NORD_OLD && standing >= BROAD_PANTHEON_SEEKER_THRESHOLD && standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
-    Bool oldWaysFaithful = activePool == BROAD_PANTHEON_NORD_OLD && standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
-    Bool nineSeeker = activePool == BROAD_PANTHEON_NORD_NINE && standing >= BROAD_PANTHEON_SEEKER_THRESHOLD && standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
-    Bool nineFaithful = activePool == BROAD_PANTHEON_NORD_NINE && standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
-
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, imperialSeeker, "The Divines' Regard - Observant")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, imperialFaithful, "The Divines' Regard - Faithful")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, oldWaysSeeker, "Old Ways - Observant")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, oldWaysFaithful, "Old Ways - Faithful")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_NineDivines_T1, nineSeeker, "Faith of the Holds - Observant")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_NineDivines_T2, nineFaithful, "Faith of the Holds - Faithful")
-EndFunction
 
 Function SyncAltmerRewards(Actor playerRef)
     if !playerRef
@@ -16194,8 +12715,8 @@ Function SyncAltmerRewards(Actor playerRef)
 
     Bool isAltmer = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
     SyncAltmerAncestorSubstrate(playerRef, isAltmer)
-    Bool broadOrthodoxFaithful = isAltmer && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count") >= 6
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, broadOrthodoxFaithful, "Altmer Orthodox T2")
+    Bool broadOrthodoxFaithful = isAltmer && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count") >= 6
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, broadOrthodoxFaithful, "Altmer Orthodox T2")
 
     SyncAltmerRewardFamily(playerRef, PDV_AuriEl, PDV_Bless_Altmer_AuriEl_T1, PDV_Bless_Altmer_AuriEl_T2, PDV_Bless_Altmer_AuriEl_T3, "Auri-El")
     SyncAltmerRewardFamily(playerRef, PDV_Magnus, PDV_Bless_Altmer_Magnus_T1, PDV_Bless_Altmer_Magnus_T2, PDV_Bless_Altmer_Magnus_T3, "Magnus")
@@ -16217,18 +12738,18 @@ Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)
 EndFunction
 
 Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
-    Int activeTier = TIER_NONE
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = LedgerRuntime.TIER_NONE
     if isActive && deity
-        activeTier = GetTier(deity)
+        activeTier = LedgerRuntime.GetTier(deity)
     endIf
 
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Altmer " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Altmer " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Altmer " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Altmer " + label)
+    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
+    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Altmer " + label + " T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Altmer " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Altmer " + label + " T3")
+    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Altmer " + label)
 EndFunction
 
 Bool Function IsAltmerCoherenceNeglected()
@@ -16275,28 +12796,28 @@ Function SyncBosmerRewards(Actor playerRef)
 
     Bool isBosmer = GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
     Int pathState = GetBosmerPathState()
-    Bool broadFaithful = isBosmer && GetPatronState() == PATRON_STATE_BROAD && GetBosmerFavorSignalCount() >= 6
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T2, broadFaithful, "Bosmer Yffre T2")
+    Bool broadFaithful = isBosmer && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && GetBosmerFavorSignalCount() >= 6
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T2, broadFaithful, "Bosmer Yffre T2")
 
     SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_OLD_CONTRACT, pathState, PDV_Yffre, PDV_Bless_Bosmer_OldContract_T1, PDV_Bless_Bosmer_OldContract_T2, PDV_Bless_Bosmer_OldContract_T3, "OldContract")
     SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_LIVING_STORY, pathState, PDV_Yffre, PDV_Bless_Bosmer_LivingStory_T1, PDV_Bless_Bosmer_LivingStory_T2, PDV_Bless_Bosmer_LivingStory_T3, "LivingStory")
-    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_EXCHANGE, pathState, PDV_Zen, PDV_Bless_Bosmer_Exchange_T1, PDV_Bless_Bosmer_Exchange_T2, PDV_Bless_Bosmer_Exchange_T3, "Exchange")
+    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_EXCHANGE, pathState, LedgerRuntime.PDV_Zen, PDV_Bless_Bosmer_Exchange_T1, PDV_Bless_Bosmer_Exchange_T2, PDV_Bless_Bosmer_Exchange_T3, "Exchange")
     SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_BANDIT_ROAD, pathState, PDV_BaanDar, PDV_Bless_Bosmer_BanditRoad_T1, PDV_Bless_Bosmer_BanditRoad_T2, PDV_Bless_Bosmer_BanditRoad_T3, "BanditRoad")
 EndFunction
 
 Function SyncBosmerPathRewardFamily(Actor playerRef, Int thisPath, Int activePath, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
     Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BOSMER && thisPath == activePath
-    Int activeTier = TIER_NONE
+    Int activeTier = LedgerRuntime.TIER_NONE
     if isActive && deity
-        activeTier = GetTier(deity)
+        activeTier = LedgerRuntime.GetTier(deity)
     endIf
 
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Bosmer " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Bosmer " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Bosmer " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Bosmer " + label)
+    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
+    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Bosmer " + label + " T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Bosmer " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Bosmer " + label + " T3")
+    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Bosmer " + label)
 EndFunction
 
 Int Function GetBosmerPathState()
@@ -16321,12 +12842,12 @@ Bool Function IsBosmerPathNeglected()
 
     Int pathState = GetBosmerPathState()
     if pathState == BOSMER_PATH_EXCHANGE
-        return IsNeglectFlagActive(PDV_Zen)
+        return LedgerRuntime.IsNeglectFlagActive(LedgerRuntime.PDV_Zen)
     elseIf pathState == BOSMER_PATH_BANDIT_ROAD
-        return IsNeglectFlagActive(PDV_BaanDar)
+        return LedgerRuntime.IsNeglectFlagActive(PDV_BaanDar)
     endIf
 
-    return IsNeglectFlagActive(PDV_Yffre)
+    return LedgerRuntime.IsNeglectFlagActive(PDV_Yffre)
 EndFunction
 
 Function SyncBosmerNeglectSpell(Bool shouldBeActive)
@@ -16365,8 +12886,8 @@ Function SyncBretonRewards(Actor playerRef)
     ; generic Tradition_T1/T2 spells are force-removed so a migrated save loses
     ; them; the broad role now lives in each tradition family's T1/T2 phase, and
     ; the focused patron unlocks T3.
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, False, "Breton Tradition T1 (retired)")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, False, "Breton Tradition T2 (retired)")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, False, "Breton Tradition T1 (retired)")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, False, "Breton Tradition T2 (retired)")
 
     ; Unified model (2026-07-13): the tradition family grants T1/T2 practice only.
     ; The former T3 slots (KnightsRoad_T3 / GreenWay_T3 / HiddenArt_T3) are now
@@ -16403,22 +12924,22 @@ Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int
         isActive = False
     endIf
 
-    Int activeTier = TIER_NONE
+    Int activeTier = LedgerRuntime.TIER_NONE
     PDV_DeityBase presentationDeity = None
     if isActive
         activeTier = GetBretonTraditionTier(thisTradition)
         presentationDeity = GetBretonTraditionPresentationDeity(thisTradition)
     endIf
 
-    Bool hadT1Spell = HasRewardSpell(playerRef, t1)
-    Bool hadT2Spell = HasRewardSpell(playerRef, t2)
-    Bool wantsT1Spell = isActive && activeTier == TIER_SEEKER
+    Bool hadT1Spell = LedgerRuntime.HasRewardSpell(playerRef, t1)
+    Bool hadT2Spell = LedgerRuntime.HasRewardSpell(playerRef, t2)
+    Bool wantsT1Spell = isActive && activeTier == LedgerRuntime.TIER_SEEKER
     Bool championReplacesT2 = isActive && IsBretonPracticeTierReplacedByChampion(thisTradition)
-    Bool wantsT2Spell = isActive && activeTier >= TIER_DEVOTED && !championReplacesT2
-    SyncRaceRewardSpell(playerRef, t1, wantsT1Spell, "Breton " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, wantsT2Spell, "Breton " + label + " T2")
-    MaybeShowBretonTraditionRewardPresentation(playerRef, t1, hadT1Spell, wantsT1Spell, presentationDeity, label, TIER_SEEKER)
-    MaybeShowBretonTraditionRewardPresentation(playerRef, t2, hadT2Spell, wantsT2Spell, presentationDeity, label, TIER_DEVOTED)
+    Bool wantsT2Spell = isActive && activeTier >= LedgerRuntime.TIER_DEVOTED && !championReplacesT2
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, wantsT1Spell, "Breton " + label + " T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, wantsT2Spell, "Breton " + label + " T2")
+    MaybeShowBretonTraditionRewardPresentation(playerRef, t1, hadT1Spell, wantsT1Spell, presentationDeity, label, LedgerRuntime.TIER_SEEKER)
+    MaybeShowBretonTraditionRewardPresentation(playerRef, t2, hadT2Spell, wantsT2Spell, presentationDeity, label, LedgerRuntime.TIER_DEVOTED)
 EndFunction
 
 Bool Function IsBretonPracticeTierReplacedByChampion(Int traditionValue)
@@ -16441,12 +12962,12 @@ Bool Function IsBretonPracticeTierReplacedByChampion(Int traditionValue)
 EndFunction
 
 PDV_DeityBase Function GetBretonChampionSource(Bool isBreton, Int traditionValue)
-    if isBreton && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity) >= TIER_CHAMPION
+    if isBreton && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity && LedgerRuntime.GetTier(_activeDeity) >= LedgerRuntime.TIER_CHAMPION
         return _activeDeity
     endIf
     if isBreton && traditionValue == BRETON_TRADITION_HIDDEN_ART
         PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
-        if activePact && activePact.GetStoredTier() >= TIER_CHAMPION
+        if activePact && activePact.GetStoredTier() >= LedgerRuntime.TIER_CHAMPION
             return activePact
         endIf
     endIf
@@ -16463,7 +12984,7 @@ Function SyncBretonChampionBoon(Actor playerRef, Bool isBreton, Int traditionVal
         wantSpell = GetBretonPatronChampionBoon(championSource, traditionValue)
     endIf
 
-    Bool hadWanted = wantSpell && HasRewardSpell(playerRef, wantSpell)
+    Bool hadWanted = wantSpell && LedgerRuntime.HasRewardSpell(playerRef, wantSpell)
     SyncBretonChampionBoonExclusive(playerRef, wantSpell)
     MaybeShowBretonChampionBoonPresentation(playerRef, wantSpell, hadWanted, traditionValue, championSource)
 EndFunction
@@ -16473,18 +12994,18 @@ EndFunction
 ; per-deity copies. SyncRaceRewardSpell no-ops on a None property, so an unbuilt
 ; record is safe.
 Function SyncBretonChampionBoonExclusive(Actor playerRef, Spell wantSpell)
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T3, wantSpell == PDV_Bless_Breton_KnightsRoad_T3, "Breton Champion Stendarr")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T3, wantSpell == PDV_Bless_Breton_GreenWay_T3, "Breton Champion Yffre")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T3, wantSpell == PDV_Bless_Breton_HiddenArt_T3, "Breton Champion HiddenArt")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Mara, wantSpell == PDV_Bless_Breton_Champion_Mara, "Breton Champion Mara")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Arkay, wantSpell == PDV_Bless_Breton_Champion_Arkay, "Breton Champion Arkay")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Akatosh, wantSpell == PDV_Bless_Breton_Champion_Akatosh, "Breton Champion Akatosh")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Julianos, wantSpell == PDV_Bless_Breton_Champion_Julianos, "Breton Champion Julianos")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Kynareth, wantSpell == PDV_Bless_Breton_Champion_Kynareth, "Breton Champion Kynareth")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Dibella, wantSpell == PDV_Bless_Breton_Champion_Dibella, "Breton Champion Dibella")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Zenithar, wantSpell == PDV_Bless_Breton_Champion_Zenithar, "Breton Champion Zenithar")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Talos, wantSpell == PDV_Bless_Breton_Champion_Talos, "Breton Champion Talos")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Magnus, wantSpell == PDV_Bless_Breton_Champion_Magnus, "Breton Champion Magnus")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T3, wantSpell == PDV_Bless_Breton_KnightsRoad_T3, "Breton Champion Stendarr")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T3, wantSpell == PDV_Bless_Breton_GreenWay_T3, "Breton Champion Yffre")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T3, wantSpell == PDV_Bless_Breton_HiddenArt_T3, "Breton Champion HiddenArt")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Mara, wantSpell == PDV_Bless_Breton_Champion_Mara, "Breton Champion Mara")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Arkay, wantSpell == PDV_Bless_Breton_Champion_Arkay, "Breton Champion Arkay")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Akatosh, wantSpell == PDV_Bless_Breton_Champion_Akatosh, "Breton Champion Akatosh")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Julianos, wantSpell == PDV_Bless_Breton_Champion_Julianos, "Breton Champion Julianos")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Kynareth, wantSpell == PDV_Bless_Breton_Champion_Kynareth, "Breton Champion Kynareth")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Dibella, wantSpell == PDV_Bless_Breton_Champion_Dibella, "Breton Champion Dibella")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Zenithar, wantSpell == PDV_Bless_Breton_Champion_Zenithar, "Breton Champion Zenithar")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Talos, wantSpell == PDV_Bless_Breton_Champion_Talos, "Breton Champion Talos")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Magnus, wantSpell == PDV_Bless_Breton_Champion_Magnus, "Breton Champion Magnus")
 EndFunction
 
 ; Maps an active Champion patron to their Breton champion boon. Stendarr and
@@ -16495,23 +13016,23 @@ Spell Function GetBretonPatronChampionBoon(PDV_DeityBase deity, Int traditionVal
     if !deity
         return None
     endIf
-    if deity == PDV_Stendarr
+    if deity == LedgerRuntime.PDV_Stendarr
         return PDV_Bless_Breton_KnightsRoad_T3
     elseIf deity == PDV_Yffre
         return PDV_Bless_Breton_GreenWay_T3
-    elseIf deity == PDV_Mara
+    elseIf deity == LedgerRuntime.PDV_Mara
         return PDV_Bless_Breton_Champion_Mara
-    elseIf deity == PDV_Arkay
+    elseIf deity == LedgerRuntime.PDV_Arkay
         return PDV_Bless_Breton_Champion_Arkay
-    elseIf deity == PDV_Akatosh
+    elseIf deity == LedgerRuntime.PDV_Akatosh
         return PDV_Bless_Breton_Champion_Akatosh
-    elseIf deity == PDV_Julianos
+    elseIf deity == LedgerRuntime.PDV_Julianos
         return PDV_Bless_Breton_Champion_Julianos
-    elseIf deity == PDV_Kynareth
+    elseIf deity == LedgerRuntime.PDV_Kynareth
         return PDV_Bless_Breton_Champion_Kynareth
-    elseIf deity == PDV_Dibella
+    elseIf deity == LedgerRuntime.PDV_Dibella
         return PDV_Bless_Breton_Champion_Dibella
-    elseIf deity == PDV_Zenithar
+    elseIf deity == LedgerRuntime.PDV_Zenithar
         return PDV_Bless_Breton_Champion_Zenithar
     elseIf deity == PDV_Talos
         return PDV_Bless_Breton_Champion_Talos
@@ -16527,23 +13048,23 @@ Spell Function GetBretonPatronChampionBoon(PDV_DeityBase deity, Int traditionVal
 EndFunction
 
 String Function GetBretonChampionBoonDisplayName(PDV_DeityBase deity)
-    if deity == PDV_Stendarr
+    if deity == LedgerRuntime.PDV_Stendarr
         return "Knight's Bulwark - Champion"
     elseIf deity == PDV_Yffre
         return "Green Way - Champion"
-    elseIf deity == PDV_Mara
+    elseIf deity == LedgerRuntime.PDV_Mara
         return "Mara's Compassion - Champion"
-    elseIf deity == PDV_Arkay
+    elseIf deity == LedgerRuntime.PDV_Arkay
         return "Arkay's Ward - Champion"
-    elseIf deity == PDV_Akatosh
+    elseIf deity == LedgerRuntime.PDV_Akatosh
         return "Akatosh's Endurance - Champion"
-    elseIf deity == PDV_Julianos
+    elseIf deity == LedgerRuntime.PDV_Julianos
         return "Julianos's Insight - Champion"
-    elseIf deity == PDV_Kynareth
+    elseIf deity == LedgerRuntime.PDV_Kynareth
         return "Kynareth's Sky - Champion"
-    elseIf deity == PDV_Dibella
+    elseIf deity == LedgerRuntime.PDV_Dibella
         return "Dibella's Inspiration - Champion"
-    elseIf deity == PDV_Zenithar
+    elseIf deity == LedgerRuntime.PDV_Zenithar
         return "Zenithar's Prosperity - Champion"
     elseIf deity == PDV_Talos
         return "Talos's Triumph - Champion"
@@ -16585,11 +13106,11 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
     if IsBretonResonantPatronChampion(traditionValue)
         line = deityName + " names you Champion through the " + traditionLabel + "."
     endIf
-    if NotifyTierUp(championSource, TIER_CHAMPION)
+    if LedgerRuntime.NotifyTierUp(championSource, LedgerRuntime.TIER_CHAMPION)
         Trace(2, "Breton champion boon marked generic tier guard: " + deityName)
     endIf
     SendPrismaToast(symbolName, "good", titleText, line)
-    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, TIER_CHAMPION, titleText)
+    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, LedgerRuntime.TIER_CHAMPION, titleText)
     Trace(1, "Breton champion boon presentation shown: " + deityName + " / " + traditionLabel)
 EndFunction
 
@@ -16612,16 +13133,16 @@ Function MaybeShowBretonTraditionRewardPresentation(Actor playerRef, Spell rewar
     String symbolName = GetPrismaSymbolForDeity(deity)
     String titleText = displayLabel + " deepens"
     String line = "The " + displayLabel + " names you " + tierLabel + "."
-    if tierValue >= TIER_CHAMPION && deity
+    if tierValue >= LedgerRuntime.TIER_CHAMPION && deity
         String deityName = GetPublicDeityDisplayName(deity)
         titleText = deityName + " names you " + tierLabel
         line = deityName + " names you " + tierLabel + " through the " + displayLabel + "."
-        if NotifyTierUp(deity, tierValue)
+        if LedgerRuntime.NotifyTierUp(deity, tierValue)
             Trace(2, "Breton focused Champion marked generic tier guard: " + deity.DeityName)
         endIf
     endIf
     SendPrismaToast(symbolName, "good", titleText, line)
-    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= TIER_CHAMPION, tierValue, titleText)
+    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= LedgerRuntime.TIER_CHAMPION, tierValue, titleText)
 EndFunction
 
 String Function GetBretonTraditionRewardDisplayLabel(String label)
@@ -16648,11 +13169,11 @@ EndFunction
 Int Function GetBretonPracticeTier(Int traditionValue)
     Int practiceCount = GetBretonPracticeCount(traditionValue)
     if practiceCount >= BRETON_PRACTICE_DEVOTED_POINTS
-        return TIER_DEVOTED
+        return LedgerRuntime.TIER_DEVOTED
     elseIf practiceCount >= BRETON_PRACTICE_SEEKER_POINTS
-        return TIER_SEEKER
+        return LedgerRuntime.TIER_SEEKER
     endIf
-    return TIER_NONE
+    return LedgerRuntime.TIER_NONE
 EndFunction
 
 Int Function GetBretonPracticeCount(Int traditionValue)
@@ -16678,20 +13199,20 @@ Function SetBretonPracticeCount(Int traditionValue, Int practicePoints)
 EndFunction
 
 Bool Function IsBretonResonantPatronChampion(Int traditionValue)
-    if GetPatronState() != PATRON_STATE_ACTIVE || !_activeDeity
+    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity
         return False
     endIf
-    if GetTier(_activeDeity) < TIER_CHAMPION
+    if LedgerRuntime.GetTier(_activeDeity) < LedgerRuntime.TIER_CHAMPION
         return False
     endIf
     return IsDeityResonantWithBretonTradition(traditionValue, _activeDeity)
 EndFunction
 
 Bool Function IsBretonNonResonantPatronChampion(Int traditionValue)
-    if GetPatronState() != PATRON_STATE_ACTIVE || !_activeDeity
+    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity
         return False
     endIf
-    if GetTier(_activeDeity) < TIER_CHAMPION
+    if LedgerRuntime.GetTier(_activeDeity) < LedgerRuntime.TIER_CHAMPION
         return False
     endIf
     return !IsDeityResonantWithBretonTradition(traditionValue, _activeDeity)
@@ -16702,15 +13223,15 @@ Bool Function IsDeityResonantWithBretonTradition(Int traditionValue, PDV_DeityBa
         return False
     endIf
     if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        return deity == PDV_Stendarr || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Julianos || deity == PDV_Akatosh || deity == PDV_Talos || deity == PDV_Kynareth
+        return deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Akatosh || deity == PDV_Talos || deity == LedgerRuntime.PDV_Kynareth
     elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        return deity == PDV_Yffre || deity == PDV_Mara || deity == PDV_Kynareth || deity == PDV_Dibella
+        return deity == PDV_Yffre || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Kynareth || deity == LedgerRuntime.PDV_Dibella
     elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
         PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
         if path
             return True
         endIf
-        return deity == PDV_Magnus || deity == PDV_Mara || deity == PDV_Julianos || deity == PDV_Dibella
+        return deity == PDV_Magnus || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Dibella
     endIf
     return False
 EndFunction
@@ -16733,7 +13254,7 @@ EndFunction
 
 PDV_DeityBase Function GetBretonTraditionDeity(Int traditionValue)
     if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        return PDV_Stendarr
+        return LedgerRuntime.PDV_Stendarr
     elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
         return PDV_Magnus
     elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
@@ -16895,8 +13416,8 @@ Function SyncDunmerRewards(Actor playerRef)
     endIf
 
     Bool isDunmer = GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
-    Bool broadReclamationFaithful = isDunmer && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") >= 6
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T2, broadReclamationFaithful, "Dunmer Reclamation T2")
+    Bool broadReclamationFaithful = isDunmer && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") >= 6
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T2, broadReclamationFaithful, "Dunmer Reclamation T2")
 
     SyncDunmerRewardFamily(playerRef, PDV_Azura, PDV_Bless_Dunmer_Azura_T1, PDV_Bless_Dunmer_Azura_T2, PDV_Bless_Dunmer_Azura_T3, "Azura")
     SyncDunmerRewardFamily(playerRef, PDV_Boethiah, PDV_Bless_Dunmer_Boethiah_T1, PDV_Bless_Dunmer_Boethiah_T2, PDV_Bless_Dunmer_Boethiah_T3, "Boethiah")
@@ -16904,18 +13425,18 @@ Function SyncDunmerRewards(Actor playerRef)
 EndFunction
 
 Function SyncDunmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_DUNMER && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
-    Int activeTier = TIER_NONE
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_DUNMER && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = LedgerRuntime.TIER_NONE
     if isActive && deity
-        activeTier = GetTier(deity)
+        activeTier = LedgerRuntime.GetTier(deity)
     endIf
 
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Dunmer " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Dunmer " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Dunmer " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Dunmer " + label)
+    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
+    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Dunmer " + label + " T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Dunmer " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Dunmer " + label + " T3")
+    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Dunmer " + label)
 EndFunction
 
 Bool Function IsDunmerAncestorNeglected()
@@ -16956,13 +13477,13 @@ Function SyncOrcRewards(Actor playerRef)
     Int activeMode = GetActiveOrcRewardMode()
     SyncOrcSpineBoon(playerRef, isOrc, activeMode)
 
-    Bool broadFaithful = isOrc && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") >= 6
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, broadFaithful, "Orc Malacath T2")
+    Bool broadFaithful = isOrc && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") >= 6
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, broadFaithful, "Orc Malacath T2")
 
-    Bool focusActive = isOrc && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == PDV_Malacath && PDV_Malacath
-    Int activeTier = TIER_NONE
+    Bool focusActive = isOrc && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == PDV_Malacath && PDV_Malacath
+    Int activeTier = LedgerRuntime.TIER_NONE
     if focusActive
-        activeTier = GetTier(PDV_Malacath)
+        activeTier = LedgerRuntime.GetTier(PDV_Malacath)
     endIf
 
     SyncOrcRewardFamily(playerRef, ORC_LIFE_MODE_STRONGHOLD, activeMode, activeTier, focusActive, PDV_Bless_Orc_Stronghold_T1, PDV_Bless_Orc_Stronghold_T2, PDV_Bless_Orc_Stronghold_T3, "Stronghold")
@@ -16975,9 +13496,9 @@ Function SyncOrcSpineBoon(Actor playerRef, Bool isOrc, Int activeMode)
         return
     endIf
 
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_City, isOrc && activeMode == ORC_LIFE_MODE_CITY, "Orc Spine City")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_Stronghold, isOrc && activeMode == ORC_LIFE_MODE_STRONGHOLD, "Orc Spine Stronghold")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_LegionExile, isOrc && activeMode == ORC_LIFE_MODE_LEGION_EXILE, "Orc Spine LegionExile")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_City, isOrc && activeMode == ORC_LIFE_MODE_CITY, "Orc Spine City")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_Stronghold, isOrc && activeMode == ORC_LIFE_MODE_STRONGHOLD, "Orc Spine Stronghold")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_LegionExile, isOrc && activeMode == ORC_LIFE_MODE_LEGION_EXILE, "Orc Spine LegionExile")
 EndFunction
 
 Int Function GetActiveOrcRewardMode()
@@ -16993,12 +13514,12 @@ EndFunction
 
 Function SyncOrcRewardFamily(Actor playerRef, Int thisMode, Int activeMode, Int activeTier, Bool focusActive, Spell t1, Spell t2, Spell t3, String label)
     Bool isActive = focusActive && thisMode == activeMode
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Orc " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Orc " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Orc " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, PDV_Malacath, "Orc " + label)
+    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
+    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Orc " + label + " T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Orc " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Orc " + label + " T3")
+    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, PDV_Malacath, "Orc " + label)
 EndFunction
 
 Bool Function IsOrcCodeNeglected()
@@ -17053,13 +13574,13 @@ Function SyncRedguardRewards(Actor playerRef)
     ; broad-worship Faithful reward, so a broad Redguard at 6+ ancestor-spine sources gains
     ; "Ancestors' Regard - Faithful" on top of the sect spine. Focused patrons stay broad-state gated
     ; out of T2, so they carry only their sect spine.
-    Bool broadFaithful = isRedguard && GetPatronState() == PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") >= 6
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, broadFaithful, "Redguard AncestorSpine T2")
+    Bool broadFaithful = isRedguard && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") >= 6
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, broadFaithful, "Redguard AncestorSpine T2")
 
     SyncRedguardRewardFamily(playerRef, PDV_Tuwhacca, PDV_Bless_Redguard_Tuwhacca_T1, PDV_Bless_Redguard_Tuwhacca_T2, PDV_Bless_Redguard_Tuwhacca_T3, "Tuwhacca")
     SyncRedguardRewardFamily(playerRef, PDV_HoonDing, PDV_Bless_Redguard_HoonDing_T1, PDV_Bless_Redguard_HoonDing_T2, PDV_Bless_Redguard_HoonDing_T3, "HoonDing")
     SyncRedguardRewardFamily(playerRef, PDV_Leki, PDV_Bless_Redguard_Leki_T1, PDV_Bless_Redguard_Leki_T2, PDV_Bless_Redguard_Leki_T3, "Leki")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_FarShoresToken, isRedguard && StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken") > 0.0, "Redguard Far Shores Token")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_FarShoresToken, isRedguard && StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken") > 0.0, "Redguard Far Shores Token")
     if isRedguard && PDV_RedguardSectTrack
         MaybeShowRedguardChampionEntry(PDV_RedguardSectTrack.GetCurrentState())
     endIf
@@ -17070,9 +13591,9 @@ Function SyncRedguardSpineBoon(Actor playerRef, Bool isRedguard, Int sectValue)
         return
     endIf
 
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Crown, isRedguard && sectValue == REDGUARD_SECT_CROWN, "Redguard Spine Crown")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Forebear, isRedguard && sectValue == REDGUARD_SECT_FOREBEAR, "Redguard Spine Forebear")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_AshAbah, isRedguard && sectValue == REDGUARD_SECT_ASHABAH, "Redguard Spine AshAbah")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Crown, isRedguard && sectValue == REDGUARD_SECT_CROWN, "Redguard Spine Crown")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Forebear, isRedguard && sectValue == REDGUARD_SECT_FOREBEAR, "Redguard Spine Forebear")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_AshAbah, isRedguard && sectValue == REDGUARD_SECT_ASHABAH, "Redguard Spine AshAbah")
 EndFunction
 
 Int Function GetActiveRedguardSpineSect()
@@ -17088,18 +13609,18 @@ Int Function GetActiveRedguardSpineSect()
 EndFunction
 
 Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
-    Int activeTier = TIER_NONE
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity
+    Int activeTier = LedgerRuntime.TIER_NONE
     if isActive && deity
-        activeTier = GetTier(deity)
+        activeTier = LedgerRuntime.GetTier(deity)
     endIf
 
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= TIER_CHAMPION
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Redguard " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Redguard " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Redguard " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Redguard " + label)
+    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
+    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Redguard " + label + " T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Redguard " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Redguard " + label + " T3")
+    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Redguard " + label)
 EndFunction
 
 Bool Function IsRedguardAncestorDistanceNeglected()
@@ -17156,7 +13677,7 @@ Function EmitRedguardDeathDutyAbandonmentMinus(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT, None, multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Redguard.DeathDutyAbandonmentCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Redguard.LastDeathDutyAbandonmentReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Redguard.LastDeathDutyAbandonmentTime", Utility.GetCurrentGameTime())
@@ -17176,7 +13697,7 @@ Function EmitMalacathCurseCodeRuptureMinus(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CURSE_CODE_RUPTURE, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_CURSE_CODE_RUPTURE, None, multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Orc.CurseCodeRuptureCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastCurseCodeRuptureReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Orc.LastCurseCodeRuptureTime", Utility.GetCurrentGameTime())
@@ -17197,7 +13718,7 @@ Function EmitMalacathBrokenFaithKinMinus(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_BROKEN_FAITH_KIN, None, multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Orc.BrokenFaithKinCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastBrokenFaithKinReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Orc.LastBrokenFaithKinTime", Utility.GetCurrentGameTime())
@@ -17222,7 +13743,7 @@ Function HandleDunmerClumsyCrime(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_BETRAYED, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_BETRAYED, None, multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Dunmer.SecretBetrayedCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastSecretBetrayedReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Dunmer.LastSecretBetrayedTime", Utility.GetCurrentGameTime())
@@ -17243,7 +13764,7 @@ Function EmitHistAbandonmentMinus(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_ABANDONMENT, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_ABANDONMENT, None, multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistAbandonmentCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistAbandonmentReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistAbandonmentTime", Utility.GetCurrentGameTime())
@@ -17260,7 +13781,7 @@ Function EmitHistCorruptionMinus(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_CORRUPTION, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_HIST_CORRUPTION, None, multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistCorruptionCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistCorruptionReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistCorruptionTime", Utility.GetCurrentGameTime())
@@ -17277,7 +13798,7 @@ Function EmitHistVoidOverreachMinus(String reason)
         return
     endIf
 
-    AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_VOID_OVERREACH, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Hist, PDV_Hist.SIGNAL_VOID_OVERREACH, None, multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.VoidOverreachCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastVoidOverreachReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastVoidOverreachTime", Utility.GetCurrentGameTime())
@@ -17304,23 +13825,23 @@ Function SyncNordRewards(Actor playerRef)
     ; existing Imperial Divine reward spells (the canonical Nine Divines rewards), identical to
     ; the Mara fix. Owner ruling 2026-06-27. NOTE: Akatosh/Julianos/Kynareth Imperial rewards are
     ; regen-rate (~0 under Requiem) -- a pre-existing Imperial reward-feel gap to convert later.
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, LedgerRuntime.PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
     ; Mara is focusable in BOTH lanes (Old Ways + Nine Divines), like Talos -- baseline -1.
     ; No Nord-specific Mara reward records exist, so reuse the Imperial Mara spells -- this IS
     ; the Nine Divines Mara reward (Restoration +5/+13/+23 + wake-mended), identical across lanes.
-    SyncNordRewardFamily(playerRef, -1, PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
+    SyncNordRewardFamily(playerRef, -1, LedgerRuntime.PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
     ; Arkay is focusable in BOTH lanes. Old Ways names him Orkey and uses
     ; Orkey-facing Nord reward records so Active Effects do not surface Arkay.
     ; Nine Divines keeps the existing Imperial Arkay rewards.
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, PDV_Arkay, PDV_Bless_Nord_Arkay_T1, PDV_Bless_Nord_Arkay_T2, PDV_Bless_Nord_Arkay_T3, "Orkey")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_OLD_WAYS, LedgerRuntime.PDV_Arkay, PDV_Bless_Nord_Arkay_T1, PDV_Bless_Nord_Arkay_T2, PDV_Bless_Nord_Arkay_T3, "Orkey")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, LedgerRuntime.PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, LedgerRuntime.PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, LedgerRuntime.PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
     ; Dibella is focusable in BOTH lanes (owner directive 2026-07-05), like Mara --
     ; baseline -1, same Imperial reward reuse either way.
-    SyncNordRewardFamily(playerRef, -1, PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
-    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
+    SyncNordRewardFamily(playerRef, -1, LedgerRuntime.PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, LedgerRuntime.PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
+    SyncNordRewardFamily(playerRef, NORD_BASELINE_NINE_DIVINES, LedgerRuntime.PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
 EndFunction
 
 Function SyncNordAncestorSubstrate(Actor playerRef, Bool isNord)
@@ -17337,17 +13858,17 @@ EndFunction
 
 Function SyncNordRewardFamily(Actor playerRef, Int requiredBaseline, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
     Bool baselineOk = requiredBaseline < 0 || GetNordPantheonBaselineState() == requiredBaseline
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_NORD && baselineOk && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_NORD && baselineOk && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity
     Float activePiety = 0.0
     if isActive && deity
-        activePiety = GetPiety(deity)
+        activePiety = LedgerRuntime.GetPiety(deity)
     endIf
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
+    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
     Bool wantsChampionSpell = isActive && activePiety >= 85.0
-    SyncRaceRewardSpell(playerRef, t1, False, "Nord " + label + " T1 compatibility")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Nord " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Nord " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Nord " + label)
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, False, "Nord " + label + " T1 compatibility")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Nord " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Nord " + label + " T3")
+    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Nord " + label)
 EndFunction
 
 ; Grants the focused Khajiit emphasis's 3-tier reward set based on that emphasis deity's piety
@@ -17358,12 +13879,12 @@ Function SyncKhajiitEmphasisRewards(Actor playerRef)
     endIf
 
     Int activeFocus = KHAJIIT_FOCUS_NONE
-    Int activeTier = TIER_NONE
+    Int activeTier = LedgerRuntime.TIER_NONE
     if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         activeFocus = GetKhajiitFocusedEmphasis()
         PDV_DeityBase deity = GetKhajiitEmphasisDeity(activeFocus)
         if deity
-            activeTier = GetTier(deity)
+            activeTier = LedgerRuntime.GetTier(deity)
         endIf
     endIf
 
@@ -17383,13 +13904,13 @@ Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFoc
         hadChampionSpell = playerRef.HasSpell(t3)
     endIf
 
-    SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == TIER_SEEKER, "Khajiit " + label + " T1")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == TIER_DEVOTED, "Khajiit " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= TIER_CHAMPION, "Khajiit " + label + " T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Khajiit " + label + " T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Khajiit " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= LedgerRuntime.TIER_CHAMPION, "Khajiit " + label + " T3")
 
-    if isActive && activeTier >= TIER_CHAMPION && t3 && !hadChampionSpell && playerRef.HasSpell(t3) && deity && NotifyTierUp(deity, TIER_CHAMPION)
-        SendPrismaEventToast("tier", deity, "", GetPublicTierBand(TIER_CHAMPION), "")
-        SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+    if isActive && activeTier >= LedgerRuntime.TIER_CHAMPION && t3 && !hadChampionSpell && playerRef.HasSpell(t3) && deity && LedgerRuntime.NotifyTierUp(deity, LedgerRuntime.TIER_CHAMPION)
+        SendPrismaEventToast("tier", deity, "", GetPublicTierBand(LedgerRuntime.TIER_CHAMPION), "")
+        SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(LedgerRuntime.TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
         Trace(1, "Khajiit Champion reward presentation shown: " + deity.DeityName)
     endIf
 EndFunction
@@ -17459,27 +13980,27 @@ Function SyncArgonianRewards(Actor playerRef)
     ; magnitude, so total power is unchanged but only one tier shows at a time).
     ; Retired Hist Communion boon family: the cultural-practice substrate now
     ; owns the universal identity boon, while Hist remains a relation ledger.
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, False, "Argonian Hist T1 retired")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T2, False, "Argonian Hist T2 retired")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_Signature, False, "Argonian Hist Signature retired")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, False, "Argonian Hist T1 retired")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T2, False, "Argonian Hist T2 retired")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_Signature, False, "Argonian Hist Signature retired")
 
     ; People focused set, highest tier only (active only when People is the focus).
     Bool peopleActive = isArgonian && activeFocus == ARGONIAN_FOCUS_PEOPLE
     Bool wantPeopleT3 = peopleActive && peopleRelation >= ARGONIAN_REWARD_T3_THRESHOLD
     Bool wantPeopleT2 = peopleActive && !wantPeopleT3 && peopleRelation >= ARGONIAN_REWARD_T2_THRESHOLD
     Bool wantPeopleT1 = peopleActive && !wantPeopleT3 && !wantPeopleT2 && peopleRelation >= ARGONIAN_REWARD_T1_THRESHOLD
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T1, wantPeopleT1, "Argonian People T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T2, wantPeopleT2, "Argonian People T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T3, wantPeopleT3, "Argonian People T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T1, wantPeopleT1, "Argonian People T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T2, wantPeopleT2, "Argonian People T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T3, wantPeopleT3, "Argonian People T3")
 
     ; Sithis tertiary, highest tier only (only when Void is fully active + the focus).
     Bool sithisActive = isArgonian && voidActive && activeFocus == ARGONIAN_FOCUS_VOID
     Bool wantSithisT3 = sithisActive && voidRelation >= ARGONIAN_REWARD_T3_THRESHOLD
     Bool wantSithisT2 = sithisActive && !wantSithisT3 && voidRelation >= ARGONIAN_REWARD_T2_THRESHOLD
     Bool wantSithisT1 = sithisActive && !wantSithisT3 && !wantSithisT2 && voidRelation >= ARGONIAN_REWARD_T1_THRESHOLD
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T1, wantSithisT1, "Argonian Sithis T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T2, wantSithisT2, "Argonian Sithis T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T3, wantSithisT3, "Argonian Sithis T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T1, wantSithisT1, "Argonian Sithis T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T2, wantSithisT2, "Argonian Sithis T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T3, wantSithisT3, "Argonian Sithis T3")
 
     ; Hist Adaptation slot rides the same dawn sync (separate channel from the
     ; tier rewards above; never touched by SyncRaceRewardSpell).
@@ -17520,7 +14041,7 @@ Bool Function IsArgonianHistNeglected()
         return True
     endIf
 
-    Int elapsedDays = GetDevotionalDay() - PDV_ArgonianHistSubstrate.GetLastHistMaintenanceDevotionalDay()
+    Int elapsedDays = LedgerRuntime.GetDevotionalDay() - PDV_ArgonianHistSubstrate.GetLastHistMaintenanceDevotionalDay()
     return elapsedDays > (ARGONIAN_HIST_NEGLECT_GRACE_DAYS as Int)
 EndFunction
 
@@ -17565,14 +14086,14 @@ Function SyncImperialRewards(Actor playerRef)
         return
     endIf
 
-    SyncImperialRewardFamily(playerRef, PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
-    SyncImperialRewardFamily(playerRef, PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
-    SyncImperialRewardFamily(playerRef, PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
-    SyncImperialRewardFamily(playerRef, PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
-    SyncImperialRewardFamily(playerRef, PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
-    SyncImperialRewardFamily(playerRef, PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
-    SyncImperialRewardFamily(playerRef, PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
-    SyncImperialRewardFamily(playerRef, PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Akatosh, PDV_Bless_Imperial_Akatosh_T1, PDV_Bless_Imperial_Akatosh_T2, PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Mara, PDV_Bless_Imperial_Mara_T1, PDV_Bless_Imperial_Mara_T2, PDV_Bless_Imperial_Mara_T3, "Mara")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Arkay, PDV_Bless_Imperial_Arkay_T1, PDV_Bless_Imperial_Arkay_T2, PDV_Bless_Imperial_Arkay_T3, "Arkay")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Stendarr, PDV_Bless_Imperial_Stendarr_T1, PDV_Bless_Imperial_Stendarr_T2, PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Zenithar, PDV_Bless_Imperial_Zenithar_T1, PDV_Bless_Imperial_Zenithar_T2, PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Dibella, PDV_Bless_Imperial_Dibella_T1, PDV_Bless_Imperial_Dibella_T2, PDV_Bless_Imperial_Dibella_T3, "Dibella")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Julianos, PDV_Bless_Imperial_Julianos_T1, PDV_Bless_Imperial_Julianos_T2, PDV_Bless_Imperial_Julianos_T3, "Julianos")
+    SyncImperialRewardFamily(playerRef, LedgerRuntime.PDV_Kynareth, PDV_Bless_Imperial_Kynareth_T1, PDV_Bless_Imperial_Kynareth_T2, PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
     SyncImperialRewardFamily(playerRef, PDV_Talos, PDV_Bless_Imperial_Talos_T1, PDV_Bless_Imperial_Talos_T2, PDV_Bless_Imperial_Talos_T3, "Talos")
 EndFunction
 
@@ -17589,17 +14110,17 @@ Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)
 EndFunction
 
 Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity == deity && !IsImperialVampireStateActive()
+    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity && !IsImperialVampireStateActive()
     Float activePiety = 0.0
     if isActive && deity
-        activePiety = GetPiety(deity)
+        activePiety = LedgerRuntime.GetPiety(deity)
     endIf
-    Bool hadChampionSpell = HasRewardSpell(playerRef, t3)
+    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
     Bool wantsChampionSpell = isActive && activePiety >= 85.0
-    SyncRaceRewardSpell(playerRef, t1, False, "Imperial " + label + " T1 compatibility")
-    SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Imperial " + label + " T2")
-    SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Imperial " + label + " T3")
-    MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Imperial " + label)
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, False, "Imperial " + label + " T1 compatibility")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Imperial " + label + " T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Imperial " + label + " T3")
+    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Imperial " + label)
 EndFunction
 
 Bool Function IsImperialCivicNeglected()
@@ -17639,13 +14160,6 @@ Function SyncImperialNeglectSpell(Bool shouldBeActive)
     endIf
 EndFunction
 
-Bool Function IsFirstTierRaceRewardEligible()
-    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetTier(_activeDeity) >= TIER_SEEKER
-        return True
-    endIf
-
-    return False
-EndFunction
 
 ; Broad-worship floor eligibility: the origin's first-tier reward also grants to a BROAD
 ; worshipper, not only an active patron. Mirrors the active path's "earned Seeker before the
@@ -17654,7 +14168,7 @@ EndFunction
 ; shared floor helper too; the old runtime excluded it by mistake even though the reward spec
 ; and manager property already expose PDV_Bless_Nord_OldWays_T1 as the broad first tier.
 Bool Function IsBroadFloorEligible()
-    if GetPatronState() != PATRON_STATE_BROAD
+    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_BROAD
         return False
     endIf
     Int origin = GetPlayerOriginRaceIndex()
@@ -17675,30 +14189,24 @@ Bool Function HasBroadLanePresentation(Int origin)
     return origin == ORIGIN_IMPERIAL || origin == ORIGIN_BRETON || origin == ORIGIN_ORC || origin == ORIGIN_ALTMER || origin == ORIGIN_NORD || origin == ORIGIN_BOSMER || origin == ORIGIN_DUNMER || origin == ORIGIN_REDGUARD
 EndFunction
 
-Bool Function IsPantheonBroadPoolPresentationActive(Int origin)
-    if origin != ORIGIN_IMPERIAL && origin != ORIGIN_NORD
-        return False
-    endIf
-    return GetActiveBroadPantheonPoolId() != ""
-EndFunction
 
 Float Function GetBroadLaneStandingValue(Int origin)
     if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
-        return GetBroadPantheonStanding(GetActiveBroadPantheonPoolId())
+        return LedgerRuntime.GetBroadPantheonStanding(LedgerRuntime.GetActiveBroadPantheonPoolId())
     endIf
     return GetBroadLaneServiceCount(origin) as Float
 EndFunction
 
 Float Function GetBroadLaneScratchValue(Int origin)
     if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
-        return GetBroadPantheonScratch(GetActiveBroadPantheonPoolId())
+        return LedgerRuntime.GetBroadPantheonScratch(LedgerRuntime.GetActiveBroadPantheonPoolId())
     endIf
     return 0.0
 EndFunction
 
 Int Function GetBroadLaneServiceCount(Int origin)
     if origin == ORIGIN_IMPERIAL
-        return GetBroadPantheonStanding(BROAD_PANTHEON_IMPERIAL) as Int
+        return LedgerRuntime.GetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_IMPERIAL) as Int
     elseIf origin == ORIGIN_BRETON
         return GetBretonPracticeCount(GetBretonTraditionValue())
     elseIf origin == ORIGIN_ORC
@@ -17707,9 +14215,9 @@ Int Function GetBroadLaneServiceCount(Int origin)
         return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
     elseIf origin == ORIGIN_NORD
         if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
-            return GetBroadPantheonStanding(BROAD_PANTHEON_NORD_NINE) as Int
+            return LedgerRuntime.GetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_NORD_NINE) as Int
         endIf
-        return GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) as Int
+        return LedgerRuntime.GetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_NORD_OLD) as Int
     elseIf origin == ORIGIN_BOSMER
         return GetBosmerFavorSignalCount()
     elseIf origin == ORIGIN_DUNMER
@@ -17721,25 +14229,25 @@ Int Function GetBroadLaneServiceCount(Int origin)
 EndFunction
 
 Int Function GetBroadLaneTierForOrigin(Int origin)
-    if GetPatronState() != PATRON_STATE_BROAD || !HasBroadLanePresentation(origin)
-        return TIER_NONE
+    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_BROAD || !HasBroadLanePresentation(origin)
+        return LedgerRuntime.TIER_NONE
     endIf
 
     Int count = GetBroadLaneServiceCount(origin)
     if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
         Float standing = GetBroadLaneStandingValue(origin)
-        if standing >= BROAD_PANTHEON_FAITHFUL_THRESHOLD
-            return TIER_DEVOTED
-        elseIf standing >= BROAD_PANTHEON_SEEKER_THRESHOLD
-            return TIER_SEEKER
+        if standing >= LedgerRuntime.BROAD_PANTHEON_FAITHFUL_THRESHOLD
+            return LedgerRuntime.TIER_DEVOTED
+        elseIf standing >= LedgerRuntime.BROAD_PANTHEON_SEEKER_THRESHOLD
+            return LedgerRuntime.TIER_SEEKER
         endIf
-        return TIER_NONE
+        return LedgerRuntime.TIER_NONE
     elseIf count >= 6
-        return TIER_DEVOTED
+        return LedgerRuntime.TIER_DEVOTED
     elseIf count >= 3
-        return TIER_SEEKER
+        return LedgerRuntime.TIER_SEEKER
     endIf
-    return TIER_NONE
+    return LedgerRuntime.TIER_NONE
 EndFunction
 
 String Function GetBroadLaneDisplayName(Int origin)
@@ -17791,9 +14299,9 @@ String Function GetBroadLaneSymbol(Int origin)
 EndFunction
 
 String Function GetBroadLaneStandingLabel(Int origin, Int tier)
-    if tier >= TIER_DEVOTED
+    if tier >= LedgerRuntime.TIER_DEVOTED
         return "Faithful"
-    elseIf tier >= TIER_SEEKER
+    elseIf tier >= LedgerRuntime.TIER_SEEKER
         return "Observant"
     endIf
     return "Distant"
@@ -17803,9 +14311,9 @@ String Function GetBroadLaneNextThresholdText(Int origin)
     Int count = GetBroadLaneServiceCount(origin)
     if origin == ORIGIN_IMPERIAL || origin == ORIGIN_NORD
         Float standing = GetBroadLaneStandingValue(origin)
-        if standing < BROAD_PANTHEON_SEEKER_THRESHOLD
+        if standing < LedgerRuntime.BROAD_PANTHEON_SEEKER_THRESHOLD
             return "Observant at 25 pantheon standing"
-        elseIf standing < BROAD_PANTHEON_FAITHFUL_THRESHOLD
+        elseIf standing < LedgerRuntime.BROAD_PANTHEON_FAITHFUL_THRESHOLD
             return "Faithful at 50 pantheon standing"
         endIf
         return "Pantheon standing cap reached"
@@ -17826,71 +14334,8 @@ String Function GetBroadLaneNextThresholdText(Int origin)
     return "Broad lane cap reached"
 EndFunction
 
-Spell Function GetFirstTierRaceRewardSpellForOrigin()
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_ALTMER
-        return PDV_Bless_Altmer_Orthodox_T1
-    ; Argonian is a no-offer race: this selector exposes the fixed T1 spell for readback and
-    ; shared reward contracts, while SyncArgonianRewards performs the actual substrate grant.
-    elseIf originRace == ORIGIN_ARGONIAN
-        return PDV_Bless_Argonian_Hist_T1
-    elseIf originRace == ORIGIN_BOSMER
-        return PDV_Bless_Bosmer_Yffre_T1
-    elseIf originRace == ORIGIN_BRETON
-        ; Readback selector only; the grant is owned by SyncBretonTraditionRewardFamily.
-        Int bretonTradition = GetBretonTraditionValue()
-        if bretonTradition == BRETON_TRADITION_HIDDEN_ART
-            return PDV_Bless_Breton_HiddenArt_T1
-        elseIf bretonTradition == BRETON_TRADITION_GREEN_WAY
-            return PDV_Bless_Breton_GreenWay_T1
-        endIf
-        return PDV_Bless_Breton_KnightsRoad_T1
-    elseIf originRace == ORIGIN_DUNMER
-        return PDV_Bless_Dunmer_Reclamation_T1
-    elseIf originRace == ORIGIN_IMPERIAL
-        return PDV_Bless_Imperial_Civic_T1
-    elseIf originRace == ORIGIN_KHAJIIT
-        return PDV_Bless_Khajiit_Lunar_T1
-    elseIf originRace == ORIGIN_NORD
-        return PDV_Bless_Nord_OldWays_T1
-    elseIf originRace == ORIGIN_ORC
-        return PDV_Bless_Orc_Malacath_T1
-    elseIf originRace == ORIGIN_REDGUARD
-        ; Redguard has no generic ancestor floor: the sect spine (Crown/Forebear/Ash'abah via
-        ; SyncRedguardSpineBoon) is the sole ancestor layer (option 2, 2026-07-16). Returning None
-        ; makes the generic-floor loop strip any legacy "Ancestors' Regard" (AncestorSpine_T1) and
-        ; never re-grant it, so a sect member carries only their sect spine.
-        return None
-    endIf
 
-    return None
-EndFunction
 
-Function SyncRaceRewardSpell(Actor playerRef, Spell rewardSpell, Bool shouldBeActive, String rewardLabel)
-    if !playerRef || !rewardSpell
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(rewardSpell)
-            playerRef.AddSpell(rewardSpell, False)
-            Trace(2, "Race reward added: " + rewardLabel)
-        endIf
-    else
-        if playerRef.HasSpell(rewardSpell)
-            playerRef.RemoveSpell(rewardSpell)
-            Trace(2, "Race reward removed: " + rewardLabel)
-        endIf
-    endIf
-EndFunction
-
-Bool Function HasRewardSpell(Actor playerRef, Spell rewardSpell)
-    if !playerRef || !rewardSpell
-        return False
-    endIf
-
-    return playerRef.HasSpell(rewardSpell)
-EndFunction
 
 Function PrepareForUninstall()
     Actor playerRef = Game.GetPlayer()
@@ -17910,11 +14355,11 @@ Function PrepareForUninstall()
     StripAllPdvSpells(playerRef)
 
     if playerRef
-        if NecromancerFaction
-            playerRef.RemoveFromFaction(NecromancerFaction)
+        if LedgerRuntime.NecromancerFaction
+            playerRef.RemoveFromFaction(LedgerRuntime.NecromancerFaction)
         endIf
-        if WarlockFaction
-            playerRef.RemoveFromFaction(WarlockFaction)
+        if LedgerRuntime.WarlockFaction
+            playerRef.RemoveFromFaction(LedgerRuntime.WarlockFaction)
         endIf
     endIf
 
@@ -17958,231 +14403,231 @@ Function StripAllPdvSpells(Actor playerRef)
         return
     endIf
 
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_SurveyDevotion, False, "PDV_SPEL_SurveyDevotion")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Kyne, False, "PDV_SPEL_Neglect_Kyne")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_SkyStormHunt_Light, False, "PDV_SPEL_Disfavor_SkyStormHunt_Light")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_SkyStormHunt_Sharp, False, "PDV_SPEL_Disfavor_SkyStormHunt_Sharp")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_DeathAncestors_Light, False, "PDV_SPEL_Disfavor_DeathAncestors_Light")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_DeathAncestors_Sharp, False, "PDV_SPEL_Disfavor_DeathAncestors_Sharp")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MercyProtection_Light, False, "PDV_SPEL_Disfavor_MercyProtection_Light")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MercyProtection_Sharp, False, "PDV_SPEL_Disfavor_MercyProtection_Sharp")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_WarHonor_Light, False, "PDV_SPEL_Disfavor_WarHonor_Light")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_WarHonor_Sharp, False, "PDV_SPEL_Disfavor_WarHonor_Sharp")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_OrderTradeLore_Light, False, "PDV_SPEL_Disfavor_OrderTradeLore_Light")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_OrderTradeLore_Sharp, False, "PDV_SPEL_Disfavor_OrderTradeLore_Sharp")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MoonLuckShadow_Light, False, "PDV_SPEL_Disfavor_MoonLuckShadow_Light")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MoonLuckShadow_Sharp, False, "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_VoidSecrets_Light, False, "PDV_SPEL_Disfavor_VoidSecrets_Light")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_VoidSecrets_Sharp, False, "PDV_SPEL_Disfavor_VoidSecrets_Sharp")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery, False, "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_StormRoadGrace, False, "PDV_SPEL_Favor_Kyne_StormRoadGrace")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_GuidedHunt, False, "PDV_SPEL_Favor_Kyne_GuidedHunt")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_WindMarkedPassage, False, "PDV_SPEL_Favor_Kyne_WindMarkedPassage")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance, False, "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal, False, "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense, False, "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet, False, "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance, False, "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace, False, "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty, False, "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy, False, "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft, False, "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine, False, "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness, False, "PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness")
-    SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement, False, "PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T1, False, "PDV_Bless_Altmer_Orthodox_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, False, "PDV_Bless_Altmer_Orthodox_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_AuriEl_T1, False, "PDV_Bless_Altmer_AuriEl_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_AuriEl_T2, False, "PDV_Bless_Altmer_AuriEl_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_AuriEl_T3, False, "PDV_Bless_Altmer_AuriEl_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Magnus_T1, False, "PDV_Bless_Altmer_Magnus_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Magnus_T2, False, "PDV_Bless_Altmer_Magnus_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Magnus_T3, False, "PDV_Bless_Altmer_Magnus_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Xarxes_T1, False, "PDV_Bless_Altmer_Xarxes_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Xarxes_T2, False, "PDV_Bless_Altmer_Xarxes_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Xarxes_T3, False, "PDV_Bless_Altmer_Xarxes_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Spine_Always, False, "PDV_Bless_Altmer_Spine_Always")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Spine_Mid, False, "PDV_Bless_Altmer_Spine_Mid")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Spine_High, False, "PDV_Bless_Altmer_Spine_High")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Altmer, False, "PDV_SPEL_Neglect_Altmer")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, False, "PDV_Bless_Argonian_Hist_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T2, False, "PDV_Bless_Argonian_Hist_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_Signature, False, "PDV_Bless_Argonian_Hist_Signature")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T1, False, "PDV_Bless_Argonian_People_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T2, False, "PDV_Bless_Argonian_People_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T3, False, "PDV_Bless_Argonian_People_T3")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianShadowscaleVeil, False, "PDV_SPEL_ArgonianShadowscaleVeil")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianRootedRest, False, "PDV_SPEL_ArgonianRootedRest")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Claws, False, "PDV_SPEL_ArgonianAdapt_Claws")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Skin, False, "PDV_SPEL_ArgonianAdapt_Skin")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Sap, False, "PDV_SPEL_ArgonianAdapt_Sap")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Marsh, False, "PDV_SPEL_ArgonianAdapt_Marsh")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerTaleCarried, False, "PDV_SPEL_BosmerTaleCarried")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerScalesAtRest, False, "PDV_SPEL_BosmerScalesAtRest")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerBaanDarGap, False, "PDV_SPEL_BosmerBaanDarGap")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Hunter, False, "PDV_SPEL_BosmerNaming_Hunter")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Speaker, False, "PDV_SPEL_BosmerNaming_Speaker")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Wanderer, False, "PDV_SPEL_BosmerNaming_Wanderer")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Keeper, False, "PDV_SPEL_BosmerNaming_Keeper")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T1, False, "PDV_Bless_Argonian_Sithis_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T2, False, "PDV_Bless_Argonian_Sithis_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T3, False, "PDV_Bless_Argonian_Sithis_T3")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianSithisNearDeathBurst, False, "PDV_SPEL_ArgonianSithisNearDeathBurst")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_ArgonianHist, False, "PDV_SPEL_Neglect_ArgonianHist")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T1, False, "PDV_Bless_Bosmer_Yffre_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T2, False, "PDV_Bless_Bosmer_Yffre_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_OldContract_T1, False, "PDV_Bless_Bosmer_OldContract_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_OldContract_T2, False, "PDV_Bless_Bosmer_OldContract_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_OldContract_T3, False, "PDV_Bless_Bosmer_OldContract_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_LivingStory_T1, False, "PDV_Bless_Bosmer_LivingStory_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_LivingStory_T2, False, "PDV_Bless_Bosmer_LivingStory_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_LivingStory_T3, False, "PDV_Bless_Bosmer_LivingStory_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Exchange_T1, False, "PDV_Bless_Bosmer_Exchange_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Exchange_T2, False, "PDV_Bless_Bosmer_Exchange_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Exchange_T3, False, "PDV_Bless_Bosmer_Exchange_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_BanditRoad_T1, False, "PDV_Bless_Bosmer_BanditRoad_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_BanditRoad_T2, False, "PDV_Bless_Bosmer_BanditRoad_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_BanditRoad_T3, False, "PDV_Bless_Bosmer_BanditRoad_T3")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Bosmer, False, "PDV_SPEL_Neglect_Bosmer")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, False, "PDV_Bless_Breton_Tradition_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, False, "PDV_Bless_Breton_Tradition_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T1, False, "PDV_Bless_Breton_KnightsRoad_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T2, False, "PDV_Bless_Breton_KnightsRoad_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T3, False, "PDV_Bless_Breton_KnightsRoad_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T1, False, "PDV_Bless_Breton_HiddenArt_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T2, False, "PDV_Bless_Breton_HiddenArt_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T3, False, "PDV_Bless_Breton_HiddenArt_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T1, False, "PDV_Bless_Breton_GreenWay_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T2, False, "PDV_Bless_Breton_GreenWay_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T3, False, "PDV_Bless_Breton_GreenWay_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_PatronChampion, False, "PDV_Bless_Breton_PatronChampion")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Breton, False, "PDV_SPEL_Neglect_Breton")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_VowIntegrity, False, "PDV_SPEL_CreedLoss_Breton_VowIntegrity")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_ExposureRupture, False, "PDV_SPEL_CreedLoss_Breton_ExposureRupture")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_Excommunication, False, "PDV_SPEL_CreedLoss_Breton_Excommunication")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal, False, "PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T1, False, "PDV_Bless_Dunmer_Reclamation_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T2, False, "PDV_Bless_Dunmer_Reclamation_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Azura_T1, False, "PDV_Bless_Dunmer_Azura_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Azura_T2, False, "PDV_Bless_Dunmer_Azura_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Azura_T3, False, "PDV_Bless_Dunmer_Azura_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Boethiah_T1, False, "PDV_Bless_Dunmer_Boethiah_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Boethiah_T2, False, "PDV_Bless_Dunmer_Boethiah_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Boethiah_T3, False, "PDV_Bless_Dunmer_Boethiah_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Mephala_T1, False, "PDV_Bless_Dunmer_Mephala_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Mephala_T2, False, "PDV_Bless_Dunmer_Mephala_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Mephala_T3, False, "PDV_Bless_Dunmer_Mephala_T3")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Dunmer, False, "PDV_SPEL_Neglect_Dunmer")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, False, "PDV_Bless_Imperial_Civic_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, False, "PDV_Bless_Imperial_Civic_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Akatosh_T1, False, "PDV_Bless_Imperial_Akatosh_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Akatosh_T2, False, "PDV_Bless_Imperial_Akatosh_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Akatosh_T3, False, "PDV_Bless_Imperial_Akatosh_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Mara_T1, False, "PDV_Bless_Imperial_Mara_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Mara_T2, False, "PDV_Bless_Imperial_Mara_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Mara_T3, False, "PDV_Bless_Imperial_Mara_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Arkay_T1, False, "PDV_Bless_Imperial_Arkay_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Arkay_T2, False, "PDV_Bless_Imperial_Arkay_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Arkay_T3, False, "PDV_Bless_Imperial_Arkay_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Stendarr_T1, False, "PDV_Bless_Imperial_Stendarr_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Stendarr_T2, False, "PDV_Bless_Imperial_Stendarr_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Stendarr_T3, False, "PDV_Bless_Imperial_Stendarr_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Zenithar_T1, False, "PDV_Bless_Imperial_Zenithar_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Zenithar_T2, False, "PDV_Bless_Imperial_Zenithar_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Zenithar_T3, False, "PDV_Bless_Imperial_Zenithar_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Dibella_T1, False, "PDV_Bless_Imperial_Dibella_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Dibella_T2, False, "PDV_Bless_Imperial_Dibella_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Dibella_T3, False, "PDV_Bless_Imperial_Dibella_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Julianos_T1, False, "PDV_Bless_Imperial_Julianos_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Julianos_T2, False, "PDV_Bless_Imperial_Julianos_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Julianos_T3, False, "PDV_Bless_Imperial_Julianos_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Kynareth_T1, False, "PDV_Bless_Imperial_Kynareth_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Kynareth_T2, False, "PDV_Bless_Imperial_Kynareth_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Kynareth_T3, False, "PDV_Bless_Imperial_Kynareth_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Talos_T1, False, "PDV_Bless_Imperial_Talos_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Talos_T2, False, "PDV_Bless_Imperial_Talos_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Talos_T3, False, "PDV_Bless_Imperial_Talos_T3")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Imperial, False, "PDV_SPEL_Neglect_Imperial")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Lunar_T1, False, "PDV_Bless_Khajiit_Lunar_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Khenarthi, False, "PDV_Bless_Khajiit_Phase_Khenarthi")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Azurah, False, "PDV_Bless_Khajiit_Phase_Azurah")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_BaanDar, False, "PDV_Bless_Khajiit_Phase_BaanDar")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Rajhin, False, "PDV_Bless_Khajiit_Phase_Rajhin")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Alkosh, False, "PDV_Bless_Khajiit_Phase_Alkosh")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Khenarthi_T1, False, "PDV_Bless_Khajiit_Khenarthi_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Khenarthi_T2, False, "PDV_Bless_Khajiit_Khenarthi_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Khenarthi_T3, False, "PDV_Bless_Khajiit_Khenarthi_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Azurah_T1, False, "PDV_Bless_Khajiit_Azurah_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Azurah_T2, False, "PDV_Bless_Khajiit_Azurah_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Azurah_T3, False, "PDV_Bless_Khajiit_Azurah_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_BaanDar_T1, False, "PDV_Bless_Khajiit_BaanDar_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_BaanDar_T2, False, "PDV_Bless_Khajiit_BaanDar_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_BaanDar_T3, False, "PDV_Bless_Khajiit_BaanDar_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Rajhin_T1, False, "PDV_Bless_Khajiit_Rajhin_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Rajhin_T2, False, "PDV_Bless_Khajiit_Rajhin_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Rajhin_T3, False, "PDV_Bless_Khajiit_Rajhin_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Alkosh_T1, False, "PDV_Bless_Khajiit_Alkosh_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Alkosh_T2, False, "PDV_Bless_Khajiit_Alkosh_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Alkosh_T3, False, "PDV_Bless_Khajiit_Alkosh_T3")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_KhajiitLunar, False, "PDV_SPEL_Neglect_KhajiitLunar")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, False, "PDV_Bless_Nord_OldWays_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, False, "PDV_Bless_Nord_OldWays_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kyne_T1, False, "PDV_Bless_Nord_Kyne_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kyne_T2, False, "PDV_Bless_Nord_Kyne_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kyne_T3, False, "PDV_Bless_Nord_Kyne_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Shor_T1, False, "PDV_Bless_Nord_Shor_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Shor_T2, False, "PDV_Bless_Nord_Shor_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Shor_T3, False, "PDV_Bless_Nord_Shor_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Tsun_T1, False, "PDV_Bless_Nord_Tsun_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Tsun_T2, False, "PDV_Bless_Nord_Tsun_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Tsun_T3, False, "PDV_Bless_Nord_Tsun_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stuhn_T1, False, "PDV_Bless_Nord_Stuhn_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stuhn_T2, False, "PDV_Bless_Nord_Stuhn_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stuhn_T3, False, "PDV_Bless_Nord_Stuhn_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T1, False, "PDV_Bless_Nord_Talos_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T2, False, "PDV_Bless_Nord_Talos_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T3, False, "PDV_Bless_Nord_Talos_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T1, False, "PDV_Bless_Nord_Arkay_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T2, False, "PDV_Bless_Nord_Arkay_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T3, False, "PDV_Bless_Nord_Arkay_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T1, False, "PDV_Bless_Orc_Malacath_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, False, "PDV_Bless_Orc_Malacath_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Stronghold_T1, False, "PDV_Bless_Orc_Stronghold_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Stronghold_T2, False, "PDV_Bless_Orc_Stronghold_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Stronghold_T3, False, "PDV_Bless_Orc_Stronghold_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_City_T1, False, "PDV_Bless_Orc_City_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_City_T2, False, "PDV_Bless_Orc_City_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_City_T3, False, "PDV_Bless_Orc_City_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_LegionExile_T1, False, "PDV_Bless_Orc_LegionExile_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_LegionExile_T2, False, "PDV_Bless_Orc_LegionExile_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_LegionExile_T3, False, "PDV_Bless_Orc_LegionExile_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_City, False, "PDV_Bless_Orc_Spine_City")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_Stronghold, False, "PDV_Bless_Orc_Spine_Stronghold")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_LegionExile, False, "PDV_Bless_Orc_Spine_LegionExile")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Orc, False, "PDV_SPEL_Neglect_Orc")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Tusk, False, "PDV_SPEL_Orc_TrialOfIron_Tusk")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Shield, False, "PDV_SPEL_Orc_TrialOfIron_Shield")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Hammer, False, "PDV_SPEL_Orc_TrialOfIron_Hammer")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Yoke, False, "PDV_SPEL_Orc_TrialOfIron_Yoke")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_OrcCodeHolds, False, "PDV_SPEL_OrcCodeHolds")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_OrcCodeHolds_Devoted, False, "PDV_SPEL_OrcCodeHolds_Devoted")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_OrcHearthHeld, False, "PDV_SPEL_OrcHearthHeld")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T1, False, "PDV_Bless_Redguard_AncestorSpine_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, False, "PDV_Bless_Redguard_AncestorSpine_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Crown, False, "PDV_Bless_Redguard_Spine_Crown")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Forebear, False, "PDV_Bless_Redguard_Spine_Forebear")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_AshAbah, False, "PDV_Bless_Redguard_Spine_AshAbah")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Tuwhacca_T1, False, "PDV_Bless_Redguard_Tuwhacca_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Tuwhacca_T2, False, "PDV_Bless_Redguard_Tuwhacca_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Tuwhacca_T3, False, "PDV_Bless_Redguard_Tuwhacca_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_HoonDing_T1, False, "PDV_Bless_Redguard_HoonDing_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_HoonDing_T2, False, "PDV_Bless_Redguard_HoonDing_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_HoonDing_T3, False, "PDV_Bless_Redguard_HoonDing_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Leki_T1, False, "PDV_Bless_Redguard_Leki_T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Leki_T2, False, "PDV_Bless_Redguard_Leki_T2")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Leki_T3, False, "PDV_Bless_Redguard_Leki_T3")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_FarShoresToken, False, "PDV_Bless_Redguard_FarShoresToken")
-    SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Redguard, False, "PDV_SPEL_Neglect_Redguard")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_SurveyDevotion, False, "PDV_SPEL_SurveyDevotion")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Kyne, False, "PDV_SPEL_Neglect_Kyne")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_SkyStormHunt_Light, False, "PDV_SPEL_Disfavor_SkyStormHunt_Light")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_SkyStormHunt_Sharp, False, "PDV_SPEL_Disfavor_SkyStormHunt_Sharp")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_DeathAncestors_Light, False, "PDV_SPEL_Disfavor_DeathAncestors_Light")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_DeathAncestors_Sharp, False, "PDV_SPEL_Disfavor_DeathAncestors_Sharp")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_MercyProtection_Light, False, "PDV_SPEL_Disfavor_MercyProtection_Light")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_MercyProtection_Sharp, False, "PDV_SPEL_Disfavor_MercyProtection_Sharp")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_WarHonor_Light, False, "PDV_SPEL_Disfavor_WarHonor_Light")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_WarHonor_Sharp, False, "PDV_SPEL_Disfavor_WarHonor_Sharp")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_OrderTradeLore_Light, False, "PDV_SPEL_Disfavor_OrderTradeLore_Light")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_OrderTradeLore_Sharp, False, "PDV_SPEL_Disfavor_OrderTradeLore_Sharp")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MoonLuckShadow_Light, False, "PDV_SPEL_Disfavor_MoonLuckShadow_Light")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Disfavor_MoonLuckShadow_Sharp, False, "PDV_SPEL_Disfavor_MoonLuckShadow_Sharp")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_VoidSecrets_Light, False, "PDV_SPEL_Disfavor_VoidSecrets_Light")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, LedgerRuntime.PDV_SPEL_Disfavor_VoidSecrets_Sharp, False, "PDV_SPEL_Disfavor_VoidSecrets_Sharp")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery, False, "PDV_SPEL_Favor_Kyne_OpenSkyRestRecovery")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_StormRoadGrace, False, "PDV_SPEL_Favor_Kyne_StormRoadGrace")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_GuidedHunt, False, "PDV_SPEL_Favor_Kyne_GuidedHunt")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Kyne_WindMarkedPassage, False, "PDV_SPEL_Favor_Kyne_WindMarkedPassage")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance, False, "PDV_SPEL_Favor_NordBroadOldWays_SkyRoadEndurance")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal, False, "PDV_SPEL_Favor_NordBroadOldWays_HonorableOrdeal")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense, False, "PDV_SPEL_Favor_NordBroadOldWays_HearthAndHoldDefense")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet, False, "PDV_SPEL_Favor_NordBroadOldWays_DeathRightAncestorQuiet")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance, False, "PDV_SPEL_Favor_NordBroadOldWays_HiddenTalosDefiance")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace, False, "PDV_SPEL_Favor_NordBroadNineDivines_KynarethRoadGrace")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty, False, "PDV_SPEL_Favor_NordBroadNineDivines_HouseholdAndMercyDuty")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy, False, "PDV_SPEL_Favor_NordBroadNineDivines_ProperDeathAndAntiNecromancy")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft, False, "PDV_SPEL_Favor_NordBroadNineDivines_HonestWorkAndLearnedCraft")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine, False, "PDV_SPEL_Favor_NordBroadNineDivines_TalosPressureInsideTheNine")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness, False, "PDV_SPEL_Favor_Altmer_Shared_DawnSteadiness")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, FavorRuntime.PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement, False, "PDV_SPEL_Favor_Altmer_Orthodox_CostlyEnforcement")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T1, False, "PDV_Bless_Altmer_Orthodox_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, False, "PDV_Bless_Altmer_Orthodox_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_AuriEl_T1, False, "PDV_Bless_Altmer_AuriEl_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_AuriEl_T2, False, "PDV_Bless_Altmer_AuriEl_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_AuriEl_T3, False, "PDV_Bless_Altmer_AuriEl_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Magnus_T1, False, "PDV_Bless_Altmer_Magnus_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Magnus_T2, False, "PDV_Bless_Altmer_Magnus_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Magnus_T3, False, "PDV_Bless_Altmer_Magnus_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Xarxes_T1, False, "PDV_Bless_Altmer_Xarxes_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Xarxes_T2, False, "PDV_Bless_Altmer_Xarxes_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Xarxes_T3, False, "PDV_Bless_Altmer_Xarxes_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Spine_Always, False, "PDV_Bless_Altmer_Spine_Always")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Spine_Mid, False, "PDV_Bless_Altmer_Spine_Mid")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Spine_High, False, "PDV_Bless_Altmer_Spine_High")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Altmer, False, "PDV_SPEL_Neglect_Altmer")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T1, False, "PDV_Bless_Argonian_Hist_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_T2, False, "PDV_Bless_Argonian_Hist_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Hist_Signature, False, "PDV_Bless_Argonian_Hist_Signature")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T1, False, "PDV_Bless_Argonian_People_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T2, False, "PDV_Bless_Argonian_People_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_People_T3, False, "PDV_Bless_Argonian_People_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianShadowscaleVeil, False, "PDV_SPEL_ArgonianShadowscaleVeil")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianRootedRest, False, "PDV_SPEL_ArgonianRootedRest")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Claws, False, "PDV_SPEL_ArgonianAdapt_Claws")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Skin, False, "PDV_SPEL_ArgonianAdapt_Skin")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Sap, False, "PDV_SPEL_ArgonianAdapt_Sap")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianAdapt_Marsh, False, "PDV_SPEL_ArgonianAdapt_Marsh")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerTaleCarried, False, "PDV_SPEL_BosmerTaleCarried")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerScalesAtRest, False, "PDV_SPEL_BosmerScalesAtRest")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerBaanDarGap, False, "PDV_SPEL_BosmerBaanDarGap")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Hunter, False, "PDV_SPEL_BosmerNaming_Hunter")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Speaker, False, "PDV_SPEL_BosmerNaming_Speaker")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Wanderer, False, "PDV_SPEL_BosmerNaming_Wanderer")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_BosmerNaming_Keeper, False, "PDV_SPEL_BosmerNaming_Keeper")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T1, False, "PDV_Bless_Argonian_Sithis_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T2, False, "PDV_Bless_Argonian_Sithis_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Argonian_Sithis_T3, False, "PDV_Bless_Argonian_Sithis_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_ArgonianSithisNearDeathBurst, False, "PDV_SPEL_ArgonianSithisNearDeathBurst")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_ArgonianHist, False, "PDV_SPEL_Neglect_ArgonianHist")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T1, False, "PDV_Bless_Bosmer_Yffre_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T2, False, "PDV_Bless_Bosmer_Yffre_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_OldContract_T1, False, "PDV_Bless_Bosmer_OldContract_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_OldContract_T2, False, "PDV_Bless_Bosmer_OldContract_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_OldContract_T3, False, "PDV_Bless_Bosmer_OldContract_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_LivingStory_T1, False, "PDV_Bless_Bosmer_LivingStory_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_LivingStory_T2, False, "PDV_Bless_Bosmer_LivingStory_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_LivingStory_T3, False, "PDV_Bless_Bosmer_LivingStory_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Exchange_T1, False, "PDV_Bless_Bosmer_Exchange_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Exchange_T2, False, "PDV_Bless_Bosmer_Exchange_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Exchange_T3, False, "PDV_Bless_Bosmer_Exchange_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_BanditRoad_T1, False, "PDV_Bless_Bosmer_BanditRoad_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_BanditRoad_T2, False, "PDV_Bless_Bosmer_BanditRoad_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_BanditRoad_T3, False, "PDV_Bless_Bosmer_BanditRoad_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Bosmer, False, "PDV_SPEL_Neglect_Bosmer")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, False, "PDV_Bless_Breton_Tradition_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, False, "PDV_Bless_Breton_Tradition_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T1, False, "PDV_Bless_Breton_KnightsRoad_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T2, False, "PDV_Bless_Breton_KnightsRoad_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T3, False, "PDV_Bless_Breton_KnightsRoad_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T1, False, "PDV_Bless_Breton_HiddenArt_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T2, False, "PDV_Bless_Breton_HiddenArt_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T3, False, "PDV_Bless_Breton_HiddenArt_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T1, False, "PDV_Bless_Breton_GreenWay_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T2, False, "PDV_Bless_Breton_GreenWay_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T3, False, "PDV_Bless_Breton_GreenWay_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_PatronChampion, False, "PDV_Bless_Breton_PatronChampion")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Breton, False, "PDV_SPEL_Neglect_Breton")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_VowIntegrity, False, "PDV_SPEL_CreedLoss_Breton_VowIntegrity")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_ExposureRupture, False, "PDV_SPEL_CreedLoss_Breton_ExposureRupture")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_Excommunication, False, "PDV_SPEL_CreedLoss_Breton_Excommunication")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal, False, "PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T1, False, "PDV_Bless_Dunmer_Reclamation_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Reclamation_T2, False, "PDV_Bless_Dunmer_Reclamation_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Azura_T1, False, "PDV_Bless_Dunmer_Azura_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Azura_T2, False, "PDV_Bless_Dunmer_Azura_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Azura_T3, False, "PDV_Bless_Dunmer_Azura_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Boethiah_T1, False, "PDV_Bless_Dunmer_Boethiah_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Boethiah_T2, False, "PDV_Bless_Dunmer_Boethiah_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Boethiah_T3, False, "PDV_Bless_Dunmer_Boethiah_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Mephala_T1, False, "PDV_Bless_Dunmer_Mephala_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Mephala_T2, False, "PDV_Bless_Dunmer_Mephala_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Dunmer_Mephala_T3, False, "PDV_Bless_Dunmer_Mephala_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Dunmer, False, "PDV_SPEL_Neglect_Dunmer")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T1, False, "PDV_Bless_Imperial_Civic_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Civic_T2, False, "PDV_Bless_Imperial_Civic_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Akatosh_T1, False, "PDV_Bless_Imperial_Akatosh_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Akatosh_T2, False, "PDV_Bless_Imperial_Akatosh_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Akatosh_T3, False, "PDV_Bless_Imperial_Akatosh_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Mara_T1, False, "PDV_Bless_Imperial_Mara_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Mara_T2, False, "PDV_Bless_Imperial_Mara_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Mara_T3, False, "PDV_Bless_Imperial_Mara_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Arkay_T1, False, "PDV_Bless_Imperial_Arkay_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Arkay_T2, False, "PDV_Bless_Imperial_Arkay_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Arkay_T3, False, "PDV_Bless_Imperial_Arkay_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Stendarr_T1, False, "PDV_Bless_Imperial_Stendarr_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Stendarr_T2, False, "PDV_Bless_Imperial_Stendarr_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Stendarr_T3, False, "PDV_Bless_Imperial_Stendarr_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Zenithar_T1, False, "PDV_Bless_Imperial_Zenithar_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Zenithar_T2, False, "PDV_Bless_Imperial_Zenithar_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Zenithar_T3, False, "PDV_Bless_Imperial_Zenithar_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Dibella_T1, False, "PDV_Bless_Imperial_Dibella_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Dibella_T2, False, "PDV_Bless_Imperial_Dibella_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Dibella_T3, False, "PDV_Bless_Imperial_Dibella_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Julianos_T1, False, "PDV_Bless_Imperial_Julianos_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Julianos_T2, False, "PDV_Bless_Imperial_Julianos_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Julianos_T3, False, "PDV_Bless_Imperial_Julianos_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Kynareth_T1, False, "PDV_Bless_Imperial_Kynareth_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Kynareth_T2, False, "PDV_Bless_Imperial_Kynareth_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Kynareth_T3, False, "PDV_Bless_Imperial_Kynareth_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Talos_T1, False, "PDV_Bless_Imperial_Talos_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Talos_T2, False, "PDV_Bless_Imperial_Talos_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Imperial_Talos_T3, False, "PDV_Bless_Imperial_Talos_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Imperial, False, "PDV_SPEL_Neglect_Imperial")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Lunar_T1, False, "PDV_Bless_Khajiit_Lunar_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Khenarthi, False, "PDV_Bless_Khajiit_Phase_Khenarthi")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Azurah, False, "PDV_Bless_Khajiit_Phase_Azurah")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_BaanDar, False, "PDV_Bless_Khajiit_Phase_BaanDar")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Rajhin, False, "PDV_Bless_Khajiit_Phase_Rajhin")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Phase_Alkosh, False, "PDV_Bless_Khajiit_Phase_Alkosh")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Khenarthi_T1, False, "PDV_Bless_Khajiit_Khenarthi_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Khenarthi_T2, False, "PDV_Bless_Khajiit_Khenarthi_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Khenarthi_T3, False, "PDV_Bless_Khajiit_Khenarthi_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Azurah_T1, False, "PDV_Bless_Khajiit_Azurah_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Azurah_T2, False, "PDV_Bless_Khajiit_Azurah_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Azurah_T3, False, "PDV_Bless_Khajiit_Azurah_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_BaanDar_T1, False, "PDV_Bless_Khajiit_BaanDar_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_BaanDar_T2, False, "PDV_Bless_Khajiit_BaanDar_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_BaanDar_T3, False, "PDV_Bless_Khajiit_BaanDar_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Rajhin_T1, False, "PDV_Bless_Khajiit_Rajhin_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Rajhin_T2, False, "PDV_Bless_Khajiit_Rajhin_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Rajhin_T3, False, "PDV_Bless_Khajiit_Rajhin_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Alkosh_T1, False, "PDV_Bless_Khajiit_Alkosh_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Alkosh_T2, False, "PDV_Bless_Khajiit_Alkosh_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Khajiit_Alkosh_T3, False, "PDV_Bless_Khajiit_Alkosh_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_KhajiitLunar, False, "PDV_SPEL_Neglect_KhajiitLunar")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T1, False, "PDV_Bless_Nord_OldWays_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_OldWays_T2, False, "PDV_Bless_Nord_OldWays_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kyne_T1, False, "PDV_Bless_Nord_Kyne_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kyne_T2, False, "PDV_Bless_Nord_Kyne_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Kyne_T3, False, "PDV_Bless_Nord_Kyne_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Shor_T1, False, "PDV_Bless_Nord_Shor_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Shor_T2, False, "PDV_Bless_Nord_Shor_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Shor_T3, False, "PDV_Bless_Nord_Shor_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Tsun_T1, False, "PDV_Bless_Nord_Tsun_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Tsun_T2, False, "PDV_Bless_Nord_Tsun_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Tsun_T3, False, "PDV_Bless_Nord_Tsun_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stuhn_T1, False, "PDV_Bless_Nord_Stuhn_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stuhn_T2, False, "PDV_Bless_Nord_Stuhn_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Stuhn_T3, False, "PDV_Bless_Nord_Stuhn_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T1, False, "PDV_Bless_Nord_Talos_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T2, False, "PDV_Bless_Nord_Talos_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Talos_T3, False, "PDV_Bless_Nord_Talos_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T1, False, "PDV_Bless_Nord_Arkay_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T2, False, "PDV_Bless_Nord_Arkay_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Nord_Arkay_T3, False, "PDV_Bless_Nord_Arkay_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T1, False, "PDV_Bless_Orc_Malacath_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T2, False, "PDV_Bless_Orc_Malacath_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Stronghold_T1, False, "PDV_Bless_Orc_Stronghold_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Stronghold_T2, False, "PDV_Bless_Orc_Stronghold_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Stronghold_T3, False, "PDV_Bless_Orc_Stronghold_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_City_T1, False, "PDV_Bless_Orc_City_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_City_T2, False, "PDV_Bless_Orc_City_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_City_T3, False, "PDV_Bless_Orc_City_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_LegionExile_T1, False, "PDV_Bless_Orc_LegionExile_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_LegionExile_T2, False, "PDV_Bless_Orc_LegionExile_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_LegionExile_T3, False, "PDV_Bless_Orc_LegionExile_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_City, False, "PDV_Bless_Orc_Spine_City")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_Stronghold, False, "PDV_Bless_Orc_Spine_Stronghold")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Spine_LegionExile, False, "PDV_Bless_Orc_Spine_LegionExile")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Orc, False, "PDV_SPEL_Neglect_Orc")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Tusk, False, "PDV_SPEL_Orc_TrialOfIron_Tusk")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Shield, False, "PDV_SPEL_Orc_TrialOfIron_Shield")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Hammer, False, "PDV_SPEL_Orc_TrialOfIron_Hammer")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Orc_TrialOfIron_Yoke, False, "PDV_SPEL_Orc_TrialOfIron_Yoke")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_OrcCodeHolds, False, "PDV_SPEL_OrcCodeHolds")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_OrcCodeHolds_Devoted, False, "PDV_SPEL_OrcCodeHolds_Devoted")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_OrcHearthHeld, False, "PDV_SPEL_OrcHearthHeld")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T1, False, "PDV_Bless_Redguard_AncestorSpine_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, False, "PDV_Bless_Redguard_AncestorSpine_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Crown, False, "PDV_Bless_Redguard_Spine_Crown")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Forebear, False, "PDV_Bless_Redguard_Spine_Forebear")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_AshAbah, False, "PDV_Bless_Redguard_Spine_AshAbah")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Tuwhacca_T1, False, "PDV_Bless_Redguard_Tuwhacca_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Tuwhacca_T2, False, "PDV_Bless_Redguard_Tuwhacca_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Tuwhacca_T3, False, "PDV_Bless_Redguard_Tuwhacca_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_HoonDing_T1, False, "PDV_Bless_Redguard_HoonDing_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_HoonDing_T2, False, "PDV_Bless_Redguard_HoonDing_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_HoonDing_T3, False, "PDV_Bless_Redguard_HoonDing_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Leki_T1, False, "PDV_Bless_Redguard_Leki_T1")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Leki_T2, False, "PDV_Bless_Redguard_Leki_T2")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Leki_T3, False, "PDV_Bless_Redguard_Leki_T3")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_FarShoresToken, False, "PDV_Bless_Redguard_FarShoresToken")
+    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_SPEL_Neglect_Redguard, False, "PDV_SPEL_Neglect_Redguard")
 
     ; B16 / fix-plan 11.1: the two observance families this property-by-property strip
     ; omitted, so an active Discipline of Return or Remembering of Names survived
@@ -18211,88 +14656,8 @@ Function StripAllDaedricPactSpells()
     endWhile
 EndFunction
 
-Function MaybeShowChampionRewardPresentation(Actor playerRef, Spell championSpell, Bool hadChampionSpell, Bool wantsChampionSpell, PDV_DeityBase deity, String rewardLabel)
-    if IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-    if !playerRef || !championSpell || !wantsChampionSpell || hadChampionSpell || !playerRef.HasSpell(championSpell) || !deity
-        return
-    endIf
 
-    if NotifyTierUp(deity, TIER_CHAMPION)
-        SendPrismaEventToast("tier", deity, "", GetPublicTierBand(TIER_CHAMPION), "")
-        SurfaceTransition("tier", deity.DeityName + " " + GetTierStandingLabel(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
-        if deity == PDV_Kyne
-            ShowNordNotification(PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
-        endIf
-        Trace(1, "Champion reward presentation shown: " + rewardLabel + " / " + deity.DeityName)
-    endIf
-EndFunction
 
-Int Function ApplyGenericNeglectFlags()
-    PDV_DeityBase firstDeity = None
-    PDV_DeityBase secondDeity = None
-    PDV_DeityBase thirdDeity = None
-    Float firstPiety = PIETY_MAX + 1.0
-    Float secondPiety = PIETY_MAX + 1.0
-    Float thirdPiety = PIETY_MAX + 1.0
-
-    Int i = 0
-    Int count = GetDeityCount()
-    while i < count
-        PDV_DeityBase deity = GetDeityAtListIndex(i)
-        if IsEligibleForNeglectSelection(deity)
-            Float piety = GetPiety(deity)
-            if piety <= NEGLECT_ACTIVE_PIETY_MAX
-                if !firstDeity || piety < firstPiety
-                    thirdDeity = secondDeity
-                    thirdPiety = secondPiety
-                    secondDeity = firstDeity
-                    secondPiety = firstPiety
-                    firstDeity = deity
-                    firstPiety = piety
-                elseIf deity != firstDeity && (!secondDeity || piety < secondPiety)
-                    thirdDeity = secondDeity
-                    thirdPiety = secondPiety
-                    secondDeity = deity
-                    secondPiety = piety
-                elseIf deity != firstDeity && deity != secondDeity && (!thirdDeity || piety < thirdPiety)
-                    thirdDeity = deity
-                    thirdPiety = piety
-                endIf
-            endIf
-        endIf
-        i += 1
-    endWhile
-
-    Int activeCount = 0
-    if firstDeity
-        SetNeglectFlag(firstDeity, True)
-        activeCount += 1
-    endIf
-    if secondDeity
-        SetNeglectFlag(secondDeity, True)
-        activeCount += 1
-    endIf
-    if thirdDeity
-        SetNeglectFlag(thirdDeity, True)
-        activeCount += 1
-    endIf
-
-    return activeCount
-EndFunction
-
-Bool Function IsEligibleForNeglectSelection(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPiety(deity) > 0.0
-        return True
-    endIf
-
-    return deity == _activeDeity
-EndFunction
 
 
 
@@ -18380,7 +14745,7 @@ Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
         return False
     endIf
 
-    if GetPatronState() != PATRON_STATE_ACTIVE || _activeDeity != PDV_Talos
+    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || _activeDeity != PDV_Talos
         Trace(2, "Talos betrayal skipped: active patron is not Talos.")
         return False
     endIf
@@ -18426,16 +14791,16 @@ Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
 
     ; fix-plan 4.2: one betrayal charge per devotional day.
     String dayKey = "PDV.Creed." + reason + ".Day"
-    if ReadZeroReservedDevotionalDayStamp(dayKey) == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp(dayKey) == (LedgerRuntime.GetDevotionalDay() + 2)
         Trace(2, "Talos betrayal suppressed for " + reason + ": already applied today.")
         return False
     endIf
 
-    WriteZeroReservedDevotionalDayStamp(dayKey)
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp(dayKey)
     StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalReason", reason)
     StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalSource", sourceReason)
 
-    AwardPiety(PDV_Talos, pietyLoss, reason)
+    LedgerRuntime.AwardPiety(PDV_Talos, pietyLoss, reason)
     if originRace == ORIGIN_IMPERIAL
         ApplyConcordatPressure(concordatPressure, reason)
     endIf
@@ -18487,7 +14852,7 @@ Function DebugSetBosmerPathState(Int stateValue)
     endIf
 
     ApplyBosmerPathPatron(stateValue, "mcm_pattern")
-    RunDawnApplySpellAndNeglectLayers()
+    LedgerRuntime.RunDawnApplySpellAndNeglectLayers()
     EndRaceSetupQuietPresentation()
 EndFunction
 
@@ -18596,14 +14961,14 @@ Function DebugSetNordPantheonBaseline(Int stateValue)
     if PDV_NordPantheonBaselineTrack && PDV_NordPantheonBaselineTrack.GetCurrentState() != normalizedState
         PDV_NordPantheonBaselineTrack.SetState(normalizedState, "mcm_pattern")
     endIf
-    PDV_DeityBase pending = GetPendingCommitmentDeity()
+    PDV_DeityBase pending = LedgerRuntime.GetPendingCommitmentDeity()
     if pending && !IsNordOfferEligibleDeity(pending)
-        ClearPendingCommitment()
+        LedgerRuntime.ClearPendingCommitment()
     endIf
-    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && !IsNordOfferEligibleDeity(_activeDeity)
-        SetBroadWorship()
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity && !IsNordOfferEligibleDeity(_activeDeity)
+        LedgerRuntime.SetBroadWorship()
     endIf
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
 EndFunction
 
@@ -18650,7 +15015,7 @@ String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceInd
         if sourceIndex == 0
             HandleImperialCivicService("mcm_debug_public_service")
         elseIf sourceIndex == 1
-            HandleSubstrateShrinePrayer("Mara", "", "", "mcm_debug_divine_prayer")
+            LedgerRuntime.HandleSubstrateShrinePrayer("Mara", "", "", "mcm_debug_divine_prayer")
         else
             HandleImperialSleepEvents(Game.GetPlayer(), "mcm_debug_rejected_sleep")
             if PDV_ImperialAncestorSubstrate
@@ -18687,7 +15052,7 @@ String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceInd
         endIf
     elseIf originValue == ORIGIN_ALTMER
         if sourceIndex == 0
-            HandleSubstrateShrinePrayer("Auri-El", "", "", "mcm_debug_auriel_rite")
+            LedgerRuntime.HandleSubstrateShrinePrayer("Auri-El", "", "", "mcm_debug_auriel_rite")
         elseIf sourceIndex == 1
             HandleAltmerMagicSkillIncrease("Alteration")
         elseIf PDV_AltmerAncestorSubstrate
@@ -18730,126 +15095,101 @@ EndFunction
 Function ResetSubstratePacingState(Int originValue)
     if originValue == ORIGIN_IMPERIAL && PDV_ImperialAncestorSubstrate
         PDV_ImperialAncestorSubstrate.ResetPilotForDebug()
-        ResetDailyRepeatKey("PDV.Signal.ImperialCivicService")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ImperialCivicService")
     elseIf originValue == ORIGIN_DUNMER && PDV_DunmerAncestorSubstrate
         PDV_DunmerAncestorSubstrate.ResetPilotForDebug()
-        ResetDailyRepeatKey("PDV.Signal.DunmerPortableShrinePrayer")
-        ResetDailyRepeatKey("PDV.Signal.DunmerHomeBonus")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.DunmerPortableShrinePrayer")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.DunmerHomeBonus")
     elseIf originValue == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
         PDV_ArgonianHistSubstrate.ResetPilotForDebug()
-        ResetDailyRepeatKey("PDV.Signal.ArgonianHistMaintenance")
-        ResetDailyRepeatKey("PDV.Signal.ArgonianPeopleSupport")
-        ResetDailyRepeatKey("PDV.Signal.ArgonianBedOfChoice")
-        ResetDailyRepeatKey("PDV.Signal.ArgonianVoidSignal")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianHistMaintenance")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianPeopleSupport")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianBedOfChoice")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.ArgonianVoidSignal")
     elseIf originValue == ORIGIN_NORD && PDV_NordAncestorSubstrate
         PDV_NordAncestorSubstrate.ResetPilotForDebug()
-        ResetDailyRepeatKey("PDV.Signal.NordAncestorSpine")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.NordAncestorSpine")
         StorageUtil.SetIntValue(None, "PDV.Signal.NordAncestralRest.Day", -1)
     elseIf originValue == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate
         PDV_AltmerAncestorSubstrate.ResetPilotForDebug()
-        ResetDailyRepeatKey("PDV.Signal.AltmerAncestorSpine")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.AltmerAncestorSpine")
     elseIf originValue == ORIGIN_KHAJIIT && PDV_KhajiitLunarSubstrate
         PDV_KhajiitLunarSubstrate.ResetPilotForDebug()
-        ResetDailyRepeatKey("PDV.Signal.KhajiitRoadHome")
+        LedgerRuntime.ResetDailyRepeatKey("PDV.Signal.KhajiitRoadHome")
         StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay", 0)
         StorageUtil.SetIntValue(None, "PDV.Khajiit.RoadHome.PresentationDay.Encoding", 2)
     endIf
 EndFunction
 
-Function ResetDailyRepeatKey(String keyPrefix)
-    StorageUtil.SetIntValue(None, keyPrefix + ".Day", -1)
-    StorageUtil.SetIntValue(None, keyPrefix + ".Count", 0)
-EndFunction
 
-String Function GetBroadPantheonPoolIdByDebugIndex(Int poolIndex)
-    if poolIndex == 0
-        return BROAD_PANTHEON_IMPERIAL
-    elseIf poolIndex == 1
-        return BROAD_PANTHEON_NORD_OLD
-    elseIf poolIndex == 2
-        return BROAD_PANTHEON_NORD_NINE
-    endIf
-    return ""
-EndFunction
 
 String Function DebugGetBroadPantheonSummary(Int poolIndex)
-    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    String poolId = LedgerRuntime.GetBroadPantheonPoolIdByDebugIndex(poolIndex)
     if poolId == ""
         return "No broad pantheon pool selected."
     endIf
-    Int gainStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
-    Int processedStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
-    Int scratchStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
-    return poolId + " roster=" + GetBroadPantheonRosterForDebug(poolId) + " standing=" + GetBroadPantheonStanding(poolId) + " scratch=" + GetBroadPantheonScratch(poolId) + " scratchDay=" + (scratchStamp - 2) + " active=" + (GetActiveBroadPantheonPoolId() == poolId) + " lastGainDay=" + (gainStamp - 2) + " lastProcessedDay=" + (processedStamp - 2) + " grace=2 decay=-0.1/day lastEvent=" + StorageUtil.GetStringValue(None, GetBroadPantheonLastEventKey(poolId))
+    Int gainStamp = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonLastGainDayKey(poolId))
+    Int processedStamp = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonLastProcessedDayKey(poolId))
+    Int scratchStamp = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonScratchDayKey(poolId))
+    return poolId + " roster=" + LedgerRuntime.GetBroadPantheonRosterForDebug(poolId) + " standing=" + LedgerRuntime.GetBroadPantheonStanding(poolId) + " scratch=" + LedgerRuntime.GetBroadPantheonScratch(poolId) + " scratchDay=" + (scratchStamp - 2) + " active=" + (LedgerRuntime.GetActiveBroadPantheonPoolId() == poolId) + " lastGainDay=" + (gainStamp - 2) + " lastProcessedDay=" + (processedStamp - 2) + " grace=2 decay=-0.1/day lastEvent=" + StorageUtil.GetStringValue(None, LedgerRuntime.GetBroadPantheonLastEventKey(poolId))
 EndFunction
 
-String Function GetBroadPantheonRosterForDebug(String poolId)
-    if poolId == BROAD_PANTHEON_IMPERIAL
-        if StorageUtil.GetIntValue(None, "PDV.Imperial.TalosBroadUnlocked") == 1
-            return "Akatosh/Arkay/Dibella/Julianos/Kynareth/Mara/Stendarr/Zenithar/Talos (unlocked)"
-        endIf
-        return "Akatosh/Arkay/Dibella/Julianos/Kynareth/Mara/Stendarr/Zenithar (Talos locked)"
-    elseIf poolId == BROAD_PANTHEON_NORD_OLD
-        return "Kyne/Shor/Tsun/Stuhn/Mara/Orkey/Dibella/Talos"
-    endIf
-    return "Akatosh/Arkay/Dibella/Julianos/Kynareth/Mara/Stendarr/Zenithar/Talos"
-EndFunction
 
 String Function DebugSeedBroadPantheonPool(Int poolIndex, Float standingValue)
-    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
-    SetBroadPantheonStanding(poolId, standingValue, "mcm_boundary_seed")
-    SyncBroadPantheonRewards(Game.GetPlayer())
+    String poolId = LedgerRuntime.GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    LedgerRuntime.SetBroadPantheonStanding(poolId, standingValue, "mcm_boundary_seed")
+    LedgerRuntime.SyncBroadPantheonRewards(Game.GetPlayer())
     return DebugGetBroadPantheonSummary(poolIndex)
 EndFunction
 
 String Function DebugResetBroadPantheonPool(Int poolIndex)
-    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
-    ResetBroadPantheonPool(poolId)
+    String poolId = LedgerRuntime.GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    LedgerRuntime.ResetBroadPantheonPool(poolId)
     return DebugGetBroadPantheonSummary(poolIndex)
 EndFunction
 
 String Function DebugRunBroadPantheonFanoutTest()
-    String poolId = GetActiveBroadPantheonPoolId()
+    String poolId = LedgerRuntime.GetActiveBroadPantheonPoolId()
     if poolId == ""
         return "Set Imperial/Nord broad worship and an active baseline first."
     endIf
     _broadPantheonSelfEventSequence += 1
     String fixtureId = "mcm_signed_fanout_" + _broadPantheonSelfEventSequence
-    Float scratchBefore = GetBroadPantheonScratch(poolId)
-    BeginBroadPantheonEvent(fixtureId)
-    if poolId == BROAD_PANTHEON_NORD_OLD
-        AwardPietyInternal(PDV_Kyne, 1.0, True, fixtureId + "_kyne")
-        AwardPietyInternal(PDV_Shor, 2.0, True, fixtureId + "_shor")
-        AwardPietyInternal(PDV_Tsun, -4.0, True, fixtureId + "_tsun")
+    Float scratchBefore = LedgerRuntime.GetBroadPantheonScratch(poolId)
+    LedgerRuntime.BeginBroadPantheonEvent(fixtureId)
+    if poolId == LedgerRuntime.BROAD_PANTHEON_NORD_OLD
+        LedgerRuntime.AwardPietyInternal(PDV_Kyne, 1.0, True, fixtureId + "_kyne")
+        LedgerRuntime.AwardPietyInternal(PDV_Shor, 2.0, True, fixtureId + "_shor")
+        LedgerRuntime.AwardPietyInternal(PDV_Tsun, -4.0, True, fixtureId + "_tsun")
     else
-        AwardPietyInternal(PDV_Akatosh, 1.0, True, fixtureId + "_akatosh")
-        AwardPietyInternal(PDV_Mara, 2.0, True, fixtureId + "_mara")
-        AwardPietyInternal(PDV_Zenithar, -4.0, True, fixtureId + "_zenithar")
+        LedgerRuntime.AwardPietyInternal(LedgerRuntime.PDV_Akatosh, 1.0, True, fixtureId + "_akatosh")
+        LedgerRuntime.AwardPietyInternal(LedgerRuntime.PDV_Mara, 2.0, True, fixtureId + "_mara")
+        LedgerRuntime.AwardPietyInternal(LedgerRuntime.PDV_Zenithar, -4.0, True, fixtureId + "_zenithar")
     endIf
-    FlushBroadPantheonEvent()
-    Float positiveEventDelta = GetBroadPantheonScratch(poolId) - scratchBefore
-    BeginBroadPantheonEvent(fixtureId + "_negative")
-    if poolId == BROAD_PANTHEON_NORD_OLD
-        AwardPietyInternal(PDV_Kyne, -1.0, False, fixtureId + "_kyne_negative")
-        AwardPietyInternal(PDV_Tsun, -4.0, False, fixtureId + "_tsun_negative")
+    LedgerRuntime.FlushBroadPantheonEvent()
+    Float positiveEventDelta = LedgerRuntime.GetBroadPantheonScratch(poolId) - scratchBefore
+    LedgerRuntime.BeginBroadPantheonEvent(fixtureId + "_negative")
+    if poolId == LedgerRuntime.BROAD_PANTHEON_NORD_OLD
+        LedgerRuntime.AwardPietyInternal(PDV_Kyne, -1.0, False, fixtureId + "_kyne_negative")
+        LedgerRuntime.AwardPietyInternal(PDV_Tsun, -4.0, False, fixtureId + "_tsun_negative")
     else
-        AwardPietyInternal(PDV_Mara, -1.0, False, fixtureId + "_mara_negative")
-        AwardPietyInternal(PDV_Zenithar, -4.0, False, fixtureId + "_zenithar_negative")
+        LedgerRuntime.AwardPietyInternal(LedgerRuntime.PDV_Mara, -1.0, False, fixtureId + "_mara_negative")
+        LedgerRuntime.AwardPietyInternal(LedgerRuntime.PDV_Zenithar, -4.0, False, fixtureId + "_zenithar_negative")
     endIf
-    FlushBroadPantheonEvent()
-    Float negativeEventDelta = GetBroadPantheonScratch(poolId) - scratchBefore - positiveEventDelta
-    Trace(1, "[PDV][PS-A4] pool=" + poolId + " strongestPositive=" + positiveEventDelta + " strongestNegative=" + negativeEventDelta + " scratch=" + GetBroadPantheonScratch(poolId))
-    return "Post-pipeline fan-out: strongest positive=" + positiveEventDelta + "; strongest negative=" + negativeEventDelta + "; final scratch=" + GetBroadPantheonScratch(poolId)
+    LedgerRuntime.FlushBroadPantheonEvent()
+    Float negativeEventDelta = LedgerRuntime.GetBroadPantheonScratch(poolId) - scratchBefore - positiveEventDelta
+    Trace(1, "[PDV][PS-A4] pool=" + poolId + " strongestPositive=" + positiveEventDelta + " strongestNegative=" + negativeEventDelta + " scratch=" + LedgerRuntime.GetBroadPantheonScratch(poolId))
+    return "Post-pipeline fan-out: strongest positive=" + positiveEventDelta + "; strongest negative=" + negativeEventDelta + "; final scratch=" + LedgerRuntime.GetBroadPantheonScratch(poolId)
 EndFunction
 
 String Function DebugPrimeBroadPantheonScratch(Int poolIndex, Float scratchValue)
-    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    String poolId = LedgerRuntime.GetBroadPantheonPoolIdByDebugIndex(poolIndex)
     if poolId == ""
         return "No broad pantheon pool selected."
     endIf
-    StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(poolId), scratchValue)
-    WriteZeroReservedDevotionalDayStamp(GetBroadPantheonScratchDayKey(poolId))
-    StorageUtil.SetStringValue(None, GetBroadPantheonLastEventKey(poolId), "mcm_signed_cap_prime")
+    StorageUtil.SetFloatValue(None, LedgerRuntime.GetBroadPantheonScratchKey(poolId), scratchValue)
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonScratchDayKey(poolId))
+    StorageUtil.SetStringValue(None, LedgerRuntime.GetBroadPantheonLastEventKey(poolId), "mcm_signed_cap_prime")
     Trace(1, "[PDV][PS-A5] staged pool=" + poolId + " scratch=" + scratchValue + "; wait through real dawn")
     return DebugGetBroadPantheonSummary(poolIndex) + " | Wait through real dawn; expected signed fold cap is 4.3."
 EndFunction
@@ -18858,39 +15198,39 @@ String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)
     ; PS-A11 uses this only after a real act has folded at a real dawn.  It
     ; drives the production catch-up routine through five days after that
     ; recorded gain without mutating Skyrim's clock or GameDaysPassed.
-    String poolId = GetBroadPantheonPoolIdByDebugIndex(poolIndex)
+    String poolId = LedgerRuntime.GetBroadPantheonPoolIdByDebugIndex(poolIndex)
     if poolId == ""
         return "No broad pantheon pool selected."
     endIf
-    if GetBroadPantheonStanding(poolId) <= 0.0
+    if LedgerRuntime.GetBroadPantheonStanding(poolId) <= 0.0
         return "PS-A11 needs standing from one real folded positive act first."
     endIf
-    if GetBroadPantheonScratch(poolId) != 0.0
+    if LedgerRuntime.GetBroadPantheonScratch(poolId) != 0.0
         return "PS-A11 needs zero pending scratch. Fold or clear the pool first."
     endIf
-    if GetActiveBroadPantheonPoolId() == poolId
+    if LedgerRuntime.GetActiveBroadPantheonPoolId() == poolId
         return "PS-A11 needs this pool suppressed. Switch to another broad pool or focused worship first."
     endIf
 
-    Int lastGainStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastGainDayKey(poolId))
+    Int lastGainStamp = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonLastGainDayKey(poolId))
     if lastGainStamp <= 0
         return "PS-A11 needs a recorded positive gain day from the real fold."
     endIf
     Int lastGainDay = lastGainStamp - 2
     Int targetDay = lastGainDay + 5
-    Int processedStamp = ReadZeroReservedDevotionalDayStamp(GetBroadPantheonLastProcessedDayKey(poolId))
+    Int processedStamp = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(LedgerRuntime.GetBroadPantheonLastProcessedDayKey(poolId))
     Int lastProcessedDay = processedStamp - 2
     if targetDay <= lastProcessedDay
         return DebugGetBroadPantheonSummary(poolIndex) + " | PS-A11 target already processed; repeat is idempotent."
     endIf
 
-    Float signedCap = PIETY_DAILY_MAX_DELTA
-    if PDV_ModePresetRef
-        signedCap = signedCap * PDV_ModePresetRef.DailyCapScalar()
+    Float signedCap = LedgerRuntime.PIETY_DAILY_MAX_DELTA
+    if LedgerRuntime.PDV_ModePresetRef
+        signedCap = signedCap * LedgerRuntime.PDV_ModePresetRef.DailyCapScalar()
     endIf
-    ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "mcm_ps_a11_catchup")
-    SyncBroadPantheonRewards(Game.GetPlayer())
-    Trace(1, "[PDV][PS-A11] forced catch-up pool=" + poolId + " lastGainDay=" + lastGainDay + " through=" + targetDay + " standing=" + GetBroadPantheonStanding(poolId))
+    LedgerRuntime.ProcessBroadPantheonThroughDay(poolId, targetDay, signedCap, "mcm_ps_a11_catchup")
+    LedgerRuntime.SyncBroadPantheonRewards(Game.GetPlayer())
+    Trace(1, "[PDV][PS-A11] forced catch-up pool=" + poolId + " lastGainDay=" + lastGainDay + " through=" + targetDay + " standing=" + LedgerRuntime.GetBroadPantheonStanding(poolId))
     return DebugGetBroadPantheonSummary(poolIndex) + " | PS-A11 processed through gain day +5; expected two grace days then 0.1/day."
 EndFunction
 
@@ -18902,39 +15242,39 @@ EndFunction
 String Function DebugOfferAcceptRecoverySummary()
     String activeName = "none"
     if _activeDeity
-        activeName = _activeDeity.DeityName + " piety=" + GetPiety(_activeDeity)
+        activeName = _activeDeity.DeityName + " piety=" + LedgerRuntime.GetPiety(_activeDeity)
     endIf
-    PDV_DeityBase pending = GetPendingCommitmentDeity()
+    PDV_DeityBase pending = LedgerRuntime.GetPendingCommitmentDeity()
     String pendingName = "none"
     if pending
         pendingName = pending.DeityName
     endIf
     PDV_DeityBase candidate = pending
     if !candidate
-        candidate = GetPacingPatronCandidate()
+        candidate = LedgerRuntime.GetPacingPatronCandidate()
     endIf
     Int qualifyingDays = 0
     Bool baselineEligible = False
     Float declinedAt = 0.0
     if candidate
-        qualifyingDays = GetRecentCommitmentSignalDayCount(candidate, 7)
-        baselineEligible = UsesFormalCommitmentOffersForDeity(candidate)
+        qualifyingDays = LedgerRuntime.GetRecentCommitmentSignalDayCount(candidate, 7)
+        baselineEligible = LedgerRuntime.UsesFormalCommitmentOffersForDeity(candidate)
         declinedAt = StorageUtil.GetFloatValue(candidate as Form, "PDV.Commitment.DeclinedAt")
     endIf
-    return "state=" + GetPatronStateLabel() + " active=" + activeName + " pending=" + pendingName + " qualifyingDays=" + qualifyingDays + " baselineEligible=" + baselineEligible + " offeredAt=" + StorageUtil.GetFloatValue(None, "PDV.Commitment.OfferedAt") + " declinedAt=" + declinedAt
+    return "state=" + LedgerRuntime.GetPatronStateLabel() + " active=" + activeName + " pending=" + pendingName + " qualifyingDays=" + qualifyingDays + " baselineEligible=" + baselineEligible + " offeredAt=" + StorageUtil.GetFloatValue(None, "PDV.Commitment.OfferedAt") + " declinedAt=" + declinedAt
 EndFunction
 
 String Function DebugSetBroadWorshipForPacing()
-    ClearPendingCommitment()
-    SetBroadWorship()
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.ClearPendingCommitment()
+    LedgerRuntime.SetBroadWorship()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     Trace(1, "[PDV][BROAD_TEST] clean broad worship restored")
     return DebugOfferAcceptRecoverySummary()
 EndFunction
 
 String Function DebugRunPatronOfferForPacing()
-    PDV_DeityBase candidate = GetPacingPatronCandidate()
+    PDV_DeityBase candidate = LedgerRuntime.GetPacingPatronCandidate()
     if !candidate
         return "Select Imperial or Nord broad worship before preparing an offer."
     endIf
@@ -18943,34 +15283,22 @@ String Function DebugRunPatronOfferForPacing()
     ; broad worship, make one baseline-eligible candidate exactly qualified,
     ; clear its offer/cooldown state, and leave it pending for the separate
     ; Accept button. No message box races this controlled MCM sequence.
-    SetBroadWorship()
-    ClearPendingCommitment()
+    LedgerRuntime.SetBroadWorship()
+    LedgerRuntime.ClearPendingCommitment()
     Form candidateForm = candidate as Form
-    StorageUtil.SetFloatValue(candidateForm, "PDV.Piety", COMMITMENT_OFFER_THRESHOLD)
+    StorageUtil.SetFloatValue(candidateForm, "PDV.Piety", LedgerRuntime.COMMITMENT_OFFER_THRESHOLD)
     StorageUtil.SetIntValue(candidateForm, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(candidateForm, "PDV.Commitment.Refused", 0)
     StorageUtil.SetFloatValue(candidateForm, "PDV.Commitment.DeclinedAt", 0.0)
     DebugSeedCommitmentSignalDaysByIndex(candidate.DeityIndex)
     StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", candidate.DeityIndex)
     StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", Utility.GetCurrentGameTime())
-    RecomputeTier(candidate)
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.RecomputeTier(candidate)
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     return DebugOfferAcceptRecoverySummary()
 EndFunction
 
-PDV_DeityBase Function GetPacingPatronCandidate()
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_IMPERIAL
-        return PDV_Akatosh
-    elseIf originRace == ORIGIN_NORD
-        if GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS
-            return PDV_Kyne
-        endIf
-        return PDV_Akatosh
-    endIf
-    return None
-EndFunction
 
 String Function DebugAcceptPatronForPacing()
     DebugAcceptPendingCommitment()
@@ -18980,8 +15308,8 @@ EndFunction
 String Function DebugLapsePatronForPacing()
     if _activeDeity
         StorageUtil.SetFloatValue(_activeDeity as Form, "PDV.Piety", 49.0)
-        RecomputeTier(_activeDeity)
-        SyncFirstTierRaceRewardRuntime()
+        LedgerRuntime.RecomputeTier(_activeDeity)
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         RequestPanelRefresh()
     endIf
     return DebugOfferAcceptRecoverySummary()
@@ -18990,8 +15318,8 @@ EndFunction
 String Function DebugRecoverPatronForPacing()
     if _activeDeity
         StorageUtil.SetFloatValue(_activeDeity as Form, "PDV.Piety", 50.0)
-        RecomputeTier(_activeDeity)
-        SyncFirstTierRaceRewardRuntime()
+        LedgerRuntime.RecomputeTier(_activeDeity)
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         RequestPanelRefresh()
     endIf
     return DebugOfferAcceptRecoverySummary()
@@ -19051,7 +15379,7 @@ Function DebugSetBretonTradition(Int traditionValue)
         SetBretonDruidicFork(BRETON_DRUIDIC_FORK_NONE, "mcm_breton_tradition")
     endIf
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
     Trace(1, "Breton tradition debug-set to " + normalized)
@@ -19156,7 +15484,7 @@ Function DebugPrimeRaceLaneNeglect()
         Debug.Notification("PDV: race-lane neglect prime not wired for this origin (Dunmer/Argonian/Imperial use curse/Hist/substrate).")
         return
     endIf
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     Debug.Notification("PDV: primed " + laneLabel + " neglect. Ensure Curse none, then check Active Effects.")
     Trace(1, "DebugPrimeRaceLaneNeglect: backdated " + laneLabel + " source and re-synced.")
 EndFunction
@@ -19224,7 +15552,7 @@ Function DebugForceCurseState(Int newState, String reason)
     Int appliedState = PDV_CurseStateService.GetCurseState()
 
     if oldState != appliedState
-        HandleCurseStateTransition(oldState, appliedState, reason)
+        LedgerRuntime.HandleCurseStateTransition(oldState, appliedState, reason)
     elseIf PDV_HircinePath
         PDV_HircinePath.UpdateResidueRecovery()
         DrainHircineResiduePrismaToasts()
@@ -19232,7 +15560,7 @@ Function DebugForceCurseState(Int newState, String reason)
 EndFunction
 
 Function DebugRefreshCurseFromPlayerState()
-    HandleCurseStateRefresh("mcm_refresh")
+    LedgerRuntime.HandleCurseStateRefresh("mcm_refresh")
 EndFunction
 
 Bool Function DebugSetCurseProofOriginRace(Int originRace)
@@ -19262,9 +15590,9 @@ Bool Function DebugSetCurseProofOriginRace(Int originRace)
     if PDV_KhajiitLunarSubstrate
         PDV_KhajiitLunarSubstrate.RecomputeSubstrateTier()
     endIf
-    RefreshPatronMirrors()
+    LedgerRuntime.RefreshPatronMirrors()
     FavorRuntime.UpdateContextualFavorRuntime()
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     Trace(1, "Curse proof origin set to " + GetOriginRaceLabel(originRace) + " (" + originRace + ")")
@@ -19272,14 +15600,14 @@ Bool Function DebugSetCurseProofOriginRace(Int originRace)
 EndFunction
 
 Function DebugEvaluateCommitmentOffer()
-    Int pendingBefore = GetPendingCommitmentDeityIndex()
-    EvaluateFormalCommitmentOffer()
-    Int pendingAfter = GetPendingCommitmentDeityIndex()
-    Trace(1, "Commitment evaluate debug: pending " + pendingBefore + " -> " + pendingAfter + "; kyneDays=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + "; kynePiety=" + PDV_DevotionRules.FormatTwoDecimals(GetPiety(PDV_Kyne)))
+    Int pendingBefore = LedgerRuntime.GetPendingCommitmentDeityIndex()
+    LedgerRuntime.EvaluateFormalCommitmentOffer()
+    Int pendingAfter = LedgerRuntime.GetPendingCommitmentDeityIndex()
+    Trace(1, "Commitment evaluate debug: pending " + pendingBefore + " -> " + pendingAfter + "; kyneDays=" + LedgerRuntime.GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + "; kynePiety=" + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.GetPiety(PDV_Kyne)))
 EndFunction
 
 Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         return
     endIf
@@ -19292,7 +15620,7 @@ Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)
     StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay", encodedPreviousDay)
     StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedActive", 1)
     StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedDay", currentDay)
-    Trace(1, "Commitment seed debug: " + deity.DeityName + "[" + deity.DeityIndex + "] days=" + GetRecentCommitmentSignalDayCount(deity, 7))
+    Trace(1, "Commitment seed debug: " + deity.DeityName + "[" + deity.DeityIndex + "] days=" + LedgerRuntime.GetRecentCommitmentSignalDayCount(deity, 7))
 EndFunction
 
 ; Form-based twin of DebugSeedCommitmentSignalDaysByIndex. Daedric-path indices do not
@@ -19311,7 +15639,7 @@ Function DebugSeedCommitmentSignalDaysForDeity(PDV_DeityBase deity)
 EndFunction
 
 Function DebugResetCommitmentStateByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if deity
         Form deityForm = deity as Form
         StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalLatestDay", 0)
@@ -19320,8 +15648,8 @@ Function DebugResetCommitmentStateByIndex(Int deityIndex)
         StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedDay", 0)
         StorageUtil.SetIntValue(deityForm, "PDV.Commitment.Offered", 0)
         StorageUtil.SetIntValue(deityForm, "PDV.Commitment.Refused", 0)
-        if GetPendingCommitmentDeityIndex() == deity.DeityIndex
-            ClearPendingCommitment()
+        if LedgerRuntime.GetPendingCommitmentDeityIndex() == deity.DeityIndex
+            LedgerRuntime.ClearPendingCommitment()
         endIf
         Trace(1, "Commitment reset debug: " + deity.DeityName + "[" + deity.DeityIndex + "]")
     endIf
@@ -19331,65 +15659,10 @@ Function DebugResetCommitmentStateByIndex(Int deityIndex)
 EndFunction
 
 Function EvaluateKyneCommitmentOffer()
-    EvaluateFormalCommitmentOffer()
+    LedgerRuntime.EvaluateFormalCommitmentOffer()
 EndFunction
 
-Function EvaluateFormalCommitmentOffer()
-    if GetPatronState() == PATRON_STATE_ACTIVE
-        return
-    endIf
 
-    if ShouldBypassFormalCommitmentOffers()
-        return
-    endIf
-
-    PDV_DeityBase candidate = GetBestFormalCommitmentOfferCandidate()
-    if !candidate
-        return
-    endIf
-
-    Message offerMessage = GetFormalCommitmentOfferMessage(candidate)
-    if !offerMessage
-        Trace(1, "Commitment offer skipped for " + candidate.DeityName + ": no offer message wired.")
-        return
-    endIf
-
-    if StorageUtil.GetFormValue(None, "PDV.Commitment.PendingDeityForm") == (candidate as Form)
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", candidate.DeityIndex)
-    StorageUtil.SetFormValue(None, "PDV.Commitment.PendingDeityForm", candidate as Form)
-    StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", Utility.GetCurrentGameTime())
-    Trace(1, "Commitment offer pending for " + candidate.DeityName + ".")
-    ShowFormalCommitmentOffer(candidate)
-EndFunction
-
-Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
-    Message offerMessage = GetFormalCommitmentOfferMessage(deity)
-    if !offerMessage
-        return
-    endIf
-
-    ; A blocking Message.Show cannot display over an open menu (it renders nothing and
-    ; burns the one-shot). Stash the offer and let ProcessQueuedCommitmentOffer replay it
-    ; from the poll once menus close.
-    if Utility.IsInMenuMode()
-        _pendingCommitmentOfferDeity = deity
-        return
-    endIf
-
-    DispatchDiegeticCue("offer", deity.DeityName, "present", deity, "revelation")
-    StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 1)
-    Int choice = offerMessage.Show()
-    if choice == 0
-        DebugAcceptPendingCommitment()
-    elseIf choice == 1
-        DebugDeclinePendingCommitment()
-    elseIf choice == 2
-        DebugRefusePendingCommitment()
-    endIf
-EndFunction
 
 Function ProcessQueuedCommitmentOffer()
     if !_pendingCommitmentOfferDeity
@@ -19400,33 +15673,9 @@ Function ProcessQueuedCommitmentOffer()
     _pendingCommitmentOfferDeity = None
     ; ShowFormalCommitmentOffer re-stashes if a menu is somehow still open, so this drain
     ; is self-healing.
-    ShowFormalCommitmentOffer(deity)
+    LedgerRuntime.ShowFormalCommitmentOffer(deity)
 EndFunction
 
-Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    ; Any Daedric path uses the single shared Prince-pact offer message, ahead of the
-    ; per-race divine dispatch (a path is offer-eligible regardless of origin race).
-    if (deity as PDV_DaedricPathBase)
-        return (deity as PDV_DaedricPathBase).GetCommitmentOfferMessage()
-    endIf
-
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_NORD
-        return GetNordFormalCommitmentOfferMessage(deity)
-    elseIf originRace == ORIGIN_IMPERIAL
-        return GetImperialFormalCommitmentOfferMessage(deity)
-    elseIf originRace == ORIGIN_DUNMER
-        return GetDunmerFormalCommitmentOfferMessage(deity)
-    elseIf originRace == ORIGIN_ALTMER
-        return GetAltmerFormalCommitmentOfferMessage(deity)
-    elseIf originRace == ORIGIN_BRETON
-        return GetBretonFormalCommitmentOfferMessage(deity)
-    elseIf originRace == ORIGIN_REDGUARD
-        return GetRedguardFormalCommitmentOfferMessage(deity)
-    endIf
-
-    return None
-EndFunction
 
 Function DispatchDiegeticCue(String eventClass, String surfaceKey, String direction, PDV_DeityBase deity, String toneOverride = "")
     Int deityIndex = -1
@@ -19447,26 +15696,26 @@ Message Function GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)
         return PDV_Msg_Nord_Tsun_Offer
     elseIf deity == PDV_Stuhn
         return PDV_Msg_Nord_Stuhn_Offer
-    elseIf deity == PDV_Akatosh
+    elseIf deity == LedgerRuntime.PDV_Akatosh
         return PDV_Msg_Nord_Akatosh_Offer
-    elseIf deity == PDV_Mara
+    elseIf deity == LedgerRuntime.PDV_Mara
         return PDV_Msg_Nord_Mara_Offer
-    elseIf deity == PDV_Arkay
+    elseIf deity == LedgerRuntime.PDV_Arkay
         if GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS
             return PDV_Msg_Nord_Orkey_Offer
         endIf
         return PDV_Msg_Nord_Arkay_Offer
-    elseIf deity == PDV_Stendarr
+    elseIf deity == LedgerRuntime.PDV_Stendarr
         return PDV_Msg_Nord_Stendarr_Offer
-    elseIf deity == PDV_Zenithar
+    elseIf deity == LedgerRuntime.PDV_Zenithar
         return PDV_Msg_Nord_Zenithar_Offer
-    elseIf deity == PDV_Julianos
+    elseIf deity == LedgerRuntime.PDV_Julianos
         return PDV_Msg_Nord_Julianos_Offer
-    elseIf deity == PDV_Dibella
+    elseIf deity == LedgerRuntime.PDV_Dibella
         return PDV_Msg_Nord_Dibella_Offer
     elseIf deity == PDV_Talos
         return PDV_Msg_Nord_Talos_Offer
-    elseIf deity == PDV_Kynareth
+    elseIf deity == LedgerRuntime.PDV_Kynareth
         return PDV_Msg_Nord_Kynareth_Offer
     endIf
 
@@ -19502,21 +15751,21 @@ Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == PDV_Stendarr
+    if deity == LedgerRuntime.PDV_Stendarr
         return PDV_Msg_Breton_Stendarr_Offer
-    elseIf deity == PDV_Akatosh
+    elseIf deity == LedgerRuntime.PDV_Akatosh
         return PDV_Msg_Breton_Akatosh_Offer
-    elseIf deity == PDV_Mara
+    elseIf deity == LedgerRuntime.PDV_Mara
         return PDV_Msg_Breton_Mara_Offer
-    elseIf deity == PDV_Arkay
+    elseIf deity == LedgerRuntime.PDV_Arkay
         return PDV_Msg_Breton_Arkay_Offer
-    elseIf deity == PDV_Julianos
+    elseIf deity == LedgerRuntime.PDV_Julianos
         return PDV_Msg_Breton_Julianos_Offer
-    elseIf deity == PDV_Zenithar
+    elseIf deity == LedgerRuntime.PDV_Zenithar
         return PDV_Msg_Breton_Zenithar_Offer
-    elseIf deity == PDV_Kynareth
+    elseIf deity == LedgerRuntime.PDV_Kynareth
         return PDV_Msg_Breton_Kynareth_Offer
-    elseIf deity == PDV_Dibella
+    elseIf deity == LedgerRuntime.PDV_Dibella
         return PDV_Msg_Breton_Dibella_Offer
     elseIf deity == PDV_Magnus
         return PDV_Msg_Breton_Magnus_Offer
@@ -19530,23 +15779,23 @@ Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == PDV_Akatosh
+    if deity == LedgerRuntime.PDV_Akatosh
         return PDV_Msg_Imperial_Akatosh_Offer
     elseIf deity == PDV_Talos && IsImperialTalosOfferAllowed()
         return PDV_Msg_Imperial_Talos_Offer
-    elseIf deity == PDV_Kynareth
+    elseIf deity == LedgerRuntime.PDV_Kynareth
         return PDV_Msg_Imperial_Kynareth_Offer
-    elseIf deity == PDV_Mara
+    elseIf deity == LedgerRuntime.PDV_Mara
         return PDV_Msg_Imperial_Mara_Offer
-    elseIf deity == PDV_Zenithar
+    elseIf deity == LedgerRuntime.PDV_Zenithar
         return PDV_Msg_Imperial_Zenithar_Offer
-    elseIf deity == PDV_Arkay
+    elseIf deity == LedgerRuntime.PDV_Arkay
         return PDV_Msg_Imperial_Arkay_Offer
-    elseIf deity == PDV_Stendarr
+    elseIf deity == LedgerRuntime.PDV_Stendarr
         return PDV_Msg_Imperial_Stendarr_Offer
-    elseIf deity == PDV_Julianos
+    elseIf deity == LedgerRuntime.PDV_Julianos
         return PDV_Msg_Imperial_Julianos_Offer
-    elseIf deity == PDV_Dibella
+    elseIf deity == LedgerRuntime.PDV_Dibella
         return PDV_Msg_Imperial_Dibella_Offer
     endIf
 
@@ -19566,13 +15815,13 @@ Message Function GetRedguardFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 Function DebugAcceptPendingCommitment()
-    PDV_DeityBase pendingDeity = GetPendingCommitmentDeity()
+    PDV_DeityBase pendingDeity = LedgerRuntime.GetPendingCommitmentDeity()
     if !pendingDeity
         return
     endIf
 
-    if !IsPendingCommitmentStillAcceptable(pendingDeity)
-        ClearPendingCommitment()
+    if !LedgerRuntime.IsPendingCommitmentStillAcceptable(pendingDeity)
+        LedgerRuntime.ClearPendingCommitment()
         Trace(1, "Pending commitment invalidated before acceptance.")
         return
     endIf
@@ -19595,118 +15844,27 @@ Function DebugAcceptPendingCommitment()
         pendingPath.MakeActiveDaedricPact()
         RequestPanelRefresh()
     else
-        SetActiveDeity(pendingDeity)
-        SyncFirstTierRaceRewardRuntime()
+        LedgerRuntime.SetActiveDeity(pendingDeity)
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     endIf
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")
-    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")
-    ClearPendingCommitment()
+    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", LedgerRuntime.BuildCommitmentOfferAcceptToastLine(pendingDeity), "")
+    LedgerRuntime.ClearPendingCommitment()
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 0)
     Trace(1, "Commitment accepted for " + pendingDeity.DeityName + ".")
 EndFunction
 
-Bool Function IsPendingCommitmentStillAcceptable(PDV_DeityBase deity)
-    if !deity || !UsesFormalCommitmentOffersForDeity(deity)
-        return False
-    endIf
-    if GetPiety(deity) < COMMITMENT_OFFER_THRESHOLD || !HasRecentCommitmentSignalDays(deity, 2, 7)
-        return False
-    endIf
-    if IsCommitmentRefused(deity) || IsCommitmentDeclineDelayActive(deity)
-        return False
-    endIf
-    return True
-EndFunction
 
-PDV_DeityBase Function GetBestFormalCommitmentOfferCandidate()
-    PDV_DeityBase bestDeity = None
-    Float bestWeight = -1.0
 
-    ; Divine deities live in PDV_FLST_AllDeities; Daedric Princes live in their own list
-    ; (PDV_FLST_DaedricPaths_All) and are NOT members of PDV_FLST_AllDeities. Scan both so a
-    ; Prince pact-consent offer can fire.
-    if PDV_FLST_AllDeities
-        Int i = 0
-        Int count = PDV_FLST_AllDeities.GetSize()
-        while i < count
-            PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-            if IsEligibleForFormalCommitmentOffer(deity)
-                Float weight = GetFormalCommitmentOfferWeight(deity)
-                if !bestDeity || weight > bestWeight
-                    bestDeity = deity
-                    bestWeight = weight
-                endIf
-            endIf
-            i += 1
-        endWhile
-    endIf
-
-    if PDV_FLST_DaedricPaths_All
-        Int j = 0
-        Int pathCount = PDV_FLST_DaedricPaths_All.GetSize()
-        while j < pathCount
-            PDV_DeityBase deity = PDV_FLST_DaedricPaths_All.GetAt(j) as PDV_DeityBase
-            if IsEligibleForFormalCommitmentOffer(deity)
-                Float weight = GetFormalCommitmentOfferWeight(deity)
-                if !bestDeity || weight > bestWeight
-                    bestDeity = deity
-                    bestWeight = weight
-                endIf
-            endIf
-            j += 1
-        endWhile
-    endIf
-
-    return bestDeity
-EndFunction
-
-Bool Function IsEligibleForFormalCommitmentOffer(PDV_DeityBase deity)
-    if !UsesFormalCommitmentOffersForDeity(deity)
-        return False
-    endIf
-
-    if deity == PDV_Kyne && !IsKyneCommitmentSignalReady()
-        return False
-    endIf
-
-    if IsCommitmentRefused(deity)
-        return False
-    endIf
-
-    if IsCommitmentOffered(deity)
-        return False
-    endIf
-
-    if IsCommitmentDeclineDelayActive(deity)
-        return False
-    endIf
-
-    if GetPiety(deity) < COMMITMENT_OFFER_THRESHOLD
-        return False
-    endIf
-
-    if !HasRecentCommitmentSignalDays(deity, 2, 7)
-        return False
-    endIf
-
-    return True
-EndFunction
 
 Bool Function IsKyneCommitmentSignalReady()
     if !PDV_Kyne
         return False
     endIf
 
-    return HasRecentCommitmentSignalDays(PDV_Kyne, 2, 7)
+    return LedgerRuntime.HasRecentCommitmentSignalDays(PDV_Kyne, 2, 7)
 EndFunction
 
-Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity) || IsDaedricPactOfferEligibleDeity(deity)
-EndFunction
 
 ; Any Daedric path (a PDV_DaedricPathBase) is formal-offer-eligible regardless of origin
 ; race -- the pact is the consent gate for Champion. The Breton Hidden Art branch inside
@@ -19737,26 +15895,14 @@ Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
 
     Int baselineState = GetNordPantheonBaselineState()
     if baselineState == NORD_BASELINE_OLD_WAYS
-        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Dibella
+        return deity == PDV_Kyne || deity == PDV_Shor || deity == PDV_Tsun || deity == PDV_Stuhn || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Dibella
     elseIf baselineState == NORD_BASELINE_NINE_DIVINES
-        return deity == PDV_Akatosh || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Zenithar || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth
+        return deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Zenithar || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Kynareth
     endIf
 
     return False
 EndFunction
 
-Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_NORD
-        return IsNordOfferEligibleDeity(deity)
-    endIf
-
-    return deity.GetStanceForRace(originRace) == deity.STANCE_NATIVE
-EndFunction
 
 Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
     if !deity
@@ -19791,7 +15937,7 @@ Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return deity == PDV_Kynareth || deity == PDV_Talos || deity == PDV_Mara || deity == PDV_Akatosh || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Julianos || deity == PDV_Dibella || deity == PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre || IsBretonHiddenArtDaedricOfferDeity(deity)
+    return deity == LedgerRuntime.PDV_Kynareth || deity == PDV_Talos || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre || IsBretonHiddenArtDaedricOfferDeity(deity)
 EndFunction
 
 Bool Function IsBretonHiddenArtDaedricOfferDeity(PDV_DeityBase deity)
@@ -19817,7 +15963,7 @@ Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)
         return IsImperialTalosOfferAllowed()
     endIf
 
-    return deity == PDV_Akatosh || deity == PDV_Mara || deity == PDV_Arkay || deity == PDV_Stendarr || deity == PDV_Zenithar || deity == PDV_Dibella || deity == PDV_Julianos || deity == PDV_Kynareth
+    return deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Zenithar || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Kynareth
 EndFunction
 
 Bool Function IsImperialTalosOfferAllowed()
@@ -19841,13 +15987,13 @@ Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)
 EndFunction
 
 Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity, Int newTier)
-    if newTier < TIER_CHAMPION
+    if newTier < LedgerRuntime.TIER_CHAMPION
         return False
     endIf
     if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return False
     endIf
-    if GetPatronState() != PATRON_STATE_ACTIVE || !_activeDeity || deity != _activeDeity
+    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity || deity != _activeDeity
         return False
     endIf
 
@@ -19866,34 +16012,21 @@ Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)
     return deity == PDV_Tuwhacca || deity == PDV_HoonDing || deity == PDV_Leki
 EndFunction
 
-Float Function GetFormalCommitmentOfferWeight(PDV_DeityBase deity)
-    if !deity
-        return -1.0
-    endIf
-
-    Float weight = GetPiety(deity)
-    weight += (GetRecentCommitmentSignalDayCount(deity, 7) as Float) * 10.0
-    if deity == PDV_Kyne
-        weight += 5.0
-    endIf
-
-    return weight
-EndFunction
 
 Function DebugDeclinePendingCommitment()
-    PDV_DeityBase pendingDeity = GetPendingCommitmentDeity()
+    PDV_DeityBase pendingDeity = LedgerRuntime.GetPendingCommitmentDeity()
     if !pendingDeity
         return
     endIf
 
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetFloatValue(pendingDeity as Form, "PDV.Commitment.DeclinedAt", Utility.GetCurrentGameTime())
-    ClearPendingCommitment()
+    LedgerRuntime.ClearPendingCommitment()
     Trace(1, "Commitment declined/postponed.")
 EndFunction
 
 Function DebugRefusePendingCommitment()
-    PDV_DeityBase pendingDeity = GetPendingCommitmentDeity()
+    PDV_DeityBase pendingDeity = LedgerRuntime.GetPendingCommitmentDeity()
     if !pendingDeity
         return
     endIf
@@ -19904,22 +16037,17 @@ Function DebugRefusePendingCommitment()
     ; silent=True writes and pins the chronicle while skipping that director cue.
     ; The ACCEPT path keeps its revelation toast + sound.
     SurfaceTransition("offer", pendingDeity.DeityName, "refuse", pendingDeity.DeityIndex, "absence", False, True, True)
-    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", BuildCommitmentOfferRefuseToastLine(pendingDeity), "")
+    SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "warning", LedgerRuntime.BuildCommitmentOfferRefuseToastLine(pendingDeity), "")
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 1)
     StorageUtil.SetIntValue(None, "PDV.Commitment.Rupture", 1)
-    ClearPendingCommitment()
+    LedgerRuntime.ClearPendingCommitment()
     Trace(1, "Commitment refused.")
 EndFunction
 
 Function DebugRunNeglectPass()
-    RunDawnApplySpellAndNeglectLayers()
+    LedgerRuntime.RunDawnApplySpellAndNeglectLayers()
 EndFunction
 
-Function ClearPendingCommitment()
-    StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", -1)
-    StorageUtil.SetFormValue(None, "PDV.Commitment.PendingDeityForm", None)
-    StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", 0.0)
-EndFunction
 
 ; ===== Daedric pact-consent debug harness (Sanguine test subject) =====
 ; Deterministic MCM smoke for the 1.5.0e pact-consent gate. Sanguine is the
@@ -19943,13 +16071,13 @@ Function DebugSeedSanguineOfferReadyCore()
     if !sanguinePath
         return
     endIf
-    sanguinePath.SetStoredPiety(COMMITMENT_OFFER_THRESHOLD, "mcm_consent_seed")
+    sanguinePath.SetStoredPiety(LedgerRuntime.COMMITMENT_OFFER_THRESHOLD, "mcm_consent_seed")
     DebugSeedCommitmentSignalDaysForDeity(sanguinePath)
     Form sanguineForm = sanguinePath as Form
     StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Refused", 0)
     StorageUtil.SetFloatValue(sanguineForm, "PDV.Commitment.DeclinedAt", 0.0)
-    ClearPendingCommitment()
+    LedgerRuntime.ClearPendingCommitment()
     sanguinePath.SetDaedricPactConsent(False)
     sanguinePath.ClearLiveDaedricPactSpells()
     StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
@@ -19973,13 +16101,13 @@ String Function DebugSeedSanguineOfferReady()
 EndFunction
 
 String Function DebugEvaluateConsentOfferReport()
-    Int pendingBefore = GetPendingCommitmentDeityIndex()
-    EvaluateFormalCommitmentOffer()
-    Int pendingAfter = GetPendingCommitmentDeityIndex()
+    Int pendingBefore = LedgerRuntime.GetPendingCommitmentDeityIndex()
+    LedgerRuntime.EvaluateFormalCommitmentOffer()
+    Int pendingAfter = LedgerRuntime.GetPendingCommitmentDeityIndex()
     if pendingAfter < 0
-        return "Evaluate: no commitment offer fired (pending none). Patron state=" + GetPatronStateLabel() + "."
+        return "Evaluate: no commitment offer fired (pending none). Patron state=" + LedgerRuntime.GetPatronStateLabel() + "."
     endIf
-    PDV_DeityBase pendingDeity = GetDeityByIndex(pendingAfter)
+    PDV_DeityBase pendingDeity = LedgerRuntime.GetDeityByIndex(pendingAfter)
     String pendingName = "index " + pendingAfter
     if pendingDeity
         pendingName = pendingDeity.DeityName
@@ -19988,17 +16116,17 @@ String Function DebugEvaluateConsentOfferReport()
 EndFunction
 
 String Function DebugConsentDivinePatronThenRaiseSanguine()
-    if !PDV_Akatosh
+    if !LedgerRuntime.PDV_Akatosh
         return "PDV_Akatosh is not wired; cannot set a divine patron."
     endIf
     ; A divine patron must suppress the Daedric pact offer and survive the raise.
-    SetActiveDeity(PDV_Akatosh, True)
+    LedgerRuntime.SetActiveDeity(LedgerRuntime.PDV_Akatosh, True)
     DebugSeedSanguineOfferReadyCore()
-    EvaluateFormalCommitmentOffer()
-    Int pendingAfter = GetPendingCommitmentDeityIndex()
+    LedgerRuntime.EvaluateFormalCommitmentOffer()
+    Int pendingAfter = LedgerRuntime.GetPendingCommitmentDeityIndex()
     String pendingLabel = "none"
     if pendingAfter >= 0
-        PDV_DeityBase pendingDeity = GetDeityByIndex(pendingAfter)
+        PDV_DeityBase pendingDeity = LedgerRuntime.GetDeityByIndex(pendingAfter)
         if pendingDeity
             pendingLabel = pendingDeity.DeityName
         else
@@ -20009,7 +16137,7 @@ String Function DebugConsentDivinePatronThenRaiseSanguine()
     if _activeDeity
         patronLabel = _activeDeity.DeityName
     endIf
-    return "Divine patron=" + patronLabel + " (state " + GetPatronStateLabel() + "); Sanguine raised to offer-ready; offer pending=" + pendingLabel + " (expect none -> suppressed)."
+    return "Divine patron=" + patronLabel + " (state " + LedgerRuntime.GetPatronStateLabel() + "); Sanguine raised to offer-ready; offer pending=" + pendingLabel + " (expect none -> suppressed)."
 EndFunction
 
 String Function DebugFireSanguineAlcoholTwice()
@@ -20031,7 +16159,7 @@ String Function DebugForceUnconsentedPactThenMigrate()
         return "Sanguine path is not available."
     endIf
     ; Reproduce the pre-consent defect: an ACTIVE pact with no recorded consent.
-    sanguinePath.SetStoredPiety(COMMITMENT_OFFER_THRESHOLD, "mcm_consent_unconsented")
+    sanguinePath.SetStoredPiety(LedgerRuntime.COMMITMENT_OFFER_THRESHOLD, "mcm_consent_unconsented")
     sanguinePath.SetDaedricPactConsent(False)
     sanguinePath.MakeActiveDaedricPact()
     sanguinePath.SetDaedricPactConsent(False)
@@ -20043,175 +16171,17 @@ String Function DebugForceUnconsentedPactThenMigrate()
     return "Un-consented pact forced (active=" + DebugYesNo(activeBefore) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(pietyBefore) + "). After migrate: activePact=" + DebugYesNo(sanguinePath.IsActiveDaedricPact()) + " (expect N), piety=" + PDV_DevotionRules.FormatTwoDecimals(sanguinePath.GetStoredPiety()) + " (preserved), consentSchema=" + StorageUtil.GetIntValue(None, "PDV.Daedric.ConsentSchema") + "."
 EndFunction
 
-Int Function GetPendingCommitmentDeityIndex()
-    return StorageUtil.GetIntValue(None, "PDV.Commitment.PendingDeityIndex")
-EndFunction
-
-PDV_DeityBase Function GetPendingCommitmentDeity()
-    Form pendingForm = StorageUtil.GetFormValue(None, "PDV.Commitment.PendingDeityForm")
-    if pendingForm
-        return pendingForm as PDV_DeityBase
-    endIf
-
-    Int deityIndex = GetPendingCommitmentDeityIndex()
-    if deityIndex < 0
-        return None
-    endIf
-
-    return GetDeityByIndex(deityIndex)
-EndFunction
-
-Bool Function IsCommitmentOffered(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    return StorageUtil.GetIntValue(deity as Form, "PDV.Commitment.Offered") == 1
-EndFunction
-
-Bool Function IsCommitmentDeclineDelayActive(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    Float declinedAt = StorageUtil.GetFloatValue(deity as Form, "PDV.Commitment.DeclinedAt")
-    if declinedAt <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - declinedAt) < COMMITMENT_DECLINE_DELAY_DAYS
-EndFunction
-
-Bool Function IsCommitmentRefused(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    return StorageUtil.GetIntValue(deity as Form, "PDV.Commitment.Refused") == 1
-EndFunction
-
-Function RecordCommitmentSignalDay(PDV_DeityBase deity)
-    if !deity
-        return
-    endIf
-
-    Form deityForm = deity as Form
-    Int currentDay = Utility.GetCurrentGameTime() as Int
-    Int encodedDay = currentDay + 1
-    Int latestDay = StorageUtil.GetIntValue(deityForm, "PDV.Commitment.SignalLatestDay")
-    Int previousDay = StorageUtil.GetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay")
-
-    if latestDay == encodedDay
-        return
-    endIf
-
-    if !PDV_DevotionRules.IsEncodedDayWithinWindow(latestDay, currentDay, 7)
-        latestDay = 0
-        previousDay = 0
-    elseIf !PDV_DevotionRules.IsEncodedDayWithinWindow(previousDay, currentDay, 7)
-        previousDay = 0
-    endIf
-
-    if latestDay > 0
-        previousDay = latestDay
-    endIf
-
-    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalLatestDay", encodedDay)
-    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay", previousDay)
-EndFunction
-
-Bool Function HasRecentCommitmentSignalDays(PDV_DeityBase deity, Int requiredCount, Int windowDays)
-    return GetRecentCommitmentSignalDayCount(deity, windowDays) >= requiredCount
-EndFunction
-
-Int Function GetRecentCommitmentSignalDayCount(PDV_DeityBase deity, Int windowDays)
-    if !deity
-        return 0
-    endIf
-
-    Form deityForm = deity as Form
-    Int currentDay = Utility.GetCurrentGameTime() as Int
-    Int latestDay = StorageUtil.GetIntValue(deityForm, "PDV.Commitment.SignalLatestDay")
-    Int previousDay = StorageUtil.GetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay")
-    Int count = 0
-
-    if PDV_DevotionRules.IsEncodedDayWithinWindow(latestDay, currentDay, windowDays)
-        count += 1
-    endIf
-
-    if previousDay != latestDay && PDV_DevotionRules.IsEncodedDayWithinWindow(previousDay, currentDay, windowDays)
-        count += 1
-    endIf
-
-    if count < 2 && StorageUtil.GetIntValue(deityForm, "PDV.Commitment.DebugSeedActive") == 1
-        Int debugSeedDay = StorageUtil.GetIntValue(deityForm, "PDV.Commitment.DebugSeedDay")
-        Int debugDayDelta = currentDay - debugSeedDay
-        if debugDayDelta >= 0 && debugDayDelta < windowDays
-            count = 2
-        endIf
-    endIf
-
-    return count
-EndFunction
 
 
-Bool Function ShouldBypassFormalCommitmentOffers()
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == ORIGIN_NORD && IsNordVampireSuppressed()
-        return True
-    endIf
 
-    return originRace == ORIGIN_KHAJIIT || originRace == ORIGIN_BOSMER
-EndFunction
 
-Function HandleCurseStateRefresh(String reason)
-    if !PDV_CurseStateService
-        return
-    endIf
 
-    Int oldState = PDV_CurseStateService.GetCurseState()
-    PDV_CurseStateService.RefreshFromPlayerState()
-    Int newState = PDV_CurseStateService.GetCurseState()
 
-    if oldState != newState
-        HandleCurseStateTransition(oldState, newState, reason)
-    else
-        if GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
-            RefreshArgonianHistPosture(reason)
-        endIf
-        if PDV_HircinePath
-            PDV_HircinePath.UpdateResidueRecovery()
-            DrainHircineResiduePrismaToasts()
-        endIf
-    endIf
-EndFunction
 
-Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
-    StorageUtil.SetIntValue(None, "PDV.Curse.State", newState)
-    StorageUtil.SetFloatValue(None, "PDV.Curse.LastTransitionAt", Utility.GetCurrentGameTime())
-    StorageUtil.SetStringValue(None, "PDV.Curse.LastTransitionReason", reason)
 
-    Bool suppressOutputs = IsCurseStateLoadReconciliation(reason)
-    Bool previousSuppress = _suppressCurseTransitionOutputs
-    _suppressCurseTransitionOutputs = suppressOutputs
-    _raceCurseSurfaceShown = False
-    ApplyCurseRaceHandlers(oldState, newState, reason)
-    _suppressCurseTransitionOutputs = previousSuppress
 
-    ; Re-sync the reward/neglect layer immediately so a curse onset/cure applies or
-    ; reverts the race neglect ability now, instead of waiting for the next dawn/re-sync
-    ; tick. With Recover-flagged neglect MGEFs, cure cleanly restores the actor value.
-    SyncFirstTierRaceRewardRuntime()
 
-    Trace(1, "Curse transition " + oldState + " -> " + newState + " (" + reason + ")")
-    if suppressOutputs
-        Trace(2, "Curse transition surfaced silently during load reconciliation.")
-    else
-        SendPrismaCurseToast(oldState, newState)
-        SurfaceCurseTransitionDiegetic(oldState, newState)
-    endIf
-    RequestPanelRefresh()
-EndFunction
+
 
 Bool Function IsCurseStateLoadReconciliation(String reason)
     return reason == "eventbus_Load" || reason == "eventbus_alias_init"
@@ -20225,17 +16195,6 @@ EndFunction
    This re-points the mirror at the service's live value without re-firing the race
    handlers, which is what a caller that has just RESTORED a state wants: the state did
    not really change, so no onset should be surfaced a second time. /;
-Function ResyncCurseStateMirror(String reason)
-    if !PDV_CurseStateService
-        return
-    endIf
-    Int liveState = PDV_CurseStateService.GetCurseState()
-    if StorageUtil.GetIntValue(None, "PDV.Curse.State") == liveState
-        return
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Curse.State", liveState)
-    Trace(1, "Curse mirror re-synced to " + liveState + " (" + reason + ")")
-EndFunction
 
 ; Derive a typed "curse" Prisma event from an old-to-new curse-state transition.
 ; Symbol names (curse-vampire, curse-werewolf) fall back to "journal" until
@@ -20676,7 +16635,7 @@ Function DrainHircineRenunciationJournal()
 EndFunction
 
 Function QueueDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier, Int newTier, String reason)
-    if !path || newTier <= TIER_NONE
+    if !path || newTier <= LedgerRuntime.TIER_NONE
         return
     endIf
 
@@ -20692,7 +16651,7 @@ Function QueueDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier
 EndFunction
 
 Function QueueDaedricMilestoneMcmReplay(PDV_DaedricPathBase path, Int oldTier, Int newTier, String reason)
-    if !path || newTier <= TIER_NONE
+    if !path || newTier <= LedgerRuntime.TIER_NONE
         return
     endIf
 
@@ -20743,7 +16702,7 @@ Function ProcessQueuedDaedricMilestonePresentation()
     _pendingDaedricMilestoneDelayTicks = 0
 
     Int currentTier = path.GetStoredTier()
-    if currentTier <= TIER_NONE
+    if currentTier <= LedgerRuntime.TIER_NONE
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] Daedric milestone queue skipped: " + path.DeityName + " has no active tier (" + reason + ")")
         endIf
@@ -20768,23 +16727,23 @@ Function ProcessQueuedDaedricMilestonePresentation()
 EndFunction
 
 Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier, Int newTier, Bool replayChampionOffer)
-    if !path || newTier <= oldTier || newTier <= TIER_NONE
+    if !path || newTier <= oldTier || newTier <= LedgerRuntime.TIER_NONE
         return
     endIf
 
-    if replayChampionOffer && newTier == TIER_CHAMPION
+    if replayChampionOffer && newTier == LedgerRuntime.TIER_CHAMPION
         if !ReplayConcreteDaedricChampionOffer(path, oldTier, newTier)
             return
         endIf
-        SyncFirstTierRaceRewardRuntime()
-        if path.GetStoredTier() < TIER_CHAMPION
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
+        if path.GetStoredTier() < LedgerRuntime.TIER_CHAMPION
             if GetDebugLevel() >= 1
                 Debug.Trace("[PDV] Daedric milestone presentation skipped after Champion decline: " + path.DeityName)
             endIf
             return
         endIf
     else
-        SyncFirstTierRaceRewardRuntime()
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     endIf
 
     String princeName = path.DeityName
@@ -20808,7 +16767,7 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
     ; Surface the Daedric tier gain in the Book of Days like a patron tier-up
     ; (tone tier.reach -> "Favor deepened"/good; Champion pinned). The toast already
     ; fired above; this adds the persistent journal entry. PLACEHOLDER copy.
-    AppendBookOfDaysEntry(princeName + " names you " + tierLabel + ".", Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, newTier >= TIER_CHAMPION)
+    AppendBookOfDaysEntry(princeName + " names you " + tierLabel + ".", Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, newTier >= LedgerRuntime.TIER_CHAMPION)
     StorageUtil.SetFormValue(None, "PDV.Daedric.LastMilestoneJournalPath", path.GetDeityForm())
     StorageUtil.SetFloatValue(None, "PDV.Daedric.LastMilestoneJournalTime", Utility.GetCurrentGameTime())
 EndFunction
@@ -20845,101 +16804,101 @@ EndFunction
 ; Contract-derived Daedric milestone copy. Source: PDV_DaedricPrinceRecordContracts.json.
 
 String Function GetDaedricMilestoneFlavor(String princeName, Int tierValue)
-    if (princeName == "Boethiah") && tierValue == TIER_SEEKER
+    if (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Boethiah marks the seeker of trials."
-    elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Boethiah's trial momentum is yours."
-    elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Boethiah names you proven."
-    elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Azura opens the threshold a little."
-    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Azura's twilight is yours."
-    elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Azura names you her seer."
-    elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Vaermina's touch opens the dream-path."
-    elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Vaermina's nightmare deepens."
-    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Vaermina names you her nightmare-walker."
-    elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Meridia's light stirs in you."
-    elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Meridia's radiance is yours in full."
-    elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Meridia names you her cleansing blade."
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Molag Bal's domination-edge settles in you."
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "The grip deepens."
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "You carry the full weight of Molag Bal's domination."
-    elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Mephala spins you a first thread."
-    elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Mephala's web is yours to read."
-    elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Mephala names you of the web."
-    elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Malacath hardens the outcast."
-    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Malacath's endurance is yours."
-    elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Malacath names you of the spurned-and-strong."
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Dagon's edge settles in you."
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Dagon's ruin deepens in you."
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Dagon names you his ruin made walking."
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Sheogorath's absurdity opens a crack."
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Sheogorath's disruption deepens."
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Sheogorath names you the Mad God's own."
-    elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Namira's darkness settles around you."
-    elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Namira's outcast fellowship deepens."
-    elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Namira names you of the outcast faithful."
-    elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Sanguine's ease settles in you."
-    elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Sanguine's indulgence deepens."
-    elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Sanguine names you his own."
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Vile's transactional edge is yours."
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Vile's contract deepens."
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Vile names you his preferred client."
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Mora's archive opens a corner."
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Mora's collection deepens in you."
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Mora names you archivist."
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Shadow luck covers you."
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Nocturnal's shade deepens."
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Nocturnal's debt runs in your favor."
-    elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Peryite's resilience settles in you."
-    elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Peryite's imposed order deepens."
-    elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Peryite names you keeper of the lowest order."
-    elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Hircine's hunt-sense is in you."
-    elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "The hunt runs deeper now."
-    elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "You see the whole arc of the hunt -- target, approach, kill, clean territory."
     endIf
 
@@ -20947,101 +16906,101 @@ String Function GetDaedricMilestoneFlavor(String princeName, Int tierValue)
 EndFunction
 
 String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
-    if (princeName == "Boethiah") && tierValue == TIER_SEEKER
+    if (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 One-handed"
-    elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+25 Armor rating"
-    elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+35 Armor rating"
-    elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+15% Magic resistance"
-    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+25 Magicka"
-    elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+35 Magicka"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Illusion"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 Sneak"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 Sneak"
-    elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Restoration"
-    elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+25% Disease resistance"
-    elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+35% Disease resistance"
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Speech"
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 Illusion"
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 Illusion"
-    elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Sneak"
-    elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 Pickpocket"
-    elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 Pickpocket"
-    elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+15 Armor rating"
-    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 Two-handed"
-    elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 Two-handed"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Destruction"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 One-handed"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 One-handed"
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Illusion"
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+25 Magicka"
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+35 Magicka"
-    elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_SEEKER
         return "Feeding restores Health and Stamina"
-    elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "Feeding restores Health and Stamina"
-    elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "Feeding restores Health and Stamina"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+15 Stamina"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 Speech"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 Speech"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Speech"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+25 Carry weight"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+35 Carry weight"
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Alteration"
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+25 Magicka"
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+20 Alteration; +20 Magicka"
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+10 Sneak"
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 Lockpicking"
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 Lockpicking"
-    elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+15% Disease resistance"
-    elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+25 Health"
-    elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+35 Health"
-    elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_SEEKER
         return "+15 Stamina"
-    elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "+18 Sneak"
-    elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "+25 Sneak"
     endIf
 
@@ -21049,101 +17008,101 @@ String Function GetDaedricBoonMechanicText(String princeName, Int tierValue)
 EndFunction
 
 String Function GetDaedricPriceMechanicText(String princeName, Int tierValue)
-    if (princeName == "Boethiah") && tierValue == TIER_SEEKER
+    if (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Speech"
-    elseIf (princeName == "Boethiah") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-18 Speech"
-    elseIf (princeName == "Boethiah") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Boethiah") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-25 Speech"
-    elseIf (princeName == "Azura") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Stamina"
-    elseIf (princeName == "Azura") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Stamina"
-    elseIf (princeName == "Azura") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Azura") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Stamina"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Health"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Health"
-    elseIf (princeName == "Vaermina") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Vaermina") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Health"
-    elseIf (princeName == "Meridia") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Illusion"
-    elseIf (princeName == "Meridia") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-18 Illusion"
-    elseIf (princeName == "Meridia") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Meridia") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-25 Illusion"
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Health"
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Health"
-    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Molag Bal" || princeName == "Molag") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Health"
-    elseIf (princeName == "Mephala") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Speech"
-    elseIf (princeName == "Mephala") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-18 Speech"
-    elseIf (princeName == "Mephala") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Mephala") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-25 Speech"
-    elseIf (princeName == "Malacath") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-4% Movement speed"
-    elseIf (princeName == "Malacath") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-7% Movement speed"
-    elseIf (princeName == "Malacath") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Malacath") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-10% Movement speed"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Armor rating"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Armor rating"
-    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Mehrunes Dagon" || princeName == "Dagon") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Armor rating"
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Restoration"
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-18 Restoration"
-    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Sheogorath" || princeName == "Sheo") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-25 Restoration"
-    elseIf (princeName == "Namira") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Speech"
-    elseIf (princeName == "Namira") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-18 Speech"
-    elseIf (princeName == "Namira") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Namira") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-25 Speech"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Magicka"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Magicka"
-    elseIf (princeName == "Sanguine") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Sanguine") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Magicka"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Magicka"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Magicka"
-    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Clavicus Vile" || princeName == "Vile") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Magicka"
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Stamina"
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Stamina"
-    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Hermaeus Mora" || princeName == "Mora") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Stamina"
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Restoration"
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-18 Restoration"
-    elseIf (princeName == "Nocturnal") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Nocturnal") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-25 Restoration"
-    elseIf (princeName == "Peryite") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Stamina"
-    elseIf (princeName == "Peryite") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Stamina"
-    elseIf (princeName == "Peryite") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Peryite") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Stamina"
-    elseIf (princeName == "Hircine") && tierValue == TIER_SEEKER
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_SEEKER
         return "-10 Health"
-    elseIf (princeName == "Hircine") && tierValue == TIER_DEVOTED
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_DEVOTED
         return "-20 Health"
-    elseIf (princeName == "Hircine") && tierValue == TIER_CHAMPION
+    elseIf (princeName == "Hircine") && tierValue == LedgerRuntime.TIER_CHAMPION
         return "-30 Health"
     endIf
 
@@ -21167,42 +17126,6 @@ String Function GetKhajiitFocusSymbol(Int focusValue)
     return "lunar"
 EndFunction
 
-Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
-    Int originRace = GetPlayerOriginRaceIndex()
-    Bool curseActive = newState != 0
-
-    if originRace == ORIGIN_BOSMER
-        StorageUtil.SetIntValue(None, "PDV.Curse.Bosmer.RoutePressure", PDV_DevotionRules.BoolToInt(curseActive))
-    elseIf originRace == ORIGIN_BRETON
-        ApplyBretonCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_DUNMER
-        ApplyDunmerCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_ALTMER
-        ApplyAltmerCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_ARGONIAN
-        ApplyArgonianCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_IMPERIAL
-        ApplyImperialCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_ORC
-        ApplyOrcCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_REDGUARD
-        ApplyRedguardCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_KHAJIIT
-        ApplyKhajiitCurseHandlers(oldState, newState, reason)
-    elseIf originRace == ORIGIN_NORD
-        ApplyNordCurseHandlers(oldState, newState, reason)
-        if PDV_HircinePath
-            if !_suppressCurseTransitionOutputs
-                PDV_HircinePath.HandleCurseTransition(oldState, newState, reason)
-                if oldState != 1 && newState == 1
-                    AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now.", Utility.GetCurrentGameTime() as Int, "curse.onset", "hircine", False, 3)
-                endIf
-                PDV_HircinePath.UpdateResidueRecovery()
-                DrainHircineResiduePrismaToasts()
-            endIf
-        endIf
-    endIf
-EndFunction
 
 Function ApplyBretonCurseHandlers(Int oldState, Int newState, String reason)
     Bool curseActive = newState != 0
@@ -21266,7 +17189,7 @@ Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileScar", 1)
         StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 0)
         FavorRuntime.ClearActiveFavor("altmer_vampire")
-        ClearPendingCommitment()
+        LedgerRuntime.ClearPendingCommitment()
         if StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown") != 1
             ShowAltmerMessage(PDV_Msg_Altmer_VampireExiledPath_Entry, "Auri-El is closed while you flee the sun. What remains is exile: a narrow discipline, never a full return.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown", 1)
@@ -21276,7 +17199,7 @@ Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 0)
         StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 1)
         FavorRuntime.ClearActiveFavor("altmer_werewolf")
-        ClearPendingCommitment()
+        LedgerRuntime.ClearPendingCommitment()
         if StorageUtil.GetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown") != 1
             ShowAltmerMessage(PDV_Msg_Altmer_CurseState_WerewolfHardHalt, "The whole of Altmer faith is to become spirit again. You have become a beast. Devotion stops here.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown", 1)
@@ -21353,7 +17276,7 @@ Function ApplyImperialCurseHandlers(Int oldState, Int newState, String reason)
             PDV_ImperialAncestorSubstrate.SetMetric(0.0, "vampire_onset")
             PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
         endIf
-        StorageUtil.SetFloatValue(None, GetBroadPantheonScratchKey(BROAD_PANTHEON_IMPERIAL), 0.0)
+        StorageUtil.SetFloatValue(None, LedgerRuntime.GetBroadPantheonScratchKey(LedgerRuntime.BROAD_PANTHEON_IMPERIAL), 0.0)
         FavorRuntime.ClearActiveFavor("imperial_vampire")
     elseIf newState == 1
         ; Werewolf strains but does not halt the civic path the way undeath does.
@@ -21367,7 +17290,7 @@ Function ApplyImperialCurseHandlers(Int oldState, Int newState, String reason)
     else
         StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
     endIf
-    SyncBroadPantheonRewards(Game.GetPlayer())
+    LedgerRuntime.SyncBroadPantheonRewards(Game.GetPlayer())
     SyncImperialRewards(Game.GetPlayer())
 EndFunction
 
@@ -21450,7 +17373,7 @@ Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
         StorageUtil.SetIntValue(None, "PDV.Nord.VampireScar", 1)
         StorageUtil.SetIntValue(None, "PDV.Nord.VampireCureFeedbackShown", 0)
         FavorRuntime.ClearActiveFavor("nord_vampire")
-        ClearPendingCommitment()
+        LedgerRuntime.ClearPendingCommitment()
         if StorageUtil.GetIntValue(None, "PDV.Nord.VampireFeedbackShown") != 1
             ShowNordMessage(PDV_Msg_Nord_CurseState_VampireOnset, "Sovngarde is closed while the thirst remains. Cure the curse, and the scar will still be remembered.", suppressModal)
             StorageUtil.SetIntValue(None, "PDV.Nord.VampireFeedbackShown", 1)
@@ -21858,7 +17781,7 @@ Function ApplyBretonInitialChoice(Int traditionValue, String reason)
         AppendBookOfDaysEntry(BuildStartupRoadJournalLine(traditionLabel), Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(traditionDeity), True, 3, "", True)
         SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
     endIf
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
 EndFunction
@@ -21872,7 +17795,7 @@ Function ApplyRedguardInitialChoice(Int sectValue, String reason)
         ShowRedguardSectEntry(normalized)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Redguard.SetupComplete", 1)
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
 EndFunction
@@ -21888,9 +17811,9 @@ Function ApplyOrcInitialChoice(Int modeValue, String reason)
     ; reachable in normal play; without this the whole Malacath progression was a dead no-op.
     ; Owner ruling 2026-06-27.
     if PDV_Malacath
-        SetActiveDeity(PDV_Malacath)
+        LedgerRuntime.SetActiveDeity(PDV_Malacath)
     endIf
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
 EndFunction
@@ -21903,13 +17826,13 @@ Function ApplyNordInitialChoice(Int baselineValue, String reason)
         PDV_NordPantheonBaselineTrack.SetState(normalized, reason)
     endIf
 
-    SetBroadWorship()
+    LedgerRuntime.SetBroadWorship()
     String baselineLabel = "Old Ways"
     if normalized == NORD_BASELINE_NINE_DIVINES
         baselineLabel = "Nine Divines"
     endIf
     AppendBookOfDaysEntry(BuildStartupRoadJournalLine(baselineLabel), Utility.GetCurrentGameTime() as Int, "reorientation", "journal", True, 3, "", True)
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
 EndFunction
@@ -21962,10 +17885,10 @@ Function DecayBretonDruidicStandingAtDawn()
 
     ; Once-per-dawn guard. fix-plan 4.2: the day+1 encoding already dodged the day-0
     ; self-suppression trap, but on the raw-midnight day -- now the actual dawn day.
-    if ReadZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay") == (GetDevotionalDay() + 2)
+    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay") == (LedgerRuntime.GetDevotionalDay() + 2)
         return
     endIf
-    WriteZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay")
+    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay")
 
     Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
     if standingValue <= 0
@@ -22066,7 +17989,7 @@ Int Function ConsumeBretonPracticePointBudget(Int requestedPoints)
     endIf
 
     ; fix-plan 4.2: the practice-point budget is a daily cap; devotional day.
-    Int today = GetDevotionalDay() + 2
+    Int today = LedgerRuntime.GetDevotionalDay() + 2
     Int budgetDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
     if budgetDay != today
         StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", today)
@@ -22128,7 +18051,7 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
     if _qrQueueTransactionActive
         _qrQueueNeedsBretonRewardSync = True
     else
-        SyncFirstTierRaceRewardRuntime()
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         RequestPanelRefresh()
     endIf
     Trace(2, "Breton practice pulse " + traditionValue + " +" + appliedPoints + " from " + sourceKey + ": " + reason)
@@ -22165,7 +18088,7 @@ Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, 
     if _qrQueueTransactionActive
         _qrQueueNeedsBretonRewardSync = True
     else
-        SyncFirstTierRaceRewardRuntime()
+        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         RequestPanelRefresh()
     endIf
     Trace(2, "Breton practice pressure " + traditionValue + " from " + sourceKey + ": " + reason)
@@ -22198,8 +18121,8 @@ Function HandleBretonKnightlyVow(String reason)
         return
     endIf
 
-    if PDV_Stendarr
-        AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
+    if LedgerRuntime.PDV_Stendarr
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Stendarr, LedgerRuntime.PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
     endIf
     if !AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_CURATED_POINTS, "handler_knightly_vow", reason)
         MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_KNIGHTS_ROAD, "handler_knightly_vow", reason)
@@ -22222,10 +18145,10 @@ Function HandleBretonHiddenArtExposure(String reason)
     endIf
 
     if PDV_Magnus
-        AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
     endIf
-    if PDV_Mara && PDV_DevotionRules.StringContainsToken(reason, "home")
-        AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
+    if LedgerRuntime.PDV_Mara && PDV_DevotionRules.StringContainsToken(reason, "home")
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
     Bool practiceAwarded = AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_CURATED_POINTS, "handler_hidden_art_exposure", reason)
     if !practiceAwarded
@@ -22276,7 +18199,7 @@ Function HandleBretonGreenWayStanding(String reason)
     if PDV_Yffre
         ; Breton-voiced Green Way signal; the Bosmer Living Story signal stays
         ; Bosmer-only so driver rows read in the right tradition's voice.
-        AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_GREEN_WAY, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_GREEN_WAY, None, multiplier)
     endIf
     if !AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, BRETON_PRACTICE_CURATED_POINTS, "handler_green_way_standing", reason)
         MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_GREEN_WAY, "handler_green_way_standing", reason)
@@ -22397,7 +18320,7 @@ Function SurfaceDunmerDeviationPriceNotice()
     ; fix-plan 4.2: one notice per devotional day (the journal line above keeps the
     ; wall-clock date on purpose -- that is a display timestamp, not a cap).
     String toastKey = "PDV.Toast.DunmerDeviationPrice.Day"
-    Int toastDayStamp = GetDevotionalDay() + 2
+    Int toastDayStamp = LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, toastKey, -1) != toastDayStamp
         StorageUtil.SetIntValue(None, toastKey, toastDayStamp)
         SendPrismaToast(symbolName, "warning", "Reclamation strained", line)
@@ -22416,7 +18339,7 @@ Bool Function TryAwardDunmerTwilightWindowSignal(String reason)
     endIf
 
     ; fix-plan 4.2: one rite per window per devotional day.
-    Int dayIndex = GetDevotionalDay() + 2
+    Int dayIndex = LedgerRuntime.GetDevotionalDay() + 2
     String windowLabel = GetDunmerTwilightWindowLabel(windowValue)
     String dayKey = "PDV.Signal.DunmerTwilight." + windowLabel + ".Day"
     if StorageUtil.GetIntValue(None, dayKey, -1) == dayIndex
@@ -22429,7 +18352,7 @@ Bool Function TryAwardDunmerTwilightWindowSignal(String reason)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastTwilightWindow", windowLabel)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastTwilightReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Dunmer.LastTwilightTime", nowTime)
-    AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DUNMER_TWILIGHT_RITE, None)
+    LedgerRuntime.AwardCuratedSignal(PDV_Azura, PDV_Azura.SIGNAL_DUNMER_TWILIGHT_RITE, None)
     Trace(2, "Dunmer " + windowLabel + " twilight rite routed: " + reason)
     return True
 EndFunction
@@ -22469,7 +18392,7 @@ String Function GetDunmerTwilightWindowLabel(Int windowValue)
 EndFunction
 
 Function AwardActiveDunmerReclamationMemorySignal()
-    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || GetPatronState() != PATRON_STATE_ACTIVE
+    if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER || LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE
         return
     endIf
 
@@ -22479,7 +18402,7 @@ Function AwardActiveDunmerReclamationMemorySignal()
     ; own 0.7^n decay separately; this stops the pulse from stacking linearly.
     ; fix-plan 4.2: the comment above already says "once per dawn cycle" -- it now uses
     ; the dawn day boundary instead of raw midnight.
-    Int pdvAncestorMemoryDay = GetDevotionalDay() + 2
+    Int pdvAncestorMemoryDay = LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, "PDV.Signal.DunmerAncestorMemory.Day") == pdvAncestorMemoryDay
         return
     endIf
@@ -22487,11 +18410,11 @@ Function AwardActiveDunmerReclamationMemorySignal()
 
     Float layerWeight = GetDunmerCurseLayerWeight(2)
     if _activeDeity == PDV_Boethiah && PDV_Boethiah
-        AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
     elseIf _activeDeity == PDV_Mephala && PDV_Mephala
-        AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SHARED_PACT_MEMORY, None, layerWeight)
     elseIf _activeDeity == PDV_Azura && PDV_Azura
-        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, layerWeight)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, layerWeight)
     endIf
 EndFunction
 
@@ -22507,13 +18430,13 @@ Function AwardDunmerAncestorSpinePulse(Float multiplier, String reason)
         return
     endIf
 
-    Int pdvAncestorSpineDay = GetDevotionalDay() + 2
+    Int pdvAncestorSpineDay = LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, "PDV.Signal.DunmerAncestorSpine.Day") == pdvAncestorSpineDay
         return
     endIf
     StorageUtil.SetIntValue(None, "PDV.Signal.DunmerAncestorSpine.Day", pdvAncestorSpineDay)
 
-    AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_ANCESTOR_SPINE, None, multiplier)
+    LedgerRuntime.AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_ANCESTOR_SPINE, None, multiplier)
     StorageUtil.AdjustFloatValue(None, "PDV.Dunmer.AncestorSpine", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Dunmer.AncestorSpineSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastAncestorSpineReason", reason)
@@ -22522,21 +18445,21 @@ EndFunction
 
 Function AwardDunmerReclamationFocusSignal(Int focusValue, Float layerWeight)
     if focusValue == 0 && PDV_Azura
-        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_THRESHOLD_RITE, None, layerWeight)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_THRESHOLD_RITE, None, layerWeight)
     elseIf focusValue == 1 && PDV_Boethiah
-        AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RIGHTEOUS_STRUGGLE, None, layerWeight)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RIGHTEOUS_STRUGGLE, None, layerWeight)
     elseIf focusValue == 2 && PDV_Mephala
-        AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_KEPT, None, layerWeight)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_SECRET_KEPT, None, layerWeight)
     endIf
 EndFunction
 
 Function AwardDunmerDeviationPriceSignal(Float multiplier)
     if _activeDeity == PDV_Boethiah && PDV_Boethiah
-        AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Boethiah, PDV_Boethiah.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
     elseIf _activeDeity == PDV_Mephala && PDV_Mephala
-        AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Mephala, PDV_Mephala.SIGNAL_RECLAMATION_ABANDONED, None, multiplier)
     elseIf _activeDeity == PDV_Azura && PDV_Azura
-        AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Azura, PDV_Azura.SIGNAL_DESECRATION, None, multiplier)
     endIf
 EndFunction
 
@@ -22574,24 +18497,24 @@ EndFunction
 
 Function AwardImperialCivicFamilySignal(Int familyId, Float multiplier)
     if familyId == IMPERIAL_CIVIC_PUBLIC_SERVICE
-        if PDV_Akatosh
-            AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None, multiplier)
+        if LedgerRuntime.PDV_Akatosh
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Akatosh, LedgerRuntime.PDV_Akatosh.SIGNAL_CIVIC_SERVICE, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_MERCY
-        if PDV_Mara
-            AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
+        if LedgerRuntime.PDV_Mara
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_LAWFUL_ORDER
-        if PDV_Stendarr
-            AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None, multiplier)
+        if LedgerRuntime.PDV_Stendarr
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Stendarr, LedgerRuntime.PDV_Stendarr.SIGNAL_LAWFUL_ORDER, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_HONEST_WORK
-        if PDV_Zenithar
-            AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
+        if LedgerRuntime.PDV_Zenithar
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zenithar, LedgerRuntime.PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
         endIf
     elseIf familyId == IMPERIAL_CIVIC_DEATH_DUTY
-        if PDV_Arkay
-            AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
+        if LedgerRuntime.PDV_Arkay
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Arkay, LedgerRuntime.PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
         endIf
     endIf
 EndFunction
@@ -22601,22 +18524,22 @@ Function AwardImperialPatronCivicSignal(Float multiplier)
         return
     endIf
 
-    if _activeDeity == PDV_Akatosh && PDV_Akatosh
-        AwardCuratedSignalScaled(PDV_Akatosh, PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == PDV_Mara && PDV_Mara
-        AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == PDV_Arkay && PDV_Arkay
-        AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == PDV_Stendarr && PDV_Stendarr
-        AwardCuratedSignalScaled(PDV_Stendarr, PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == PDV_Zenithar && PDV_Zenithar
-        AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == PDV_Dibella && PDV_Dibella
-        AwardCuratedSignalScaled(PDV_Dibella, PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == PDV_Julianos && PDV_Julianos
-        AwardCuratedSignalScaled(PDV_Julianos, PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    elseIf _activeDeity == PDV_Kynareth && PDV_Kynareth
-        AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    if _activeDeity == LedgerRuntime.PDV_Akatosh && LedgerRuntime.PDV_Akatosh
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Akatosh, LedgerRuntime.PDV_Akatosh.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    elseIf _activeDeity == LedgerRuntime.PDV_Mara && LedgerRuntime.PDV_Mara
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    elseIf _activeDeity == LedgerRuntime.PDV_Arkay && LedgerRuntime.PDV_Arkay
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Arkay, LedgerRuntime.PDV_Arkay.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    elseIf _activeDeity == LedgerRuntime.PDV_Stendarr && LedgerRuntime.PDV_Stendarr
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Stendarr, LedgerRuntime.PDV_Stendarr.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    elseIf _activeDeity == LedgerRuntime.PDV_Zenithar && LedgerRuntime.PDV_Zenithar
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zenithar, LedgerRuntime.PDV_Zenithar.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    elseIf _activeDeity == LedgerRuntime.PDV_Dibella && LedgerRuntime.PDV_Dibella
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Dibella, LedgerRuntime.PDV_Dibella.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    elseIf _activeDeity == LedgerRuntime.PDV_Julianos && LedgerRuntime.PDV_Julianos
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Julianos, LedgerRuntime.PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
+    elseIf _activeDeity == LedgerRuntime.PDV_Kynareth && LedgerRuntime.PDV_Kynareth
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Kynareth, LedgerRuntime.PDV_Kynareth.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
     endIf
 EndFunction
 
@@ -22704,12 +18627,12 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
     if isPrivate
         StorageUtil.SetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") + 1)
         if PDV_Talos
-            AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
         endIf
     else
         StorageUtil.SetIntValue(None, "PDV.Imperial.PublicTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PublicTalosPressureCount") + 1)
         if PDV_Talos
-            AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None, multiplier)
         endIf
     endIf
 
@@ -22817,39 +18740,39 @@ Function AwardNordRouteFamilySignal(Int familyValue, Float multiplier)
         ; Kyne's curated sky-road milestone bump. Services broad Old Ways worship
         ; and a focused Kyne patron alike (direct deity award, patron-agnostic).
         if PDV_Kyne
-            AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_OLD_ORDEAL
         if PDV_Tsun
-            AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Tsun, PDV_Tsun.SIGNAL_TRIAL_ENDURED, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_OLD_HEARTH
         if PDV_Stuhn
-            AwardCuratedSignalScaled(PDV_Stuhn, PDV_Stuhn.SIGNAL_PROTECT_BOND, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Stuhn, PDV_Stuhn.SIGNAL_PROTECT_BOND, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_OLD_ANCESTOR
         if PDV_Shor
-            AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_HONORED_DEAD, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Shor, PDV_Shor.SIGNAL_HONORED_DEAD, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_OLD_TALOS || familyValue == NORD_ROUTE_NINE_TALOS
         if PDV_Talos
-            AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
+            LedgerRuntime.AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_ROAD
-        if PDV_Kynareth
-            AwardCuratedSignalScaled(PDV_Kynareth, PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
+        if LedgerRuntime.PDV_Kynareth
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Kynareth, LedgerRuntime.PDV_Kynareth.SIGNAL_OPEN_SKY, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_MERCY
-        if PDV_Mara
-            AwardCuratedSignalScaled(PDV_Mara, PDV_Mara.SIGNAL_MERCY, None, multiplier)
+        if LedgerRuntime.PDV_Mara
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_DEATH
-        if PDV_Arkay
-            AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
+        if LedgerRuntime.PDV_Arkay
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Arkay, LedgerRuntime.PDV_Arkay.SIGNAL_DEATH_DUTY, None, multiplier)
         endIf
     elseIf familyValue == NORD_ROUTE_NINE_WORK
-        if PDV_Zenithar
-            AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
+        if LedgerRuntime.PDV_Zenithar
+            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zenithar, LedgerRuntime.PDV_Zenithar.SIGNAL_HONEST_WORK, None, multiplier)
         endIf
     endIf
 EndFunction
@@ -22888,7 +18811,7 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
     ; Nord broad/focused survey + reward state should react on the accepted source itself, not wait
     ; for the next dawn pass. This is especially visible on broad Old Ways T1, which otherwise does
     ; not appear until ProcessDawn even after the third accepted source has already been read.
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     Trace(2, traceLabel + " routed: " + reason)
     return True
@@ -23243,11 +19166,11 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
         return NormalizePublicDeityDisplayText(activePact.DeityName) + " Pact"
     endIf
 
-    if _activeDeity && GetPatronState() == PATRON_STATE_ACTIVE
+    if _activeDeity && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE
         return GetPublicDeityDisplayName(_activeDeity)
     endIf
 
-    if GetPatronState() == PATRON_STATE_BROAD
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD
         return GetBroadLaneDisplayName(originRace)
     endIf
 
@@ -23357,31 +19280,31 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
     Int tierValue = 0
     Float pietyValue = 0.0
     Float championThreshold = 85.0
-    Int bretonPracticeTier = TIER_NONE
+    Int bretonPracticeTier = LedgerRuntime.TIER_NONE
     if originRace == ORIGIN_BRETON
         bretonPracticeTier = GetBretonPracticeTier(GetBretonTraditionValue())
     endIf
-    if PDV_GLO_ActiveTier
-        tierValue = PDV_GLO_ActiveTier.GetValueInt()
+    if LedgerRuntime.PDV_GLO_ActiveTier
+        tierValue = LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
     endIf
-    if PDV_GLO_ActivePiety
-        pietyValue = PDV_GLO_ActivePiety.GetValue()
+    if LedgerRuntime.PDV_GLO_ActivePiety
+        pietyValue = LedgerRuntime.PDV_GLO_ActivePiety.GetValue()
     endIf
 
     PDV_DeityBase journalCommitment = ResolveBookOfDaysStandingDeity()
-    if IsPantheonBroadPoolPresentationActive(originRace) || originRace == ORIGIN_ARGONIAN
+    if LedgerRuntime.IsPantheonBroadPoolPresentationActive(originRace) || originRace == ORIGIN_ARGONIAN
         ; A remembered prior deity must not hide the active broad pool.
         journalCommitment = None
     endIf
     if journalCommitment
         championThreshold = journalCommitment.ThresholdChampion
-        tierValue = GetTier(journalCommitment)
-        pietyValue = GetPiety(journalCommitment)
+        tierValue = LedgerRuntime.GetTier(journalCommitment)
+        pietyValue = LedgerRuntime.GetPiety(journalCommitment)
         if IsFocusedPantheonBoonSuspended()
-            tierValue = TIER_NONE
+            tierValue = LedgerRuntime.TIER_NONE
         endIf
     elseIf originRace == ORIGIN_BRETON
-        if bretonPracticeTier > TIER_NONE
+        if bretonPracticeTier > LedgerRuntime.TIER_NONE
             tierValue = bretonPracticeTier
             pietyValue = GetBretonPracticeCount(GetBretonTraditionValue()) as Float
         endIf
@@ -23391,18 +19314,18 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
         championThreshold = 75.0
     else
         Int broadTier = GetBroadLaneTierForOrigin(originRace)
-        if IsPantheonBroadPoolPresentationActive(originRace) || broadTier > TIER_NONE
+        if LedgerRuntime.IsPantheonBroadPoolPresentationActive(originRace) || broadTier > LedgerRuntime.TIER_NONE
             tierValue = broadTier
             pietyValue = GetBroadLaneStandingValue(originRace)
         endIf
     endIf
 
     String tierLabel = GetCurrentStandingLabel()
-    if journalCommitment == None && originRace == ORIGIN_BRETON && bretonPracticeTier > TIER_NONE
+    if journalCommitment == None && originRace == ORIGIN_BRETON && bretonPracticeTier > LedgerRuntime.TIER_NONE
         tierLabel = GetPublicTierBand(bretonPracticeTier)
     elseIf journalCommitment == None && originRace == ORIGIN_ARGONIAN
         tierLabel = GetArgonianCulturalPracticeLabel()
-    elseIf journalCommitment == None && (IsPantheonBroadPoolPresentationActive(originRace) || GetBroadLaneTierForOrigin(originRace) > TIER_NONE)
+    elseIf journalCommitment == None && (LedgerRuntime.IsPantheonBroadPoolPresentationActive(originRace) || GetBroadLaneTierForOrigin(originRace) > LedgerRuntime.TIER_NONE)
         tierLabel = GetBroadLaneStandingLabel(originRace, GetBroadLaneTierForOrigin(originRace))
     elseIf journalCommitment && IsFocusedPantheonBoonSuspended()
         tierLabel = "Wavering"
@@ -23875,47 +19798,47 @@ EndFunction
 
 String Function GetNordMedallionEntriesJson()
     String entries = RosterMedallionEntry("kyne", "Kyne", "god", "kyne", PDV_Kyne, "Sky, storm, hunt, and warrior-spirit.")
-    entries = entries + "," + RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", PDV_Kynareth, "The Nine Divines sky road.")
+    entries = entries + "," + RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", LedgerRuntime.PDV_Kynareth, "The Nine Divines sky road.")
     entries = entries + "," + RosterMedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, "Open defiance and human apotheosis.")
     entries = entries + "," + RosterMedallionEntry("shor", "Shor", "god", "shor", PDV_Shor, "The old king and afterlife road.")
     entries = entries + "," + RosterMedallionEntry("tsun", "Tsun", "god", "tsun", PDV_Tsun, "Trial, honor, and the threshold.")
     entries = entries + "," + RosterMedallionEntry("stuhn", "Stuhn", "god", "stuhn", PDV_Stuhn, "Mercy in war and fair ransom.")
-    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Love, hearth, and compassion.")
-    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, order, and dragon authority.")
+    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", LedgerRuntime.PDV_Mara, "Love, hearth, and compassion.")
+    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", LedgerRuntime.PDV_Akatosh, "Time, order, and dragon authority.")
     String arkayRosterName = "Arkay"
     if UsesNordOldWaysDeityNames()
         arkayRosterName = "Orkey"
     endIf
-    entries = entries + "," + RosterMedallionEntry("arkay", arkayRosterName, "god", "arkay", PDV_Arkay, "Death, burial, and proper passage.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy, justice, and protection.")
-    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", PDV_Julianos, "Law, learning, and craft of mind.")
-    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", PDV_Dibella, "Beauty, art, and embodied grace.")
-    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", PDV_Zenithar, "Work, trade, and honest craft.")
+    entries = entries + "," + RosterMedallionEntry("arkay", arkayRosterName, "god", "arkay", LedgerRuntime.PDV_Arkay, "Death, burial, and proper passage.")
+    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", LedgerRuntime.PDV_Stendarr, "Mercy, justice, and protection.")
+    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", LedgerRuntime.PDV_Julianos, "Law, learning, and craft of mind.")
+    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", LedgerRuntime.PDV_Dibella, "Beauty, art, and embodied grace.")
+    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", LedgerRuntime.PDV_Zenithar, "Work, trade, and honest craft.")
     return entries
 EndFunction
 
 String Function GetImperialMedallionEntriesJson()
-    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", PDV_Kynareth, "Road, wind, and natural order.")
-    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Love, family, and mercy.")
-    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, covenant, and empire.")
-    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", PDV_Arkay, "Life, death, and lawful burial.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy, protection, and civic virtue.")
-    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", PDV_Julianos, "Law, learning, and reason.")
-    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", PDV_Dibella, "Art, beauty, and human grace.")
-    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", PDV_Zenithar, "Work, trade, and prosperity.")
+    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", LedgerRuntime.PDV_Kynareth, "Road, wind, and natural order.")
+    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", LedgerRuntime.PDV_Mara, "Love, family, and mercy.")
+    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", LedgerRuntime.PDV_Akatosh, "Time, covenant, and empire.")
+    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", LedgerRuntime.PDV_Arkay, "Life, death, and lawful burial.")
+    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", LedgerRuntime.PDV_Stendarr, "Mercy, protection, and civic virtue.")
+    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", LedgerRuntime.PDV_Julianos, "Law, learning, and reason.")
+    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", LedgerRuntime.PDV_Dibella, "Art, beauty, and human grace.")
+    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", LedgerRuntime.PDV_Zenithar, "Work, trade, and prosperity.")
     return entries
 EndFunction
 
 String Function GetBretonMedallionEntriesJson()
-    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", PDV_Kynareth, "Sky, travel, and druidic memory.")
+    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", LedgerRuntime.PDV_Kynareth, "Sky, travel, and druidic memory.")
     entries = entries + "," + RosterMedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, "Civic defiance and Septim inheritance.")
-    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", PDV_Mara, "Household, mercy, and love.")
-    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", PDV_Akatosh, "Time, order, and covenant.")
-    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", PDV_Arkay, "Death, burial, and clean endings.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", PDV_Stendarr, "Mercy, protection, and oath.")
-    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", PDV_Julianos, "Learning, law, and formal craft.")
-    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", PDV_Dibella, "Beauty, courtliness, and grace.")
-    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", PDV_Zenithar, "Trade, craft, and honest work.")
+    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", LedgerRuntime.PDV_Mara, "Household, mercy, and love.")
+    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", LedgerRuntime.PDV_Akatosh, "Time, order, and covenant.")
+    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", LedgerRuntime.PDV_Arkay, "Death, burial, and clean endings.")
+    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", LedgerRuntime.PDV_Stendarr, "Mercy, protection, and oath.")
+    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", LedgerRuntime.PDV_Julianos, "Learning, law, and formal craft.")
+    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", LedgerRuntime.PDV_Dibella, "Beauty, courtliness, and grace.")
+    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", LedgerRuntime.PDV_Zenithar, "Trade, craft, and honest work.")
     entries = entries + "," + RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Magic, light, and hidden inheritance.")
     entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Pilgrimage, endurance, and Elven memory.")
     entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Green memory, story, and law.")
@@ -23941,7 +19864,7 @@ String Function GetBosmerNativeMedallionEntriesJson()
 EndFunction
 
 String Function GetBosmerFocusMedallionEntriesJson()
-    return RosterMedallionEntry("zen", "Z'en", "god", "zen", PDV_Zen, "Debt, toil, exchange, and obligation.")
+    return RosterMedallionEntry("zen", "Z'en", "god", "zen", LedgerRuntime.PDV_Zen, "Debt, toil, exchange, and obligation.")
 EndFunction
 
 String Function GetDunmerMedallionEntriesJson()
@@ -24039,14 +19962,14 @@ String Function MedallionEntry(String optionId, String titleText, String kindTex
 EndFunction
 
 Bool Function IsMedallionDeitySelectable(PDV_DeityBase deity)
-    if !deity || !PDV_FLST_AllDeities
+    if !deity || !LedgerRuntime.PDV_FLST_AllDeities
         return False
     endIf
 
     Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
+    Int count = LedgerRuntime.PDV_FLST_AllDeities.GetSize()
     while i < count
-        if (PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase) == deity
+        if (LedgerRuntime.PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase) == deity
             return True
         endIf
         i += 1
@@ -24059,15 +19982,15 @@ PDV_DeityBase Function GetMedallionDeityForOptionId(String optionId)
     if optionId == "kyne"
         return PDV_Kyne
     elseIf optionId == "kynareth"
-        return PDV_Kynareth
+        return LedgerRuntime.PDV_Kynareth
     elseIf optionId == "talos"
         return PDV_Talos
     elseIf optionId == "auri-el"
-        return GetDeityByName("Auri-El")
+        return LedgerRuntime.GetDeityByName("Auri-El")
     elseIf optionId == "yffre"
         return PDV_Yffre
     elseIf optionId == "zen"
-        return PDV_Zen
+        return LedgerRuntime.PDV_Zen
     elseIf optionId == "baan-dar"
         return PDV_BaanDar
     endIf
@@ -24078,13 +20001,13 @@ EndFunction
 String Function GetMedallionOptionIdForDeity(PDV_DeityBase deity)
     if deity == PDV_Kyne
         return "kyne"
-    elseIf deity == PDV_Kynareth
+    elseIf deity == LedgerRuntime.PDV_Kynareth
         return "kynareth"
     elseIf deity == PDV_Talos
         return "talos"
     elseIf deity == PDV_Yffre
         return "yffre"
-    elseIf deity == PDV_Zen
+    elseIf deity == LedgerRuntime.PDV_Zen
         return "zen"
     elseIf deity == PDV_BaanDar
         return "baan-dar"
@@ -24248,7 +20171,7 @@ Function EnterBosmerOldContract(Bool isStartupChoice, String reason)
     ApplyBosmerPathPatron(BOSMER_PATH_OLD_CONTRACT, reason)
 
     if PDV_Yffre && GetBosmerLapsedFromPact() > 0
-        AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
+        LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
     endIf
 EndFunction
 
@@ -24273,7 +20196,7 @@ Function ApplyBosmerPathPatron(Int pathState, String reason)
         return
     endIf
 
-    SetActiveDeity(deity)
+    LedgerRuntime.SetActiveDeity(deity)
     Trace(2, "Bosmer foreground patron -> " + deity.DeityName + " (" + reason + ")")
     SurfaceTransition("reorientation", GetBosmerPathLabel(), "shift", deity.DeityIndex, "turning")
 EndFunction
@@ -24282,7 +20205,7 @@ PDV_DeityBase Function GetBosmerForegroundDeity(Int pathState)
     if pathState == BOSMER_PATH_OLD_CONTRACT || pathState == BOSMER_PATH_LIVING_STORY
         return PDV_Yffre
     elseIf pathState == BOSMER_PATH_EXCHANGE
-        return PDV_Zen
+        return LedgerRuntime.PDV_Zen
     elseIf pathState == BOSMER_PATH_BANDIT_ROAD
         return PDV_BaanDar
     endIf
@@ -24341,7 +20264,7 @@ Function EvaluateBosmerForcedReckoning()
         SetBosmerGreenPactCompliance(30, "reckoning_recommit")
         StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
         if PDV_Yffre
-            AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
+            LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
         endIf
     else
         ExitBosmerOldContract(True, "reckoning_renounce")
@@ -24472,11 +20395,11 @@ Function ConfirmBosmerPendingTransition(String reason)
         SetBosmerPactBound(False, reason)
         ApplyBosmerPathPatron(pendingState, reason)
         if pendingState == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-            AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None)
-        elseIf pendingState == BOSMER_PATH_EXCHANGE && PDV_Zen
-            AwardCuratedSignal(PDV_Zen, PDV_Zen.SIGNAL_CONFIRMATION, None)
+            LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None)
+        elseIf pendingState == BOSMER_PATH_EXCHANGE && LedgerRuntime.PDV_Zen
+            LedgerRuntime.AwardCuratedSignal(LedgerRuntime.PDV_Zen, LedgerRuntime.PDV_Zen.SIGNAL_CONFIRMATION, None)
         elseIf pendingState == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-            AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_CONFIRMATION, None)
+            LedgerRuntime.AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_CONFIRMATION, None)
         endIf
     endIf
 
@@ -24608,8 +20531,8 @@ String Function OnOffForReport(Int v)
 EndFunction
 
 String Function GetExperienceModeLabelForReport()
-    if PDV_ModePresetRef
-        return PDV_ModePresetRef.GetModeLabel()
+    if LedgerRuntime.PDV_ModePresetRef
+        return LedgerRuntime.PDV_ModePresetRef.GetModeLabel()
     endIf
     return "Pilgrim's Path"
 EndFunction
@@ -24632,7 +20555,7 @@ String Function ExportDevotionReport()
     report = report + nl + "-- Versions --"
     report = report + nl + "Devotion build: " + PDV_BUILD_VERSION
     report = report + nl + "Framework schema: " + FRAMEWORK_SCHEMA_VERSION
-    report = report + nl + "Likes/dislikes: " + LIKES_DISLIKES_VERSION
+    report = report + nl + "Likes/dislikes: " + LedgerRuntime.LIKES_DISLIKES_VERSION
     report = report + nl + "Prince LD: " + PRINCE_LD_VERSION
     report = report + nl + "Daedric pact: " + DAEDRIC_PACT_VERSION
     report = report + nl + "PapyrusUtil: " + PapyrusUtil.GetVersion()
@@ -24649,11 +20572,11 @@ String Function ExportDevotionReport()
     report = report + nl + "Race: " + GetOriginRaceLabel(originRace) + " (index " + originRace + ")"
     report = report + nl + "Summary: " + GetPlayerMcmSummaryLine()
     report = report + nl + "Mode: " + GetPlayerMcmModeLine()
-    report = report + nl + "Patron: " + GetPlayerMcmPatronLine() + " | state " + GetPatronState() + " | activeIndex " + GetActiveDeityIndex()
+    report = report + nl + "Patron: " + GetPlayerMcmPatronLine() + " | state " + LedgerRuntime.GetPatronState() + " | activeIndex " + LedgerRuntime.GetActiveDeityIndex()
     report = report + nl + "Standing: " + GetPlayerMcmStandingLine()
     report = report + nl + "Curse: " + GetPlayerMcmCurseLine()
     report = report + nl + "Favor: " + FavorRuntime.GetPlayerMcmFavorLine()
-    report = report + nl + "Neglect: " + GetPlayerMcmNeglectLine()
+    report = report + nl + "Neglect: " + LedgerRuntime.GetPlayerMcmNeglectLine()
     report = report + nl + "Startup: " + GetStartupMcmLine()
     report = report + nl
     report = report + nl + "-- Survey readout --"
@@ -24662,12 +20585,12 @@ String Function ExportDevotionReport()
     report = report + nl + "-- Per-deity ledger (tier: 0 None 1 Seeker 2 Devoted 3 Champion) --"
     report = report + nl + "deity [index] | tier | piety | scratch"
 
-    Int count = GetDeityCount()
+    Int count = LedgerRuntime.GetDeityCount()
     Int i = 0
     while i < count
-        PDV_DeityBase deityEntry = GetDeityAtListIndex(i)
+        PDV_DeityBase deityEntry = LedgerRuntime.GetDeityAtListIndex(i)
         if deityEntry
-            report = report + nl + deityEntry.DeityName + " [" + deityEntry.DeityIndex + "] | " + GetTier(deityEntry) + " | " + GetPiety(deityEntry) + " | +" + GetPietyToday(deityEntry)
+            report = report + nl + deityEntry.DeityName + " [" + deityEntry.DeityIndex + "] | " + LedgerRuntime.GetTier(deityEntry) + " | " + LedgerRuntime.GetPiety(deityEntry) + " | +" + LedgerRuntime.GetPietyToday(deityEntry)
         endIf
         i += 1
     endWhile
@@ -24706,42 +20629,42 @@ EndFunction
 String Function GetSurveyDevotionText()
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace < 0
-        return AppendRecentDevotionEvents("Devotion has not settled yet. Wait a moment, then survey again.")
+        return LedgerRuntime.AppendRecentDevotionEvents("Devotion has not settled yet. Wait a moment, then survey again.")
     endIf
 
     ; Hidden Art is a layered Breton tradition: its Survey owns the base practice and
     ; exposure readout, then appends its integrated Prince through the patron sentence.
     if originRace == ORIGIN_BRETON
-        return AppendRecentDevotionEvents(GetBretonSurveyText())
+        return LedgerRuntime.AppendRecentDevotionEvents(GetBretonSurveyText())
     endIf
 
     ; Prince-wins for races without a layered pact tradition. The tier>0 guard inside
     ; GetActiveDaedricPactPath prevents a stale-pointer ghost pact.
     PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
     if pactPath
-        return AppendRecentDevotionEvents(GetDaedricSurveyText(pactPath))
+        return LedgerRuntime.AppendRecentDevotionEvents(GetDaedricSurveyText(pactPath))
     endIf
 
     if originRace != ORIGIN_NORD
         if originRace == ORIGIN_ALTMER
-            return AppendRecentDevotionEvents(GetAltmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetAltmerSurveyText())
         elseIf originRace == ORIGIN_KHAJIIT
-            return AppendRecentDevotionEvents(GetKhajiitSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetKhajiitSurveyText())
         elseIf originRace == ORIGIN_BOSMER
-            return AppendRecentDevotionEvents(GetBosmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetBosmerSurveyText())
         elseIf originRace == ORIGIN_ARGONIAN
-            return AppendRecentDevotionEvents(GetArgonianSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetArgonianSurveyText())
         elseIf originRace == ORIGIN_ORC
-            return AppendRecentDevotionEvents(GetOrcSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetOrcSurveyText())
         elseIf originRace == ORIGIN_REDGUARD
-            return AppendRecentDevotionEvents(GetRedguardSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetRedguardSurveyText())
         elseIf originRace == ORIGIN_IMPERIAL
-            return AppendRecentDevotionEvents(GetImperialSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetImperialSurveyText())
         elseIf originRace == ORIGIN_DUNMER
-            return AppendRecentDevotionEvents(GetDunmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(GetDunmerSurveyText())
         endIf
 
-        return AppendRecentDevotionEvents("Your devotion is watched. Standing: " + GetCurrentStandingBand() + ".")
+        return LedgerRuntime.AppendRecentDevotionEvents("Your devotion is watched. Standing: " + GetCurrentStandingBand() + ".")
     endIf
 
     String text = GetNordSurveyBaseText()
@@ -24750,45 +20673,11 @@ String Function GetSurveyDevotionText()
         text = text + "\n\n" + scarText
     endIf
 
-    return AppendRecentDevotionEvents(text)
+    return LedgerRuntime.AppendRecentDevotionEvents(text)
 EndFunction
 
-Function RecordRecentDevotionEvent(String line)
-    if line == ""
-        return
-    endIf
 
-    while StorageUtil.StringListCount(None, "PDV.RecentDevotionEvents") >= 8
-        StorageUtil.StringListShift(None, "PDV.RecentDevotionEvents")
-    endWhile
 
-    StorageUtil.StringListAdd(None, "PDV.RecentDevotionEvents", line, True)
-EndFunction
-
-String Function GetRecentDevotionEventsText()
-    Int count = StorageUtil.StringListCount(None, "PDV.RecentDevotionEvents")
-    if count <= 0
-        return ""
-    endIf
-
-    String text = "Recent:"
-    Int index = 0
-    while index < count
-        text = text + "\n" + StorageUtil.StringListGet(None, "PDV.RecentDevotionEvents", index)
-        index = index + 1
-    endWhile
-
-    return text
-EndFunction
-
-String Function AppendRecentDevotionEvents(String text)
-    String recent = GetRecentDevotionEventsText()
-    if recent != ""
-        return text + "\n\n" + recent
-    endIf
-
-    return text
-EndFunction
 
 String Function GetPlayerMcmSummaryLine()
     if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
@@ -24824,7 +20713,7 @@ String Function GetPlayerMcmSummaryLine()
         return "Dunmer | " + GetDunmerAncestorLayerLabel() + " | " + GetCurrentStandingLabel()
     endIf
 
-    return GetOriginRaceLabel(GetPlayerOriginRaceIndex()) + " | " + GetPatronStateLabel() + " | " + GetCurrentStandingLabel()
+    return GetOriginRaceLabel(GetPlayerOriginRaceIndex()) + " | " + LedgerRuntime.GetPatronStateLabel() + " | " + GetCurrentStandingLabel()
 EndFunction
 
 String Function GetPlayerMcmPatronLine()
@@ -24839,7 +20728,7 @@ String Function GetPlayerMcmPatronLine()
         return GetPublicDeityDisplayName(_activeDeity)
     endIf
 
-    return GetPatronStateLabel()
+    return LedgerRuntime.GetPatronStateLabel()
 EndFunction
 
 String Function GetPlayerMcmStandingLine()
@@ -24873,7 +20762,7 @@ String Function GetPlayerMcmModeLine()
         return GetDunmerAncestorLayerLabel()
     endIf
 
-    return GetPatronStateLabel()
+    return LedgerRuntime.GetPatronStateLabel()
 EndFunction
 
 String Function GetStartupMcmLine()
@@ -24901,19 +20790,6 @@ String Function GetPlayerMcmCurseLine()
 EndFunction
 
 
-String Function GetPlayerMcmNeglectLine()
-    Int activeCount = StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount")
-    if activeCount > 0
-        return "Attention needed"
-    endIf
-
-    if GetPatronState() == PATRON_STATE_ACTIVE
-        return "Steady"
-    endIf
-
-    ; "No neglect" not bare "None": the Anvil MCM font renders a lone "None" blank.
-    return "No neglect"
-EndFunction
 
 String Function GetNordSurveyBaseText()
     String band = GetCurrentStandingBand()
@@ -24922,7 +20798,7 @@ String Function GetNordSurveyBaseText()
     endIf
 
     String contextText = GetNordContextSurveyText()
-    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity
         String focusedText = "Standing: " + band + ". " + GetPublicDeityDisplayName(_activeDeity) + " names you."
         if IsFocusedPantheonBoonSuspended()
             return focusedText + " The commitment remains, but its boon is suspended until 50 piety." + contextText
@@ -24933,7 +20809,7 @@ String Function GetNordSurveyBaseText()
         return focusedText + " The bond holds." + contextText
     endIf
 
-    if GetPatronState() == PATRON_STATE_BROAD
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD
         Int baselineState = GetNordPantheonBaselineState()
         if baselineState == NORD_BASELINE_NINE_DIVINES
             return "Standing: " + band + ". You walk the Nine Divines as a Nord walks them: weather, hearth, hold, and the old breath underneath." + contextText
@@ -24956,7 +20832,7 @@ String Function GetNordContextSurveyText()
     String text = ""
     Int kyneTalosCount = StorageUtil.GetIntValue(None, "PDV.Nord.KyneTalosContextCount")
     Int edgeCount = StorageUtil.GetIntValue(None, "PDV.Nord.HircineArkayEdgeCount")
-    if GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS && GetBroadPantheonStanding(BROAD_PANTHEON_NORD_OLD) > 0.0
+    if GetNordPantheonBaselineState() == NORD_BASELINE_OLD_WAYS && LedgerRuntime.GetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_NORD_OLD) > 0.0
         text = text + " Recent acts confirm the old road."
     endIf
     if kyneTalosCount > 0
@@ -24984,11 +20860,11 @@ String Function GetNordDevotionModeLabel()
         return "Vampire rupture"
     endIf
 
-    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity
         return "Focused " + GetPublicDeityDisplayName(_activeDeity)
     endIf
 
-    if GetPatronState() == PATRON_STATE_BROAD
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD
         if GetNordPantheonBaselineState() == NORD_BASELINE_NINE_DIVINES
             return "Broad Nine Divines"
         endIf
@@ -25003,27 +20879,27 @@ String Function GetCurrentStandingLabel()
     if IsFocusedPantheonBoonSuspended()
         return "Wavering"
     endIf
-    Int tierValue = TIER_NONE
+    Int tierValue = LedgerRuntime.TIER_NONE
     PDV_DaedricPathBase standingPact = GetActiveDaedricPactPath()
     if standingPact
         tierValue = standingPact.GetStoredTier()
     elseIf _activeDeity
-        tierValue = GetTier(_activeDeity)
-    elseIf GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > TIER_NONE
+        tierValue = LedgerRuntime.GetTier(_activeDeity)
+    elseIf GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
         tierValue = GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex())
-    elseIf PDV_GLO_ActiveTier
-        tierValue = PDV_GLO_ActiveTier.GetValueInt()
+    elseIf LedgerRuntime.PDV_GLO_ActiveTier
+        tierValue = LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
     endIf
 
-    if !_activeDeity && !standingPact && GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > TIER_NONE
+    if !_activeDeity && !standingPact && GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
         return GetBroadLaneStandingLabel(GetPlayerOriginRaceIndex(), tierValue)
     endIf
 
-    if tierValue >= TIER_CHAMPION
+    if tierValue >= LedgerRuntime.TIER_CHAMPION
         return "Champion"
-    elseIf tierValue == TIER_DEVOTED
+    elseIf tierValue == LedgerRuntime.TIER_DEVOTED
         return "Devoted"
-    elseIf tierValue == TIER_SEEKER
+    elseIf tierValue == LedgerRuntime.TIER_SEEKER
         return "Seeker"
     endIf
 
@@ -25037,16 +20913,16 @@ String Function GetCurrentStandingBand()
     if IsFocusedPantheonBoonSuspended()
         return "Distant"
     endIf
-    Int tierValue = TIER_NONE
+    Int tierValue = LedgerRuntime.TIER_NONE
     PDV_DaedricPathBase standingPact = GetActiveDaedricPactPath()
     if standingPact
         tierValue = standingPact.GetStoredTier()
     elseIf _activeDeity
-        tierValue = GetTier(_activeDeity)
-    elseIf GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > TIER_NONE
+        tierValue = LedgerRuntime.GetTier(_activeDeity)
+    elseIf GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
         tierValue = GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex())
-    elseIf PDV_GLO_ActiveTier
-        tierValue = PDV_GLO_ActiveTier.GetValueInt()
+    elseIf LedgerRuntime.PDV_GLO_ActiveTier
+        tierValue = LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
     endIf
     return GetPublicTierBand(tierValue)
 EndFunction
@@ -25056,7 +20932,7 @@ Bool Function IsFocusedPantheonBoonSuspended()
     if originRace != ORIGIN_IMPERIAL && originRace != ORIGIN_NORD
         return False
     endIf
-    return GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity && GetPiety(_activeDeity) < COMMITMENT_OFFER_THRESHOLD
+    return LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity && LedgerRuntime.GetPiety(_activeDeity) < LedgerRuntime.COMMITMENT_OFFER_THRESHOLD
 EndFunction
 
 String Function GetPlayerCursePublicLabel()
@@ -25157,22 +21033,22 @@ String Function GetAltmerHeritageTierName()
         return "Heritage quiet"
     endIf
     Int tierValue = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-    if tierValue >= TIER_CHAMPION
+    if tierValue >= LedgerRuntime.TIER_CHAMPION
         return "Exemplar Heritage"
-    elseIf tierValue >= TIER_DEVOTED
+    elseIf tierValue >= LedgerRuntime.TIER_DEVOTED
         return "Disciplined Heritage"
-    elseIf tierValue >= TIER_SEEKER
+    elseIf tierValue >= LedgerRuntime.TIER_SEEKER
         return "Ordered Heritage"
     endIf
     return "Heritage quiet"
 EndFunction
 
 String Function GetAltmerHeritageTierJournalLine(Int tierValue)
-    if tierValue >= TIER_CHAMPION
+    if tierValue >= LedgerRuntime.TIER_CHAMPION
         return "Your ancestral inheritance is visible in all you do."
-    elseIf tierValue >= TIER_DEVOTED
+    elseIf tierValue >= LedgerRuntime.TIER_DEVOTED
         return "Your ancestral inheritance is practiced, not merely inherited."
-    elseIf tierValue >= TIER_SEEKER
+    elseIf tierValue >= LedgerRuntime.TIER_SEEKER
         return "Your ancestral inheritance begins to take shape in you."
     endIf
     return "Your ancestral inheritance gathers quietly."
@@ -25245,7 +21121,7 @@ String Function GetKhajiitFocusStandingLine(Int focusValue)
         return "not yet wired"
     endIf
 
-    String line = GetTierStandingLabel(GetTier(deity)) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(GetPiety(deity))
+    String line = GetTierStandingLabel(LedgerRuntime.GetTier(deity)) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.GetPiety(deity))
     if GetKhajiitFocusedEmphasis() == focusValue
         line = line + " (leading)"
     endIf
@@ -25608,7 +21484,7 @@ String Function GetBretonBookOfDaysPathStatusLabel()
         return status + " / " + NormalizePublicDeityDisplayText(activePact.DeityName) + " Pact"
     endIf
 
-    if _activeDeity && GetPatronState() == PATRON_STATE_ACTIVE
+    if _activeDeity && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE
         return status + " / " + GetPublicDeityDisplayName(_activeDeity) + " Focus"
     endIf
 
@@ -25619,19 +21495,19 @@ String Function GetBretonPatronSurveySentence(Int traditionValue)
     PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
     if activePact
         String pactName = GetPublicDeityDisplayName(activePact)
-        if traditionValue == BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= TIER_CHAMPION
+        if traditionValue == BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= LedgerRuntime.TIER_CHAMPION
             return " Your pact with " + pactName + " has opened Hidden Art - Champion."
         endIf
         return " Your pact with " + pactName + " stands beside the tradition."
     endIf
 
-    if !_activeDeity || GetPatronState() != PATRON_STATE_ACTIVE
+    if !_activeDeity || LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE
         return ""
     endIf
 
     String deityName = GetPublicDeityDisplayName(_activeDeity)
-    Int patronTier = GetTier(_activeDeity)
-    if patronTier >= TIER_CHAMPION
+    Int patronTier = LedgerRuntime.GetTier(_activeDeity)
+    if patronTier >= LedgerRuntime.TIER_CHAMPION
         String boonName = GetBretonChampionBoonDisplayName(_activeDeity)
         if IsDeityResonantWithBretonTradition(traditionValue, _activeDeity)
             return " " + deityName + " is your Champion patron through this tradition. " + boonName + " stands beside your practice."
@@ -25768,7 +21644,7 @@ String Function GetImperialSurveyText()
     String band = GetCurrentStandingBand()
     String concordat = GetImperialConcordatLabel()
     String text = ""
-    if GetPatronState() == PATRON_STATE_ACTIVE && _activeDeity
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity
         text = GetPublicDeityDisplayName(_activeDeity) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
         if IsFocusedPantheonBoonSuspended()
             text = text + " The commitment remains, but its boon is suspended until 50 piety."
@@ -25847,11 +21723,11 @@ String Function GetImperialCivicTierName()
         return "Civic practice quiet"
     endIf
     Int tierValue = PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-    if tierValue >= TIER_CHAMPION
+    if tierValue >= LedgerRuntime.TIER_CHAMPION
         return "Civic Exemplar"
-    elseIf tierValue >= TIER_DEVOTED
+    elseIf tierValue >= LedgerRuntime.TIER_DEVOTED
         return "Civic Discipline"
-    elseIf tierValue >= TIER_SEEKER
+    elseIf tierValue >= LedgerRuntime.TIER_SEEKER
         return "Civic Steadiness"
     endIf
     return "Civic practice quiet"
@@ -25917,8 +21793,8 @@ String Function DebugGetPatternProvingSummary()
     summary = summary + "; Orc=" + GetOrcSummary()
     summary = summary + "; Redguard=" + GetRedguardSummary()
     summary = summary + "; Favor=" + FavorRuntime.GetContextualFavorSummary()
-    summary = summary + "; Commitment=" + GetCommitmentSummary()
-    summary = summary + "; Neglect=" + GetNeglectSummary()
+    summary = summary + "; Commitment=" + LedgerRuntime.GetCommitmentSummary()
+    summary = summary + "; Neglect=" + LedgerRuntime.GetNeglectSummary()
     summary = summary + "; Hircine=" + GetHircineSummary()
     summary = summary + "; Curse=" + GetCurseStateSummary()
     summary = summary + "; CurseHandlers=" + GetCurseHandlerSummary()
@@ -25947,9 +21823,9 @@ String Function DebugGetPatternSummarySection(Int sectionIndex)
     elseIf sectionIndex == 8
         return "Favor: " + FavorRuntime.GetContextualFavorSummary()
     elseIf sectionIndex == 9
-        return "Commitment: " + GetCommitmentSummary()
+        return "Commitment: " + LedgerRuntime.GetCommitmentSummary()
     elseIf sectionIndex == 10
-        return "Neglect: " + GetNeglectSummary()
+        return "Neglect: " + LedgerRuntime.GetNeglectSummary()
     elseIf sectionIndex == 11
         return "Hircine: " + GetHircineSummary()
     elseIf sectionIndex == 12
@@ -26132,24 +22008,10 @@ String Function GetKyneFavorSummary()
     return "mask=" + maskValue + ";conds=" + PDV_DevotionRules.CountSetBits(maskValue) + ";active=" + activeCount + ";generic=" + FavorRuntime.GetContextualFavorSummary()
 EndFunction
 
-String Function GetCommitmentSummary()
-    PDV_DeityBase pending = GetPendingCommitmentDeity()
-    String summary = "state=" + GetPatronStateLabel() + ";active=" + GetDeitySummaryLabel(_activeDeity) + ";pending=" + GetPendingCommitmentDeityIndex() + ";label=" + GetDeitySummaryLabel(pending) + ";carry=" + StorageUtil.GetFloatValue(None, "PDV.Commitment.LastCarryover") + ";rupture=" + StorageUtil.GetIntValue(None, "PDV.Commitment.Rupture")
-    if pending
-        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(pending, 7) + ";offered=" + PDV_DevotionRules.BoolToInt(IsCommitmentOffered(pending)) + ";refused=" + PDV_DevotionRules.BoolToInt(IsCommitmentRefused(pending))
-    elseIf PDV_Kyne
-        summary = summary + ";days=" + GetRecentCommitmentSignalDayCount(PDV_Kyne, 7) + ";offered=" + PDV_DevotionRules.BoolToInt(IsCommitmentOffered(PDV_Kyne)) + ";refused=" + PDV_DevotionRules.BoolToInt(IsCommitmentRefused(PDV_Kyne))
-    endIf
 
-    return summary
-EndFunction
-
-String Function GetNeglectSummary()
-    return "state=" + GetPatronStateLabel() + ";broad=" + PDV_DevotionRules.BoolToInt(IsBroadWorshipActive()) + ";activeDeity=" + GetDeitySummaryLabel(_activeDeity) + ";count=" + StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") + ";active=" + GetNeglectActiveSummary() + ";kyneSpell=" + StorageUtil.GetIntValue(None, "PDV.Neglect.KyneSpellActive")
-EndFunction
 
 String Function DebugGetDecaySummaryByIndex(Int deityIndex)
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
     if !deity
         return "missing deity " + deityIndex
     endIf
@@ -26159,11 +22021,11 @@ String Function DebugGetDecaySummaryByIndex(Int deityIndex)
     Float lastEvent = StorageUtil.GetFloatValue(deityForm, "PDV.LastEventGameTime")
     Int lastDecayDay = StorageUtil.GetIntValue(deityForm, "PDV.LastDecayAppliedDay")
     Float multiplier = 1.0
-    if IsBroadWorshipActive()
-        multiplier = BROAD_WORSHIP_DECAY_MULTIPLIER
+    if LedgerRuntime.IsBroadWorshipActive()
+        multiplier = LedgerRuntime.BROAD_WORSHIP_DECAY_MULTIPLIER
     endIf
 
-    return "deity=" + deity.DeityName + ";state=" + GetPatronStateLabel() + ";active=" + PDV_DevotionRules.BoolToInt(deity == _activeDeity) + ";broad=" + PDV_DevotionRules.BoolToInt(IsBroadWorshipActive()) + ";p=" + PDV_DevotionRules.FormatTwoDecimals(piety) + ";tier=" + GetTier(deity) + ";lastEvent=" + PDV_DevotionRules.FormatTwoDecimals(lastEvent) + ";lastDecayDay=" + lastDecayDay + ";rate=" + PDV_DevotionRules.FormatTwoDecimals(DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity)) + ";floor=" + PDV_DevotionRules.FormatTwoDecimals(GetDecayFloorForDeity(deity, piety))
+    return "deity=" + deity.DeityName + ";state=" + LedgerRuntime.GetPatronStateLabel() + ";active=" + PDV_DevotionRules.BoolToInt(deity == _activeDeity) + ";broad=" + PDV_DevotionRules.BoolToInt(LedgerRuntime.IsBroadWorshipActive()) + ";p=" + PDV_DevotionRules.FormatTwoDecimals(piety) + ";tier=" + LedgerRuntime.GetTier(deity) + ";lastEvent=" + PDV_DevotionRules.FormatTwoDecimals(lastEvent) + ";lastDecayDay=" + lastDecayDay + ";rate=" + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * GetDaedricStigmaGainMultiplier(deity)) + ";floor=" + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.GetDecayFloorForDeity(deity, piety))
 EndFunction
 
 String Function GetHircineSummary()
@@ -26212,40 +22074,7 @@ String Function GetOriginRaceLabel(Int originRace)
     return "" + originRace
 EndFunction
 
-String Function GetNeglectActiveSummary()
-    if !PDV_FLST_AllDeities
-        return "none"
-    endIf
 
-    String output = ""
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-    while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-        if deity && IsNeglectFlagActive(deity)
-            if output == ""
-                output = deity.DeityName
-            else
-                output = output + "," + deity.DeityName
-            endIf
-        endIf
-        i += 1
-    endWhile
-
-    if output == ""
-        return "none"
-    endIf
-
-    return output
-EndFunction
-
-String Function GetDeitySummaryLabel(PDV_DeityBase deity)
-    if deity
-        return deity.DeityName
-    endIf
-
-    return "none"
-EndFunction
 
 ; Real Skyrim moon phase: the engine renders an 8-phase, 24-day cycle driven by
 ; GameDaysPassed % 24, advancing the visible phase at midday. We replicate the
@@ -26286,7 +22115,7 @@ EndFunction
 ; the same zero-reserved +2 devotional stamp as the rest of the tree; a stamp is >= 1 by
 ; construction, so the StorageUtil default of 0 can never collide with a real day.
 Float Function ConsumeDailyRepeatMultiplier(String keyPrefix)
-    Int currentDay = GetDevotionalDay() + 2
+    Int currentDay = LedgerRuntime.GetDevotionalDay() + 2
     String dayKey = keyPrefix + ".Day"
     String countKey = keyPrefix + ".Count"
     Int repeatCount = 0
@@ -26310,7 +22139,7 @@ Float Function ConsumeDailyRepeatMultiplier(String keyPrefix)
 EndFunction
 
 Bool Function ConsumeOncePerDaySignal(String keyPrefix)
-    Int currentDay = GetDevotionalDay() + 2
+    Int currentDay = LedgerRuntime.GetDevotionalDay() + 2
     String dayKey = keyPrefix + ".Day"
     if StorageUtil.GetIntValue(None, dayKey, -1) == currentDay
         StorageUtil.AdjustIntValue(None, keyPrefix + ".RejectCount", 1)
@@ -26322,39 +22151,6 @@ Bool Function ConsumeOncePerDaySignal(String keyPrefix)
 EndFunction
 
 
-Function ApplyRivalryPenalties(PDV_DeityBase sourceDeity, Float sourceAmount)
-    Quest[] rivalForms = sourceDeity.RivalDeities
-    Float[] rivalMultipliers = sourceDeity.RivalMultipliers
-
-    if !rivalForms || !rivalMultipliers
-        return
-    endIf
-
-    Bool rivalToastShown = False
-    Int i = 0
-    Int rivalCount = rivalForms.Length
-    while i < rivalCount
-        if i < rivalMultipliers.Length
-            PDV_DeityBase rivalDeity = rivalForms[i] as PDV_DeityBase
-            Float rivalAmount = sourceAmount * rivalMultipliers[i] * -1.0
-
-            if rivalDeity && rivalAmount != 0.0
-                AwardPietyInternal(rivalDeity, rivalAmount, False, "rivalry with " + sourceDeity.DeityName)
-
-                if !rivalToastShown
-                    SendPrismaEventToast("rivalry", sourceDeity, "", "", rivalDeity.DeityName)
-                    rivalToastShown = True
-                endIf
-
-                if GetDebugLevel() >= 2
-                    Debug.Trace("[PDV] Rivalry: " + sourceDeity.DeityName + " applied " + rivalAmount + " to " + rivalDeity.DeityName)
-                endIf
-            endIf
-        endIf
-
-        i += 1
-    endWhile
-EndFunction
 
 Form Function GetDeityFormOrNone(PDV_DeityBase deity)
     if deity
@@ -26363,142 +22159,12 @@ Form Function GetDeityFormOrNone(PDV_DeityBase deity)
     return None
 EndFunction
 
-Function EnsureDeityState(PDV_DeityBase deity)
-    Form deityForm = GetDeityFormOrNone(deity)
-    if !deityForm
-        return
-    endIf
 
-    StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
-    StorageUtil.GetFloatValue(deityForm, "PDV.PietyToday")
-    StorageUtil.GetFloatValue(deityForm, "PDV.Tier")
-    StorageUtil.GetFloatValue(deityForm, "PDV.LastTierChange")
-EndFunction
 
-Int Function ComputeTierFromPiety(PDV_DeityBase deity, Float piety)
-    if !deity
-        return TIER_NONE
-    endIf
 
-    Int tierCap = deity.GetTierCap()
-    if piety >= deity.ThresholdChampion
-        if tierCap < TIER_CHAMPION
-            return tierCap
-        endIf
-        return TIER_CHAMPION
-    elseIf piety >= deity.ThresholdDevoted
-        if tierCap < TIER_DEVOTED
-            return tierCap
-        endIf
-        return TIER_DEVOTED
-    elseIf piety >= deity.ThresholdSeeker
-        if tierCap < TIER_SEEKER
-            return tierCap
-        endIf
-        return TIER_SEEKER
-    endIf
 
-    return TIER_NONE
-EndFunction
 
-Float Function ThresholdForTier(PDV_DeityBase deity, Int tierValue)
-    if !deity
-        return 0.0
-    endIf
 
-    if tierValue >= TIER_CHAMPION
-        return deity.ThresholdChampion
-    elseIf tierValue >= TIER_DEVOTED
-        return deity.ThresholdDevoted
-    elseIf tierValue >= TIER_SEEKER
-        return deity.ThresholdSeeker
-    endIf
-
-    return 0.0
-EndFunction
-
-PDV_DeityBase Function GetDeityByIndex(Int deityIndex)
-    if deityIndex < 0 || !PDV_FLST_AllDeities
-        return GetKnownDeityByIndex(deityIndex)
-    endIf
-
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-    while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-        if deity && deity.DeityIndex == deityIndex
-            return deity
-        endIf
-        i += 1
-    endWhile
-
-    return GetKnownDeityByIndex(deityIndex)
-EndFunction
-
-PDV_DeityBase Function GetKnownDeityByIndex(Int deityIndex)
-    if PDV_Kyne && PDV_Kyne.DeityIndex == deityIndex
-        return PDV_Kyne
-    endIf
-
-    if PDV_Kynareth && PDV_Kynareth.DeityIndex == deityIndex
-        return PDV_Kynareth
-    endIf
-
-    if PDV_Talos && PDV_Talos.DeityIndex == deityIndex
-        return PDV_Talos
-    endIf
-
-    if PDV_Yffre && PDV_Yffre.DeityIndex == deityIndex
-        return PDV_Yffre
-    endIf
-
-    if PDV_Zen && PDV_Zen.DeityIndex == deityIndex
-        return PDV_Zen
-    endIf
-
-    if PDV_BaanDar && PDV_BaanDar.DeityIndex == deityIndex
-        return PDV_BaanDar
-    endIf
-
-    return None
-EndFunction
-
-Function UpdatePatronDeityGlobal()
-    if _activeDeity
-        StorageUtil.SetIntValue(None, "PDV.PatronDeityIndex", _activeDeity.DeityIndex)
-    else
-        StorageUtil.SetIntValue(None, "PDV.PatronDeityIndex", -1)
-    endIf
-
-    if !PDV_GLO_PatronDeity
-        return
-    endIf
-
-    if !_activeDeity
-        PDV_GLO_PatronDeity.SetValue(0.0)
-        return
-    endIf
-
-    PDV_GLO_PatronDeity.SetValue((_activeDeity as Form).GetFormID() as Float)
-EndFunction
-
-Function RestoreActiveDeityFromStoredPatron()
-    Int deityIndex = StorageUtil.GetIntValue(None, "PDV.PatronDeityIndex")
-    if deityIndex < 0
-        return
-    endIf
-
-    PDV_DeityBase deity = GetDeityByIndex(deityIndex)
-    if !deity
-        Trace(1, "Stored patron deity index " + deityIndex + " could not be restored.")
-        return
-    endIf
-
-    _activeDeity = deity
-    EnsureDeityState(_activeDeity)
-    _activeDeity.OnPatronStart()
-    Trace(2, "Restored active deity from stored patron index " + deityIndex)
-EndFunction
 
 Function Trace(Int level, String traceText)
     if GetDebugLevel() >= level
@@ -26715,16 +22381,16 @@ String Function GetNpcRecognitionStatusLine()
     endIf
     Int identityIndex = ResolveNpcRecognitionIdentity()
     Int band = ResolveNpcRecognitionBand(identityIndex)
-    if identityIndex < 0 || band <= TIER_NONE
+    if identityIndex < 0 || band <= LedgerRuntime.TIER_NONE
         return "On - no public standing"
     endIf
     return GetRecognitionIdentityDisplayName(identityIndex) + " - " + GetPublicTierBand(band) + " (" + GetNpcRecognitionRelationLabel(band) + ")"
 EndFunction
 
 String Function GetNpcRecognitionRelationLabel(Int band)
-    if band >= TIER_CHAMPION
+    if band >= LedgerRuntime.TIER_CHAMPION
         return "ally"
-    elseIf band >= TIER_DEVOTED
+    elseIf band >= LedgerRuntime.TIER_DEVOTED
         return "friend"
     endIf
     return "neutral"
@@ -26737,9 +22403,9 @@ String Function GetNpcRecognitionAdvisory(Int identityIndex, Int band, Bool reco
         return "Religious recognition is managed by " + ownerName + "."
     elseIf identityIndex < 0
         return "No public religious identity is active."
-    elseIf band >= TIER_CHAMPION
+    elseIf band >= LedgerRuntime.TIER_CHAMPION
         return "Adherents may regard you as an ally."
-    elseIf band >= TIER_DEVOTED
+    elseIf band >= LedgerRuntime.TIER_DEVOTED
         return "Adherents may regard you as a friend."
     endIf
     return "Adherents remain neutral until your standing is Faithful."
@@ -26892,12 +22558,12 @@ Function SyncNpcReligiousRecognition()
 
     ResetNpcRecognitionRelations(playerFaction)
     if recognitionEnabled && !owned && identityIndex >= 0
-        if band >= TIER_CHAMPION
+        if band >= LedgerRuntime.TIER_CHAMPION
             SetRecognitionPair(GetRecognitionCohortFaction(identityIndex), playerFaction, RECOGNITION_REACTION_ALLY)
             if hostileRecognitionEnabled
                 ApplyNpcRecognitionHardRivals(identityIndex, playerFaction)
             endIf
-        elseIf band >= TIER_DEVOTED
+        elseIf band >= LedgerRuntime.TIER_DEVOTED
             SetRecognitionPair(GetRecognitionCohortFaction(identityIndex), playerFaction, RECOGNITION_REACTION_FRIEND)
         endIf
     endIf
@@ -26926,7 +22592,7 @@ Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recog
     String bodyText = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
     if recognitionEnabled && ownerName == "" && identityIndex >= 0
         bodyText = identityName + " - " + bandName + ". " + bodyText
-        if hostileRecognitionEnabled && band >= TIER_CHAMPION
+        if hostileRecognitionEnabled && band >= LedgerRuntime.TIER_CHAMPION
             bodyText = bodyText + " Explicit rival adherents may regard you as an enemy."
         endIf
     endIf
@@ -26972,7 +22638,7 @@ Int Function ResolveNpcRecognitionIdentity()
     if _activeDeity
         return GetRecognitionFocusedIndex(_activeDeity)
     endIf
-    if GetPatronState() == PATRON_STATE_BROAD
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD
         return GetRecognitionBroadIndex(GetPlayerOriginRaceIndex())
     endIf
     return -1
@@ -26980,14 +22646,14 @@ EndFunction
 
 Int Function ResolveNpcRecognitionBand(Int identityIndex)
     if identityIndex < 0
-        return TIER_NONE
+        return LedgerRuntime.TIER_NONE
     endIf
     PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
     if activePact
         return activePact.GetStoredTier()
     endIf
     if _activeDeity
-        return GetTier(_activeDeity)
+        return LedgerRuntime.GetTier(_activeDeity)
     endIf
     return GetRecognitionBroadTier(GetPlayerOriginRaceIndex())
 EndFunction
@@ -26999,7 +22665,7 @@ Int Function GetRecognitionFocusedIndex(PDV_DeityBase deity)
         return 1
     elseIf deity == PDV_Yffre
         return 2
-    elseIf deity == PDV_Zen
+    elseIf deity == LedgerRuntime.PDV_Zen
         return 3
     elseIf deity == PDV_BaanDar
         return 4
@@ -27013,21 +22679,21 @@ Int Function GetRecognitionFocusedIndex(PDV_DeityBase deity)
         return 8
     elseIf deity == PDV_Alkosh
         return 9
-    elseIf deity == PDV_Akatosh
+    elseIf deity == LedgerRuntime.PDV_Akatosh
         return 10
-    elseIf deity == PDV_Mara
+    elseIf deity == LedgerRuntime.PDV_Mara
         return 11
-    elseIf deity == PDV_Arkay
+    elseIf deity == LedgerRuntime.PDV_Arkay
         return 12
-    elseIf deity == PDV_Stendarr
+    elseIf deity == LedgerRuntime.PDV_Stendarr
         return 13
-    elseIf deity == PDV_Zenithar
+    elseIf deity == LedgerRuntime.PDV_Zenithar
         return 14
-    elseIf deity == PDV_Dibella
+    elseIf deity == LedgerRuntime.PDV_Dibella
         return 15
-    elseIf deity == PDV_Julianos
+    elseIf deity == LedgerRuntime.PDV_Julianos
         return 16
-    elseIf deity == PDV_Kynareth
+    elseIf deity == LedgerRuntime.PDV_Kynareth
         return 17
     elseIf deity == PDV_Hist
         return 18
@@ -27341,7 +23007,7 @@ Function HandleKIDAction(String actionKey, Form sourceForm)
         bodyText = "You drank " + sourceName + "; Sanguine marks the revel."
         symbolName = "sanguine"
     elseIf actionKey == "zenithar_trade"
-        AwardCuratedSignalScaled(PDV_Zenithar, PDV_Zenithar.SIGNAL_HONEST_WORK, sourceForm, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zenithar, LedgerRuntime.PDV_Zenithar.SIGNAL_HONEST_WORK, sourceForm, multiplier)
         titleText = "Honest trade"
         bodyText = "You brought " + sourceName + " to market; Zenithar marks the exchange."
         symbolName = "zenithar"
@@ -27353,63 +23019,63 @@ Function HandleKIDAction(String actionKey, Form sourceForm)
             ShowDaedricMilestonePresentation(PDV_HircinePath, tierBefore, PDV_HircinePath.GetStoredTier(), False)
             MaybeEmitHircineStigmaPrice(stigmaBefore, PDV_HircinePath.GetStigma())
         endIf
-        AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, sourceForm, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Kyne, PDV_Kyne.SIGNAL_SKY_ROAD, sourceForm, multiplier)
         titleText = "Trophy of the hunt"
         bodyText = "You claimed " + sourceName + " from your quarry; Hircine and Kyne mark the hunt."
         symbolName = "hircine"
     elseIf actionKey == "funerary_offering"
-        AwardCuratedSignalScaled(PDV_Arkay, PDV_Arkay.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
-        AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Arkay, LedgerRuntime.PDV_Arkay.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, sourceForm, multiplier)
         titleText = "Gift to the dead"
         bodyText = "You left " + sourceName + " with the dead; Arkay and Tu'whacca mark the duty."
         symbolName = "arkay"
     elseIf actionKey == "orcish_craft"
-        AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, sourceForm, multiplier)
+        LedgerRuntime.AwardCuratedSignalScaled(PDV_Malacath, PDV_Malacath.SIGNAL_STRONGHOLD_FORGE, sourceForm, multiplier)
         titleText = "Orcish craft"
         bodyText = "You forged " + sourceName + "; Malacath weighs the work."
         symbolName = "malacath"
     elseIf actionKey == "amulet_akatosh"
-        AwardPiety(PDV_Akatosh, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Akatosh, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Akatosh honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "akatosh"
     elseIf actionKey == "amulet_arkay"
-        AwardPiety(PDV_Arkay, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Arkay, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Arkay honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "arkay"
     elseIf actionKey == "amulet_dibella"
-        AwardPiety(PDV_Dibella, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Dibella, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Dibella honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "dibella"
     elseIf actionKey == "amulet_julianos"
-        AwardPiety(PDV_Julianos, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Julianos, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Julianos honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "julianos"
     elseIf actionKey == "amulet_kynareth"
-        AwardPiety(PDV_Kynareth, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Kynareth, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Kynareth honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "kynareth"
     elseIf actionKey == "amulet_mara"
-        AwardPiety(PDV_Mara, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Mara, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Mara honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "mara"
     elseIf actionKey == "amulet_stendarr"
-        AwardPiety(PDV_Stendarr, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Stendarr, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Stendarr honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "stendarr"
     elseIf actionKey == "amulet_talos"
-        AwardPiety(PDV_Talos, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(PDV_Talos, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Talos honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "talos"
     elseIf actionKey == "amulet_zenithar"
-        AwardPiety(PDV_Zenithar, 0.5 * multiplier, "kid_amulet_honor")
+        LedgerRuntime.AwardPiety(LedgerRuntime.PDV_Zenithar, 0.5 * multiplier, "kid_amulet_honor")
         titleText = "Zenithar honoured"
         bodyText = "You put on " + sourceName + "."
         symbolName = "zenithar"
@@ -27663,10 +23329,10 @@ Function ResyncDevotionSpellsAfterRepair(Actor playerRef)
 
     ; The normal reward path re-grants every race/patron family and re-applies the
     ; neglect spells from live state.
-    SyncFirstTierRaceRewardRuntime()
+    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     FavorRuntime.UpdateContextualFavorRuntime()
-    UpdateDisfavorStingRuntime()
-    ReapplyActiveDisfavorStings(playerRef)
+    LedgerRuntime.UpdateDisfavorStingRuntime()
+    LedgerRuntime.ReapplyActiveDisfavorStings(playerRef)
     ; The two observance families B16 covers; both self-gate on their stored state.
     SyncAltmerDisciplines(playerRef)
     SyncRedguardRemembering(playerRef)
@@ -27682,27 +23348,7 @@ EndFunction
 
 ; UpdateDisfavorStingRuntime only CLEARS expired stings -- nothing re-applies an
 ; unexpired one after a strip, so restore each active domain's band spell here.
-Function ReapplyActiveDisfavorStings(Actor playerRef)
-    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_SKY_STORM_HUNT)
-    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_DEATH_ANCESTORS)
-    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_MERCY_PROTECTION)
-    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_WAR_HONOR)
-    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_ORDER_TRADE_LORE)
-    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_MOON_LUCK_SHADOW)
-    ReapplyOneDisfavorSting(playerRef, DISFAVOR_DOMAIN_VOID_SECRETS)
-EndFunction
 
-Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
-    if !playerRef || !IsDisfavorDomainActive(domainValue)
-        return
-    endIf
-
-    Bool sharpBand = StorageUtil.GetStringValue(None, GetDisfavorBandKey(domainValue)) == GetDisfavorBandLabel(True)
-    Spell bandSpell = GetDisfavorSpell(domainValue, sharpBand)
-    if bandSpell && !playerRef.HasSpell(bandSpell)
-        playerRef.AddSpell(bandSpell, False)
-    endIf
-EndFunction
 
 ; Reported at debug level 1 so a bug reporter can verify every correction. The
 ; per-value lines are the audit trail the fix plan asks for.
@@ -27738,3 +23384,95 @@ String Function GetAuthoriaResidueSummary()
     endIf
     return "Permanent modifier still present on " + touched + " actor value(s):\n" + summary
 EndFunction
+
+
+;/ =====================================================================
+    LEDGER extraction accessors -- backref bridge for PDV_DevotionLedger.
+    The moved LEDGER logic lives in PDV_DevotionLedger and reaches these
+    manager script variables through the Manager backref. Getters/setters
+    are thin passthroughs; behavior is identical to the pre-move bare access.
+   ===================================================================== /;
+Bool Function GetQrQueueTransactionActive()
+    return _qrQueueTransactionActive
+EndFunction
+
+Function SetActiveDeityRef(PDV_DeityBase value)
+    _activeDeity = value
+EndFunction
+
+Bool Function GetSuppressAwardFavorToast()
+    return _suppressAwardFavorToast
+EndFunction
+
+Function SetSuppressAwardFavorToast(Bool value)
+    _suppressAwardFavorToast = value
+EndFunction
+
+Bool Function GetSuppressCurseTransitionOutputs()
+    return _suppressCurseTransitionOutputs
+EndFunction
+
+Function SetSuppressCurseTransitionOutputs(Bool value)
+    _suppressCurseTransitionOutputs = value
+EndFunction
+
+Function SetRaceCurseSurfaceShown(Bool value)
+    _raceCurseSurfaceShown = value
+EndFunction
+
+Function SetQrQueueNeedsCurseRefresh(Bool value)
+    _qrQueueNeedsCurseRefresh = value
+EndFunction
+
+Bool Function GetDawnHadActivity()
+    return _dawnHadActivity
+EndFunction
+
+Function SetDawnHadActivity(Bool value)
+    _dawnHadActivity = value
+EndFunction
+
+Int Function GetBroadPantheonSelfEventSequence()
+    return _broadPantheonSelfEventSequence
+EndFunction
+
+Function SetBroadPantheonSelfEventSequence(Int value)
+    _broadPantheonSelfEventSequence = value
+EndFunction
+
+Function SetPendingCommitmentOfferDeity(PDV_DeityBase value)
+    _pendingCommitmentOfferDeity = value
+EndFunction
+
+Bool Function GetPdvSurvivalModePresent()
+    return _pdvSurvivalModePresent
+EndFunction
+
+Function SetPdvSurvivalModePresent(Bool value)
+    _pdvSurvivalModePresent = value
+EndFunction
+
+Bool Function GetPdvSunHelmPresent()
+    return _pdvSunHelmPresent
+EndFunction
+
+Function SetPdvSunHelmPresent(Bool value)
+    _pdvSunHelmPresent = value
+EndFunction
+
+Bool Function GetPdvCCSaintsPresent()
+    return _pdvCCSaintsPresent
+EndFunction
+
+Function SetPdvCCSaintsPresent(Bool value)
+    _pdvCCSaintsPresent = value
+EndFunction
+
+Bool Function GetPdvCCFishingPresent()
+    return _pdvCCFishingPresent
+EndFunction
+
+Function SetPdvCCFishingPresent(Bool value)
+    _pdvCCFishingPresent = value
+EndFunction
+

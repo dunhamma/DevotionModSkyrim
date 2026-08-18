@@ -1028,7 +1028,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidApplyDomainSting
         if PDV_Manager
             PDV_Manager.DebugApplyDomainSting(_pendingDisfavorDomain, _pendingDisfavorSharp)
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
@@ -1036,22 +1036,22 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidDisfavorBurst
         if PDV_Manager
             PDV_Manager.DebugBurstAntiStack()
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
 
     if a_option == _oidDisfavorShow
         if PDV_Manager
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
 
     if a_option == _oidDisfavorClear
         if PDV_Manager
-            PDV_Manager.ClearAllDisfavorStings()
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            PDV_Manager.LedgerRuntime.ClearAllDisfavorStings()
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
@@ -1146,7 +1146,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidRunDawn
         if ShowMessage("Run ProcessDawn now?", True, "$Yes", "$No")
-            PDV_Manager.ProcessDawn()
+            PDV_Manager.LedgerRuntime.ProcessDawn()
             ForcePageReset()
         endIf
         return
@@ -1692,7 +1692,7 @@ Function OnOptionSelect(Int a_option)
         PDV__ManagerQuest forcePatronManager = GetManagerService()
         PDV_DeityBase forcePatronDeity = GetSelectedDeity()
         if forcePatronManager && forcePatronDeity
-            forcePatronManager.SetActiveDeity(forcePatronDeity, True)
+            forcePatronManager.LedgerRuntime.SetActiveDeity(forcePatronDeity, True)
             Debug.Notification("PDV: active patron forced.")
             ForcePageReset()
         else
@@ -1709,7 +1709,7 @@ Function OnOptionSelect(Int a_option)
             ; active patron, then drop its piety to 0 so ApplyGenericNeglectFlags selects it (piety
             ; <= NEGLECT_ACTIVE_PIETY_MAX). Sidesteps Prime-decay-eligible, which sets piety 20 and
             ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
-            primeNeglectManager.SetActiveDeity(primeNeglectDeity, True)
+            primeNeglectManager.LedgerRuntime.SetActiveDeity(primeNeglectDeity, True)
             primeNeglectManager.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
             Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
             ForcePageReset()
@@ -2005,7 +2005,7 @@ Function BuildPlayerPage()
         AddTextOption("Standing", PDV_Manager.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Curse", PDV_Manager.GetPlayerMcmCurseLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Favor", PDV_Manager.FavorRuntime.GetPlayerMcmFavorLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Neglect", PDV_Manager.GetPlayerMcmNeglectLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Neglect", PDV_Manager.LedgerRuntime.GetPlayerMcmNeglectLine(), OPTION_FLAG_DISABLED)
         _oidSurveyDevotion = AddTextOption("Survey Devotion", "Open readout", OPTION_FLAG_NONE)
         _oidExportReport = AddTextOption("Export Devotion Report", "Write file", OPTION_FLAG_NONE)
 
@@ -2324,9 +2324,9 @@ Function BuildStatusPage()
 
     Int i = 0
     while i < deityCount
-        PDV_DeityBase deity = PDV_Manager.GetDeityAtListIndex(i)
+        PDV_DeityBase deity = PDV_Manager.LedgerRuntime.GetDeityAtListIndex(i)
         if deity
-            String rowValue = TierToLabel(PDV_Manager.GetTier(deity)) + " | " + FormatFloat(PDV_Manager.GetPiety(deity)) + " (+" + FormatFloat(PDV_Manager.GetPietyToday(deity)) + ")"
+            String rowValue = TierToLabel(PDV_Manager.LedgerRuntime.GetTier(deity)) + " | " + FormatFloat(PDV_Manager.LedgerRuntime.GetPiety(deity)) + " (+" + FormatFloat(PDV_Manager.LedgerRuntime.GetPietyToday(deity)) + ")"
             if deity.DeityIndex == activeDeityIndex
                 rowValue = rowValue + " | active"
             endIf
@@ -2952,7 +2952,7 @@ Function DebugOverridePatron()
     endIf
 
     if ShowMessage("Apply a debug patron override to " + deity.DeityName + "?", True, "$Yes", "$No")
-        PDV_Manager.ForceSetActiveDeityByIndex(deity.DeityIndex)
+        PDV_Manager.LedgerRuntime.ForceSetActiveDeityByIndex(deity.DeityIndex)
         ForcePageReset()
     endIf
 EndFunction
@@ -3028,7 +3028,7 @@ Function DebugFireSelectedDislike()
 
     if ShowMessage("Fire dislike event " + _pendingDisfavorEventId + " vs " + deity.DeityName + "? Set Target piety >= 25 first (or make it your patron) so the disfavor standing gate passes; below standing it applies the piety loss only.", True, "$Yes", "$No")
         PDV_Manager.DebugFireDislike(deity, _pendingDisfavorEventId)
-        ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+        ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
@@ -3042,7 +3042,7 @@ EndFunction
 
 String Function GetDisfavorDomainCycleLabel()
     if PDV_Manager
-        return _pendingDisfavorDomain + " " + PDV_Manager.GetDisfavorDomainLabel(_pendingDisfavorDomain)
+        return _pendingDisfavorDomain + " " + PDV_Manager.LedgerRuntime.GetDisfavorDomainLabel(_pendingDisfavorDomain)
     endIf
     return "Domain " + _pendingDisfavorDomain
 EndFunction
@@ -3089,12 +3089,12 @@ PDV_DeityBase Function GetSelectedDeity()
     if _selectedListIndex < 0
         return None
     endIf
-    return PDV_Manager.GetDeityAtListIndex(_selectedListIndex)
+    return PDV_Manager.LedgerRuntime.GetDeityAtListIndex(_selectedListIndex)
 EndFunction
 
 Int Function GetDeityCount()
     if PDV_Manager
-        return PDV_Manager.GetDeityCount()
+        return PDV_Manager.LedgerRuntime.GetDeityCount()
     endIf
     if PDV_FLST_AllDeities
         return PDV_FLST_AllDeities.GetSize()
@@ -3353,7 +3353,7 @@ String Function GetActivePatronLabel()
         return "None"
     endIf
 
-    PDV_DeityBase deity = PDV_Manager.GetDeityByIndex(activeDeityIndex)
+    PDV_DeityBase deity = PDV_Manager.LedgerRuntime.GetDeityByIndex(activeDeityIndex)
     if deity
         return deity.DeityName + " [" + deity.DeityIndex + "]"
     endIf
@@ -3363,7 +3363,7 @@ EndFunction
 
 String Function GetPatronStateLabel()
     if PDV_Manager
-        return PDV_Manager.GetPatronStateLabel()
+        return PDV_Manager.LedgerRuntime.GetPatronStateLabel()
     endIf
 
     return "Unknown"
@@ -3481,7 +3481,7 @@ EndFunction
 Float Function GetSelectedDeityPiety()
     PDV_DeityBase deity = GetSelectedDeity()
     if deity && PDV_Manager
-        return PDV_Manager.GetPiety(deity)
+        return PDV_Manager.LedgerRuntime.GetPiety(deity)
     endIf
     return 0.0
 EndFunction
@@ -3489,7 +3489,7 @@ EndFunction
 Float Function GetSelectedDeityPietyToday()
     PDV_DeityBase deity = GetSelectedDeity()
     if deity && PDV_Manager
-        return PDV_Manager.GetPietyToday(deity)
+        return PDV_Manager.LedgerRuntime.GetPietyToday(deity)
     endIf
     return 0.0
 EndFunction
@@ -3837,26 +3837,26 @@ String Function GetSelectedCommitmentSummary(PDV__ManagerQuest manager)
     endIf
 
     Int usesFormal = 0
-    if manager.UsesFormalCommitmentOffersForDeity(selectedDeity)
+    if manager.LedgerRuntime.UsesFormalCommitmentOffersForDeity(selectedDeity)
         usesFormal = 1
     endIf
 
     Int ready = 0
-    if manager.HasRecentCommitmentSignalDays(selectedDeity, 2, 7)
+    if manager.LedgerRuntime.HasRecentCommitmentSignalDays(selectedDeity, 2, 7)
         ready = 1
     endIf
 
     Int offered = 0
-    if manager.IsCommitmentOffered(selectedDeity)
+    if manager.LedgerRuntime.IsCommitmentOffered(selectedDeity)
         offered = 1
     endIf
 
     Int refused = 0
-    if manager.IsCommitmentRefused(selectedDeity)
+    if manager.LedgerRuntime.IsCommitmentRefused(selectedDeity)
         refused = 1
     endIf
 
-    return "selected=" + selectedDeity.DeityName + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.GetPiety(selectedDeity)) + ";offered=" + offered + ";refused=" + refused
+    return "selected=" + selectedDeity.DeityName + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.LedgerRuntime.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.LedgerRuntime.GetPiety(selectedDeity)) + ";offered=" + offered + ";refused=" + refused
 EndFunction
 
 PDV__ManagerQuest Function GetManagerService()
@@ -4043,7 +4043,7 @@ String Function RunCurseStateSmoke()
     ; rather than routing the restore through the transition handler: the state has been put
     ; back where it started, so nothing should re-fire a curse-onset surface for it.
     if PDV_Manager
-        PDV_Manager.ResyncCurseStateMirror("mcm_scaffold_restore")
+        PDV_Manager.LedgerRuntime.ResyncCurseStateMirror("mcm_scaffold_restore")
     endIf
     Debug.Trace("[PDV] MCM ScaffoldSmoke: curse " + oldState + " -> " + adjustedState + " -> " + PDV_CurseStateService.GetCurseState())
     return "Curse ok"
