@@ -37,7 +37,7 @@ EndFunction
 
 Function RouteDunmerHonorableVictory(Form victimForm)
     if PDV_Manager
-        PDV_Manager.HandleDunmerHonorableVictory(victimForm)
+        PDV_Manager.OriginRuntime.HandleDunmerHonorableVictory(victimForm)
     endIf
 EndFunction
 
@@ -95,7 +95,7 @@ Function RouteDunmerOutdoorGoodDaedraShrine(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleDunmerOutdoorGoodDaedraShrine("eventbus_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleDunmerOutdoorGoodDaedraShrine("eventbus_" + sourceId)
     Trace(2, "RouteDunmerOutdoorGoodDaedraShrine complete: " + sourceId)
 EndFunction
 
@@ -188,7 +188,7 @@ Function RouteDunmerPortableShrinePrayer()
         eventType = eventTypes.EVT_DUNMER_PORTABLE_SHRINE
     endIf
 
-    PDV_Manager.HandleDunmerPortableShrinePrayer("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleDunmerPortableShrinePrayer("eventbus_" + eventType)
     Trace(2, "RouteDunmerPortableShrinePrayer complete: " + eventType)
 EndFunction
 
@@ -204,7 +204,7 @@ Function RouteDunmerPlayerHomeBonus()
         eventType = eventTypes.EVT_DUNMER_HOME_BONUS
     endIf
 
-    PDV_Manager.HandleDunmerPlayerHomeBonus("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleDunmerPlayerHomeBonus("eventbus_" + eventType)
     Trace(2, "RouteDunmerPlayerHomeBonus complete: " + eventType)
 EndFunction
 
@@ -1432,7 +1432,7 @@ Function RouteDunmerReclamationFocus(Int focusValue, String sourceId)
         eventType = eventTypes.EVT_DUNMER_RECLAMATION_FOCUS
     endIf
 
-    PDV_Manager.HandleDunmerReclamationFocus(focusValue, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleDunmerReclamationFocus(focusValue, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteDunmerReclamationFocus complete: " + eventType + " focus " + focusValue)
 EndFunction
 
@@ -1448,7 +1448,7 @@ Function RouteDunmerDeviationPrice(String sourceId)
         eventType = eventTypes.EVT_DUNMER_DEVIATION_PRICE
     endIf
 
-    PDV_Manager.HandleDunmerDeviationPrice("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleDunmerDeviationPrice("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteDunmerDeviationPrice complete: " + eventType)
 EndFunction
 
@@ -1512,7 +1512,7 @@ Function RouteNordOldWaysState(String sourceId)
         eventType = eventTypes.EVT_NORD_OLD_WAYS_STATE
     endIf
 
-    PDV_Manager.HandleNordOldWaysState("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleNordOldWaysState("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteNordOldWaysState complete: " + eventType)
 EndFunction
 
@@ -1528,7 +1528,7 @@ Function RouteNordKyneTalosContext(String sourceId)
         eventType = eventTypes.EVT_NORD_KYNE_TALOS_CONTEXT
     endIf
 
-    PDV_Manager.HandleNordKyneTalosContext("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleNordKyneTalosContext("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteNordKyneTalosContext complete: " + eventType)
 EndFunction
 
@@ -1544,7 +1544,7 @@ Function RouteNordHircineArkayEdge(String sourceId)
         eventType = eventTypes.EVT_NORD_HIRCINE_ARKAY_EDGE
     endIf
 
-    PDV_Manager.HandleNordHircineArkayEdge("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleNordHircineArkayEdge("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteNordHircineArkayEdge complete: " + eventType)
 EndFunction
 
@@ -1752,7 +1752,7 @@ Function RouteNordTsunAdversity(String asSourceId = "")
         Trace(1, "RouteNordTsunAdversity skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleNordTsunAdversitySurvived("eventbus_nord_tsun_adversity_" + asSourceId)
+    PDV_Manager.OriginRuntime.HandleNordTsunAdversitySurvived("eventbus_nord_tsun_adversity_" + asSourceId)
     Trace(2, "RouteNordTsunAdversity complete: " + asSourceId)
 EndFunction
 
@@ -1779,6 +1779,7 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] EventBus: " + traceText)
     endIf
 EndFunction
+
 
 
 

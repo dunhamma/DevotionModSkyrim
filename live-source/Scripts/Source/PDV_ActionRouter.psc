@@ -188,7 +188,7 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
             ; Story Manager contributes the hostile/non-murder half only. The
             ; player-alias kill receiver must independently contribute direct
             ; kill plus clean-opener evidence before the substrate can fire.
-            PDV_Manager.RecordDunmerStoryVictoryEvidence(victimActor as Form, aiRelationshipRank)
+            PDV_Manager.OriginRuntime.RecordDunmerStoryVictoryEvidence(victimActor as Form, aiRelationshipRank)
         endIf
         PDV_Manager.OriginRuntime.HandleHoonDingBreakthroughKill(victimActor as Form, eventType)
         ; A UNIQUE (named/boss) undead defeat is the marked Ash'abah death-burden that
@@ -316,7 +316,7 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
         ; (own per-FormID seen keys + Eldergleam arm/disarm), so it rides every
         ; change here rather than the one-shot MarkLocationSeen gate below.
         PDV_Manager.OriginRuntime.HandleBosmerLocationChange(akNewLocation)
-        PDV_Manager.HandleNordLocationChange(akNewLocation)
+        PDV_Manager.OriginRuntime.HandleNordLocationChange(akNewLocation)
         PDV_Manager.HandleOrcLocationChange(akNewLocation)
         PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
         PDV_Manager.TrackUndeadCryptClearSiteVisit(akNewLocation)
@@ -769,6 +769,7 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
+
 
 
 

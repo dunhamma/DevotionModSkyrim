@@ -1106,7 +1106,7 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
                 StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
                 Manager.SendPrismaEventToast("tier", deity, "", Manager.GetPublicTierBand(newTier), "")
                 Manager.SurfaceTransition("tier", deity.DeityName + " " + Manager.GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
-                Manager.MaybeShowNordKyneChampionEntry(deity, newTier)
+                Manager.OriginRuntime.MaybeShowNordKyneChampionEntry(deity, newTier)
             endIf
         endIf
 
@@ -1899,7 +1899,7 @@ Function ProcessDawn()
     RunDawnChampionAmbient()
     Manager.OriginRuntime.SyncKhajiitRuntimeState()
     Manager.OriginRuntime.ProcessKhajiitAlkoshWordDrip()
-    Manager.DisarmDunmerAncestorWatch()
+    Manager.OriginRuntime.DisarmDunmerAncestorWatch()
     Manager.RequestPanelRefresh()
 
     if Manager.GetDebugLevel() >= 1
@@ -1986,7 +1986,7 @@ Bool Function ShowChampionAmbientForDeity(PDV_DeityBase deity, Bool deep)
     elseIf deity == Manager.PDV_Kyne
         ; Kyne keeps her existing one-shot at the moment of the reach; this is the recurring layer
         ; on top of it, not a replacement. She ships one ambient record, so both slots speak it.
-        Manager.ShowNordNotification(Manager.PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
+        Manager.OriginRuntime.ShowNordNotification(Manager.PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
         return True
     endIf
 
@@ -2089,7 +2089,7 @@ Function RunDawnRefreshTrackStates()
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
-        Manager.RunDawnRefreshNordAncestor()
+        Manager.OriginRuntime.RunDawnRefreshNordAncestor()
     endIf
 
     if Manager.IsOrcOrigin()
@@ -2153,8 +2153,8 @@ Function RunDawnApplySpellAndNeglectLayers()
         ; (Old Ways / Nine Divines) reuses the Kyne weather spell as its broad-lane neglect for now;
         ; per-race broad-lane neglect spells are a follow-on. Other races: no broad spell yet.
         Bool nordBroadLapsed = Manager.IsBroadLaneLapsed() && Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
-        Manager.SyncKyneNeglectSpell(nordBroadLapsed)
-        Manager.SyncNordPatronNeglectSpells()
+        Manager.OriginRuntime.SyncKyneNeglectSpell(nordBroadLapsed)
+        Manager.OriginRuntime.SyncNordPatronNeglectSpells()
         if nordBroadLapsed && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
             Manager.SendPrismaToast("journal", "warning", "Devotion quiet", "The gods feel distant as your devotion goes quiet.")
         endIf
@@ -2168,8 +2168,8 @@ Function RunDawnApplySpellAndNeglectLayers()
         ClearAllNeglectFlags()
         StorageUtil.SetIntValue(None, "PDV.Neglect.ActiveCount", 0)
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", 0)
-        Manager.SyncKyneNeglectSpell(False)
-        Manager.SyncNordPatronNeglectSpells()
+        Manager.OriginRuntime.SyncKyneNeglectSpell(False)
+        Manager.OriginRuntime.SyncNordPatronNeglectSpells()
         Manager.FavorRuntime.UpdateContextualFavorRuntime()
         SyncFirstTierRaceRewardRuntime()
         return
@@ -2189,8 +2189,8 @@ Function RunDawnApplySpellAndNeglectLayers()
     ; Owner ruling 2026-06-26: committing to a patron fades other gods' neglect. Kyne's
     ; weather-neglect now fires only when Kyne is the player's own active patron; any
     ; non-Kyne focus (any tier) suppresses it. Broad worship already had no Kyne penalty.
-    Manager.SyncKyneNeglectSpell(IsNeglectFlagActive(Manager.PDV_Kyne) && Manager.GetActiveDeity() == Manager.PDV_Kyne)
-    Manager.SyncNordPatronNeglectSpells()
+    Manager.OriginRuntime.SyncKyneNeglectSpell(IsNeglectFlagActive(Manager.PDV_Kyne) && Manager.GetActiveDeity() == Manager.PDV_Kyne)
+    Manager.OriginRuntime.SyncNordPatronNeglectSpells()
     Manager.FavorRuntime.UpdateContextualFavorRuntime()
 
     Bool patronNeglected = IsNeglectFlagActive(Manager.GetActiveDeity())
@@ -2503,7 +2503,7 @@ String Function GetActiveBroadPantheonPoolId()
         endIf
         return BROAD_PANTHEON_IMPERIAL
     elseIf origin == Manager.ORIGIN_NORD
-        if Manager.GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
+        if Manager.OriginRuntime.GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
             return BROAD_PANTHEON_NORD_NINE
         endIf
         return BROAD_PANTHEON_NORD_OLD
@@ -3582,8 +3582,8 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Dunmer is hybrid: ancestor substrate is always-on identity, while the Reclamation foreground
     ; remains an active-patron offer lane with one focused patron active at a time.
-    Manager.SyncDunmerRewards(playerRef)
-    Manager.SyncDunmerNeglectSpell(Manager.IsDunmerAncestorNeglected())
+    Manager.OriginRuntime.SyncDunmerRewards(playerRef)
+    Manager.OriginRuntime.SyncDunmerNeglectSpell(Manager.OriginRuntime.IsDunmerAncestorNeglected())
 
     ; Orc is state-enum gated: one life-mode focused family can be active at a time, all under
     ; Malacath as the single religious spine.
@@ -3597,7 +3597,7 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Nord is state-enum gated: the baseline selects Old Ways or Nine Divines, and only a patron
     ; from that baseline can carry focused rewards. Kyne neglect remains the existing Nord neglect.
-    Manager.SyncNordRewards(playerRef)
+    Manager.OriginRuntime.SyncNordRewards(playerRef)
 
     ; Argonian is the second no-offer race: rewards gate on the Hist substrate relations + People
     ; focus + Void-active (not active-patron), so the broad Hist set runs without an offer.
@@ -3731,7 +3731,7 @@ Function MaybeShowChampionRewardPresentation(Actor playerRef, Spell championSpel
         Manager.SendPrismaEventToast("tier", deity, "", Manager.GetPublicTierBand(TIER_CHAMPION), "")
         Manager.SurfaceTransition("tier", deity.DeityName + " " + Manager.GetTierStandingLabel(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
         if deity == Manager.PDV_Kyne
-            Manager.ShowNordNotification(Manager.PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
+            Manager.OriginRuntime.ShowNordNotification(Manager.PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
         endIf
         Manager.Trace(1, "Champion reward presentation shown: " + rewardLabel + " / " + deity.DeityName)
     endIf
@@ -3835,7 +3835,7 @@ PDV_DeityBase Function GetPacingPatronCandidate()
     if originRace == Manager.ORIGIN_IMPERIAL
         return PDV_Akatosh
     elseIf originRace == Manager.ORIGIN_NORD
-        if Manager.GetNordPantheonBaselineState() == Manager.NORD_BASELINE_OLD_WAYS
+        if Manager.OriginRuntime.GetNordPantheonBaselineState() == Manager.NORD_BASELINE_OLD_WAYS
             return Manager.PDV_Kyne
         endIf
         return PDV_Akatosh
@@ -3909,11 +3909,11 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
 
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_NORD
-        return Manager.GetNordFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetNordFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_IMPERIAL
         return Manager.GetImperialFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_DUNMER
-        return Manager.GetDunmerFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetDunmerFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_ALTMER
         return Manager.OriginRuntime.GetAltmerFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_BRETON
@@ -3985,7 +3985,7 @@ Bool Function IsEligibleForFormalCommitmentOffer(PDV_DeityBase deity)
         return False
     endIf
 
-    if deity == Manager.PDV_Kyne && !Manager.IsKyneCommitmentSignalReady()
+    if deity == Manager.PDV_Kyne && !Manager.OriginRuntime.IsKyneCommitmentSignalReady()
         return False
     endIf
 
@@ -4017,7 +4017,7 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return Manager.IsNordOfferEligibleDeity(deity) || Manager.IsImperialOfferEligibleDeity(deity) || Manager.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsRedguardOfferEligibleDeity(deity) || Manager.OriginRuntime.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
+    return Manager.OriginRuntime.IsNordOfferEligibleDeity(deity) || Manager.IsImperialOfferEligibleDeity(deity) || Manager.OriginRuntime.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsRedguardOfferEligibleDeity(deity) || Manager.OriginRuntime.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
 EndFunction
 
 Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
@@ -4027,7 +4027,7 @@ Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
 
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_NORD
-        return Manager.IsNordOfferEligibleDeity(deity)
+        return Manager.OriginRuntime.IsNordOfferEligibleDeity(deity)
     endIf
 
     return deity.GetStanceForRace(originRace) == deity.STANCE_NATIVE
@@ -4166,7 +4166,7 @@ EndFunction
 
 Bool Function ShouldBypassFormalCommitmentOffers()
     Int originRace = Manager.GetPlayerOriginRaceIndex()
-    if originRace == Manager.ORIGIN_NORD && Manager.IsNordVampireSuppressed()
+    if originRace == Manager.ORIGIN_NORD && Manager.OriginRuntime.IsNordVampireSuppressed()
         return True
     endIf
 
@@ -4243,7 +4243,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == Manager.ORIGIN_BRETON
         Manager.OriginRuntime.ApplyBretonCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_DUNMER
-        Manager.ApplyDunmerCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyDunmerCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ALTMER
         Manager.OriginRuntime.ApplyAltmerCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ARGONIAN
@@ -4257,7 +4257,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == Manager.ORIGIN_KHAJIIT
         Manager.OriginRuntime.ApplyKhajiitCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_NORD
-        Manager.ApplyNordCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyNordCurseHandlers(oldState, newState, reason)
         if Manager.PDV_HircinePath
             if !Manager.GetSuppressCurseTransitionOutputs()
                 Manager.PDV_HircinePath.HandleCurseTransition(oldState, newState, reason)
@@ -4565,6 +4565,7 @@ Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
         playerRef.AddSpell(bandSpell, False)
     endIf
 EndFunction
+
 
 
 

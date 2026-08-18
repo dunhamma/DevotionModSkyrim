@@ -132,7 +132,7 @@ Function EnsureOriginInventoryTokens()
         return
     endIf
 
-    PDV_Manager.EnsureDunmerAncestralUrn()
+    PDV_Manager.OriginRuntime.EnsureDunmerAncestralUrn()
     PDV_Manager.OriginRuntime.EnsureArgonianHistSapToken()
 EndFunction
 
@@ -515,4 +515,5 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] Origin: " + traceText)
     endIf
 EndFunction
+
 

@@ -212,7 +212,7 @@ Bool Function IsEligibleForFavorLane(Int laneValue)
 EndFunction
 
 Int Function ResolveEligibleFavorLane()
-    if Manager.IsNordVampireSuppressed()
+    if Manager.OriginRuntime.IsNordVampireSuppressed()
         return FAVOR_LANE_NONE
     endIf
 
@@ -236,7 +236,7 @@ Int Function ResolveEligibleFavorLane()
         return FAVOR_LANE_NONE
     endIf
 
-    Int baselineState = Manager.GetNordPantheonBaselineState()
+    Int baselineState = Manager.OriginRuntime.GetNordPantheonBaselineState()
     if baselineState == Manager.NORD_BASELINE_OLD_WAYS
         return FAVOR_LANE_NORD_BROAD_OLD_WAYS
     elseIf baselineState == Manager.NORD_BASELINE_NINE_DIVINES
@@ -539,7 +539,7 @@ String Function GetSelectedContextualFavorFamilyLabel()
 EndFunction
 
 String Function GetPlayerMcmFavorLine()
-    if Manager.IsNordVampireSuppressed()
+    if Manager.OriginRuntime.IsNordVampireSuppressed()
         return "Suppressed by vampire curse"
     endIf
 
@@ -571,4 +571,5 @@ String Function GetContextualFavorSummary()
     summary = summary + ";selected=" + GetSelectedContextualFavorLaneLabel() + "/" + GetSelectedContextualFavorFamilyLabel()
     return summary
 EndFunction
+
 
