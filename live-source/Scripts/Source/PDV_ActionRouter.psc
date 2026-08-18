@@ -170,7 +170,7 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
 
         RouteActionWithAttribution(nonHostileEvent, ATTR_DIRECT_PLAYER, killerActor as Form, victimActor as Form)
         if PDV_Manager
-            PDV_Manager.HandleArgonianShadowscaleKill(playerActor)
+            PDV_Manager.OriginRuntime.HandleArgonianShadowscaleKill(playerActor)
         endIf
         return
     endIf
@@ -183,7 +183,7 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
 
     RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, killerActor as Form, victimActor as Form)
     if PDV_Manager
-        PDV_Manager.HandleArgonianShadowscaleKill(playerActor)
+        PDV_Manager.OriginRuntime.HandleArgonianShadowscaleKill(playerActor)
         if eventType == EVT_KILLED_HOSTILE_HUMANOID_IN_COMBAT && aiCrimeStatus == 0 && aiRelationshipRank <= -2
             ; Story Manager contributes the hostile/non-murder half only. The
             ; player-alias kill receiver must independently contribute direct
@@ -311,7 +311,7 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
     ; Runs on EVERY location change (before the one-shot discovery gate) so the
     ; Eldergleam interior-cell catch can arm/disarm as the player comes and goes.
     if PDV_Manager
-        PDV_Manager.UpdateArgonianSanctuaryActive(akNewLocation)
+        PDV_Manager.OriginRuntime.UpdateArgonianSanctuaryActive(akNewLocation)
         ; Bosmer Songs of the Green + Hearth discovery counter. Self-contained
         ; (own per-FormID seen keys + Eldergleam arm/disarm), so it rides every
         ; change here rather than the one-shot MarkLocationSeen gate below.
@@ -331,7 +331,7 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
 
     RouteActionWithAttribution(EVT_DISCOVER_LOCATION, ATTR_DIRECT_PLAYER, akActor as Form, akNewLocation as Form)
     if PDV_Manager
-        PDV_Manager.HandleArgonianSacredWaterDiscovery(akNewLocation)
+        PDV_Manager.OriginRuntime.HandleArgonianSacredWaterDiscovery(akNewLocation)
     endIf
 EndFunction
 
@@ -769,4 +769,5 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
+
 

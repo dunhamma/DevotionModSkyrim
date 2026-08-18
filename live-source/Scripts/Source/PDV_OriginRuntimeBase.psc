@@ -16,6 +16,17 @@ Int _altmerPracticeLinesValidatedVersion = -1
 ObjectReference _bosGildergreenRef
 ObjectReference _bosYffreTreeStoneRef
 
+; --- Origin-owned script variables (tranche 2: Khajiit moon-observation state; moved verbatim; referenced only by moved bodies) ---
+Int _khajiitMoonObservationsValidatedVersion = -1
+String _khajiitMoonObservationsValidatedKey = ""
+Bool _khajiitMoonObservationPending = False
+Int _khajiitMoonObservationGeneration = 0
+Float _khajiitMoonObservationStartRealTime = 0.0
+Cell _khajiitMoonObservationCell = None
+Float _khajiitMoonObservationX = 0.0
+Float _khajiitMoonObservationY = 0.0
+Float _khajiitMoonObservationZ = 0.0
+
 Function EnsureBosmerRuntimeWiring()
     if Manager.PDV_BosmerPathTrack
         if Manager.PDV_BosmerPathTrack.TrackName != "BosmerPath"
@@ -2947,4 +2958,2571 @@ EndFunction
 
 Int Function GetBosmerFavorCount(String favorKey)
     return StorageUtil.GetIntValue(None, "PDV.Bosmer.Favor." + favorKey + ".Count")
+EndFunction
+
+; ============================================================================
+; ORIGIN tranche 2: Khajiit (lunar/road/Baan-Dar/Azurah/focus) + Argonian
+; (Hist/sap/adaptation/home) lanes. Moved verbatim from PDV__ManagerQuest;
+; bare manager-member references qualified via Manager.; read of
+; _suppressCurseTransitionOutputs -> Manager.GetSuppressCurseTransitionOutputs();
+; write of _raceCurseSurfaceShown -> Manager.SetRaceCurseSurfaceShown(...).
+; ============================================================================
+
+Int Function GetKhajiitFocusForDeityName(String deityName)
+    if deityName == "Khenarthi"
+        return Manager.KHAJIIT_FOCUS_KHENARTHI
+    elseIf deityName == "Azurah" || deityName == "Azura"
+        return Manager.KHAJIIT_FOCUS_AZURAH
+    elseIf deityName == "Baan Dar"
+        return Manager.KHAJIIT_FOCUS_BAANDAR
+    elseIf deityName == "Rajhin"
+        return Manager.KHAJIIT_FOCUS_RAJHIN
+    elseIf deityName == "Alkosh"
+        return Manager.KHAJIIT_FOCUS_ALKOSH
+    endIf
+
+    return Manager.KHAJIIT_FOCUS_NONE
+EndFunction
+
+Function BridgeKhajiitMatrixFocus(String deityName, String magnitude)
+    Int focusValue = GetKhajiitFocusForDeityName(deityName)
+    if focusValue == Manager.KHAJIIT_FOCUS_NONE
+        return
+    endIf
+
+    Float base = Manager.KHAJIIT_FOCUS_MATRIX_DELTA
+    if magnitude == "milestone"
+        base = Manager.KHAJIIT_FOCUS_MATRIX_DELTA * 2.0
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitMatrixFocus." + deityName)
+    if multiplier <= 0.0
+        return
+    endIf
+
+    AdjustKhajiitFocusedEmphasis(focusValue, base * multiplier, "matrix_focus_" + deityName)
+    Manager.Trace(2, "Khajiit matrix focus bridge: " + deityName + " focus +" + (base * multiplier))
+EndFunction
+
+Int Function GetLunarPresidingFocus(Int phaseIndex)
+    if phaseIndex == 1
+        return Manager.KHAJIIT_FOCUS_ALKOSH      ; full moon -- order at its height, the dragon-sun
+    elseIf phaseIndex == 2
+        return Manager.KHAJIIT_FOCUS_AZURAH      ; waning gibbous -- twilight descending
+    elseIf phaseIndex == 3
+        return Manager.KHAJIIT_FOCUS_KHENARTHI   ; last quarter -- the road in balance
+    elseIf phaseIndex == 4
+        return Manager.KHAJIIT_FOCUS_RAJHIN      ; waning crescent -- fading into shadow
+    elseIf phaseIndex == 5
+        return Manager.KHAJIIT_FOCUS_RAJHIN      ; new moon -- the deepest dark, quiet theft
+    elseIf phaseIndex == 6
+        return Manager.KHAJIIT_FOCUS_BAANDAR     ; waxing crescent -- the pariah's edge emerging
+    elseIf phaseIndex == 7
+        return Manager.KHAJIIT_FOCUS_KHENARTHI   ; first quarter -- the road in balance
+    elseIf phaseIndex == 8
+        return Manager.KHAJIIT_FOCUS_AZURAH      ; waxing gibbous -- twilight ascending
+    endIf
+
+    return Manager.KHAJIIT_FOCUS_NONE
+EndFunction
+
+Int Function GetKhajiitFocusForDeity(PDV_DeityBase deity)
+    if !deity
+        return Manager.KHAJIIT_FOCUS_NONE
+    elseIf deity == Manager.PDV_Khenarthi
+        return Manager.KHAJIIT_FOCUS_KHENARTHI
+    elseIf deity == Manager.PDV_Azura
+        return Manager.KHAJIIT_FOCUS_AZURAH
+    elseIf deity == Manager.PDV_BaanDar
+        return Manager.KHAJIIT_FOCUS_BAANDAR
+    elseIf deity == Manager.PDV_Rajhin
+        return Manager.KHAJIIT_FOCUS_RAJHIN
+    elseIf deity == Manager.PDV_Alkosh
+        return Manager.KHAJIIT_FOCUS_ALKOSH
+    endIf
+
+    return Manager.KHAJIIT_FOCUS_NONE
+EndFunction
+
+Int Function GetCurrentLunarPresidingFocus()
+    if !IsKhajiitOrigin()
+        return Manager.KHAJIIT_FOCUS_NONE
+    endIf
+
+    return GetLunarPresidingFocus(GetKhajiitMoonPhaseFromGameDay(Utility.GetCurrentGameTime()))
+EndFunction
+
+Int Function GetActiveLunarFavoredFocus()
+    Int presidingFocus = GetCurrentLunarPresidingFocus()
+    if presidingFocus == Manager.KHAJIIT_FOCUS_NONE || presidingFocus != GetKhajiitFocusedEmphasis()
+        return Manager.KHAJIIT_FOCUS_NONE
+    endIf
+
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(presidingFocus)
+    if !deity || Manager.LedgerRuntime.GetPiety(deity) < 25.0
+        return Manager.KHAJIIT_FOCUS_NONE
+    endIf
+
+    return presidingFocus
+EndFunction
+
+Spell Function GetKhajiitPhaseBlessing(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        return Manager.PDV_Bless_Khajiit_Phase_Khenarthi
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        return Manager.PDV_Bless_Khajiit_Phase_Azurah
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return Manager.PDV_Bless_Khajiit_Phase_BaanDar
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        return Manager.PDV_Bless_Khajiit_Phase_Rajhin
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        return Manager.PDV_Bless_Khajiit_Phase_Alkosh
+    endIf
+
+    return None
+EndFunction
+
+Function SyncKhajiitPhaseBlessing()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    Int focusValue = 1
+    while focusValue <= 5
+        Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, GetKhajiitPhaseBlessing(focusValue), False, "retired Khajiit phase blessing " + GetKhajiitFocusLabel(focusValue))
+        focusValue += 1
+    endWhile
+EndFunction
+
+Bool Function IsKhajiitLatticeResonating()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+        return False
+    endIf
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    if focusValue == Manager.KHAJIIT_FOCUS_NONE || focusValue != GetCurrentLunarPresidingFocus()
+        return False
+    endIf
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
+    return deity && Manager.LedgerRuntime.GetPiety(deity) >= 25.0
+EndFunction
+
+Spell Function GetKhajiitFocusedRewardSpell(Int focusValue, Int tierValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION
+            return Manager.PDV_Bless_Khajiit_Khenarthi_T3
+        elseIf tierValue == Manager.LedgerRuntime.TIER_DEVOTED
+            return Manager.PDV_Bless_Khajiit_Khenarthi_T2
+        elseIf tierValue == Manager.LedgerRuntime.TIER_SEEKER
+            return Manager.PDV_Bless_Khajiit_Khenarthi_T1
+        endIf
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION
+            return Manager.PDV_Bless_Khajiit_Azurah_T3
+        elseIf tierValue == Manager.LedgerRuntime.TIER_DEVOTED
+            return Manager.PDV_Bless_Khajiit_Azurah_T2
+        elseIf tierValue == Manager.LedgerRuntime.TIER_SEEKER
+            return Manager.PDV_Bless_Khajiit_Azurah_T1
+        endIf
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION
+            return Manager.PDV_Bless_Khajiit_BaanDar_T3
+        elseIf tierValue == Manager.LedgerRuntime.TIER_DEVOTED
+            return Manager.PDV_Bless_Khajiit_BaanDar_T2
+        elseIf tierValue == Manager.LedgerRuntime.TIER_SEEKER
+            return Manager.PDV_Bless_Khajiit_BaanDar_T1
+        endIf
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION
+            return Manager.PDV_Bless_Khajiit_Rajhin_T3
+        elseIf tierValue == Manager.LedgerRuntime.TIER_DEVOTED
+            return Manager.PDV_Bless_Khajiit_Rajhin_T2
+        elseIf tierValue == Manager.LedgerRuntime.TIER_SEEKER
+            return Manager.PDV_Bless_Khajiit_Rajhin_T1
+        endIf
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION
+            return Manager.PDV_Bless_Khajiit_Alkosh_T3
+        elseIf tierValue == Manager.LedgerRuntime.TIER_DEVOTED
+            return Manager.PDV_Bless_Khajiit_Alkosh_T2
+        elseIf tierValue == Manager.LedgerRuntime.TIER_SEEKER
+            return Manager.PDV_Bless_Khajiit_Alkosh_T1
+        endIf
+    endIf
+    return None
+EndFunction
+
+Function RefreshKhajiitFocusedRewardForResonance(Actor playerRef)
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
+    if !playerRef || !deity
+        return
+    endIf
+    Spell rewardSpell = GetKhajiitFocusedRewardSpell(focusValue, Manager.LedgerRuntime.GetTier(deity))
+    if rewardSpell && playerRef.HasSpell(rewardSpell)
+        playerRef.RemoveSpell(rewardSpell)
+        playerRef.AddSpell(rewardSpell, False)
+    endIf
+EndFunction
+
+Function SyncKhajiitLatticeResonance(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+    Bool shouldResonate = IsKhajiitLatticeResonating()
+    Bool wasResonating = StorageUtil.GetIntValue(None, "PDV.Khajiit.LatticeResonating") == 1
+    if shouldResonate
+        if Manager.PDV_PERK_Khajiit_LatticeResonance && !playerRef.HasPerk(Manager.PDV_PERK_Khajiit_LatticeResonance)
+            playerRef.AddPerk(Manager.PDV_PERK_Khajiit_LatticeResonance)
+        endIf
+        if Manager.PDV_SPEL_Khajiit_LatticeResonanceMarker && !playerRef.HasSpell(Manager.PDV_SPEL_Khajiit_LatticeResonanceMarker)
+            playerRef.AddSpell(Manager.PDV_SPEL_Khajiit_LatticeResonanceMarker, False)
+        endIf
+    else
+        if Manager.PDV_PERK_Khajiit_LatticeResonance && playerRef.HasPerk(Manager.PDV_PERK_Khajiit_LatticeResonance)
+            playerRef.RemovePerk(Manager.PDV_PERK_Khajiit_LatticeResonance)
+        endIf
+        if Manager.PDV_SPEL_Khajiit_LatticeResonanceMarker && playerRef.HasSpell(Manager.PDV_SPEL_Khajiit_LatticeResonanceMarker)
+            playerRef.RemoveSpell(Manager.PDV_SPEL_Khajiit_LatticeResonanceMarker)
+        endIf
+    endIf
+    if shouldResonate != wasResonating
+        if shouldResonate
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 1)
+        else
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 0)
+        endIf
+        RefreshKhajiitFocusedRewardForResonance(playerRef)
+        Manager.RequestPanelRefresh()
+        Manager.Trace(1, "Khajiit Lattice Resonance " + shouldResonate)
+    endIf
+EndFunction
+
+Function SyncKhajiitPortentPower(Actor playerRef)
+    if !playerRef || !Manager.PDV_Power_Khajiit_AzurahPortent
+        return
+    endIf
+    PDV_DeityBase focusDeity = GetKhajiitEmphasisDeity(GetKhajiitFocusedEmphasis())
+    Bool shouldHave = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT && focusDeity == Manager.PDV_Azura && Manager.LedgerRuntime.GetTier(focusDeity) >= Manager.LedgerRuntime.TIER_CHAMPION && playerRef.HasSpell(Manager.PDV_Bless_Khajiit_Azurah_T3)
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Power_Khajiit_AzurahPortent, shouldHave, "Azurah Portent power")
+EndFunction
+
+Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
+    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_AZURAH
+        return False
+    endIf
+    if !Manager.PDV_Azura || Manager.LedgerRuntime.GetTier(Manager.PDV_Azura) < Manager.LedgerRuntime.TIER_CHAMPION || !Manager.PDV_Bless_Khajiit_Azurah_T3 || !playerRef.HasSpell(Manager.PDV_Bless_Khajiit_Azurah_T3)
+        SyncKhajiitPortentPower(playerRef)
+        return False
+    endIf
+
+    Int currentDay = Manager.LedgerRuntime.GetDevotionalDay() + 2
+    if StorageUtil.GetIntValue(None, "PDV.Khajiit.AzurahPortent.Day") == currentDay
+        if Manager.PDV_SND_Khajiit_AzurahPortentFizzle
+            Manager.PDV_SND_Khajiit_AzurahPortentFizzle.Play(playerRef)
+        endIf
+        return False
+    endIf
+    if !Manager.PDV_SPEL_Khajiit_AzurahPortentDetect
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.AzurahPortent.Day", currentDay)
+    Manager.PDV_SPEL_Khajiit_AzurahPortentDetect.Cast(playerRef, playerRef)
+    String portentText = "For a moment, living hearts, restless dead, fallen bodies, Daedra, and brass minds declare their places."
+    Manager.SendPrismaToast("azurah", "good", "Azurah's Portent", portentText)
+    Manager.AppendBookOfDaysEntry(portentText, Utility.GetCurrentGameTime() as Int, "champion.act", "azurah", False, 1, "Azurah's Portent")
+    return True
+EndFunction
+
+Bool Function CanExecuteKhajiitBaanDarRescue(Actor playerRef)
+    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_BAANDAR
+        return False
+    endIf
+    if !Manager.PDV_BaanDar || Manager.LedgerRuntime.GetTier(Manager.PDV_BaanDar) < Manager.LedgerRuntime.TIER_CHAMPION || !Manager.PDV_Bless_Khajiit_BaanDar_T3
+        return False
+    endIf
+    return playerRef.HasSpell(Manager.PDV_Bless_Khajiit_BaanDar_T3)
+EndFunction
+
+Function ScheduleNextKhajiitGodStrengthBoundary()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+        UnregisterForUpdateGameTime()
+        return
+    endIf
+    Float nowTime = Utility.GetCurrentGameTime()
+    Int currentPhase = GetKhajiitMoonPhaseFromGameDay(nowTime)
+    Int currentBucket = (nowTime + 0.5) as Int
+    Int candidateBucket = currentBucket + 1
+    while candidateBucket < currentBucket + 5 && GetKhajiitMoonPhaseFromGameDay((candidateBucket as Float) - 0.5) == currentPhase
+        candidateBucket += 1
+    endWhile
+    Float hoursUntilBoundary = (((candidateBucket as Float) - 0.5) - nowTime) * 24.0
+    if hoursUntilBoundary < 0.05
+        hoursUntilBoundary = 0.05
+    endIf
+    RegisterForSingleUpdateGameTime(hoursUntilBoundary)
+EndFunction
+
+Function SyncKhajiitRuntimeState()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+    if GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
+        ; Existing focused saves are grandfathered without replaying the ceremony.
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
+    endIf
+    SyncKhajiitEmphasisRewards(playerRef)
+    SyncKhajiitPhaseBlessing()
+    ScheduleNextKhajiitGodStrengthBoundary()
+EndFunction
+
+Function ProcessKhajiitAlkoshWordDrip()
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    Int wordsNow = Game.QueryStat("Words Of Power Learned")
+    Manager.Trace(3, "Khajiit Alkosh word drip: stat reads " + wordsNow)
+    if StorageUtil.GetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen.Init") == 0
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen.Init", 1)
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen", wordsNow)
+        return
+    endIf
+
+    Int wordsSeen = StorageUtil.GetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen")
+    Int newWords = wordsNow - wordsSeen
+    if newWords <= 0
+        return
+    endIf
+
+    Int awarded = 0
+    while awarded < newWords && awarded < 3
+        Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitAlkoshWordOfPower")
+        AdjustKhajiitFocusedEmphasis(Manager.KHAJIIT_FOCUS_ALKOSH, Manager.KHAJIIT_FOCUS_MATRIX_DELTA * multiplier, "alkosh_word_of_power")
+        awarded += 1
+    endWhile
+
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen", wordsSeen + awarded)
+    Manager.Trace(2, "Khajiit Alkosh word-of-power drip awarded " + awarded + " of " + newWords + " new words")
+    Manager.SendPrismaShiftToast("Words marked", "Alkosh orders new words.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_ALKOSH))
+    Manager.LedgerRuntime.RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
+EndFunction
+
+Float Function GetKhajiitLunarAlignmentMultiplier(PDV_DeityBase deity)
+    return 1.0
+EndFunction
+
+String Function GetArgonianCulturalNextThresholdText(Float metric)
+    if metric < 1.0
+        return "Root Memory at 1"
+    elseIf metric < 25.0
+        return "River-Kept Practice at 25"
+    elseIf metric < 75.0
+        return "Rooted Adaptation at 75"
+    endIf
+    return "Rooted Adaptation"
+EndFunction
+
+String Function GetArgonianCulturalPracticeLabel()
+    if !Manager.PDV_ArgonianHistSubstrate
+        return "Practice quiet"
+    endIf
+    Int tierValue = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION
+        return "Rooted Adaptation"
+    elseIf tierValue >= Manager.LedgerRuntime.TIER_DEVOTED
+        return "River-Kept Practice"
+    elseIf tierValue >= Manager.LedgerRuntime.TIER_SEEKER
+        return "Root Memory"
+    endIf
+    return "Practice quiet"
+EndFunction
+
+Function HandleArgonianSleepEvents(Actor playerRef, String reason)
+    if !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    ; Identity = the CELL you sleep in (reliable at sleep-stop), not the bed
+    ; furniture ref (GetFurnitureReference is None at OnSleepStart). Your home
+    ; room becomes your place of rest.
+    Int sleepCellId = 0
+    Cell sleepCell = playerRef.GetParentCell()
+    if sleepCell
+        sleepCellId = sleepCell.GetFormID()
+    endIf
+
+    Bool menuShown = TryArgonianBedOfChoiceSleep(playerRef, sleepCellId, reason)
+    if !menuShown
+        menuShown = TryArgonianAdaptationRite(playerRef, sleepCellId, reason)
+    endIf
+    if !menuShown
+        TryArgonianPostureDream(reason)
+    endIf
+EndFunction
+
+Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, String reason)
+    if sleepCellId == 0 || !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+        return false
+    endIf
+
+    ; Every bed cadence uses the shared 06:00 devotional day, encoded with
+    ; +2 so day zero cannot be mistaken for an unset legacy value.
+    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
+    Int declaredId = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclaredFormID")
+    if declaredId != 0 && sleepCellId == declaredId
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", 0)
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
+        HandleArgonianBedOfChoiceReturn("declared_" + reason)
+        if Manager.PDV_SPEL_ArgonianRootedRest && StorageUtil.GetIntValue(Manager.PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount") >= 12
+            Int rootedRestStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
+            if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay") != rootedRestStamp
+                Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay")
+                Manager.PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
+                Manager.SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
+                Manager.Trace(1, "[PDV][ARGONIAN_ROOTED_REST] granted day=" + Manager.LedgerRuntime.GetDevotionalDay())
+            else
+                Manager.Trace(2, "Argonian Rooted Rest suppressed: already granted this devotional day")
+            endIf
+        endIf
+        return false
+    endIf
+
+    if !Manager.PDV_MESG_ArgonianMarkBed
+        return false
+    endIf
+
+    Int declinedDay = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclineDay")
+    if declinedDay > 0 && (todayStamp - declinedDay) < 3
+        return false
+    endIf
+
+    Int candidateId = StorageUtil.GetIntValue(None, "PDV.ArgBed.CandidateFormID")
+    Int candidateDay = StorageUtil.GetIntValue(None, "PDV.ArgBed.CandidateDay")
+    Int candidateCount = StorageUtil.GetIntValue(None, "PDV.ArgBed.CandidateCount")
+    if candidateId != sleepCellId
+        candidateCount = 1
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", sleepCellId)
+    elseIf candidateDay != todayStamp
+        candidateCount += 1
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", candidateCount)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", todayStamp)
+
+    if candidateCount < 3
+        return false
+    endIf
+
+    Utility.Wait(0.5)
+    Int pressed = Manager.PDV_MESG_ArgonianMarkBed.Show()
+    ; B4 / fix-plan 3. -1 is "another menu was already up", not a decline. Stamping the
+    ; 3-day suppression AND wiping the 3-sleep candidacy counters on a menu the player
+    ; never saw threw away three nights of progress silently.
+    if pressed < 0
+        Manager.Trace(2, "Argonian bed-of-choice menu not shown (menu busy); candidacy kept.")
+        return false
+    endIf
+    if pressed == 0
+        SetArgonianHome(playerRef, sleepCellId, todayStamp, reason)
+        Manager.SendPrismaToast("hist", "good", "Place of rest", "The Hist remembers it now.")
+    else
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", todayStamp)
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", 0)
+        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
+    endIf
+    return true
+EndFunction
+
+Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int devotionalDayStamp, String reason)
+    if sleepCellId == 0
+        return
+    endIf
+
+    ; Adaptation's older maturation clock remains a raw game-day value.  The
+    ; declaration/candidate cadence above is the one governed by 06:00 days.
+    Int today = Utility.GetCurrentGameTime() as Int
+
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredFormID", sleepCellId)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclaredDay", devotionalDayStamp)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", 0)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", 0)
+    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
+    if Manager.PDV_ArgonianHistSubstrate
+        StorageUtil.SetIntValue(Manager.PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount", 0)
+        StorageUtil.SetIntValue(Manager.PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepDay", 0)
+    endIf
+    ; A chosen adaptation is permanent and follows the player to a new home.
+    ; Only an unadapted player rolls a new maturation clock.
+    if StorageUtil.GetIntValue(None, "PDV.Adapt.Active") == 0
+        StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", today + Utility.RandomInt(10, 14) + 1)
+    endIf
+    Manager.Trace(2, "Argonian home declared: " + reason)
+EndFunction
+
+Function ClearArgonianAdaptation(Actor playerRef)
+    if playerRef
+        RemoveArgonianAdaptationSpells(playerRef)
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Adapt.Active", 0)
+    StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", 0)
+EndFunction
+
+Bool Function TryArgonianAdaptationRite(Actor playerRef, Int sleepCellId, String reason)
+    if !playerRef || !Manager.PDV_MESG_ArgonianAdaptRite || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+        return false
+    endIf
+
+    if Manager.PDV_ArgonianHistSubstrate.GetMetric() < Manager.ARGONIAN_REWARD_SIGNATURE_THRESHOLD
+        return false
+    endIf
+
+    Bool rooted = false
+    Int declaredId = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclaredFormID")
+    if sleepCellId != 0 && declaredId != 0 && sleepCellId == declaredId
+        rooted = true
+    elseIf Manager.PDV_FLST_ArgonianSacredWaters && playerRef.GetCurrentLocation() && Manager.PDV_FLST_ArgonianSacredWaters.HasForm(playerRef.GetCurrentLocation())
+        rooted = true
+    endIf
+    if !rooted
+        return false
+    endIf
+
+    ; One-time, permanent choice: the rite is only offered while no adaptation is
+    ; active. Once taken it is kept for good -- no swap, no re-rite.
+    if StorageUtil.GetIntValue(None, "PDV.Adapt.Active") != 0
+        return false
+    endIf
+
+    ; Grow into the home over time: wait out the randomized 10-14 day clock rolled
+    ; on the first qualifying sleep at this home. DueDay is stored as targetDay + 1
+    ; so 0 unambiguously means "never armed" (StorageUtil ints default to 0).
+    Int dueDay = StorageUtil.GetIntValue(None, "PDV.Adapt.DueDay")
+    Int todayDay = Utility.GetCurrentGameTime() as Int
+    if dueDay <= 0
+        StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", todayDay + Utility.RandomInt(10, 14) + 1)
+        return false
+    endIf
+    if todayDay < (dueDay - 1)
+        return false
+    endIf
+
+    Utility.Wait(0.5)
+    Int pressed = Manager.PDV_MESG_ArgonianAdaptRite.Show()
+    if pressed < 0 || pressed > 3
+        return true
+    endIf
+
+    ApplyArgonianAdaptation(playerRef, pressed)
+    return true
+EndFunction
+
+Function ApplyArgonianAdaptation(Actor playerRef, Int adaptationIndex)
+    RemoveArgonianAdaptationSpells(playerRef)
+    Spell chosenAdaptation = GetArgonianAdaptationSpell(adaptationIndex)
+    if !chosenAdaptation
+        return
+    endIf
+
+    playerRef.AddSpell(chosenAdaptation, False)
+    StorageUtil.SetIntValue(None, "PDV.Adapt.Active", adaptationIndex + 1)
+    Manager.SendPrismaShiftToast("The Hist has reshaped you.", "", "hist")
+    Manager.AppendBookOfDaysEntry("You took the Hist's adaptation into your body. The change is permanent -- the root has answered, and you are remade in its image.", Utility.GetCurrentGameTime() as Int, "reorientation", "hist", True, 3)
+    Manager.Trace(2, "Argonian adaptation applied: " + adaptationIndex)
+EndFunction
+
+Function RemoveArgonianAdaptationSpells(Actor playerRef)
+    Int adaptationIndex = 0
+    while adaptationIndex < 4
+        Spell adaptationSpell = GetArgonianAdaptationSpell(adaptationIndex)
+        if adaptationSpell && playerRef.HasSpell(adaptationSpell)
+            playerRef.RemoveSpell(adaptationSpell)
+        endIf
+        adaptationIndex += 1
+    endWhile
+EndFunction
+
+Spell Function GetArgonianAdaptationSpell(Int adaptationIndex)
+    if adaptationIndex == 0
+        return Manager.PDV_SPEL_ArgonianAdapt_Claws
+    elseIf adaptationIndex == 1
+        return Manager.PDV_SPEL_ArgonianAdapt_Skin
+    elseIf adaptationIndex == 2
+        return Manager.PDV_SPEL_ArgonianAdapt_Sap
+    elseIf adaptationIndex == 3
+        return Manager.PDV_SPEL_ArgonianAdapt_Marsh
+    endIf
+
+    return None
+EndFunction
+
+Function SyncArgonianAdaptation(Actor playerRef, Bool isArgonian)
+    Int activeAdaptation = StorageUtil.GetIntValue(None, "PDV.Adapt.Active")
+    if activeAdaptation <= 0
+        return
+    endIf
+
+    Spell activeSpell = GetArgonianAdaptationSpell(activeAdaptation - 1)
+    if !activeSpell
+        return
+    endIf
+
+    if isArgonian
+        if !playerRef.HasSpell(activeSpell)
+            playerRef.AddSpell(activeSpell, False)
+        endIf
+    else
+        if playerRef.HasSpell(activeSpell)
+            playerRef.RemoveSpell(activeSpell)
+        endIf
+    endIf
+EndFunction
+
+Function HandleArgonianSacredWaterDiscovery(Location discoveredLocation)
+    if !discoveredLocation || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+        return
+    endIf
+
+    if !Manager.PDV_FLST_ArgonianSacredWaters || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    ; Eldergleam's water and great tree are inside the cave, but the sanctuary
+    ; LOCATION spans the exterior approach too. Arm the interior-cell catch
+    ; instead of firing at the door; TryArgonianEldergleamInterior awards it
+    ; once the player is actually in a cave cell.
+    if discoveredLocation.GetFormID() == 0x000192AC
+        StorageUtil.SetIntValue(None, "PDV.ArgWaters.EldergleamActive", 1)
+        return
+    endIf
+
+    if !Manager.PDV_FLST_ArgonianSacredWaters.HasForm(discoveredLocation)
+        return
+    endIf
+
+    AwardArgonianSacredWater(discoveredLocation.GetFormID())
+EndFunction
+
+Function AwardArgonianSacredWater(Int siteFormId)
+    String seenKey = "PDV.ArgWaters.Seen." + siteFormId
+    if StorageUtil.GetIntValue(None, seenKey) == 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, seenKey, 1)
+    Int seenCount = StorageUtil.AdjustIntValue(None, "PDV.ArgWaters.Count", 1)
+
+    Manager.PDV_ArgonianHistSubstrate.SetHistRelation(Manager.PDV_ArgonianHistSubstrate.GetHistRelation() + 1.0, "sacred_water")
+    Manager.PDV_ArgonianHistSubstrate.StampHistMaintenance("sacred_water_" + siteFormId)
+    Manager.PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_sacred_water", "sacred_water_" + siteFormId)
+    if Manager.PDV_Hist
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
+    endIf
+    Debug.MessageBox("The water remembers. For one slow breath you stand in the marsh again, and the root speaks your name.")
+    Manager.SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
+    Manager.AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
+
+    if seenCount >= Manager.PDV_FLST_ArgonianSacredWaters.GetSize()
+        StorageUtil.SetIntValue(None, "PDV.ArgWaters.Milestone", 1)
+        Debug.MessageBox("Every water that remembers has known you now. The marsh is never truly far -- the root holds you, wherever the road takes you.")
+    endIf
+    Manager.Trace(2, "Sacred water remembered: " + seenCount + " of " + Manager.PDV_FLST_ArgonianSacredWaters.GetSize())
+EndFunction
+
+Function UpdateArgonianSanctuaryActive(Location loc)
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+        return
+    endIf
+
+    Int active = 0
+    if loc && loc.GetFormID() == 0x000192AC
+        active = 1
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.ArgWaters.EldergleamActive", active)
+EndFunction
+
+Function TryArgonianEldergleamInterior()
+    if StorageUtil.GetIntValue(None, "PDV.ArgWaters.EldergleamActive") != 1
+        return
+    endIf
+
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || StorageUtil.GetIntValue(None, "PDV.ArgWaters.Seen.103084") == 1
+        StorageUtil.SetIntValue(None, "PDV.ArgWaters.EldergleamActive", 0)
+        return
+    endIf
+
+    Actor argonianPlayer = Game.GetPlayer()
+    Cell parentCell = argonianPlayer.GetParentCell()
+    if !parentCell
+        return
+    endIf
+
+    Int cellId = parentCell.GetFormID()
+    if cellId == 0x0003A9EC || cellId == 0x0003A9E0 || cellId == 0x0003A9E3
+        AwardArgonianSacredWater(0x000192AC)
+        StorageUtil.SetIntValue(None, "PDV.ArgWaters.EldergleamActive", 0)
+    endIf
+EndFunction
+
+Function TryArgonianNearWaterMaintenance()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    Int pdvEncodedWaterDay = Manager.LedgerRuntime.GetDevotionalDay() + 2
+    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay") == pdvEncodedWaterDay
+        return
+    endIf
+
+    Actor argonianPlayer = Game.GetPlayer()
+    Cell waterCell = None
+    if argonianPlayer
+        waterCell = argonianPlayer.GetParentCell()
+    endIf
+    if !argonianPlayer || !argonianPlayer.IsSwimming() || !waterCell || waterCell.IsInterior()
+        StorageUtil.SetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime", 0.0)
+        return
+    endIf
+
+    Float startedAt = StorageUtil.GetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime")
+    if startedAt <= 0.0
+        StorageUtil.SetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime", Utility.GetCurrentRealTime())
+        return
+    endIf
+    if Utility.GetCurrentRealTime() - startedAt < 10.0
+        return
+    endIf
+
+    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.NearWaterDay")
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.WaterPractice.StartRealTime", 0.0)
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianNearWater")
+    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    Manager.PDV_ArgonianHistSubstrate.RecordHistMaintenanceScaled(multiplier, "near_water")
+    RefreshArgonianHistPosture("near_water")
+    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    if Manager.PDV_Hist
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+    endIf
+    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The water remembers you.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.RequestPanelRefresh()
+    Manager.Trace(2, "Argonian near-water Hist maintenance routed.")
+EndFunction
+
+Function HandleArgonianSapVision()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    if StorageUtil.GetIntValue(None, "PDV.ArgWaters.SapVision") == 1
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.ArgWaters.SapVision", 1)
+    Manager.PDV_ArgonianHistSubstrate.SetHistRelation(Manager.PDV_ArgonianHistSubstrate.GetHistRelation() + 1.0, "sleeping_tree_sap")
+    Manager.PDV_ArgonianHistSubstrate.StampHistMaintenance("sleeping_tree_sap")
+    Manager.PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_hist", "sleeping_tree_sap")
+    if Manager.PDV_Hist
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
+    endIf
+    Debug.MessageBox("The sap is strange and far from home, but it resonates, and the Hist stirs within.")
+    Manager.Trace(2, "Sleeping Tree Sap vision fired.")
+EndFunction
+
+Function HandleArgonianShadowscaleKill(Actor playerRef)
+    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+        return
+    endIf
+
+    if !Manager.PDV_ArgonianHistSubstrate || !Manager.PDV_SPEL_ArgonianShadowscaleVeil
+        return
+    endIf
+
+    if !playerRef.IsSneaking()
+        return
+    endIf
+
+    if !Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        return
+    endIf
+
+    Float voidRelation = Manager.PDV_ArgonianHistSubstrate.GetVoidRelation()
+    Float peopleRelation = Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation()
+    if GetArgonianActiveFocus(peopleRelation, voidRelation, True) != Manager.ARGONIAN_FOCUS_VOID
+        return
+    endIf
+
+    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
+    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay") == (Manager.LedgerRuntime.GetDevotionalDay() + 2)
+        return
+    endIf
+
+    Manager.PDV_SPEL_ArgonianShadowscaleVeil.Cast(playerRef, playerRef)
+    Manager.SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
+    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay")
+    Manager.Trace(2, "Shadowscale veil fired on sneak kill.")
+EndFunction
+
+Function TryArgonianPostureDream(String reason)
+    ; fix-plan 4.2: the dream cadence is sleep-triggered, so a raw-midnight day boundary
+    ; crossed mid-sleep was exactly the case that let it fire two nights running.
+    Int today = Manager.LedgerRuntime.GetDevotionalDay() + 2
+    Int lastDreamDay = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
+    if lastDreamDay > 0 && (today - lastDreamDay) < 2
+        return
+    endIf
+
+    Int posture = Manager.PDV_ArgonianHistSubstrate.GetHistPosture()
+    Int dreamChance = 8
+    if StorageUtil.GetIntValue(None, "PDV.ArgDream.Armed") == 1
+        dreamChance = 60
+    elseIf posture != Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_NORMAL
+        dreamChance = 12
+    endIf
+
+    if Utility.RandomInt(1, 100) > dreamChance
+        return
+    endIf
+
+    String dreamText = Manager.PDV_ArgonianHistSubstrate.GetDreamTextForPosture(posture)
+    Manager.SendPrismaSubstrateToast("ArgonianHist", "dream", dreamText, "hist", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
+    StorageUtil.SetIntValue(None, "PDV.ArgDream.Armed", 0)
+    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
+    Manager.Trace(2, "Argonian posture dream fired (" + Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel() + ", " + reason + ")")
+EndFunction
+
+Function TryArgonianSithisNearDeathBurst(Actor playerRef)
+    if !playerRef || Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_SPEL_ArgonianSithisNearDeathBurst
+        return
+    endIf
+    if !playerRef.IsInCombat() || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+    if !Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        return
+    endIf
+
+    Float voidRelation = Manager.PDV_ArgonianHistSubstrate.GetVoidRelation()
+    Float peopleRelation = Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation()
+    if GetArgonianActiveFocus(peopleRelation, voidRelation, True) != Manager.ARGONIAN_FOCUS_VOID || voidRelation < Manager.ARGONIAN_REWARD_T3_THRESHOLD
+        return
+    endIf
+
+    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
+    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay") == (Manager.LedgerRuntime.GetDevotionalDay() + 2)
+        return
+    endIf
+
+    Manager.PDV_SPEL_ArgonianSithisNearDeathBurst.Cast(playerRef, playerRef)
+    ; Requiem parity (2026-07-13): the cast StaminaRateMult burst is muted under
+    ; Requiem, so pair it with a felt flat stamina restore (TryOrcCodeHolds
+    ; pattern) - the Void lends an instant surge you can actually spend.
+    playerRef.RestoreActorValue("Stamina", 100.0)
+    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay")
+    HandleArgonianVoidSignal("near_death_burst")
+    Manager.Trace(2, "Argonian Sithis near-death burst fired.")
+EndFunction
+
+Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
+    ; Compatibility ingress is intentionally inert. Only the validated
+    ; two-second Observe the Moons power may award observance credit.
+    Manager.Trace(2, "Legacy moon observance ignored: " + reason)
+EndFunction
+
+Function HandleKhajiitLunarSubstrate(String sourceId)
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || !Manager.PDV_KhajiitLunarSubstrate
+        return
+    endIf
+
+    ; Curated books and exact quest milestones are cultural substitutes. They
+    ; claim the shared substrate day only; deity piety/focus remains on its own
+    ; specifically authored receiver route.
+    Manager.PDV_KhajiitLunarSubstrate.RecordCulturalSubstitute("khajiit_lunar_source", "p2_khajiit_lunar_" + sourceId)
+    Manager.RequestPanelRefresh()
+EndFunction
+
+Function EnsureKhajiitObserveMoonsPower()
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !Manager.PDV_Power_Khajiit_ObserveMoons
+        return
+    endIf
+    if IsKhajiitOrigin()
+        if !playerRef.HasSpell(Manager.PDV_Power_Khajiit_ObserveMoons)
+            playerRef.AddSpell(Manager.PDV_Power_Khajiit_ObserveMoons, False)
+        endIf
+        ; One-time migration: clear an obsolete hand assignment without
+        ; changing the player's selected lesser power. Observe the Moons and
+        ; Survey Devotion are peers in the same Power slot; selecting either in
+        ; the Magic menu replaces the other in the ordinary Skyrim way.
+    elseIf playerRef.HasSpell(Manager.PDV_Power_Khajiit_ObserveMoons)
+        playerRef.RemoveSpell(Manager.PDV_Power_Khajiit_ObserveMoons)
+    endIf
+EndFunction
+
+Int Function BeginKhajiitMoonObservation(Actor playerRef)
+    if !playerRef || playerRef != Game.GetPlayer() || !IsValidKhajiitMoonObservationContext(playerRef)
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "invalid_start_context")
+        Manager.Trace(1, "[PDV][MOON_RITE] rejected start: invalid_start_context")
+        return 0
+    endIf
+    if _khajiitMoonObservationPending
+        if Utility.GetCurrentRealTime() - _khajiitMoonObservationStartRealTime > 30.0
+            _khajiitMoonObservationPending = False
+            Manager.Trace(1, "[PDV][MOON_RITE] cleared stale pending observation")
+        else
+            StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "already_pending")
+            Manager.Trace(1, "[PDV][MOON_RITE] rejected start: already_pending")
+            return 0
+        endIf
+    endIf
+
+    _khajiitMoonObservationGeneration += 1
+    if _khajiitMoonObservationGeneration <= 0
+        _khajiitMoonObservationGeneration = 1
+    endIf
+    _khajiitMoonObservationPending = True
+    _khajiitMoonObservationStartRealTime = Utility.GetCurrentRealTime()
+    _khajiitMoonObservationCell = playerRef.GetParentCell()
+    _khajiitMoonObservationX = playerRef.GetPositionX()
+    _khajiitMoonObservationY = playerRef.GetPositionY()
+    _khajiitMoonObservationZ = playerRef.GetPositionZ()
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "")
+    Manager.Trace(1, "[PDV][MOON_RITE] started token=" + _khajiitMoonObservationGeneration)
+    return _khajiitMoonObservationGeneration
+EndFunction
+
+Function ProcessPendingKhajiitMoonObservation(Int observationToken)
+    if !_khajiitMoonObservationPending || observationToken <= 0 || observationToken != _khajiitMoonObservationGeneration
+        Manager.Trace(1, "[PDV][MOON_RITE] rejected completion: stale_token=" + observationToken)
+        return
+    endIf
+    if Utility.GetCurrentRealTime() - _khajiitMoonObservationStartRealTime < 2.0
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "delay_incomplete")
+        Manager.Trace(1, "[PDV][MOON_RITE] rejected completion: delay_incomplete token=" + observationToken)
+        return
+    endIf
+    _khajiitMoonObservationPending = False
+    Actor playerRef = Game.GetPlayer()
+    if !IsValidKhajiitMoonObservationContext(playerRef) || playerRef.GetParentCell() != _khajiitMoonObservationCell
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "interrupted_context")
+        Manager.Trace(1, "[PDV][MOON_RITE] rejected completion: interrupted_context token=" + observationToken)
+        return
+    endIf
+
+    Float dx = playerRef.GetPositionX() - _khajiitMoonObservationX
+    Float dy = playerRef.GetPositionY() - _khajiitMoonObservationY
+    Float dz = playerRef.GetPositionZ() - _khajiitMoonObservationZ
+    if (dx * dx) + (dy * dy) + (dz * dz) > 16384.0
+        StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastReject", "moved_too_far")
+        Manager.Trace(1, "[PDV][MOON_RITE] rejected completion: moved_too_far token=" + observationToken)
+        return
+    endIf
+
+    CompleteKhajiitMoonObservation(playerRef)
+EndFunction
+
+Bool Function IsValidKhajiitMoonObservationContext(Actor playerRef)
+    if !playerRef || !IsKhajiitOrigin() || playerRef.IsInCombat() || playerRef.IsOnMount() || playerRef.IsSwimming()
+        return False
+    endIf
+    Cell currentCell = playerRef.GetParentCell()
+    if !currentCell || currentCell.IsInterior()
+        return False
+    endIf
+    Float nowTime = Utility.GetCurrentGameTime()
+    Float hourOfDay = (nowTime - ((nowTime as Int) as Float)) * 24.0
+    return hourOfDay >= 20.0 || hourOfDay < 5.0
+EndFunction
+
+Function CompleteKhajiitMoonObservation(Actor playerRef)
+    Float nowTime = Utility.GetCurrentGameTime()
+    Int phaseIndex = GetKhajiitMoonPhaseFromGameDay(nowTime)
+    Int focusValue = GetLunarPresidingFocus(phaseIndex)
+    Int tierBefore = Manager.LedgerRuntime.TIER_NONE
+    Int tierAfter = Manager.LedgerRuntime.TIER_NONE
+    Float metricBefore = 0.0
+    Float metricAfter = 0.0
+    if Manager.PDV_KhajiitLunarSubstrate
+        metricBefore = Manager.PDV_KhajiitLunarSubstrate.GetMetric()
+        tierBefore = Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+        Manager.PDV_KhajiitLunarSubstrate.ObserveMoonPhase(phaseIndex, "observe_moons_power")
+        tierAfter = Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+        metricAfter = Manager.PDV_KhajiitLunarSubstrate.GetMetric()
+    endIf
+
+    Bool firstRiteToday = False
+    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
+    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay") != todayStamp
+        firstRiteToday = True
+        Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Khajiit.MoonRite.PietyDay")
+        PDV_DeityBase presidingDeity = GetKhajiitEmphasisDeity(focusValue)
+        if presidingDeity
+            Manager.LedgerRuntime.AwardPietyInternal(presidingDeity, 0.4, True, "observe_moons_power")
+        endIf
+        StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", nowTime)
+        ; Preserve the common actual-delta accounting path without emitting a
+        ; second toast or Book entry; the authored contemplation below owns
+        ; this rite's single player-facing presentation.
+        Manager.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "", "lunar", GetKhajiitLunarTierLabel(tierAfter), False)
+    endIf
+
+    ShowKhajiitMoonContemplation(focusValue, firstRiteToday)
+    SyncKhajiitRuntimeState()
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastPhase", phaseIndex)
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastFocus", focusValue)
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", nowTime)
+    Manager.Trace(1, "[PDV][MOON_RITE] success phase=" + phaseIndex + " focus=" + focusValue + " metricDelta=" + (metricAfter - metricBefore))
+    Manager.RequestPanelRefresh()
+EndFunction
+
+Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
+    if focusValue < Manager.KHAJIIT_FOCUS_KHENARTHI || focusValue > Manager.KHAJIIT_FOCUS_ALKOSH
+        return
+    endIf
+    if !IsKhajiitMoonObservationJsonValid(focusValue)
+        ShowKhajiitMoonContemplationFallback(focusValue, firstRiteToday)
+        return
+    endIf
+
+    String deityKey = GetKhajiitMoonObservationDeityKey(focusValue)
+    String lastId = StorageUtil.GetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId")
+    Int excludedPoolIndex = -1
+    Int i = 0
+    while i < 16 && excludedPoolIndex < 0
+        String candidatePath = "." + deityKey + "[" + i + "].id"
+        if i >= 10
+            candidatePath = ".shared[" + (i - 10) + "].id"
+        endIf
+        if JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, candidatePath, "") == lastId
+            excludedPoolIndex = i
+        endIf
+        i += 1
+    endWhile
+
+    Int poolIndex = Utility.RandomInt(0, 15)
+    if excludedPoolIndex >= 0
+        poolIndex = Utility.RandomInt(0, 14)
+        if poolIndex >= excludedPoolIndex
+            poolIndex += 1
+        endIf
+    endIf
+
+    String entryPath = "." + deityKey + "[" + poolIndex + "]"
+    if poolIndex >= 10
+        entryPath = ".shared[" + (poolIndex - 10) + "]"
+    endIf
+    String resolvedId = JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "")
+    String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "")
+    String bodyText = JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "")
+    Manager.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    if firstRiteToday
+        Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+    endIf
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", resolvedId)
+EndFunction
+
+Bool Function IsKhajiitMoonObservationJsonValid(Int focusValue)
+    ; Load/IsGood run every call -- see _khajiitMoonObservationsValidatedVersion for why they are not
+    ; cached. The cache is keyed on deityKey as well as VERSION: each focus deity has its own 10-entry
+    ; pool, so validating khenarthi says nothing about alkosh.
+    String deityKey = GetKhajiitMoonObservationDeityKey(focusValue)
+    if deityKey == "" || !JsonUtil.Load(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE) || !JsonUtil.IsGood(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE)
+        _khajiitMoonObservationsValidatedVersion = -1
+        _khajiitMoonObservationsValidatedKey = ""
+        return False
+    endIf
+    if _khajiitMoonObservationsValidatedVersion == Manager.KHAJIIT_MOON_OBSERVATIONS_VERSION && _khajiitMoonObservationsValidatedKey == deityKey
+        return True
+    endIf
+    if JsonUtil.GetPathIntValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, ".version", -1) != Manager.KHAJIIT_MOON_OBSERVATIONS_VERSION
+        return False
+    endIf
+    if JsonUtil.PathCount(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, ".shared") != 6 || JsonUtil.PathCount(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, "." + deityKey) != 10
+        return False
+    endIf
+    Int poolIndex = 0
+    while poolIndex < 16
+        String entryPath = "." + deityKey + "[" + poolIndex + "]"
+        if poolIndex >= 10
+            entryPath = ".shared[" + (poolIndex - 10) + "]"
+        endIf
+        if JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "") == "" || JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "") == "" || JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "") == ""
+            return False
+        endIf
+        poolIndex += 1
+    endWhile
+    _khajiitMoonObservationsValidatedVersion = Manager.KHAJIIT_MOON_OBSERVATIONS_VERSION
+    _khajiitMoonObservationsValidatedKey = deityKey
+    return True
+EndFunction
+
+String Function GetKhajiitMoonObservationDeityKey(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        return "khenarthi"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        return "azurah"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return "baandar"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        return "rajhin"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        return "alkosh"
+    endIf
+    return ""
+EndFunction
+
+Function ShowKhajiitMoonContemplationFallback(Int focusValue, Bool firstRiteToday)
+    Int localIndex = Utility.RandomInt(0, 3)
+    Int messageIndex = ((focusValue - 1) * 4) + localIndex
+    Int lastIndex = StorageUtil.GetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", -1)
+    if messageIndex == lastIndex
+        localIndex = (localIndex + 1) % 4
+        messageIndex = ((focusValue - 1) * 4) + localIndex
+    endIf
+    String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + GetKhajiitMoonContemplationTitle(messageIndex)
+    String bodyText = GetKhajiitMoonContemplationText(messageIndex)
+    Manager.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    if firstRiteToday
+        Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", "fallback_" + messageIndex)
+EndFunction
+
+String Function GetKhajiitMoonContemplationTitle(Int messageIndex)
+    if messageIndex == 0
+        return "The Road Breathes"
+    elseIf messageIndex == 1
+        return "A Windward Home"
+    elseIf messageIndex == 2
+        return "The Open Mile"
+    elseIf messageIndex == 3
+        return "Breath Between Steps"
+    elseIf messageIndex == 4
+        return "Twilight's Mirror"
+    elseIf messageIndex == 5
+        return "A Name at Dusk"
+    elseIf messageIndex == 6
+        return "Shadow With Shape"
+    elseIf messageIndex == 7
+        return "The Liminal Hour"
+    elseIf messageIndex == 8
+        return "The Unlatched Gate"
+    elseIf messageIndex == 9
+        return "Luck Turned Sideways"
+    elseIf messageIndex == 10
+        return "The Laughing Escape"
+    elseIf messageIndex == 11
+        return "Clever Hands, Clear Debt"
+    elseIf messageIndex == 12
+        return "A Secret Kept"
+    elseIf messageIndex == 13
+        return "The Audacious Step"
+    elseIf messageIndex == 14
+        return "Limits in Silver"
+    elseIf messageIndex == 15
+        return "The Purring Question"
+    elseIf messageIndex == 16
+        return "The Ordered Sky"
+    elseIf messageIndex == 17
+        return "A Dragon's Measure"
+    elseIf messageIndex == 18
+        return "The Hour Unbroken"
+    endIf
+    return "Duty Beneath the Moons"
+EndFunction
+
+String Function GetKhajiitMoonContemplationText(Int messageIndex)
+    if messageIndex == 0
+        return "The wind crosses your whiskers like a road remembered. Khenarthi asks where you will return when the path grows quiet."
+    elseIf messageIndex == 1
+        return "Cloud and branch lean the same way tonight. Khenarthi teaches that a home may be carried without being abandoned."
+    elseIf messageIndex == 2
+        return "The sky leaves no walls around you. Khenarthi's road is freedom joined to the duty to return."
+    elseIf messageIndex == 3
+        return "For a moment, the wind stills. The pause belongs to Khenarthi as surely as the journey."
+    elseIf messageIndex == 4
+        return "Moonlight divides shadow from darkness. Azurah asks which parts of yourself you hide, and which you keep."
+    elseIf messageIndex == 5
+        return "The night changes every color without erasing it. Azurah keeps identity through every crossing."
+    elseIf messageIndex == 6
+        return "Your shadow lengthens beneath the moons. Azurah teaches that shadow can reveal the form that casts it."
+    elseIf messageIndex == 7
+        return "Neither day nor deepest night claims this hour. Azurah watches over the self made between worlds."
+    elseIf messageIndex == 8
+        return "A narrow opening is still an opening. Baan Dar favors the wit that finds a way without surrendering the self."
+    elseIf messageIndex == 9
+        return "The moons make familiar stones look strange. Baan Dar reminds you that reversal begins by seeing another angle."
+    elseIf messageIndex == 10
+        return "A distant night sound might be danger or laughter. Baan Dar prizes the survivor who can tell, then act."
+    elseIf messageIndex == 11
+        return "The road offers many exits. Baan Dar asks whether your cleverness frees only you, or those beside you."
+    elseIf messageIndex == 12
+        return "Moonlight reaches most places, but not all. Rajhin asks whether a secret is power, burden, or both."
+    elseIf messageIndex == 13
+        return "The next step lies beyond certainty. Rajhin honors audacity that knows the line it chooses to cross."
+    elseIf messageIndex == 14
+        return "The moons draw bright borders around the dark. Rajhin teaches that limits are clearest to those tempted to test them."
+    elseIf messageIndex == 15
+        return "Night keeps its answers close. Rajhin leaves you a question whose value lies in what you dare not say."
+    elseIf messageIndex == 16
+        return "The moons keep their courses without hurry. Alkosh teaches that order is not stillness, but motion kept true."
+    elseIf messageIndex == 17
+        return "Time stretches above you like a dragon's shadow. Alkosh asks what duty can survive both fear and glory."
+    elseIf messageIndex == 18
+        return "This moment will not return, yet it belongs to every moment after it. Alkosh keeps consequence within time."
+    endIf
+    return "The sky is vast, but each light holds its place. Alkosh reminds you that duty gives freedom a shape."
+EndFunction
+
+Function HandleKhajiitRoadHome(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_KhajiitLunarSubstrate
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitRoadHome")
+    Float metricBefore = Manager.PDV_KhajiitLunarSubstrate.GetMetric()
+    Int tierBefore = Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+    Manager.PDV_KhajiitLunarSubstrate.RecordRoadHomeCadence(reason)
+    Int tierAfter = Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()
+    Float grantedMetric = Manager.PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore
+    AdjustKhajiitFocusedEmphasis(Manager.KHAJIIT_FOCUS_KHENARTHI, Manager.KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
+    if Manager.PDV_Khenarthi
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Khenarthi, Manager.PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
+    endIf
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
+
+    ; Road-home recognition owns one presentation per 06:00 devotional cycle,
+    ; independently of the shared lunar +4 budget. If another authentic lunar
+    ; practice already spent that budget, the rest is still acknowledged without
+    ; implying that it granted more substrate progress.
+    String presentationDayKey = "PDV.Khajiit.RoadHome.PresentationDay"
+    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
+    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp(presentationDayKey) != todayStamp
+        Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp(presentationDayKey)
+        if grantedMetric > 0.0
+            Manager.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+        else
+            String cappedContext = "The road home was remembered. Today's lunar practice was already marked."
+            Manager.SendPrismaSubstrateToast("lunar", "act", cappedContext, "lunar", GetKhajiitLunarTierLabel(tierAfter))
+            Manager.AppendBookOfDaysEntry(cappedContext, Utility.GetCurrentGameTime() as Int, "substrate.act", "lunar", False)
+        endIf
+    endIf
+    Manager.NotifyDiegeticRoutineFavor("khajiit_road_home")
+    Manager.RequestPanelRefresh()
+    Manager.Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier)
+EndFunction
+
+Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
+    ; Retired anchor/circuit ingress must never award metric or piety.
+    Manager.Trace(2, "Retired Khajiit road anchor ignored: " + anchorId + " (" + reason + ")")
+EndFunction
+
+Float Function ConsumeKhajiitLunarMetricBudget(Float requestedMetric)
+    ; Compatibility-only. PDV_SubstrateBase owns the one daily +4 budget.
+    return 0.0
+EndFunction
+
+Function HandleKhajiitBaanDarRoadTrick(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_BAANDAR, "PDV.Signal.KhajiitBaanDarRoadTrick", "Baan Dar road trick", reason)
+EndFunction
+
+Function HandleKhajiitRajhinElegantTheft(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_RAJHIN, "PDV.Signal.KhajiitRajhinElegantTheft", "Rajhin elegant theft", reason)
+    ; Night theft is shadow-coded behavior; it accrues toward the ShadowDrift boundary.
+    RecordKhajiitShadowEvidence("rajhin_night_theft_" + reason)
+    Manager.SendPrismaShiftToast("Elegant theft", "Rajhin purrs.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_RAJHIN))
+    Manager.LedgerRuntime.RecordRecentDevotionEvent("Rajhin: theft with style")
+EndFunction
+
+Function HandleKhajiitAlkoshDragonOrder(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh dragon order", reason)
+EndFunction
+
+Function HandleKhajiitFocusedSource(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    if focusValue == Manager.KHAJIIT_FOCUS_NONE
+        focusValue = GetActiveLunarFavoredFocus()
+    endIf
+    if focusValue == Manager.KHAJIIT_FOCUS_NONE
+        focusValue = Manager.KHAJIIT_FOCUS_AZURAH
+    endIf
+
+    RecordKhajiitFocusSignal(focusValue, "PDV.Signal.KhajiitFocusedSource", "Khajiit focused source", reason)
+EndFunction
+
+Function HandleKhajiitFocusedSourceForFocus(Int focusValue, String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    if focusValue < Manager.KHAJIIT_FOCUS_KHENARTHI || focusValue > Manager.KHAJIIT_FOCUS_ALKOSH
+        HandleKhajiitFocusedSource(reason)
+        return
+    endIf
+
+    RecordKhajiitFocusSignal(focusValue, "PDV.Signal.KhajiitFocusedSource", "Khajiit focused source", reason)
+EndFunction
+
+Function HandleKhajiitAlkoshNamedDragon(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    Float multiplier = RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh named dragon", reason)
+    if Manager.PDV_Alkosh
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Alkosh, Manager.PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
+    endIf
+    AwardKhajiitSubstrateSubstitute("khajiit_alkosh_milestone", reason)
+    Manager.Trace(1, "Khajiit Alkosh named-dragon beat routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitAlkoshGenericDragon(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    Int weekStamp = ((Utility.GetCurrentGameTime() as Int) / 7) + 1
+    if StorageUtil.GetIntValue(None, "PDV.Signal.KhajiitAlkoshGenericDragon.Week") == weekStamp
+        Manager.Trace(2, "Khajiit Alkosh generic-dragon nudge suppressed by weekly cap (" + reason + ")")
+        return
+    endIf
+
+    StorageUtil.SetIntValue(None, "PDV.Signal.KhajiitAlkoshGenericDragon.Week", weekStamp)
+    AdjustKhajiitFocusedEmphasis(Manager.KHAJIIT_FOCUS_ALKOSH, Manager.KHAJIIT_FOCUS_SIGNAL_DELTA * 0.25, reason)
+    Manager.Trace(2, "Khajiit Alkosh generic-dragon emphasis nudge routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitBaanDarReversal(String reason)
+    if !IsKhajiitOrigin()
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitBaanDarReversal")
+    StorageUtil.AdjustIntValue(None, "PDV.Signal.KhajiitBaanDarReversal.CountAll", 1)
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
+    AdjustKhajiitFocusedEmphasis(Manager.KHAJIIT_FOCUS_BAANDAR, Manager.KHAJIIT_FOCUS_SIGNAL_DELTA * 2.0 * multiplier, reason)
+    if Manager.PDV_BaanDar
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_BaanDar, Manager.PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
+    endIf
+    AwardKhajiitSubstrateSubstitute("khajiit_baandar_reversal", reason)
+    Manager.Trace(1, "Khajiit Baan Dar near-fatal reversal routed (" + reason + ")")
+EndFunction
+
+Float Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label, String reason)
+    if !IsKhajiitOrigin()
+        return 0.0
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier(keyPrefix)
+    StorageUtil.AdjustIntValue(None, keyPrefix + ".CountAll", 1)
+    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
+    StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
+    ; The piety pulse must land before evaluation: focus emergence requires both
+    ; behavioral dominance and actual Seeker piety on this same event.
+    AdjustKhajiitFocusedEmphasis(focusValue, Manager.KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason, False)
+    PulseKhajiitFocusPiety(focusValue, multiplier)
+    EvaluateKhajiitFocusedEmphasis()
+    Manager.Trace(2, "Khajiit " + label + " routed with multiplier " + multiplier)
+    return multiplier
+EndFunction
+
+PDV_DeityBase Function GetKhajiitEmphasisDeity(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        return Manager.PDV_Khenarthi
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        return Manager.PDV_Azura
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return Manager.PDV_BaanDar
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        return Manager.PDV_Rajhin
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        return Manager.PDV_Alkosh
+    endIf
+
+    return None
+EndFunction
+
+Function PulseKhajiitFocusPiety(Int focusValue, Float multiplier)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI && Manager.PDV_Khenarthi
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Khenarthi, Manager.PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH && Manager.PDV_Azura
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Azura, Manager.PDV_Azura.SIGNAL_MOON_OBSERVANCE, None, multiplier)
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR && Manager.PDV_BaanDar
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_BaanDar, Manager.PDV_BaanDar.SIGNAL_ROAD_TRICK, None, multiplier)
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN && Manager.PDV_Rajhin
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Rajhin, Manager.PDV_Rajhin.SIGNAL_ELEGANT_THEFT, None, multiplier)
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH && Manager.PDV_Alkosh
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Alkosh, Manager.PDV_Alkosh.SIGNAL_DRAGON_ORDER, None, multiplier)
+    endIf
+EndFunction
+
+Function HandleKhajiitAzurahDesecration(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_Azura
+        return
+    endIf
+    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Azura, Manager.PDV_Azura.SIGNAL_DESECRATION, None)
+    Manager.Trace(2, "Khajiit Azurah desecration routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitKhenarthiCaravanHarm(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_Khenarthi
+        return
+    endIf
+    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Khenarthi, Manager.PDV_Khenarthi.SIGNAL_CARAVAN_HARM, None)
+    Manager.Trace(2, "Khajiit Khenarthi caravan-harm routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitKhenarthiCaravanAid(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_Khenarthi
+        return
+    endIf
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhenarthiCaravanAid")
+    if multiplier <= 0.0
+        Manager.Trace(2, "Khajiit Khenarthi caravan-aid blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Khenarthi, Manager.PDV_Khenarthi.SIGNAL_CARAVAN_AID, None, multiplier)
+    AwardKhajiitSubstrateSubstitute("khajiit_caravan_defense", reason)
+    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Khenarthi, "Caravan defended", "marks the caravan road kept safe.")
+    Manager.Trace(2, "Khajiit Khenarthi caravan-aid routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitRajhinLegendMade(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_Rajhin
+        return
+    endIf
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.RajhinLegendMade")
+    if multiplier <= 0.0
+        Manager.Trace(2, "Khajiit Rajhin legend-made blocked by daily cap (" + reason + ")")
+        return
+    endIf
+    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Rajhin, Manager.PDV_Rajhin.SIGNAL_LEGEND_MADE, None, multiplier)
+    AwardKhajiitSubstrateSubstitute("khajiit_rajhin_notable_theft", reason)
+    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Rajhin, "Legend made", "marks a theft worth remembering.")
+    Manager.Trace(2, "Khajiit Rajhin legend-made routed (" + reason + ")")
+EndFunction
+
+Function AwardKhajiitSubstrateSubstitute(String sourceId, String reason)
+    if IsKhajiitOrigin() && Manager.PDV_KhajiitLunarSubstrate
+        Manager.PDV_KhajiitLunarSubstrate.RecordCulturalSubstitute(sourceId, reason)
+    endIf
+EndFunction
+
+Function HandleKhajiitRajhinBotchedTheft(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_Rajhin
+        return
+    endIf
+    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Rajhin, Manager.PDV_Rajhin.SIGNAL_BOTCHED_THEFT, None)
+    Manager.Trace(2, "Khajiit Rajhin botched-theft routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitAlkoshChaosAid(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_Alkosh
+        return
+    endIf
+    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Alkosh, Manager.PDV_Alkosh.SIGNAL_CHAOS_AID, None)
+    Manager.Trace(2, "Khajiit Alkosh chaos-aid routed (" + reason + ")")
+EndFunction
+
+Function HandleKhajiitBaanDarBetrayal(String reason)
+    if !IsKhajiitOrigin() || !Manager.PDV_BaanDar
+        return
+    endIf
+    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_BaanDar, Manager.PDV_BaanDar.SIGNAL_BETRAYAL, None)
+    Manager.Trace(2, "Khajiit Baan Dar betrayal routed (" + reason + ")")
+EndFunction
+
+Bool Function IsKhajiitOrigin()
+    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
+EndFunction
+
+Int Function GetKhajiitLunarPosture()
+    if Manager.PDV_KhajiitLunarPostureTrack
+        Int value = Manager.PDV_KhajiitLunarPostureTrack.GetCurrentState()
+        if value < 0
+            return Manager.KHAJIIT_LUNAR_POSTURE_NORMAL
+        endIf
+        return value
+    endIf
+
+    return Manager.KHAJIIT_LUNAR_POSTURE_NORMAL
+EndFunction
+
+Int Function DeriveKhajiitLunarPosture()
+    if Manager.PDV_CurseStateService
+        if Manager.PDV_CurseStateService.IsWerewolf()
+            return Manager.KHAJIIT_LUNAR_POSTURE_STRAINED
+        elseIf Manager.PDV_CurseStateService.IsVampire()
+            return Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
+        endIf
+    endIf
+
+    if HasKhajiitShadowDrift()
+        return Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
+    endIf
+
+    return Manager.KHAJIIT_LUNAR_POSTURE_NORMAL
+EndFunction
+
+Bool Function HasKhajiitShadowDrift()
+    if StorageUtil.GetIntValue(None, "PDV.Khajiit.ShadowDrift.DebugForce") == 1
+        return True
+    endIf
+
+    if !Manager.PDV_KhajiitLunarPostureTrack
+        return False
+    endIf
+
+    return Manager.PDV_KhajiitLunarPostureTrack.HasRecentEvidenceDays(Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT, Manager.KHAJIIT_SHADOWDRIFT_EVIDENCE_REQUIRED, Manager.KHAJIIT_SHADOWDRIFT_EVIDENCE_WINDOW)
+EndFunction
+
+Function RecordKhajiitShadowEvidence(String reason)
+    if !Manager.PDV_KhajiitLunarPostureTrack || !IsKhajiitOrigin()
+        return
+    endIf
+
+    Float gameTime = Utility.GetCurrentGameTime()
+    Int dayInt = gameTime as Int
+    Float hour = (gameTime - dayInt) * 24.0
+    if hour < 19.0 && hour >= 7.0
+        return
+    endIf
+
+    Manager.PDV_KhajiitLunarPostureTrack.RecordEvidenceDay(Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT, reason)
+    Manager.Trace(2, "Khajiit shadow-evidence day recorded (" + reason + ")")
+EndFunction
+
+Function RefreshKhajiitLunarPosture(String reason)
+    if !Manager.PDV_KhajiitLunarPostureTrack || !IsKhajiitOrigin()
+        return
+    endIf
+
+    Int oldPosture = GetKhajiitLunarPosture()
+    Int newPosture = DeriveKhajiitLunarPosture()
+    if newPosture == oldPosture
+        return
+    endIf
+
+    Manager.PDV_KhajiitLunarPostureTrack.SetState(newPosture, reason)
+    Manager.Trace(1, "Khajiit lunar posture " + oldPosture + " -> " + newPosture + " (" + reason + ")")
+
+    if newPosture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
+        ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_ShadowDriftEntry, "You have drifted into shadow. The moons grow distant; the Lattice loosens toward the dark between the stars.", False)
+    endIf
+
+    if newPosture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
+        Manager.AppendBookOfDaysEntry("The moonlight scatters from your path. Corruption is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
+    elseIf newPosture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
+        Manager.AppendBookOfDaysEntry("You slipped into the moons' shadow. Darkness is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
+    endIf
+
+    Manager.SendPrismaShiftToast(GetKhajiitLunarPostureDisplayLabelAt(newPosture), GetKhajiitLunarPostureReadout(newPosture), "lunar")
+    Manager.RequestPanelRefresh()
+EndFunction
+
+String Function GetKhajiitLunarPostureLabel()
+    return GetKhajiitLunarPostureLabelAt(GetKhajiitLunarPosture())
+EndFunction
+
+String Function GetKhajiitLunarPostureLabelAt(Int posture)
+    if posture == Manager.KHAJIIT_LUNAR_POSTURE_STRAINED
+        return "Strained"
+    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
+        return "Corrupted"
+    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
+        return "ShadowDrift"
+    endIf
+
+    return "Normal"
+EndFunction
+
+String Function GetKhajiitLunarPostureDisplayLabelAt(Int posture)
+    if posture == Manager.KHAJIIT_LUNAR_POSTURE_STRAINED
+        return "Lattice strained"
+    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
+        return "Lattice thinned"
+    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
+        return "Drifting to shadow"
+    endIf
+
+    return "Lattice clear"
+EndFunction
+
+String Function GetKhajiitLunarPostureReadout(Int posture)
+    if posture == Manager.KHAJIIT_LUNAR_POSTURE_STRAINED
+        return "The Lattice holds you, but strained. The beast-shape is a competing form, and the caravans keep their distance."
+    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
+        return "The Lattice still holds you, corrupted and thinned. The moons do not disown the undead, but the community does."
+    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
+        return "You have drifted into shadow. The moons grow distant; the Lattice loosens toward the dark between the stars."
+    endIf
+
+    return "The Lunar Lattice holds you cleanly. The moons know your form, and the road knows your step."
+EndFunction
+
+Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool suppressModal)
+    if Manager.GetSuppressCurseTransitionOutputs()
+        return
+    endIf
+
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    Manager.SetRaceCurseSurfaceShown(True)
+
+    if suppressModal
+        Manager.SendPrismaToast("lunar", "warning", "", fallbackText)
+        return
+    endIf
+
+    if messageRecord
+        messageRecord.Show()
+        return
+    endIf
+
+    Debug.MessageBox(fallbackText)
+EndFunction
+
+Function ApplyKhajiitCurseHandlers(Int oldState, Int newState, String reason)
+    if newState == 2
+        if StorageUtil.GetIntValue(None, "PDV.Khajiit.VampireOnsetShown") != 1
+            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_VampireOnset, "The thirst has taken you, little moon. The Lattice does not cast you out, but the caravans will fear you.", False)
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.VampireOnsetShown", 1)
+        endIf
+    elseIf newState == 1
+        if StorageUtil.GetIntValue(None, "PDV.Khajiit.WerewolfOnsetShown") != 1
+            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_WerewolfOnset, "Hircine has given you another shape. You are still Khajiit -- strained, watched, but not erased.", False)
+            StorageUtil.SetIntValue(None, "PDV.Khajiit.WerewolfOnsetShown", 1)
+        endIf
+    elseIf newState == 0
+        if oldState == 2
+            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_VampireCured, "The thirst is gone. The corruption lifts from the Lattice; walk back into the moonlight.", False)
+        elseIf oldState == 1
+            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_WerewolfCured, "The wolf is set down, little moon. The Lattice holds a single shape once more.", False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.VampireOnsetShown", 0)
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.WerewolfOnsetShown", 0)
+    endIf
+
+    RefreshKhajiitLunarPosture("curse_" + reason)
+EndFunction
+
+Function HandleArgonianHistMaintenance(String reason)
+    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianHistMaintenance")
+    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    Manager.PDV_ArgonianHistSubstrate.RecordHistMaintenanceScaled(multiplier, reason)
+    RefreshArgonianHistPosture(reason)
+    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    ; Double-route: the substrate carries the reward gating; a small honest +1 Hist pulse keeps
+    ; the universal piety layer (decay/neglect/creed-loss) honest.
+    if Manager.PDV_Hist
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
+    endIf
+    StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
+    Manager.SurfaceP2BookReadNotice(reason, "The Hist remembers", "The reading carries the smell of home.")
+    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Hist memory stirred.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.RequestPanelRefresh()
+    Manager.Trace(2, "Argonian Hist maintenance routed with multiplier " + multiplier)
+EndFunction
+
+Function HandleArgonianPeopleSupport(String reason)
+    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianPeopleSupport")
+    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    Manager.PDV_ArgonianHistSubstrate.RecordPeopleSupportScaled(multiplier, reason)
+    RefreshArgonianHistPosture(reason)
+    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "Your people were supported.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.RequestPanelRefresh()
+    Manager.Trace(2, "Argonian People support routed with multiplier " + multiplier)
+EndFunction
+
+Function HandleArgonianBedOfChoiceReturn(String reason)
+    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianBedOfChoice")
+    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    Manager.PDV_ArgonianHistSubstrate.RecordBedOfChoiceReturnScaled(multiplier, reason)
+    RefreshArgonianHistPosture(reason)
+    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The chosen rest took root.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.RequestPanelRefresh()
+    Manager.Trace(2, "Argonian bed-of-choice return routed with multiplier " + multiplier)
+EndFunction
+
+Function HandleArgonianVoidSignal(String reason)
+    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianVoidSignal")
+    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    Manager.PDV_ArgonianHistSubstrate.RecordVoidSignalScaled(multiplier, reason)
+    RefreshArgonianHistPosture(reason)
+    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+    ; Void piety belongs to Sithis only after the relation is explicitly active.
+    if Manager.PDV_Sithis && Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Sithis, Manager.PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
+    endIf
+    ; Void overreach: leaning deep into the Void (fully active) while Hist maintenance has
+    ; lapsed below its non-curse floor is the curated major loss for the Hist.
+    if Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive() && Manager.PDV_ArgonianHistSubstrate.GetHistRelation() <= Manager.PDV_ArgonianHistSubstrate.HistNonCurseFloor
+        EmitHistVoidOverreachMinus(reason)
+    endIf
+    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Void was noticed.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.RequestPanelRefresh()
+    Manager.Trace(2, "Argonian Void signal routed with multiplier " + multiplier)
+EndFunction
+
+Function RunDawnRefreshArgonianHist()
+    if !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    Bool curseActive = False
+    if Manager.PDV_CurseStateService && Manager.PDV_CurseStateService.GetCurseState() != 0
+        curseActive = True
+    endIf
+
+    Manager.PDV_ArgonianHistSubstrate.ProcessHistDistanceDawn(curseActive, "dawn")
+    Manager.PDV_ArgonianHistSubstrate.ProcessCulturalPracticeDawn(curseActive, "dawn")
+    RefreshArgonianHistPosture("dawn")
+EndFunction
+
+Function RefreshArgonianHistPosture(String reason)
+    if !Manager.PDV_ArgonianHistSubstrate
+        return
+    endIf
+
+    RefreshArgonianDominationPressure(reason)
+
+    Int curseState = 0
+    if Manager.PDV_CurseStateService
+        curseState = Manager.PDV_CurseStateService.GetCurseState()
+    endIf
+
+    Int oldPosture = 0
+    if Manager.PDV_ArgonianHistPostureTrack
+        oldPosture = Manager.PDV_ArgonianHistPostureTrack.GetCurrentState()
+    endIf
+
+    Bool dominationPressure = StorageUtil.GetIntValue(None, "PDV.Curse.Argonian.DominationPressure") == 1
+    Manager.PDV_ArgonianHistSubstrate.RefreshHistPosture(curseState, dominationPressure, reason)
+    StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.PDV_ArgonianHistSubstrate.GetHistPosture())
+    if Manager.PDV_ArgonianHistPostureTrack
+        Manager.PDV_ArgonianHistPostureTrack.SetState(Manager.PDV_ArgonianHistSubstrate.GetHistPosture(), reason)
+        if Manager.PDV_ArgonianHistPostureTrack.GetCurrentState() != oldPosture
+            Manager.SendPrismaShiftToast(GetArgonianHistPostureLabel(), "", "hist")
+            Manager.RequestPanelRefresh()
+            Int newPosture = Manager.PDV_ArgonianHistSubstrate.GetHistPosture()
+            if newPosture == Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_CORRUPTED
+                EmitHistCorruptionMinus(reason)
+            elseIf newPosture == Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_DISTANT
+                EmitHistAbandonmentMinus(reason)
+            endIf
+        endIf
+    endIf
+EndFunction
+
+Function RefreshArgonianDominationPressure(String reason)
+    Bool active = IsArgonianMolagBalDominationPressureActive()
+    Int oldValue = StorageUtil.GetIntValue(None, "PDV.Curse.Argonian.DominationPressure")
+    StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.DominationPressure", PDV_DevotionRules.BoolToInt(active))
+    if PDV_DevotionRules.BoolToInt(active) != oldValue
+        Manager.Trace(1, "Argonian domination pressure -> " + PDV_DevotionRules.BoolToInt(active) + " (" + reason + ")")
+    endIf
+EndFunction
+
+Function RefreshArgonianDominationPressureForPath(PDV_DaedricPathBase path, String reason)
+    if !path
+        return
+    endIf
+    if path.DeityName != "Molag Bal" && path.DeityName != "Molag"
+        return
+    endIf
+    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
+        RefreshArgonianHistPosture(reason)
+    endIf
+EndFunction
+
+Bool Function IsArgonianMolagBalDominationPressureActive()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
+        return False
+    endIf
+    if !Manager.PDV_CurseStateService || Manager.PDV_CurseStateService.GetCurseState() != 2
+        return False
+    endIf
+
+    PDV_DeityBase deity = Manager.GetQuestReactionDeity("Molag Bal")
+    PDV_DaedricPathBase molagPath = deity as PDV_DaedricPathBase
+    if !molagPath
+        return False
+    endIf
+
+    return molagPath.GetStoredTier() >= Manager.LedgerRuntime.TIER_SEEKER
+EndFunction
+
+Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason, Bool evaluateNow = True)
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+        return
+    endIf
+
+    if focusValue < Manager.KHAJIIT_FOCUS_KHENARTHI || focusValue > Manager.KHAJIIT_FOCUS_ALKOSH
+        return
+    endIf
+
+    String focusKey = GetKhajiitFocusWeightKey(focusValue)
+    StorageUtil.AdjustFloatValue(None, focusKey, amount)
+    if evaluateNow
+        EvaluateKhajiitFocusedEmphasis()
+    endIf
+    Manager.Trace(2, "Khajiit focus " + GetKhajiitFocusLabel(focusValue) + " adjusted by " + amount + " (" + reason + ")")
+EndFunction
+
+Function EvaluateKhajiitFocusedEmphasis()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+        return
+    endIf
+    Float khenarthi = GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_KHENARTHI)
+    Float azurah = GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_AZURAH)
+    Float baanDar = GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_BAANDAR)
+    Float rajhin = GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_RAJHIN)
+    Float alkosh = GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_ALKOSH)
+
+    Int bestFocus = Manager.KHAJIIT_FOCUS_NONE
+    Float bestWeight = 0.0
+    if khenarthi > bestWeight
+        bestFocus = Manager.KHAJIIT_FOCUS_KHENARTHI
+        bestWeight = khenarthi
+    endIf
+    if azurah > bestWeight
+        bestFocus = Manager.KHAJIIT_FOCUS_AZURAH
+        bestWeight = azurah
+    endIf
+    if baanDar > bestWeight
+        bestFocus = Manager.KHAJIIT_FOCUS_BAANDAR
+        bestWeight = baanDar
+    endIf
+    if rajhin > bestWeight
+        bestFocus = Manager.KHAJIIT_FOCUS_RAJHIN
+        bestWeight = rajhin
+    endIf
+    if alkosh > bestWeight
+        bestFocus = Manager.KHAJIIT_FOCUS_ALKOSH
+        bestWeight = alkosh
+    endIf
+
+    ; All five weights are already local. Re-reading the current leader from
+    ; StorageUtil after every comparison added five external calls to every
+    ; focus-bearing action without changing the strict-greater tie behavior.
+    Float nextWeight = GetKhajiitSecondFocusWeight(bestFocus, khenarthi, azurah, baanDar, rajhin, alkosh)
+
+    ; Once a focus has emerged, a tie, lead loss, or later piety loss does not
+    ; erase it. A replacement must independently satisfy both gates.
+    if bestWeight < Manager.KHAJIIT_FOCUS_THRESHOLD || (bestWeight - nextWeight) < Manager.KHAJIIT_FOCUS_LEAD_REQUIRED
+        return
+    endIf
+
+    PDV_DeityBase bestDeity = GetKhajiitEmphasisDeity(bestFocus)
+    if !bestDeity || Manager.LedgerRuntime.GetPiety(bestDeity) < 25.0
+        return
+    endIf
+
+    SetKhajiitFocusedEmphasis(bestFocus, "lead")
+EndFunction
+
+Float Function GetKhajiitSecondFocusWeight(Int bestFocus, Float khenarthi, Float azurah, Float baanDar, Float rajhin, Float alkosh)
+    Float secondWeight = 0.0
+    if bestFocus != Manager.KHAJIIT_FOCUS_KHENARTHI && khenarthi > secondWeight
+        secondWeight = khenarthi
+    endIf
+    if bestFocus != Manager.KHAJIIT_FOCUS_AZURAH && azurah > secondWeight
+        secondWeight = azurah
+    endIf
+    if bestFocus != Manager.KHAJIIT_FOCUS_BAANDAR && baanDar > secondWeight
+        secondWeight = baanDar
+    endIf
+    if bestFocus != Manager.KHAJIIT_FOCUS_RAJHIN && rajhin > secondWeight
+        secondWeight = rajhin
+    endIf
+    if bestFocus != Manager.KHAJIIT_FOCUS_ALKOSH && alkosh > secondWeight
+        secondWeight = alkosh
+    endIf
+    return secondWeight
+EndFunction
+
+Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
+    Int oldFocus = GetKhajiitFocusedEmphasis()
+    if oldFocus != Manager.KHAJIIT_FOCUS_NONE && focusValue == Manager.KHAJIIT_FOCUS_NONE
+        return
+    endIf
+    if oldFocus == focusValue
+        return
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusedEmphasis", focusValue)
+    if Manager.PDV_GLO_KhajiitFocusedEmphasis
+        Manager.PDV_GLO_KhajiitFocusedEmphasis.SetValue(focusValue as Float)
+    endIf
+
+    Manager.Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
+    String focusText = GetKhajiitFocusShiftText(focusValue)
+    Manager.SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", focusText, GetKhajiitFocusSymbol(focusValue))
+    Bool firstEmergence = oldFocus == Manager.KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
+    if firstEmergence
+        StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
+        Message emergenceMessage = GetKhajiitFocusEmergenceMessage(focusValue)
+        if emergenceMessage
+            emergenceMessage.Show()
+        else
+            Debug.MessageBox(focusText)
+        endIf
+    endIf
+    if firstEmergence
+        Manager.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "focus.emergence", GetKhajiitFocusSymbol(focusValue), True, 1, GetKhajiitFocusLabel(focusValue) + " Emerges")
+    else
+        Manager.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "reorientation", GetKhajiitFocusSymbol(focusValue), False, 1, "The Road Turns")
+    endIf
+    SyncKhajiitRuntimeState()
+    Manager.RequestPanelRefresh()
+EndFunction
+
+Message Function GetKhajiitFocusEmergenceMessage(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        return Manager.PDV_MSG_KhajiitFocus_Khenarthi
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        return Manager.PDV_MSG_KhajiitFocus_Azurah
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return Manager.PDV_MSG_KhajiitFocus_BaanDar
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        return Manager.PDV_MSG_KhajiitFocus_Rajhin
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        return Manager.PDV_MSG_KhajiitFocus_Alkosh
+    endIf
+    return None
+EndFunction
+
+Int Function GetKhajiitFocusedEmphasis()
+    return StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusedEmphasis")
+EndFunction
+
+PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)
+    return GetKhajiitEmphasisDeity(focusValue)
+EndFunction
+
+Float Function GetKhajiitFocusWeight(Int focusValue)
+    return StorageUtil.GetFloatValue(None, GetKhajiitFocusWeightKey(focusValue))
+EndFunction
+
+String Function GetKhajiitFocusWeightKey(Int focusValue)
+    return "PDV.Khajiit.Focus." + GetKhajiitFocusStorageLabel(focusValue)
+EndFunction
+
+String Function GetKhajiitFocusLabel(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        return "Khenarthi"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        return "Azurah"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return "Baan Dar"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        return "Rajhin"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        return "Alkosh"
+    endIf
+
+    return "None"
+EndFunction
+
+String Function GetKhajiitFocusStorageLabel(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return "BaanDar"
+    endIf
+
+    return GetKhajiitFocusLabel(focusValue)
+EndFunction
+
+String Function GetKhajiitFocusShiftText(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        return "Khenarthi's wind has found your steps."
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        return "Azurah's dusk-bright road has found your steps."
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return "Baan Dar's road has found your steps."
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        return "Rajhin's clever path has found your steps."
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        return "Alkosh's order has found your steps."
+    endIf
+
+    return "The Lunar Lattice has found a new shape in your practice."
+EndFunction
+
+Function EmitHistAbandonmentMinus(String reason)
+    if !IsArgonianOrigin() || !Manager.PDV_Hist
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.HistAbandonment")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_ABANDONMENT, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistAbandonmentCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistAbandonmentReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistAbandonmentTime", Utility.GetCurrentGameTime())
+    Manager.Trace(2, "Hist abandonment routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+Function EmitHistCorruptionMinus(String reason)
+    if !IsArgonianOrigin() || !Manager.PDV_Hist
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.HistCorruption")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_CORRUPTION, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistCorruptionCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistCorruptionReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistCorruptionTime", Utility.GetCurrentGameTime())
+    Manager.Trace(2, "Hist corruption routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+Function EmitHistVoidOverreachMinus(String reason)
+    if !IsArgonianOrigin() || !Manager.PDV_Hist
+        return
+    endIf
+
+    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.HistVoidOverreach")
+    if multiplier <= 0.0
+        return
+    endIf
+
+    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_VOID_OVERREACH, None, multiplier)
+    StorageUtil.AdjustIntValue(None, "PDV.Argonian.VoidOverreachCount", 1)
+    StorageUtil.SetStringValue(None, "PDV.Argonian.LastVoidOverreachReason", reason)
+    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastVoidOverreachTime", Utility.GetCurrentGameTime())
+    Manager.Trace(2, "Hist void overreach routed: " + reason + " multiplier=" + multiplier)
+EndFunction
+
+Function SyncKhajiitEmphasisRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Int activeFocus = Manager.KHAJIIT_FOCUS_NONE
+    Int activeTier = Manager.LedgerRuntime.TIER_NONE
+    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
+        activeFocus = GetKhajiitFocusedEmphasis()
+        PDV_DeityBase deity = GetKhajiitEmphasisDeity(activeFocus)
+        if deity
+            activeTier = Manager.LedgerRuntime.GetTier(deity)
+        endIf
+    endIf
+
+    SyncKhajiitEmphasisFamily(playerRef, Manager.KHAJIIT_FOCUS_KHENARTHI, activeFocus, activeTier, Manager.PDV_Khenarthi, Manager.PDV_Bless_Khajiit_Khenarthi_T1, Manager.PDV_Bless_Khajiit_Khenarthi_T2, Manager.PDV_Bless_Khajiit_Khenarthi_T3, "Khenarthi")
+    SyncKhajiitEmphasisFamily(playerRef, Manager.KHAJIIT_FOCUS_AZURAH, activeFocus, activeTier, Manager.PDV_Azura, Manager.PDV_Bless_Khajiit_Azurah_T1, Manager.PDV_Bless_Khajiit_Azurah_T2, Manager.PDV_Bless_Khajiit_Azurah_T3, "Azurah")
+    SyncKhajiitEmphasisFamily(playerRef, Manager.KHAJIIT_FOCUS_BAANDAR, activeFocus, activeTier, Manager.PDV_BaanDar, Manager.PDV_Bless_Khajiit_BaanDar_T1, Manager.PDV_Bless_Khajiit_BaanDar_T2, Manager.PDV_Bless_Khajiit_BaanDar_T3, "Baan Dar")
+    SyncKhajiitEmphasisFamily(playerRef, Manager.KHAJIIT_FOCUS_RAJHIN, activeFocus, activeTier, Manager.PDV_Rajhin, Manager.PDV_Bless_Khajiit_Rajhin_T1, Manager.PDV_Bless_Khajiit_Rajhin_T2, Manager.PDV_Bless_Khajiit_Rajhin_T3, "Rajhin")
+    SyncKhajiitEmphasisFamily(playerRef, Manager.KHAJIIT_FOCUS_ALKOSH, activeFocus, activeTier, Manager.PDV_Alkosh, Manager.PDV_Bless_Khajiit_Alkosh_T1, Manager.PDV_Bless_Khajiit_Alkosh_T2, Manager.PDV_Bless_Khajiit_Alkosh_T3, "Alkosh")
+    SyncKhajiitLatticeResonance(playerRef)
+    SyncKhajiitPortentPower(playerRef)
+EndFunction
+
+Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFocus, Int activeTier, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
+    Bool isActive = (thisFocus == activeFocus)
+    Bool hadChampionSpell = False
+    if t3
+        hadChampionSpell = playerRef.HasSpell(t3)
+    endIf
+
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == Manager.LedgerRuntime.TIER_SEEKER, "Khajiit " + label + " T1")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == Manager.LedgerRuntime.TIER_DEVOTED, "Khajiit " + label + " T2")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= Manager.LedgerRuntime.TIER_CHAMPION, "Khajiit " + label + " T3")
+
+    if isActive && activeTier >= Manager.LedgerRuntime.TIER_CHAMPION && t3 && !hadChampionSpell && playerRef.HasSpell(t3) && deity && Manager.LedgerRuntime.NotifyTierUp(deity, Manager.LedgerRuntime.TIER_CHAMPION)
+        Manager.SendPrismaEventToast("tier", deity, "", Manager.GetPublicTierBand(Manager.LedgerRuntime.TIER_CHAMPION), "")
+        Manager.SurfaceTransition("tier", deity.DeityName + " " + Manager.GetTierStandingLabel(Manager.LedgerRuntime.TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+        Manager.Trace(1, "Khajiit Champion reward presentation shown: " + deity.DeityName)
+    endIf
+EndFunction
+
+Bool Function IsKhajiitLunarNeglected()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
+        return False
+    endIf
+
+    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime")
+    if lastSource <= 0.0
+        return False
+    endIf
+
+    return (Utility.GetCurrentGameTime() - lastSource) > Manager.KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS
+EndFunction
+
+Function SyncKhajiitNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !Manager.PDV_SPEL_Neglect_KhajiitLunar
+        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar)
+            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 1)
+    else
+        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar)
+            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 0)
+    endIf
+EndFunction
+
+Function SyncArgonianRewards(Actor playerRef)
+    if !playerRef
+        return
+    endIf
+
+    Bool isArgonian = Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
+    Float histRelation = 0.0
+    Float peopleRelation = 0.0
+    Float voidRelation = 0.0
+    Bool voidActive = False
+    Int activeFocus = Manager.ARGONIAN_FOCUS_NONE
+    if isArgonian && Manager.PDV_ArgonianHistSubstrate
+        histRelation = Manager.PDV_ArgonianHistSubstrate.GetHistRelation()
+        peopleRelation = Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation()
+        voidRelation = Manager.PDV_ArgonianHistSubstrate.GetVoidRelation()
+        voidActive = Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        activeFocus = GetArgonianActiveFocus(peopleRelation, voidRelation, voidActive)
+    endIf
+
+    ; Hist broad set, HIGHEST TIER ONLY (each tier spell carries the cumulative
+    ; magnitude, so total power is unchanged but only one tier shows at a time).
+    ; Retired Hist Communion boon family: the cultural-practice substrate now
+    ; owns the universal identity boon, while Hist remains a relation ledger.
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Hist_T1, False, "Argonian Hist T1 retired")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Hist_T2, False, "Argonian Hist T2 retired")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Hist_Signature, False, "Argonian Hist Signature retired")
+
+    ; People focused set, highest tier only (active only when People is the focus).
+    Bool peopleActive = isArgonian && activeFocus == Manager.ARGONIAN_FOCUS_PEOPLE
+    Bool wantPeopleT3 = peopleActive && peopleRelation >= Manager.ARGONIAN_REWARD_T3_THRESHOLD
+    Bool wantPeopleT2 = peopleActive && !wantPeopleT3 && peopleRelation >= Manager.ARGONIAN_REWARD_T2_THRESHOLD
+    Bool wantPeopleT1 = peopleActive && !wantPeopleT3 && !wantPeopleT2 && peopleRelation >= Manager.ARGONIAN_REWARD_T1_THRESHOLD
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_People_T1, wantPeopleT1, "Argonian People T1")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_People_T2, wantPeopleT2, "Argonian People T2")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_People_T3, wantPeopleT3, "Argonian People T3")
+
+    ; Sithis tertiary, highest tier only (only when Void is fully active + the focus).
+    Bool sithisActive = isArgonian && voidActive && activeFocus == Manager.ARGONIAN_FOCUS_VOID
+    Bool wantSithisT3 = sithisActive && voidRelation >= Manager.ARGONIAN_REWARD_T3_THRESHOLD
+    Bool wantSithisT2 = sithisActive && !wantSithisT3 && voidRelation >= Manager.ARGONIAN_REWARD_T2_THRESHOLD
+    Bool wantSithisT1 = sithisActive && !wantSithisT3 && !wantSithisT2 && voidRelation >= Manager.ARGONIAN_REWARD_T1_THRESHOLD
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Sithis_T1, wantSithisT1, "Argonian Sithis T1")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Sithis_T2, wantSithisT2, "Argonian Sithis T2")
+    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Sithis_T3, wantSithisT3, "Argonian Sithis T3")
+
+    ; Hist Adaptation slot rides the same dawn sync (separate channel from the
+    ; tier rewards above; never touched by SyncRaceRewardSpell).
+    SyncArgonianAdaptation(playerRef, isArgonian)
+
+    ; Existing-save fallback for Waters That Remember: discovery events never
+    ; re-fire for already-known locations, so the dawn sync also offers the
+    ; player's current location to the same one-shot gate.
+    if isArgonian
+        HandleArgonianSacredWaterDiscovery(playerRef.GetCurrentLocation())
+    endIf
+EndFunction
+
+Int Function GetArgonianActiveFocus(Float peopleRelation, Float voidRelation, Bool voidActive)
+    if voidActive && voidRelation > peopleRelation
+        return Manager.ARGONIAN_FOCUS_VOID
+    endIf
+
+    return Manager.ARGONIAN_FOCUS_PEOPLE
+EndFunction
+
+Bool Function IsArgonianHistNeglected()
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
+        return False
+    endIf
+
+    Int posture = Manager.PDV_ArgonianHistSubstrate.GetHistPosture()
+    if posture != Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_SILENCED && posture != Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_CORRUPTED
+        return False
+    endIf
+
+    if !Manager.PDV_ArgonianHistSubstrate.HasHistMaintenance()
+        return True
+    endIf
+
+    Int elapsedDays = Manager.LedgerRuntime.GetDevotionalDay() - Manager.PDV_ArgonianHistSubstrate.GetLastHistMaintenanceDevotionalDay()
+    return elapsedDays > (Manager.ARGONIAN_HIST_NEGLECT_GRACE_DAYS as Int)
+EndFunction
+
+Function SyncArgonianNeglectSpell(Bool shouldBeActive)
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef || !Manager.PDV_SPEL_Neglect_ArgonianHist
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 0)
+        return
+    endIf
+
+    if shouldBeActive
+        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_ArgonianHist)
+            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_ArgonianHist, False)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 1)
+    else
+        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_ArgonianHist)
+            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_ArgonianHist)
+        endIf
+        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 0)
+    endIf
+EndFunction
+
+String Function GetKhajiitFocusSymbol(Int focusValue)
+    if focusValue == Manager.KHAJIIT_FOCUS_KHENARTHI
+        return "khenarthi"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_AZURAH
+        return "azura"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_BAANDAR
+        return "baan-dar"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_RAJHIN
+        return "rajhin"
+    elseIf focusValue == Manager.KHAJIIT_FOCUS_ALKOSH
+        return "alkosh"
+    endIf
+    return "lunar"
+EndFunction
+
+Function ApplyArgonianCurseHandlers(Int oldState, Int newState, String reason)
+    if newState == 2
+        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_SILENCED)
+        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.VampireScar", 1)
+        if StorageUtil.GetIntValue(None, "PDV.Argonian.VampireFeedbackShown") != 1
+            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_VampireOnset, "You are undead now. The Hist falls silent.", False)
+            StorageUtil.SetIntValue(None, "PDV.Argonian.VampireFeedbackShown", 1)
+        endIf
+    elseIf newState == 1
+        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_STRAINED)
+        if StorageUtil.GetIntValue(None, "PDV.Argonian.WerewolfFeedbackShown") != 1
+            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_WerewolfOnset, "The beast is in you. The Hist relation strains, but does not sever.", False)
+            StorageUtil.SetIntValue(None, "PDV.Argonian.WerewolfFeedbackShown", 1)
+        endIf
+    elseIf oldState != 0 && newState == 0
+        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_DISTANT)
+        if oldState == 2
+            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_VampireCured, "The undeath is lifted. The Hist reaches again slowly.", False)
+            StorageUtil.SetIntValue(None, "PDV.Argonian.VampireFeedbackShown", 0)
+        elseIf oldState == 1
+            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_WerewolfCured, "The beast is set down. The shape settles.", False)
+            StorageUtil.SetIntValue(None, "PDV.Argonian.WerewolfFeedbackShown", 0)
+        endIf
+    else
+        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_NORMAL)
+    endIf
+
+    RefreshArgonianHistPosture(reason)
+EndFunction
+
+Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppressModal)
+    if Manager.GetSuppressCurseTransitionOutputs()
+        return
+    endIf
+
+    ; Past this point the function always emits something (toast, modal, or fallback box),
+    ; so the generic curse toast can stand aside for this transition.
+    Manager.SetRaceCurseSurfaceShown(True)
+
+    if suppressModal || !messageRecord
+        Manager.SendPrismaToast("hist", "warning", "", fallback)
+        return
+    endIf
+
+    messageRecord.Show()
+EndFunction
+
+Bool Function IsArgonianOrigin()
+    return Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
+EndFunction
+
+String Function GetKhajiitMedallionEntriesJson()
+    String entries = Manager.RosterMedallionEntry("azura", "Azurah", "prince", "azura", Manager.PDV_Azura, "Dusk, dawn, moon-shadow, and fate.")
+    entries = entries + "," + Manager.RosterMedallionEntry("boethiah", "Boethra", "prince", "boethiah", Manager.PDV_Boethiah, "Trial, edge, and hard lessons.")
+    entries = entries + "," + Manager.RosterMedallionEntry("mephala", "Mafala", "prince", "mephala", Manager.PDV_Mephala, "Hidden paths, webs, and clan memory.")
+    entries = entries + "," + Manager.RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", Manager.PDV_BaanDar, "The bandit god, wit, and road survival.")
+    entries = entries + "," + Manager.RosterMedallionEntry("rajhin", "Rajhin", "god", "rajhin", Manager.PDV_Rajhin, "The clever thief and impossible escape.")
+    entries = entries + "," + Manager.RosterMedallionEntry("alkosh", "Alkosh", "god", "alkosh", Manager.PDV_Alkosh, "Dragon order and time in Khajiit memory.")
+    entries = entries + "," + Manager.RosterMedallionEntry("khenarthi", "Khenarthi", "god", "khenarthi", Manager.PDV_Khenarthi, "Wind, sky-road, and breath.")
+    entries = entries + "," + Manager.PendingMedallionEntry("riddle-thar", "Riddle'Thar", "god", "riddle-thar", "Balance, ja-Kha'jay, and right conduct.")
+    entries = entries + "," + Manager.PendingMedallionEntry("jone-jode", "Jone and Jode", "god", "lunar", "The moons, the lattice, and the road home.")
+    return entries
+EndFunction
+
+String Function GetArgonianMedallionEntriesJson()
+    String entries = Manager.RosterMedallionEntry("hist", "The Hist", "substrate", "hist", Manager.PDV_Hist, "Root, memory, people, and sap.")
+    entries = entries + "," + Manager.RosterMedallionEntry("sithis", "Sithis", "god", "sithis", Manager.PDV_Sithis, "Void, change, and dangerous silence.")
+    return entries
+EndFunction
+
+Function EnsureArgonianHistSapToken()
+    ; V1: grant the self-replenishing Hist Sap POTION (PDV_ALCH_ArgonianHistSap) rather than the old read
+    ; BOOK. Drinking it routes Hist maintenance (see PDV_PotionArgonianHistSapEffect) and re-adds itself, so
+    ; the player keeps one ritual vial. The book property stays declared but is no longer granted.
+    if Manager.GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ALCH_ArgonianHistSap
+        return
+    endIf
+
+    Actor playerRef = Game.GetPlayer()
+    if !playerRef
+        return
+    endIf
+
+    if playerRef.GetItemCount(Manager.PDV_ALCH_ArgonianHistSap) <= 0
+        playerRef.AddItem(Manager.PDV_ALCH_ArgonianHistSap, 1, True)
+        StorageUtil.SetIntValue(None, "PDV.Token.ArgonianHistSap.Granted", 1)
+        Manager.Trace(2, "Argonian Hist sap potion granted.")
+    endIf
+EndFunction
+
+String Function GetKhajiitSurveyText()
+    String band = Manager.GetCurrentStandingBand()
+    Int focusValue = GetKhajiitFocusedEmphasis()
+    String text = ""
+    if focusValue > Manager.KHAJIIT_FOCUS_NONE
+        text = "You walk inside the Lunar Lattice, and " + GetKhajiitFocusLabel(focusValue) + " leads your devotion now. Standing: " + band + ". You did not choose it; you were walking it."
+    else
+        text = "You walk inside the Lunar Lattice, broad and unfocused, held by the moons and the road. Standing: " + band + ". No god leads yet, and that is whole."
+    endIf
+
+    if Manager.PDV_KhajiitLunarSubstrate
+        text = text + " Your moon practice is " + GetKhajiitLunarTierLabel(Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()) + "."
+        if StorageUtil.GetIntValue(None, "PDV.Khajiit.LunarSourceCount") > 0
+            text = text + " A lunar source has been read and remembered."
+        endIf
+        if Manager.PDV_KhajiitLunarSubstrate.GetRoadHomeCount() > 0
+            text = text + " The road-home cadence has begun to carry weight."
+        endIf
+    else
+        text = text + " The moons have not yet taken the measure of your practice."
+    endIf
+
+    Int presiding = GetCurrentLunarPresidingFocus()
+    if presiding > Manager.KHAJIIT_FOCUS_NONE
+        if GetActiveLunarFavoredFocus() == presiding
+            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength, and your focused blessing resonates."
+        else
+            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength."
+        endIf
+    endIf
+
+    Int posture = GetKhajiitLunarPosture()
+    if posture != Manager.KHAJIIT_LUNAR_POSTURE_NORMAL
+        text = text + "\n\n" + GetKhajiitLunarPostureReadout(posture)
+    endIf
+
+    return text
+EndFunction
+
+String Function GetKhajiitFocusStandingLine(Int focusValue)
+    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
+    if !deity
+        return "not yet wired"
+    endIf
+
+    String line = Manager.GetTierStandingLabel(Manager.LedgerRuntime.GetTier(deity)) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(Manager.LedgerRuntime.GetPiety(deity))
+    if GetKhajiitFocusedEmphasis() == focusValue
+        line = line + " (leading)"
+    endIf
+    if GetCurrentLunarPresidingFocus() == focusValue
+        if GetActiveLunarFavoredFocus() == focusValue
+            line = line + " (in strength, resonating)"
+        else
+            line = line + " (in strength)"
+        endIf
+    endIf
+
+    return line
+EndFunction
+
+String Function GetKhajiitLunarTierLabel(Int tierValue)
+    if tierValue >= 3
+        return "strong"
+    elseIf tierValue == 2
+        return "steady"
+    elseIf tierValue == 1
+        return "beginning"
+    endIf
+
+    return "quiet"
+EndFunction
+
+String Function GetArgonianSurveyText()
+    if !Manager.PDV_ArgonianHistSubstrate
+        return "Far from Black Marsh, the Hist is distant and your practice is still settling."
+    endIf
+
+    Float histRel = Manager.PDV_ArgonianHistSubstrate.GetHistRelation()
+    String text = "Far from Black Marsh, Hist memory is " + GetArgonianLayerStrengthLabel(histRel)
+    Float peopleRel = Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation()
+    if peopleRel >= 70.0
+        text = text + " and the People are near."
+    elseIf peopleRel >= 35.0
+        text = text + " and the People are with you."
+    elseIf peopleRel > 0.0
+        text = text + " and the People are scattered."
+    else
+        text = text + " and the People are far off."
+    endIf
+
+    if Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        text = text + " Sithis is awake, but the Hist remains first."
+    else
+        Float voidRel = Manager.PDV_ArgonianHistSubstrate.GetVoidRelation()
+        if voidRel >= 35.0
+            text = text + " Sithis stirs at the edge."
+        elseIf voidRel > 0.0
+            text = text + " Sithis waits at the edge."
+        endIf
+    endIf
+
+    text = text + " Cultural practice: " + GetArgonianCulturalPracticeLabel() + "."
+
+    return text
+EndFunction
+
+String Function GetArgonianHistLayerText()
+    if !Manager.PDV_ArgonianHistSubstrate
+        return "Hist, People, and Void are not yet readable."
+    endIf
+
+    String text = "Hist memory is " + GetArgonianLayerStrengthLabel(Manager.PDV_ArgonianHistSubstrate.GetHistRelation())
+    text = text + "; People support is " + GetArgonianLayerStrengthLabel(Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation())
+    text = text + "; Void awareness is " + GetArgonianVoidStrengthLabel(Manager.PDV_ArgonianHistSubstrate.GetVoidRelation())
+    Int bedCount = StorageUtil.GetIntValue(Manager.PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount")
+    if bedCount > 0
+        text = text + ". Your chosen bed has begun to matter."
+    endIf
+    if Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        text = text + ". Sithis is active, but the Hist remains first."
+    else
+        text = text + ". Sithis is only an awareness at the edge."
+    endIf
+    return text
+EndFunction
+
+String Function GetArgonianLayerStrengthLabel(Float value)
+    if value >= 70.0
+        return "held"
+    elseIf value >= 35.0
+        return "present"
+    elseIf value > 0.0
+        return "thin"
+    endIf
+
+    return "distant"
+EndFunction
+
+String Function GetArgonianVoidStrengthLabel(Float value)
+    if Manager.PDV_ArgonianHistSubstrate && Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
+        return "awake"
+    elseIf value >= 35.0
+        return "stirring"
+    elseIf value > 0.0
+        return "at the edge"
+    endIf
+
+    return "dormant"
+EndFunction
+
+String Function GetArgonianHistPostureLabel()
+    if Manager.PDV_ArgonianHistSubstrate
+        return Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel()
+    endIf
+
+    return "Missing"
+EndFunction
+
+String Function GetKhajiitLunarSummary()
+    if !Manager.PDV_KhajiitLunarSubstrate
+        return "missing"
+    endIf
+
+    return Manager.PDV_KhajiitLunarSubstrate.GetPilotSummary() + "; focus=" + GetKhajiitFocusLabel(GetKhajiitFocusedEmphasis()) + "; kh=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_KHENARTHI)) + "; az=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_AZURAH)) + "; bd=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_BAANDAR)) + "; rj=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_RAJHIN)) + "; ak=" + PDV_DevotionRules.FormatTwoDecimals(GetKhajiitFocusWeight(Manager.KHAJIIT_FOCUS_ALKOSH))
+EndFunction
+
+String Function GetArgonianHistSummary()
+    if !Manager.PDV_ArgonianHistSubstrate
+        return "missing"
+    endIf
+
+    return Manager.PDV_ArgonianHistSubstrate.GetPilotSummary()
+EndFunction
+
+Int Function GetKhajiitMoonPhaseFromGameDay(Float gameDay)
+    Int phaseTest = (gameDay + 0.5) as Int
+    phaseTest = phaseTest % 24
+    if phaseTest < 0
+        phaseTest += 24
+    endIf
+
+    if phaseTest >= 22 || phaseTest == 0
+        return 1    ; Full Moon
+    elseIf phaseTest < 4
+        return 2    ; Waning Gibbous
+    elseIf phaseTest < 7
+        return 3    ; Last Quarter
+    elseIf phaseTest < 10
+        return 4    ; Waning Crescent
+    elseIf phaseTest < 13
+        return 5    ; New Moon
+    elseIf phaseTest < 16
+        return 6    ; Waxing Crescent
+    elseIf phaseTest < 19
+        return 7    ; First Quarter
+    endIf
+
+    return 8        ; Waxing Gibbous
 EndFunction

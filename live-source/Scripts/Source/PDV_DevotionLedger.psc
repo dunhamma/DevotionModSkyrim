@@ -363,8 +363,8 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     ; Khenarthi / Azurah cells drive the focused-emphasis system. Piety is already
     ; awarded above; this adds focus weight only. Behavior-driven focus per the
     ; LOCKED Khajiit design sheet.
-    if amount > 0.0 && Manager.IsKhajiitOrigin()
-        Manager.BridgeKhajiitMatrixFocus(deityName, magnitude)
+    if amount > 0.0 && Manager.OriginRuntime.IsKhajiitOrigin()
+        Manager.OriginRuntime.BridgeKhajiitMatrixFocus(deityName, magnitude)
     endIf
 EndFunction
 
@@ -1080,7 +1080,7 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
             endIf
         endIf
 
-        Bool isFocusedEmphasis = Manager.IsKhajiitOrigin() && deity == Manager.GetKhajiitEmphasisDeity(Manager.GetKhajiitFocusedEmphasis())
+        Bool isFocusedEmphasis = Manager.OriginRuntime.IsKhajiitOrigin() && deity == Manager.OriginRuntime.GetKhajiitEmphasisDeity(Manager.OriginRuntime.GetKhajiitFocusedEmphasis())
 
         ; Reward/mirror hooks fire only for the patron / focused-emphasis deity.
         if deity == Manager.GetActiveDeity()
@@ -1887,7 +1887,7 @@ Function ProcessDawn()
     RunDawnRefreshDevotionMarks()
     RunDawnConsolidateScratch()
     ProcessBroadPantheonDawn()
-    Manager.EvaluateKhajiitFocusedEmphasis()
+    Manager.OriginRuntime.EvaluateKhajiitFocusedEmphasis()
     Manager.RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
     Manager.OriginRuntime.EvaluateAltmerCrisisAtDawn()
@@ -1897,8 +1897,8 @@ Function ProcessDawn()
     RunDawnNotifyNoop()
     Manager.RunDawnBookOfDays()
     RunDawnChampionAmbient()
-    Manager.SyncKhajiitRuntimeState()
-    Manager.ProcessKhajiitAlkoshWordDrip()
+    Manager.OriginRuntime.SyncKhajiitRuntimeState()
+    Manager.OriginRuntime.ProcessKhajiitAlkoshWordDrip()
     Manager.DisarmDunmerAncestorWatch()
     Manager.RequestPanelRefresh()
 
@@ -2070,12 +2070,12 @@ Function RunDawnRefreshTrackStates()
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
-        Manager.EvaluateKhajiitFocusedEmphasis()
-        Manager.RefreshKhajiitLunarPosture("dawn")
+        Manager.OriginRuntime.EvaluateKhajiitFocusedEmphasis()
+        Manager.OriginRuntime.RefreshKhajiitLunarPosture("dawn")
     endIf
 
-    if Manager.IsArgonianOrigin()
-        Manager.RunDawnRefreshArgonianHist()
+    if Manager.OriginRuntime.IsArgonianOrigin()
+        Manager.OriginRuntime.RunDawnRefreshArgonianHist()
     endIf
 
     if Manager.OriginRuntime.IsAltmerOrigin()
@@ -2311,8 +2311,8 @@ Function ForceSetPiety(Float amount)
     StorageUtil.SetFloatValue(deityForm, "PDV.Piety", PDV_DevotionRules.ClampValue(amount, 0.0, PIETY_MAX))
     RecomputeTier(Manager.GetActiveDeity(), False)
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_KHAJIIT
-        Manager.EvaluateKhajiitFocusedEmphasis()
-        Manager.SyncKhajiitRuntimeState()
+        Manager.OriginRuntime.EvaluateKhajiitFocusedEmphasis()
+        Manager.OriginRuntime.SyncKhajiitRuntimeState()
     endIf
 EndFunction
 
@@ -2834,8 +2834,8 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
     ; A Khajiit focus may already have the required behavioral lead when this
     ; piety movement crosses Seeker. Evaluate here as well as on weight changes
     ; so emergence cannot lag until the next unrelated action.
-    if appliedAmount != 0.0 && Manager.IsKhajiitOrigin() && Manager.GetKhajiitFocusForDeity(deity) != Manager.KHAJIIT_FOCUS_NONE
-        Manager.EvaluateKhajiitFocusedEmphasis()
+    if appliedAmount != 0.0 && Manager.OriginRuntime.IsKhajiitOrigin() && Manager.OriginRuntime.GetKhajiitFocusForDeity(deity) != Manager.KHAJIIT_FOCUS_NONE
+        Manager.OriginRuntime.EvaluateKhajiitFocusedEmphasis()
     endIf
     if ownsBroadEvent
         FlushBroadPantheonEvent()
@@ -3562,8 +3562,8 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Khajiit is a no-offer race: its emphasis rewards gate on the focused emphasis deity's
     ; piety tier (not active-patron), and its broad lunar reward is the substrate boon layer.
-    Manager.SyncKhajiitEmphasisRewards(playerRef)
-    Manager.SyncKhajiitNeglectSpell(Manager.IsKhajiitLunarNeglected())
+    Manager.OriginRuntime.SyncKhajiitEmphasisRewards(playerRef)
+    Manager.OriginRuntime.SyncKhajiitNeglectSpell(Manager.OriginRuntime.IsKhajiitLunarNeglected())
 
     ; Altmer is an offer race: broad orthodoxy T1 remains on the existing first-tier path while
     ; focused Auri-El/Magnus/Xarxes families gate on the active patron's tier.
@@ -3601,8 +3601,8 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Argonian is the second no-offer race: rewards gate on the Hist substrate relations + People
     ; focus + Void-active (not active-patron), so the broad Hist set runs without an offer.
-    Manager.SyncArgonianRewards(playerRef)
-    Manager.SyncArgonianNeglectSpell(Manager.IsArgonianHistNeglected())
+    Manager.OriginRuntime.SyncArgonianRewards(playerRef)
+    Manager.OriginRuntime.SyncArgonianNeglectSpell(Manager.OriginRuntime.IsArgonianHistNeglected())
 
     ; Imperial is an offer race: broad civic T1 remains on the existing first-tier path while the
     ; focused Divine/Talos families gate on the active patron's tier.
@@ -4186,7 +4186,7 @@ Function HandleCurseStateRefresh(String reason)
         HandleCurseStateTransition(oldState, newState, reason)
     else
         if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
-            Manager.RefreshArgonianHistPosture(reason)
+            Manager.OriginRuntime.RefreshArgonianHistPosture(reason)
         endIf
         if Manager.PDV_HircinePath
             Manager.PDV_HircinePath.UpdateResidueRecovery()
@@ -4247,7 +4247,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == Manager.ORIGIN_ALTMER
         Manager.OriginRuntime.ApplyAltmerCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ARGONIAN
-        Manager.ApplyArgonianCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyArgonianCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_IMPERIAL
         Manager.ApplyImperialCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ORC
@@ -4255,7 +4255,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == Manager.ORIGIN_REDGUARD
         Manager.ApplyRedguardCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_KHAJIIT
-        Manager.ApplyKhajiitCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyKhajiitCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_NORD
         Manager.ApplyNordCurseHandlers(oldState, newState, reason)
         if Manager.PDV_HircinePath
@@ -4565,5 +4565,6 @@ Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
         playerRef.AddSpell(bandSpell, False)
     endIf
 EndFunction
+
 
 

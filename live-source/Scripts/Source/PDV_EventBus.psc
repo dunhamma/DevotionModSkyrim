@@ -220,7 +220,7 @@ Function RouteKhajiitMoonObservance(Int phaseIndex)
         eventType = eventTypes.EVT_SLEEP_MOON_OBSERVANCE
     endIf
 
-    PDV_Manager.HandleKhajiitMoonObservance(phaseIndex, "eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleKhajiitMoonObservance(phaseIndex, "eventbus_" + eventType)
     Trace(2, "RouteKhajiitMoonObservance complete: " + eventType + " phase " + phaseIndex)
 EndFunction
 
@@ -236,7 +236,7 @@ Function RouteKhajiitRoadHome()
         eventType = eventTypes.EVT_KHAJIIT_ROAD_HOME
     endIf
 
-    PDV_Manager.HandleKhajiitRoadHome("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleKhajiitRoadHome("eventbus_" + eventType)
     Trace(2, "RouteKhajiitRoadHome complete: " + eventType)
 EndFunction
 
@@ -252,7 +252,7 @@ Function RouteKhajiitRoadHomeAnchor(Int anchorId)
         eventType = eventTypes.EVT_KHAJIIT_ROAD_HOME
     endIf
 
-    PDV_Manager.HandleKhajiitRoadHomeAnchor(anchorId, "eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleKhajiitRoadHomeAnchor(anchorId, "eventbus_" + eventType)
     Trace(2, "RouteKhajiitRoadHomeAnchor complete: " + eventType + " anchor " + anchorId)
 EndFunction
 
@@ -273,7 +273,7 @@ Function RouteKhajiitBaanDarRoadTrick(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitBaanDarRoadTrick(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitBaanDarRoadTrick(reason)
     Trace(2, "RouteKhajiitBaanDarRoadTrick complete: " + reason)
 EndFunction
 
@@ -288,7 +288,7 @@ Function RouteKhajiitBaanDarReversal(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitBaanDarReversal(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitBaanDarReversal(reason)
     Trace(2, "RouteKhajiitBaanDarReversal complete: " + reason)
 EndFunction
 
@@ -309,7 +309,7 @@ Function RouteKhajiitRajhinElegantTheft(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitRajhinElegantTheft(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitRajhinElegantTheft(reason)
     Trace(2, "RouteKhajiitRajhinElegantTheft complete: " + reason)
 EndFunction
 
@@ -330,7 +330,7 @@ Function RouteKhajiitAlkoshDragonOrder(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitAlkoshDragonOrder(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitAlkoshDragonOrder(reason)
     Trace(2, "RouteKhajiitAlkoshDragonOrder complete: " + reason)
 EndFunction
 
@@ -345,7 +345,7 @@ Function RouteKhajiitAlkoshNamedDragon(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitAlkoshNamedDragon(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitAlkoshNamedDragon(reason)
     Trace(2, "RouteKhajiitAlkoshNamedDragon complete: " + reason)
 EndFunction
 
@@ -360,7 +360,7 @@ Function RouteKhajiitAlkoshGenericDragon(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitAlkoshGenericDragon(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitAlkoshGenericDragon(reason)
     Trace(2, "RouteKhajiitAlkoshGenericDragon complete: " + reason)
 EndFunction
 
@@ -369,7 +369,7 @@ Function RouteKhajiitAzurahDesecration()
         Trace(1, "RouteKhajiitAzurahDesecration skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleKhajiitAzurahDesecration("eventbus_khajiit_azurah_desecration")
+    PDV_Manager.OriginRuntime.HandleKhajiitAzurahDesecration("eventbus_khajiit_azurah_desecration")
     Trace(2, "RouteKhajiitAzurahDesecration complete")
 EndFunction
 
@@ -378,7 +378,7 @@ Function RouteKhajiitKhenarthiCaravanHarm()
         Trace(1, "RouteKhajiitKhenarthiCaravanHarm skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleKhajiitKhenarthiCaravanHarm("eventbus_khajiit_khenarthi_caravan_harm")
+    PDV_Manager.OriginRuntime.HandleKhajiitKhenarthiCaravanHarm("eventbus_khajiit_khenarthi_caravan_harm")
     Trace(2, "RouteKhajiitKhenarthiCaravanHarm complete")
 EndFunction
 
@@ -393,7 +393,7 @@ Function RouteKhajiitKhenarthiCaravanAid(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitKhenarthiCaravanAid(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitKhenarthiCaravanAid(reason)
     Trace(2, "RouteKhajiitKhenarthiCaravanAid complete: " + reason)
 EndFunction
 
@@ -408,7 +408,7 @@ Function RouteKhajiitRajhinLegendMade(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleKhajiitRajhinLegendMade(reason)
+    PDV_Manager.OriginRuntime.HandleKhajiitRajhinLegendMade(reason)
     Trace(2, "RouteKhajiitRajhinLegendMade complete: " + reason)
 EndFunction
 
@@ -447,7 +447,7 @@ Function RouteKhajiitRajhinBotchedTheft()
         Trace(1, "RouteKhajiitRajhinBotchedTheft skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleKhajiitRajhinBotchedTheft("eventbus_khajiit_rajhin_botched_theft")
+    PDV_Manager.OriginRuntime.HandleKhajiitRajhinBotchedTheft("eventbus_khajiit_rajhin_botched_theft")
     Trace(2, "RouteKhajiitRajhinBotchedTheft complete")
 EndFunction
 
@@ -456,7 +456,7 @@ Function RouteKhajiitAlkoshChaosAid()
         Trace(1, "RouteKhajiitAlkoshChaosAid skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleKhajiitAlkoshChaosAid("eventbus_khajiit_alkosh_chaos_aid")
+    PDV_Manager.OriginRuntime.HandleKhajiitAlkoshChaosAid("eventbus_khajiit_alkosh_chaos_aid")
     Trace(2, "RouteKhajiitAlkoshChaosAid complete")
 EndFunction
 
@@ -483,7 +483,7 @@ Function RouteKhajiitBaanDarBetrayal()
         Trace(1, "RouteKhajiitBaanDarBetrayal skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleKhajiitBaanDarBetrayal("eventbus_khajiit_baandar_betrayal")
+    PDV_Manager.OriginRuntime.HandleKhajiitBaanDarBetrayal("eventbus_khajiit_baandar_betrayal")
     Trace(2, "RouteKhajiitBaanDarBetrayal complete")
 EndFunction
 
@@ -493,14 +493,14 @@ Function RouteKhajiitLunarSubstrate(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleKhajiitLunarSubstrate(sourceId)
+    PDV_Manager.OriginRuntime.HandleKhajiitLunarSubstrate(sourceId)
     Trace(2, "RouteKhajiitLunarSubstrate complete: " + sourceId)
 EndFunction
 
 Function RouteKhajiitFocusedEmphasis(Int deityId, String sourceId)
     if deityId == 2
         if PDV_Manager
-            PDV_Manager.HandleKhajiitFocusedSourceForFocus(2, "eventbus_p2_khajiit_focused_" + sourceId)
+            PDV_Manager.OriginRuntime.HandleKhajiitFocusedSourceForFocus(2, "eventbus_p2_khajiit_focused_" + sourceId)
         else
             RouteKhajiitMoonObservance(0)
         endIf
@@ -509,7 +509,7 @@ Function RouteKhajiitFocusedEmphasis(Int deityId, String sourceId)
             Trace(1, "RouteKhajiitFocusedEmphasis skipped: PDV_Manager not assigned.")
             return
         endIf
-        PDV_Manager.HandleKhajiitFocusedSourceForFocus(1, "eventbus_p2_khajiit_focused_" + sourceId)
+        PDV_Manager.OriginRuntime.HandleKhajiitFocusedSourceForFocus(1, "eventbus_p2_khajiit_focused_" + sourceId)
     elseIf deityId == 3
         RouteKhajiitBaanDarRoadTrick(sourceId)
     elseIf deityId == 4
@@ -521,7 +521,7 @@ Function RouteKhajiitFocusedEmphasis(Int deityId, String sourceId)
             Trace(1, "RouteKhajiitFocusedEmphasis skipped: PDV_Manager not assigned.")
             return
         endIf
-        PDV_Manager.HandleKhajiitFocusedSource("eventbus_p2_khajiit_focused_" + sourceId)
+        PDV_Manager.OriginRuntime.HandleKhajiitFocusedSource("eventbus_p2_khajiit_focused_" + sourceId)
     endIf
 
     Trace(2, "RouteKhajiitFocusedEmphasis complete: " + deityId + " source " + sourceId)
@@ -728,7 +728,7 @@ Function RouteArgonianHistMaintenance()
         eventType = eventTypes.EVT_ARGONIAN_HIST_MAINTENANCE
     endIf
 
-    PDV_Manager.HandleArgonianHistMaintenance("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleArgonianHistMaintenance("eventbus_" + eventType)
     Trace(2, "RouteArgonianHistMaintenance complete: " + eventType)
 EndFunction
 
@@ -744,7 +744,7 @@ Function RouteArgonianPeopleSupport()
         eventType = eventTypes.EVT_ARGONIAN_PEOPLE_SUPPORT
     endIf
 
-    PDV_Manager.HandleArgonianPeopleSupport("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleArgonianPeopleSupport("eventbus_" + eventType)
     Trace(2, "RouteArgonianPeopleSupport complete: " + eventType)
 EndFunction
 
@@ -760,7 +760,7 @@ Function RouteArgonianVoidSignal()
         eventType = eventTypes.EVT_ARGONIAN_VOID_SIGNAL
     endIf
 
-    PDV_Manager.HandleArgonianVoidSignal("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleArgonianVoidSignal("eventbus_" + eventType)
     Trace(2, "RouteArgonianVoidSignal complete: " + eventType)
 EndFunction
 
@@ -776,7 +776,7 @@ Function RouteArgonianBedOfChoice()
         eventType = eventTypes.EVT_ARGONIAN_BED_OF_CHOICE
     endIf
 
-    PDV_Manager.HandleArgonianBedOfChoiceReturn("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleArgonianBedOfChoiceReturn("eventbus_" + eventType)
     Trace(2, "RouteArgonianBedOfChoice complete: " + eventType)
 EndFunction
 
@@ -786,7 +786,7 @@ Function RouteArgonianCommunity(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleArgonianPeopleSupport("eventbus_p2_argonian_community_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleArgonianPeopleSupport("eventbus_p2_argonian_community_" + sourceId)
     Trace(2, "RouteArgonianCommunity complete: " + sourceId)
 EndFunction
 
@@ -796,7 +796,7 @@ Function RouteArgonianSapVision()
         return
     endIf
 
-    PDV_Manager.HandleArgonianSapVision()
+    PDV_Manager.OriginRuntime.HandleArgonianSapVision()
     Trace(2, "RouteArgonianSapVision complete.")
 EndFunction
 
@@ -806,7 +806,7 @@ Function RouteArgonianHistMaintenanceSource(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleArgonianHistMaintenance("eventbus_p2_argonian_hist_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleArgonianHistMaintenance("eventbus_p2_argonian_hist_" + sourceId)
     Trace(2, "RouteArgonianHistMaintenanceSource complete: " + sourceId)
 EndFunction
 
@@ -816,7 +816,7 @@ Function RouteArgonianSithisAcknowledgment(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleArgonianVoidSignal("eventbus_p2_argonian_sithis_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleArgonianVoidSignal("eventbus_p2_argonian_sithis_" + sourceId)
     Trace(2, "RouteArgonianSithisAcknowledgment complete: " + sourceId)
 EndFunction
 
@@ -1625,7 +1625,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     ; the elegant-theft cadence (SIGNAL_LEGEND_MADE). The manager handler owns the
     ; Khajiit-origin gate and the daily cap; this is only the value gate.
     if eventType == 362 && targetRef && (targetRef.GetGoldValue() >= 500)
-        PDV_Manager.HandleKhajiitRajhinLegendMade("eventbus_362_grand_theft")
+        PDV_Manager.OriginRuntime.HandleKhajiitRajhinLegendMade("eventbus_362_grand_theft")
     endIf
 
     ; P7 (2026-08-03): Trinimac's renewable civilization-defence beat. The bus only forwards -- the
@@ -1779,4 +1779,5 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] EventBus: " + traceText)
     endIf
 EndFunction
+
 

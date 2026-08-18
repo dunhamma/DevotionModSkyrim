@@ -2015,7 +2015,7 @@ Function BuildPlayerPage()
             AddHeaderOption("Moon-paths", OPTION_FLAG_NONE)
             Int khajiitFocus = 1
             while khajiitFocus <= 5
-                AddTextOption(PDV_Manager.GetKhajiitFocusLabel(khajiitFocus), PDV_Manager.GetKhajiitFocusStandingLine(khajiitFocus), OPTION_FLAG_DISABLED)
+                AddTextOption(PDV_Manager.OriginRuntime.GetKhajiitFocusLabel(khajiitFocus), PDV_Manager.OriginRuntime.GetKhajiitFocusStandingLine(khajiitFocus), OPTION_FLAG_DISABLED)
                 khajiitFocus += 1
             endWhile
         endIf
@@ -4325,3 +4325,4 @@ Function ResetAllOptionIds()
     _oidTalosBetrayalMajor = -1
     _oidTalosShrineDefiance = -1
 EndFunction
+

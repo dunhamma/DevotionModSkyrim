@@ -133,7 +133,7 @@ Function EnsureOriginInventoryTokens()
     endIf
 
     PDV_Manager.EnsureDunmerAncestralUrn()
-    PDV_Manager.EnsureArgonianHistSapToken()
+    PDV_Manager.OriginRuntime.EnsureArgonianHistSapToken()
 EndFunction
 
 Bool Function ShouldDeferProvisionalNordCapture(Int raceIndex, Actor playerActor)
@@ -515,3 +515,4 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] Origin: " + traceText)
     endIf
 EndFunction
+
