@@ -5,6 +5,7 @@ import path from "node:path";
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 import { hashByteFiles, hashText } from "./lib/pdv_file_compare.mjs";
 import { devotionPex, devotionPrismaView } from "./lib/pdv_paths.mjs";
+import { callTokenPattern } from "./lib/pdv_symbol_home.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ui_audit" });
@@ -30,6 +31,17 @@ const REPO_MANAGER_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Sour
 const REPO_QUEST_REACTION_RUNTIME_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV_QuestReactionRuntime.psc");
 const BRIDGE_PSC_LIVE = path.join(DEVOTION_SOURCE, "PDV_PrismaBridge.psc");
 const BRIDGE_PSC_REPO = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "mod", "Scripts", "Source", "PDV_PrismaBridge.psc");
+
+function reEsc(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Broad-pool normalization needle, resolver-driven so it tracks ClampValue's
+// extraction into PDV_DevotionRules (matches bare or owning-script-qualified),
+// while still pinning the exact broad-pool argument expression.
+const BROAD_POOL_CLAMP_RE = new RegExp(
+  callTokenPattern("ClampValue", REPO_ROOT).source + reEsc("piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)"),
+);
 
 function fail(message, source = "") {
   failures.push({ message, source });
@@ -1787,7 +1799,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     !managerForBroadLane.includes("Bool Function IsPantheonBroadPoolPresentationActive(Int origin)") ||
     !managerForBroadLane.includes("Float Function GetBroadLaneStandingValue(Int origin)") ||
     !managerForBroadLane.includes("Float Function GetBroadLaneScratchValue(Int origin)") ||
-    !managerForBroadLane.includes("primary = ClampValue(piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)") ||
+    !BROAD_POOL_CLAMP_RE.test(managerForBroadLane) ||
     !managerForBroadLane.includes('\\"scratch\\":') ||
     !app.includes("const renderBroadInstrument") ||
     !app.includes("broad: renderBroadInstrument")

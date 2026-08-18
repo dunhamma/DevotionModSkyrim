@@ -15,9 +15,25 @@ import { fileURLToPath } from "node:url";
 import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
 import { recordActorValueFor } from "./lib/pdv_actor_value_aliases.mjs";
 import { resolveDevotionRoot, devotionSource, devotionPex, devotionEsp } from "./lib/pdv_paths.mjs";
+import { callTokenPattern } from "./lib/pdv_symbol_home.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
+
+function reEscape(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Build a { needle, pattern } entry for checkSourceMatches. `pattern` matches a
+// call to `name` with an OPTIONAL owning-script qualifier (resolver-driven, so
+// it tracks the symbol's extraction into its deep module) followed by the
+// literal `argsTail`; `needle` is the bare call text shown in the check output.
+function callNeedle(name, argsTail) {
+  return {
+    needle: `${name}(${argsTail}`,
+    pattern: new RegExp(callTokenPattern(name, PROJECT_ROOT).source + reEscape(argsTail)),
+  };
+}
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
 const DEVOTION_MOD = resolveDevotionRoot();
 const DEVOTION_SOURCE = devotionSource();
@@ -4331,7 +4347,7 @@ class Verifier {
   checkRestoreBoundaryRecoverySourceScaffold() {
     this.checkSourceContains("Restore boundary book notice source", "PDV__ManagerQuest", [
       "Bool Function IsP2BookNoticeReason(String reason)",
-      "return StringContainsToken(reason, \"po3_book\")",
+      "StringContainsToken(reason, \"po3_book\")",
     ], this.phase20RaceCostingGap.bind(this));
 
     this.checkSourceContains("Restore boundary startup confirm source", "PDV__ManagerQuest", [
@@ -4352,7 +4368,11 @@ class Verifier {
       "Function HandleOrcStrongholdPresence(Int holdId, String reason)",
       "Function HandleOrcBloodKinCrisis(String reason)",
       "Int Function GetOrcStrongholdHoldId(Location newLocation)",
-      "return StringContainsToken(reason, \"orc_bloodkin_crisis\") || StringContainsToken(reason, \"orc_cursed_tribe_resolved\") || StringContainsToken(reason, \"orc_major_gate\")",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceMatches("Restore boundary Orc organic source", "PDV__ManagerQuest", [
+      callNeedle("StringContainsToken", "reason, \"orc_bloodkin_crisis\")"),
+      callNeedle("StringContainsToken", "reason, \"orc_cursed_tribe_resolved\")"),
+      callNeedle("StringContainsToken", "reason, \"orc_major_gate\")"),
     ], this.phase20RaceCostingGap.bind(this));
     this.checkSourceContains("Restore boundary Orc organic router source", "PDV_ActionRouter", [
       "PDV_Manager.HandleOrcLocationChange(akNewLocation)",
@@ -4395,9 +4415,11 @@ class Verifier {
       "String Function BuildJournalPayloadJson()",
       "String pathInfo = GetOriginRaceLabel(GetPlayerOriginRaceIndex())",
       "pathInfo = pathInfo + \" | \" + GetPlayerMcmModeLine()",
-      "j = j + \",\\\"survey\\\":\\\"\" + JsonSafeString(pathInfo) + \"\\\"\"",
       "String Function GetPlayerMcmModeLine()",
       "return GetRedguardSectLabel()",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceMatches("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
+      callNeedle("JsonSafeString", "pathInfo)"),
     ], this.phase20RaceCostingGap.bind(this));
     this.checkSourceNotContains("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
       "pathInfo = pathInfo + \" | \" + GetPlayerMcmSummaryLine()",
@@ -9883,6 +9905,24 @@ class Verifier {
         reportGap(checkName, `${scriptName}.psc still contains ${snippet}.`, source);
       } else {
         this.pass(checkName, `${scriptName}.psc does not contain ${snippet}.`, source);
+      }
+    }
+  }
+
+  checkSourceMatches(checkName, scriptName, entries, gapFn = null) {
+    const reportGap = gapFn || this.fail.bind(this);
+    const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+    if (!exists(source)) {
+      reportGap(checkName, `${scriptName}.psc is missing.`, source);
+      return;
+    }
+
+    const text = fs.readFileSync(source, "utf8");
+    for (const { needle, pattern } of entries) {
+      if (pattern.test(text)) {
+        this.pass(checkName, `${scriptName}.psc contains ${needle}.`, source);
+      } else {
+        reportGap(checkName, `${scriptName}.psc is missing ${needle}.`, source);
       }
     }
   }

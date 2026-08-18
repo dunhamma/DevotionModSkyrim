@@ -20,13 +20,6 @@
           "callerCount": 7
         },
         {
-          "name": "GetDebugLevel",
-          "startLine": 13566,
-          "endLine": 13571,
-          "loc": 6,
-          "callerCount": 226
-        },
-        {
           "name": "MaxFloat",
           "startLine": 14444,
           "endLine": 14449,
@@ -76,13 +69,6 @@
           "callerCount": 1
         },
         {
-          "name": "NormalizePublicDeityDisplayText",
-          "startLine": 23993,
-          "endLine": 23999,
-          "loc": 7,
-          "callerCount": 26
-        },
-        {
           "name": "ReplaceText",
           "startLine": 24001,
           "endLine": 24027,
@@ -104,13 +90,6 @@
           "callerCount": 7
         },
         {
-          "name": "GetBuildVersion",
-          "startLine": 25068,
-          "endLine": 25070,
-          "loc": 3,
-          "callerCount": 1
-        },
-        {
           "name": "FormatTwoDecimals",
           "startLine": 26543,
           "endLine": 26551,
@@ -125,20 +104,6 @@
           "callerCount": 1
         },
         {
-          "name": "ConsumeDailyRepeatMultiplier",
-          "startLine": 26807,
-          "endLine": 26829,
-          "loc": 23,
-          "callerCount": 72
-        },
-        {
-          "name": "ConsumeOncePerDaySignal",
-          "startLine": 26831,
-          "endLine": 26841,
-          "loc": 11,
-          "callerCount": 19
-        },
-        {
           "name": "CountSetBits",
           "startLine": 26843,
           "endLine": 26858,
@@ -151,13 +116,6 @@
           "endLine": 26865,
           "loc": 6,
           "callerCount": 41
-        },
-        {
-          "name": "GetDeityFormOrNone",
-          "startLine": 26901,
-          "endLine": 26906,
-          "loc": 6,
-          "callerCount": 11
         },
         {
           "name": "JsonSafeString",
@@ -11654,6 +11612,48 @@
           "endLine": 28318,
           "loc": 24,
           "callerCount": 2
+        },
+        {
+          "name": "GetDebugLevel",
+          "startLine": 13566,
+          "endLine": 13571,
+          "loc": 6,
+          "callerCount": 226
+        },
+        {
+          "name": "NormalizePublicDeityDisplayText",
+          "startLine": 23993,
+          "endLine": 23999,
+          "loc": 7,
+          "callerCount": 26
+        },
+        {
+          "name": "GetBuildVersion",
+          "startLine": 25068,
+          "endLine": 25070,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "ConsumeDailyRepeatMultiplier",
+          "startLine": 26807,
+          "endLine": 26829,
+          "loc": 23,
+          "callerCount": 72
+        },
+        {
+          "name": "ConsumeOncePerDaySignal",
+          "startLine": 26831,
+          "endLine": 26841,
+          "loc": 11,
+          "callerCount": 19
+        },
+        {
+          "name": "GetDeityFormOrNone",
+          "startLine": 26901,
+          "endLine": 26906,
+          "loc": 6,
+          "callerCount": 11
         }
       ],
       "properties": [

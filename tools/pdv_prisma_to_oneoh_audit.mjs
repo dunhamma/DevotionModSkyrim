@@ -11,6 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { hashText } from "./lib/pdv_file_compare.mjs";
+import { definitionFile } from "./lib/pdv_symbol_home.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -53,7 +54,7 @@ function main(argv) {
   const app = readRequired(appPath, "Prisma app", pass, fail);
 
   if (manager) verifyManager(manager, managerPath, pass, fail);
-  if (manager) verifyJsonSafeString(manager, "Manager JsonSafeString", managerPath, pass, fail);
+  verifyJsonSafeStringDefinition(pass, fail);
   if (director) verifyDirector(director, directorPath, pass, fail);
   if (hircine) verifyHircine(hircine, hircinePath, pass, fail);
   if (lowHealth) verifyJsonSafeString(lowHealth, "Low-health effect JsonSafeString", lowHealthPath, pass, fail);
@@ -208,6 +209,19 @@ function verifyHircine(text, filePath, pass, fail) {
   for (const [check, snippet, detail] of requiredSnippets) {
     requireSnippet(text, snippet, check, detail, filePath, pass, fail);
   }
+}
+
+// The JsonSafeString definition moved out of the manager into PDV_DevotionRules
+// during the 2.0 extraction. Resolve the real definition file from the ledger
+// rather than assuming the manager, so this check tracks the extraction.
+function verifyJsonSafeStringDefinition(pass, fail) {
+  const { script, file } = definitionFile("JsonSafeString", ROOT, LIVE_SOURCE);
+  const label = `${script} JsonSafeString`;
+  if (!file || !fs.existsSync(file)) {
+    fail(label, "JsonSafeString definition source is missing.", file || LIVE_SOURCE);
+    return;
+  }
+  verifyJsonSafeString(normalizedText(file), label, file, pass, fail);
 }
 
 function verifyJsonSafeString(text, label, filePath, pass, fail) {

@@ -5766,11 +5766,11 @@
       "symbol": "GetDebugLevel",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionRules",
-      "action": "extract",
+      "targetModule": "PDV__ManagerQuest",
+      "action": "retain",
       "adjudication": "clear",
       "evidence": "golden L13566-13571 (loc 6); callers=226",
-      "notes": ""
+      "notes": "reclassified RULES->MANAGER: reads instance state, not Global-safe (2.0 pilot)"
     },
     {
       "symbol": "RunDebugCommand",
@@ -11110,7 +11110,7 @@
       "action": "retire",
       "adjudication": "clear",
       "evidence": "golden L23892-23943 (loc 52)",
-      "notes": "One-shot BoD text-repair migration; migration-sweep marks dead. Retire with its exclusive helper ShouldPruneDeferredAltmerJournalLine."
+      "notes": "One-shot BoD text-repair migration; migration-sweep marks dead. Retire with its exclusive helper ShouldPruneDeferredAltmerJournalLine. REMOVED in migration sweep step 1 (2026-08-18)"
     },
     {
       "symbol": "ShouldPruneDeferredAltmerJournalLine",
@@ -11120,7 +11120,7 @@
       "action": "retire",
       "adjudication": "clear",
       "evidence": "golden L23945-23950 (loc 6); callers=1",
-      "notes": "Exclusive helper of RepairBookOfDaysJournalText (dead migration); retire with it."
+      "notes": "Exclusive helper of RepairBookOfDaysJournalText (dead migration); retire with it. REMOVED in migration sweep step 1 (2026-08-18)"
     },
     {
       "symbol": "GetPublicDeityDisplayName",
@@ -11146,11 +11146,11 @@
       "symbol": "NormalizePublicDeityDisplayText",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionRules",
-      "action": "extract",
+      "targetModule": "PDV__ManagerQuest",
+      "action": "retain",
       "adjudication": "clear",
       "evidence": "golden L23993-23999 (loc 7); callers=26",
-      "notes": ""
+      "notes": "reclassified RULES->MANAGER: reads instance state, not Global-safe (2.0 pilot)"
     },
     {
       "symbol": "ReplaceText",
@@ -11816,11 +11816,11 @@
       "symbol": "GetBuildVersion",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionRules",
-      "action": "extract",
+      "targetModule": "PDV__ManagerQuest",
+      "action": "retain",
       "adjudication": "clear",
       "evidence": "golden L25068-25070 (loc 3); callers=1",
-      "notes": ""
+      "notes": "reclassified RULES->MANAGER: reads instance state, not Global-safe (2.0 pilot)"
     },
     {
       "symbol": "OnOffForReport",
@@ -12876,21 +12876,21 @@
       "symbol": "ConsumeDailyRepeatMultiplier",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionRules",
-      "action": "extract",
+      "targetModule": "PDV__ManagerQuest",
+      "action": "retain",
       "adjudication": "clear",
       "evidence": "golden L26807-26829 (loc 23); callers=72",
-      "notes": ""
+      "notes": "reclassified RULES->MANAGER: reads instance state, not Global-safe (2.0 pilot)"
     },
     {
       "symbol": "ConsumeOncePerDaySignal",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionRules",
-      "action": "extract",
+      "targetModule": "PDV__ManagerQuest",
+      "action": "retain",
       "adjudication": "clear",
       "evidence": "golden L26831-26841 (loc 11); callers=19",
-      "notes": ""
+      "notes": "reclassified RULES->MANAGER: reads instance state, not Global-safe (2.0 pilot)"
     },
     {
       "symbol": "CountSetBits",
@@ -12926,11 +12926,11 @@
       "symbol": "GetDeityFormOrNone",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionRules",
-      "action": "extract",
+      "targetModule": "PDV__ManagerQuest",
+      "action": "retain",
       "adjudication": "clear",
       "evidence": "golden L26901-26906 (loc 6); callers=11",
-      "notes": ""
+      "notes": "reclassified RULES->MANAGER: reads instance state, not Global-safe (2.0 pilot)"
     },
     {
       "symbol": "EnsureDeityState",
