@@ -312,15 +312,13 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   add(/HistDawnDecay\s*\*\s*decayDays/i.test(histDecay) && /graceEndDay/i.test(histDecay), "source.argonian-relation-decay-catchup", "the separate Hist relation ledger must catch up every elapsed post-grace decay day");
   const histMaintenance = bodyFor(argonianSource, "RecordHistMaintenanceScaled");
   const histMaintenanceStamp = bodyFor(argonianSource, "StampHistMaintenance");
-  const histStampMigration = bodyFor(argonianSource, "EnsureHistMaintenanceStampEncoding");
   const histNeglect = bodyFor(managerSource, "IsArgonianHistNeglected");
   add(/StampHistMaintenance\s*\(/i.test(histMaintenance)
     && /LastMaintenanceStamp[^\r\n]*GetDevotionalDay\(\)\s*\+\s*2/i.test(histMaintenanceStamp)
     && /MaintenanceStampVersion[^\r\n]*1/i.test(histMaintenanceStamp)
-    && /legacyDay\s*\+\s*2/i.test(histStampMigration)
     && /HasHistMaintenance/i.test(histNeglect)
     && /GetLastHistMaintenanceDevotionalDay/i.test(histNeglect)
-    && !/LastHistSourceTime/i.test(histNeglect), "source.argonian-maintenance-clock", "all Hist neglect timing must use the substrate-owned +2 maintenance stamp, including one-time legacy migration");
+    && !/LastHistSourceTime/i.test(histNeglect), "source.argonian-maintenance-clock", "all Hist neglect timing must use the substrate-owned +2 maintenance stamp (legacy +1 migration removed on the not-save-safe V3 sweep)");
 
   const bedSleep = bodyFor(managerSource, "TryArgonianBedOfChoiceSleep");
   add(/rootedRestStamp\s*=\s*GetDevotionalDay\(\)\s*\+\s*2/i.test(bedSleep)
