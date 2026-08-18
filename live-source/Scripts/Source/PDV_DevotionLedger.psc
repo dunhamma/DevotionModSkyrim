@@ -441,7 +441,7 @@ Function FlushLikesDislikesSurface(Int eventType)
     ; Altmer lore reads receive a dedicated sacred-text acknowledgement when a
     ; curated source applies. Keep the generic piety fan-out real, but do not
     ; let its catch-all surface compete with that specific moment.
-    if Manager.IsAltmerOrigin() && eventType == 342
+    if Manager.OriginRuntime.IsAltmerOrigin() && eventType == 342
         ResetLikesDislikesSurface()
         FlushBroadPantheonEvent()
         return
@@ -873,9 +873,9 @@ Function HandleSubstrateShrinePrayer(String primaryDeityName, String secondaryDe
         if IsDeityEligibleForBroadPantheon(primary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(secondary, BROAD_PANTHEON_IMPERIAL) || IsDeityEligibleForBroadPantheon(tertiary, BROAD_PANTHEON_IMPERIAL)
             Manager.AwardImperialAncestorSpinePulse(1.0, "divine_prayer_" + sourceId)
         endIf
-    elseIf origin == Manager.ORIGIN_ALTMER && Manager.PDV_AltmerAncestorSubstrate && !Manager.IsAltmerFavorSuppressedByCurse()
+    elseIf origin == Manager.ORIGIN_ALTMER && Manager.PDV_AltmerAncestorSubstrate && !Manager.OriginRuntime.IsAltmerFavorSuppressedByCurse()
         if GetShrinePrayerDeityByName(primaryDeityName) == Manager.PDV_AuriEl || GetShrinePrayerDeityByName(secondaryDeityName) == Manager.PDV_AuriEl || GetShrinePrayerDeityByName(tertiaryDeityName) == Manager.PDV_AuriEl
-            Manager.AwardAltmerAncestorSpinePulse(1.0, "auriel_shrine_rite_" + sourceId)
+            Manager.OriginRuntime.AwardAltmerAncestorSpinePulse(1.0, "auriel_shrine_rite_" + sourceId)
         endIf
     endIf
 EndFunction
@@ -1882,15 +1882,15 @@ Function ProcessDawn()
     endIf
 
     Manager.EnsureAkatoshRuntimeIdentity()
-    Manager.RunDawnAwardAltmerAuriElDawn()
-    Manager.RunDawnAwardAltmerXarxesRecord()
+    Manager.OriginRuntime.RunDawnAwardAltmerAuriElDawn()
+    Manager.OriginRuntime.RunDawnAwardAltmerXarxesRecord()
     RunDawnRefreshDevotionMarks()
     RunDawnConsolidateScratch()
     ProcessBroadPantheonDawn()
     Manager.EvaluateKhajiitFocusedEmphasis()
     Manager.RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
-    Manager.EvaluateAltmerCrisisAtDawn()
+    Manager.OriginRuntime.EvaluateAltmerCrisisAtDawn()
     RunDawnApplyDecayNoop()
     RunDawnApplySpellAndNeglectLayersNoop()
     RunDawnProcessCommitmentOffersNoop()
@@ -1913,7 +1913,7 @@ Function RunDawnChampionAmbient()
     endIf
 
     RunDawnChampionDeityAmbient()
-    Manager.RunDawnAltmerHeritageAmbient()
+    Manager.OriginRuntime.RunDawnAltmerHeritageAmbient()
 EndFunction
 
 Function RunDawnChampionDeityAmbient()
@@ -1950,37 +1950,37 @@ EndFunction
 Bool Function ShowChampionAmbientForDeity(PDV_DeityBase deity, Bool deep)
     if deity == Manager.PDV_AuriEl
         if deep
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return, "You have met every dawn. Auri-El has counted them all.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_AuriEl_ChampionAmbient_Return, "You have met every dawn. Auri-El has counted them all.")
         else
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn, "The dawn answers you now, as it answered your ancestors.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_AuriEl_ChampionAmbient_Dawn, "The dawn answers you now, as it answered your ancestors.")
         endIf
         return True
     elseIf deity == Manager.PDV_Magnus
         if deep
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay, "Magnus has watched you study for a long time now.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Magnus_ChampionAmbient_ElderWay, "Magnus has watched you study for a long time now.")
         else
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Magnus_ChampionAmbient_Study, "The spells come easily today. Your study shows.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Magnus_ChampionAmbient_Study, "The spells come easily today. Your study shows.")
         endIf
         return True
     elseIf deity == Manager.PDV_Xarxes
         if deep
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage, "Xarxes has kept the record of your whole life.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Xarxes_ChampionAmbient_Lineage, "Xarxes has kept the record of your whole life.")
         else
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record, "Xarxes has written your name into the record.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record, "Xarxes has written your name into the record.")
         endIf
         return True
     elseIf deity == Manager.PDV_Trinimac
         if deep
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword, "Your sword arm is steady. Trinimac made it so.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Trinimac_ChampionAmbient_Sword, "Your sword arm is steady. Trinimac made it so.")
         else
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch, "You have held the line, and Trinimac saw it.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Trinimac_ChampionAmbient_Watch, "You have held the line, and Trinimac saw it.")
         endIf
         return True
     elseIf deity == Manager.PDV_Syrabane
         if deep
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard, "Syrabane has warded you so long you forget it is there.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Syrabane_ChampionAmbient_Guard, "Syrabane has warded you so long you forget it is there.")
         else
-            Manager.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward, "Syrabane's ward is on you, quiet and steady.")
+            Manager.OriginRuntime.ShowAltmerNotification(Manager.PDV_Notif_Altmer_Syrabane_ChampionAmbient_Ward, "Syrabane's ward is on you, quiet and steady.")
         endIf
         return True
     elseIf deity == Manager.PDV_Kyne
@@ -2078,14 +2078,14 @@ Function RunDawnRefreshTrackStates()
         Manager.RunDawnRefreshArgonianHist()
     endIf
 
-    if Manager.IsAltmerOrigin()
-        String oldAltmerBand = Manager.GetAltmerCommittedAlignmentJournalBand()
+    if Manager.OriginRuntime.IsAltmerOrigin()
+        String oldAltmerBand = Manager.OriginRuntime.GetAltmerCommittedAlignmentJournalBand()
         if Manager.PDV_ThalmorAlignmentTrack
             Manager.PDV_ThalmorAlignmentTrack.RefreshState()
-            Manager.MaybeSurfaceAltmerAlignmentBandChange(oldAltmerBand, "dawn")
+            Manager.OriginRuntime.MaybeSurfaceAltmerAlignmentBandChange(oldAltmerBand, "dawn")
         endIf
-        Manager.RunDawnRefreshAltmerAncestor()
-        Manager.SyncAltmerDisciplines(Game.GetPlayer())
+        Manager.OriginRuntime.RunDawnRefreshAltmerAncestor()
+        Manager.OriginRuntime.SyncAltmerDisciplines(Game.GetPlayer())
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
@@ -2103,11 +2103,11 @@ Function RunDawnRefreshTrackStates()
         Manager.DecayBretonDruidicStandingAtDawn()
     endIf
 
-    if Manager.IsBosmerOrigin() && Manager.PDV_BosmerPathTrack
-        Manager.EnsureBosmerCurrentPathFallback()
-        Manager.EvaluateBosmerForcedReckoning()
-        Manager.SyncBosmerNaming(Game.GetPlayer())
-        Manager.ArmBosmerDreamOnPathChange()
+    if Manager.OriginRuntime.IsBosmerOrigin() && Manager.PDV_BosmerPathTrack
+        Manager.OriginRuntime.EnsureBosmerCurrentPathFallback()
+        Manager.OriginRuntime.EvaluateBosmerForcedReckoning()
+        Manager.OriginRuntime.SyncBosmerNaming(Game.GetPlayer())
+        Manager.OriginRuntime.ArmBosmerDreamOnPathChange()
     endIf
 
     if Manager.IsRedguardOrigin() && Manager.PDV_RedguardSectTrack
@@ -2206,8 +2206,8 @@ Function RunDawnApplySpellAndNeglectLayers()
 EndFunction
 
 Function RunDawnProcessCommitmentOffers()
-    if Manager.IsBosmerOrigin()
-        Manager.EvaluateBosmerPathSuggestion()
+    if Manager.OriginRuntime.IsBosmerOrigin()
+        Manager.OriginRuntime.EvaluateBosmerPathSuggestion()
         return
     endIf
 
@@ -3567,13 +3567,13 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Altmer is an offer race: broad orthodoxy T1 remains on the existing first-tier path while
     ; focused Auri-El/Magnus/Xarxes families gate on the active patron's tier.
-    Manager.SyncAltmerRewards(playerRef)
-    Manager.SyncAltmerNeglectSpell(Manager.IsAltmerCoherenceNeglected())
+    Manager.OriginRuntime.SyncAltmerRewards(playerRef)
+    Manager.OriginRuntime.SyncAltmerNeglectSpell(Manager.OriginRuntime.IsAltmerCoherenceNeglected())
 
     ; Bosmer is path-state gated: Y'ffre broad remains soft/capped, and the active path family
     ; uses the path scoring deity tier while clearing every other path reward.
-    Manager.SyncBosmerRewards(playerRef)
-    Manager.SyncBosmerNeglectSpell(Manager.IsBosmerPathNeglected())
+    Manager.OriginRuntime.SyncBosmerRewards(playerRef)
+    Manager.OriginRuntime.SyncBosmerNeglectSpell(Manager.OriginRuntime.IsBosmerPathNeglected())
 
     ; Breton is tradition-state gated. The chosen tradition selects exactly one focused family;
     ; the broad tradition reward remains softer and capped at Faithful.
@@ -3915,7 +3915,7 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
     elseIf originRace == Manager.ORIGIN_DUNMER
         return Manager.GetDunmerFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_ALTMER
-        return Manager.GetAltmerFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetAltmerFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_BRETON
         return Manager.GetBretonFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_REDGUARD
@@ -4017,7 +4017,7 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return Manager.IsNordOfferEligibleDeity(deity) || Manager.IsImperialOfferEligibleDeity(deity) || Manager.IsDunmerOfferEligibleDeity(deity) || Manager.IsAltmerOfferEligibleDeity(deity) || Manager.IsRedguardOfferEligibleDeity(deity) || Manager.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
+    return Manager.IsNordOfferEligibleDeity(deity) || Manager.IsImperialOfferEligibleDeity(deity) || Manager.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.IsRedguardOfferEligibleDeity(deity) || Manager.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
 EndFunction
 
 Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
@@ -4245,7 +4245,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == Manager.ORIGIN_DUNMER
         Manager.ApplyDunmerCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ALTMER
-        Manager.ApplyAltmerCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyAltmerCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ARGONIAN
         Manager.ApplyArgonianCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_IMPERIAL
@@ -4565,4 +4565,5 @@ Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
         playerRef.AddSpell(bandSpell, False)
     endIf
 EndFunction
+
 

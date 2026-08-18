@@ -221,7 +221,7 @@ Int Function ResolveEligibleFavorLane()
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
-        if Manager.IsAltmerFavorSuppressedByCurse()
+        if Manager.OriginRuntime.IsAltmerFavorSuppressedByCurse()
             return FAVOR_LANE_NONE
         endIf
 
@@ -295,7 +295,7 @@ Bool Function IsValidFavorFamilyForLane(Int laneValue, Int familyValue)
     elseIf laneValue == FAVOR_LANE_NORD_BROAD_NINE_DIVINES
         return familyValue >= FAVOR_FAMILY_NINE_ROAD_GRACE && familyValue <= FAVOR_FAMILY_NINE_TALOS_PRESSURE
     elseIf laneValue == FAVOR_LANE_ALTMER
-        return Manager.IsValidAltmerSourceFavorFamily(familyValue)
+        return Manager.OriginRuntime.IsValidAltmerSourceFavorFamily(familyValue)
     endIf
 
     return False
@@ -571,3 +571,4 @@ String Function GetContextualFavorSummary()
     summary = summary + ";selected=" + GetSelectedContextualFavorLaneLabel() + "/" + GetSelectedContextualFavorFamilyLabel()
     return summary
 EndFunction
+

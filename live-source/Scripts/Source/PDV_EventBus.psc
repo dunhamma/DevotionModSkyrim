@@ -85,7 +85,7 @@ Function RouteAltmerAlignmentSignal(String actionKey, Form sourceForm, String so
         return
     endIf
 
-    PDV_Manager.HandleAltmerAlignmentSignal(actionKey, sourceForm, "eventbus_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerAlignmentSignal(actionKey, sourceForm, "eventbus_" + sourceId)
     Trace(2, "RouteAltmerAlignmentSignal complete: " + actionKey + " source " + sourceId)
 EndFunction
 
@@ -571,7 +571,7 @@ Function RouteAltmerLorkhanPressure(Int pressureTier, String sourceId)
         eventType = eventTypes.EVT_ALTMER_LORKHAN_PRESSURE
     endIf
 
-    PDV_Manager.HandleAltmerLorkhanPressure(pressureTier, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerLorkhanPressure(pressureTier, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteAltmerLorkhanPressure complete: " + eventType + " tier " + pressureTier)
 EndFunction
 
@@ -587,7 +587,7 @@ Function RouteAltmerCrisisSource(Int crisisSource, String sourceId)
         eventType = eventTypes.EVT_ALTMER_CRISIS_SOURCE
     endIf
 
-    PDV_Manager.HandleAltmerCrisisSource(crisisSource, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerCrisisSource(crisisSource, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteAltmerCrisisSource complete: " + eventType + " source " + crisisSource)
 EndFunction
 
@@ -603,7 +603,7 @@ Function RouteAltmerDawnSteadiness()
         eventType = eventTypes.EVT_ALTMER_DAWN_STEADINESS
     endIf
 
-    PDV_Manager.HandleAltmerDawnSteadiness("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleAltmerDawnSteadiness("eventbus_" + eventType)
     Trace(2, "RouteAltmerDawnSteadiness complete: " + eventType)
 EndFunction
 
@@ -619,7 +619,7 @@ Function RouteAltmerOrthodoxCostlyEnforcement()
         eventType = eventTypes.EVT_ALTMER_ORTHODOX_COST
     endIf
 
-    PDV_Manager.HandleAltmerOrthodoxCostlyEnforcement("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleAltmerOrthodoxCostlyEnforcement("eventbus_" + eventType)
     Trace(2, "RouteAltmerOrthodoxCostlyEnforcement complete: " + eventType)
 EndFunction
 
@@ -629,7 +629,7 @@ Function RouteAltmerAurielFoundation(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleAltmerDawnSteadiness("eventbus_p2_altmer_auriel_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerDawnSteadiness("eventbus_p2_altmer_auriel_" + sourceId)
     Trace(2, "RouteAltmerAurielFoundation complete: " + sourceId)
 EndFunction
 
@@ -639,7 +639,7 @@ Function RouteAltmerMagnusScholarship(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleAltmerDawnSteadiness("eventbus_p2_altmer_magnus_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerDawnSteadiness("eventbus_p2_altmer_magnus_" + sourceId)
     Trace(2, "RouteAltmerMagnusScholarship complete: " + sourceId)
 EndFunction
 
@@ -649,7 +649,7 @@ Function RouteAltmerXarxesLineage(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleAltmerOrthodoxCostlyEnforcement("eventbus_p2_altmer_xarxes_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerOrthodoxCostlyEnforcement("eventbus_p2_altmer_xarxes_" + sourceId)
     Trace(2, "RouteAltmerXarxesLineage complete: " + sourceId)
 EndFunction
 
@@ -662,7 +662,7 @@ Function RouteAltmerTrinimacOrthodoxy(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleAltmerTrinimacOrthodoxy("eventbus_p2_altmer_trinimac_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerTrinimacOrthodoxy("eventbus_p2_altmer_trinimac_" + sourceId)
     Trace(2, "RouteAltmerTrinimacOrthodoxy complete: " + sourceId)
 EndFunction
 
@@ -673,7 +673,7 @@ Function RouteAltmerSyrabaneCureWard(String sourceId)
         Trace(1, "RouteAltmerSyrabaneCureWard skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleAltmerSyrabaneCureWard("eventbus_syrabane_cure_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerSyrabaneCureWard("eventbus_syrabane_cure_" + sourceId)
 EndFunction
 
 Function RouteAltmerSyrabaneProtectiveWard(String sourceId)
@@ -681,7 +681,7 @@ Function RouteAltmerSyrabaneProtectiveWard(String sourceId)
         Trace(1, "RouteAltmerSyrabaneProtectiveWard skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleAltmerSyrabaneProtectiveWard("eventbus_syrabane_ward_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerSyrabaneProtectiveWard("eventbus_syrabane_ward_" + sourceId)
 EndFunction
 
 Function RouteAltmerSyrabaneAntiMageSurvival(String sourceId)
@@ -689,7 +689,7 @@ Function RouteAltmerSyrabaneAntiMageSurvival(String sourceId)
         Trace(1, "RouteAltmerSyrabaneAntiMageSurvival skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleAltmerSyrabaneAntiMageSurvival("eventbus_syrabane_antimage_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerSyrabaneAntiMageSurvival("eventbus_syrabane_antimage_" + sourceId)
 EndFunction
 
 ; P14 (2026-08-04). Returns the idle KIND for the token to play (0 = pray, 1 = study) so the gesture
@@ -700,7 +700,7 @@ Int Function RouteAltmerPracticeFocus()
         Trace(1, "RouteAltmerPracticeFocus skipped: PDV_Manager not assigned.")
         return 0
     endIf
-    return PDV_Manager.HandleAltmerPracticeFocus("eventbus_altmer_practice_focus")
+    return PDV_Manager.OriginRuntime.HandleAltmerPracticeFocus("eventbus_altmer_practice_focus")
 EndFunction
 
 Function RouteAltmerSyrabaneContainment(String sourceId)
@@ -708,7 +708,7 @@ Function RouteAltmerSyrabaneContainment(String sourceId)
         Trace(1, "RouteAltmerSyrabaneContainment skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleAltmerSyrabaneContainment("eventbus_p2_altmer_syrabane_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleAltmerSyrabaneContainment("eventbus_p2_altmer_syrabane_" + sourceId)
 EndFunction
 
 Function RouteAltmerLorkhanPenalty(Int pressureTier, String sourceId)
@@ -1091,7 +1091,7 @@ Function RouteBosmerLivingStory()
         eventType = eventTypes.EVT_BOSMER_LIVING_STORY
     endIf
 
-    PDV_Manager.HandleBosmerLivingStorySignal("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerLivingStorySignal("eventbus_" + eventType)
     Trace(2, "RouteBosmerLivingStory complete: " + eventType)
 EndFunction
 
@@ -1107,7 +1107,7 @@ Function RouteBosmerExchange()
         eventType = eventTypes.EVT_BOSMER_EXCHANGE
     endIf
 
-    PDV_Manager.HandleBosmerExchangeSignal("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerExchangeSignal("eventbus_" + eventType)
     Trace(2, "RouteBosmerExchange complete: " + eventType)
 EndFunction
 
@@ -1123,7 +1123,7 @@ Function RouteBosmerBanditRoad()
         eventType = eventTypes.EVT_BOSMER_BANDIT_ROAD
     endIf
 
-    PDV_Manager.HandleBosmerBanditRoadSignal("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerBanditRoadSignal("eventbus_" + eventType)
     Trace(2, "RouteBosmerBanditRoad complete: " + eventType)
 EndFunction
 
@@ -1139,7 +1139,7 @@ Function RouteBosmerPactPositive()
         eventType = eventTypes.EVT_BOSMER_PACT_POSITIVE
     endIf
 
-    PDV_Manager.HandleBosmerPactPositiveSignal("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerPactPositiveSignal("eventbus_" + eventType)
     Trace(2, "RouteBosmerPactPositive complete: " + eventType)
 EndFunction
 
@@ -1189,7 +1189,7 @@ Function RouteBosmerOldContractProperHunt()
         eventType = eventTypes.EVT_BOSMER_OLD_CONTRACT_PROPER_HUNT
     endIf
 
-    PDV_Manager.HandleBosmerOldContractProperHunt("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerOldContractProperHunt("eventbus_" + eventType)
     Trace(2, "RouteBosmerOldContractProperHunt complete: " + eventType)
 EndFunction
 
@@ -1205,7 +1205,7 @@ Function RouteBosmerOldContractForestKept()
         eventType = eventTypes.EVT_BOSMER_OLD_CONTRACT_FOREST_KEPT
     endIf
 
-    PDV_Manager.HandleBosmerOldContractForestKept("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerOldContractForestKept("eventbus_" + eventType)
     Trace(2, "RouteBosmerOldContractForestKept complete: " + eventType)
 EndFunction
 
@@ -1221,7 +1221,7 @@ Function RouteBosmerLivingStoryCommunityKept()
         eventType = eventTypes.EVT_BOSMER_LIVING_STORY_COMMUNITY
     endIf
 
-    PDV_Manager.HandleBosmerLivingStoryCommunityKept("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerLivingStoryCommunityKept("eventbus_" + eventType)
     Trace(2, "RouteBosmerLivingStoryCommunityKept complete: " + eventType)
 EndFunction
 
@@ -1237,7 +1237,7 @@ Function RouteBosmerLivingStoryNatureSite()
         eventType = eventTypes.EVT_BOSMER_LIVING_STORY_NATURE_SITE
     endIf
 
-    PDV_Manager.HandleBosmerLivingStoryNatureSite("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerLivingStoryNatureSite("eventbus_" + eventType)
     Trace(2, "RouteBosmerLivingStoryNatureSite complete: " + eventType)
 EndFunction
 
@@ -1253,7 +1253,7 @@ Function RouteBosmerExchangeDebtSettled()
         eventType = eventTypes.EVT_BOSMER_EXCHANGE_DEBT_SETTLED
     endIf
 
-    PDV_Manager.HandleBosmerExchangeDebtSettled("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerExchangeDebtSettled("eventbus_" + eventType)
     Trace(2, "RouteBosmerExchangeDebtSettled complete: " + eventType)
 EndFunction
 
@@ -1269,7 +1269,7 @@ Function RouteBosmerExchangeProportionateVengeance()
         eventType = eventTypes.EVT_BOSMER_EXCHANGE_PROPORTIONATE_VENGEANCE
     endIf
 
-    PDV_Manager.HandleBosmerExchangeProportionateVengeance("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerExchangeProportionateVengeance("eventbus_" + eventType)
     Trace(2, "RouteBosmerExchangeProportionateVengeance complete: " + eventType)
 EndFunction
 
@@ -1285,7 +1285,7 @@ Function RouteBosmerBanditRoadRoadLife()
         eventType = eventTypes.EVT_BOSMER_BANDIT_ROAD_ROAD_LIFE
     endIf
 
-    PDV_Manager.HandleBosmerBanditRoadRoadLife("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerBanditRoadRoadLife("eventbus_" + eventType)
     Trace(2, "RouteBosmerBanditRoadRoadLife complete: " + eventType)
 EndFunction
 
@@ -1301,7 +1301,7 @@ Function RouteBosmerBanditRoadReversal()
         eventType = eventTypes.EVT_BOSMER_BANDIT_ROAD_REVERSAL
     endIf
 
-    PDV_Manager.HandleBosmerBanditRoadReversal("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleBosmerBanditRoadReversal("eventbus_" + eventType)
     Trace(2, "RouteBosmerBanditRoadReversal complete: " + eventType)
 EndFunction
 
@@ -1312,9 +1312,9 @@ Function RouteBosmerYffre(Int pathState, String sourceId)
     endIf
 
     if pathState == 1
-        PDV_Manager.HandleBosmerLivingStoryCommunityKept("eventbus_p2_bosmer_yffre_" + sourceId)
+        PDV_Manager.OriginRuntime.HandleBosmerLivingStoryCommunityKept("eventbus_p2_bosmer_yffre_" + sourceId)
     else
-        PDV_Manager.HandleBosmerPactPositiveSignal("eventbus_p2_bosmer_yffre_" + sourceId)
+        PDV_Manager.OriginRuntime.HandleBosmerPactPositiveSignal("eventbus_p2_bosmer_yffre_" + sourceId)
     endIf
 
     Trace(2, "RouteBosmerYffre complete: " + pathState + " source " + sourceId)
@@ -1326,7 +1326,7 @@ Function RouteBosmerZenExchange(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleBosmerExchangeSignal("eventbus_p2_bosmer_zen_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleBosmerExchangeSignal("eventbus_p2_bosmer_zen_" + sourceId)
     Trace(2, "RouteBosmerZenExchange complete: " + sourceId)
 EndFunction
 
@@ -1336,7 +1336,7 @@ Function RouteBosmerBaanDarRoad(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleBosmerBanditRoadSignal("eventbus_p2_bosmer_baandar_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleBosmerBanditRoadSignal("eventbus_p2_bosmer_baandar_" + sourceId)
     Trace(2, "RouteBosmerBaanDarRoad complete: " + sourceId)
 EndFunction
 
@@ -1631,7 +1631,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     ; P7 (2026-08-03): Trinimac's renewable civilization-defence beat. The bus only forwards -- the
     ; manager owns the Altmer-origin gate, the ThalmorAlignment >= 70 band gate, and the daily cap.
     if eventType == 2
-        PDV_Manager.HandleAltmerTrinimacCivilizationDefense("eventbus_2_civilization_defense")
+        PDV_Manager.OriginRuntime.HandleAltmerTrinimacCivilizationDefense("eventbus_2_civilization_defense")
     endIf
 
     Int i = 0
@@ -1779,3 +1779,4 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] EventBus: " + traceText)
     endIf
 EndFunction
+

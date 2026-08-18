@@ -730,6 +730,7 @@ PDV_DeityBase _activeDeity
 
 PDV_ContextualFavorRuntime Property FavorRuntime Auto
 PDV_DevotionLedger Property LedgerRuntime Auto
+PDV_OriginRuntimeBase Property OriginRuntime Auto
 
 Int Property DebugCommand = 0 Auto
 Int Property DebugIndex = -1 Auto
@@ -785,7 +786,6 @@ Int _pendingNordKyneChampionDelayTicks = 0
 ; cache lives in the DLL, so it does not survive a game reload, and skipping Load would make every
 ; probe read its "missing" default after a load. The bundled Papyrus reference documents no caching
 ; semantics for Load, so nothing here assumes any.
-Int _altmerPracticeLinesValidatedVersion = -1
 Int _khajiitMoonObservationsValidatedVersion = -1
 String _khajiitMoonObservationsValidatedKey = ""
 ; Quest-reaction surface accumulator (2026-07-05): one quest fire = one toast +
@@ -858,7 +858,7 @@ Event OnInit()
     EnsurePhase8RuntimeWiring()
     EnsureAkatoshRuntimeIdentity()
     LedgerRuntime.EnsureCanonicalDeityDisplayNames()
-    EnsureBosmerRuntimeWiring()
+    OriginRuntime.EnsureBosmerRuntimeWiring()
     EnsureNordRuntimeWiring()
     RegisterManagerShoutSignals()
     LedgerRuntime.EnsureLikesDislikesTable()
@@ -872,7 +872,7 @@ Event OnInit()
     LedgerRuntime.UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
     EnsureDunmerAncestralUrn()
-    EnsureAltmerPracticeFocus()
+    OriginRuntime.EnsureAltmerPracticeFocus()
     EnsureArgonianHistSapToken()
     EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
@@ -958,11 +958,11 @@ Event OnUpdate()
         EnsurePhase8RuntimeWiring()
         EnsureAkatoshRuntimeIdentity()
         LedgerRuntime.EnsureCanonicalDeityDisplayNames()
-        EnsureBosmerRuntimeWiring()
+        OriginRuntime.EnsureBosmerRuntimeWiring()
         EnsureNordRuntimeWiring()
         EnsureSurveyDevotionPower()
         EnsureDunmerAncestralUrn()
-        EnsureAltmerPracticeFocus()
+        OriginRuntime.EnsureAltmerPracticeFocus()
         EnsureArgonianHistSapToken()
         LedgerRuntime.InitCCContent()
         RegisterManagerShoutSignals()
@@ -1012,9 +1012,9 @@ Event OnUpdate()
         _optimizationContextProbeRuns += 1
         TryArgonianEldergleamInterior()
         TryArgonianNearWaterMaintenance()
-        TryBosmerEldergleamInterior()
-        TryBosmerGildergreenProximity()
-        TryBosmerYffreTreeStoneProximity()
+        OriginRuntime.TryBosmerEldergleamInterior()
+        OriginRuntime.TryBosmerGildergreenProximity()
+        OriginRuntime.TryBosmerYffreTreeStoneProximity()
         LedgerRuntime.TryCCSaintsRecognition()
         LedgerRuntime.TryCCFishingDevotion()
     endIf
@@ -1207,30 +1207,6 @@ String Function CanonicalDaedricPathName(PDV_DaedricPathBase namedPath)
     return ""
 EndFunction
 
-Function EnsureBosmerRuntimeWiring()
-    if PDV_BosmerPathTrack
-        if PDV_BosmerPathTrack.TrackName != "BosmerPath"
-            PDV_BosmerPathTrack.TrackName = "BosmerPath"
-        endIf
-
-        if PDV_BosmerPathTrack.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
-            PDV_BosmerPathTrack.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
-        endIf
-
-        if PDV_BosmerPathTrack.StateLabels.Length != 4
-            String[] labels = new String[4]
-            labels[0] = "the Old Contract"
-            labels[1] = "the Living Story"
-            labels[2] = "the Exchange"
-            labels[3] = "the Bandit Road"
-            PDV_BosmerPathTrack.StateLabels = labels
-        endIf
-    endIf
-
-    EnsureBosmerYffreRuntimeIdentity()
-    EnsureBosmerZenRuntimeIdentity()
-    EnsureBosmerBaanDarRuntimeIdentity()
-EndFunction
 
 Function EnsureNordRuntimeWiring()
     EnsureNordOrkeyRewardRuntimeWiring()
@@ -1286,126 +1262,8 @@ Function EnsureNordOrkeyRewardRuntimeWiring()
     endIf
 EndFunction
 
-Function EnsureBosmerYffreRuntimeIdentity()
-    if !PDV_Yffre
-        return
-    endIf
 
-    if PDV_Yffre.DeityName != "Y'ffre"
-        PDV_Yffre.DeityName = "Y'ffre"
-    endIf
 
-    if PDV_Yffre.DeityDomain == ""
-        PDV_Yffre.DeityDomain = "Story, Green Pact, Forest Law"
-    endIf
-
-    if PDV_Yffre.DeityIndex != 3
-        PDV_Yffre.DeityIndex = 3
-    endIf
-
-    if PDV_Yffre.Stance_Bosmer != PDV_Yffre.STANCE_NATIVE
-        PDV_Yffre.Stance_Bosmer = PDV_Yffre.STANCE_NATIVE
-    endIf
-
-    if PDV_Yffre.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
-        PDV_Yffre.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
-    endIf
-
-    if PDV_Yffre.PDV_GLO_OriginRace != PDV_GLO_OriginRace
-        PDV_Yffre.PDV_GLO_OriginRace = PDV_GLO_OriginRace
-    endIf
-
-    if PDV_Yffre.EligibleStateTrack != PDV_BosmerPathTrack
-        PDV_Yffre.EligibleStateTrack = PDV_BosmerPathTrack
-    endIf
-
-    if PDV_Yffre.EligibleStateValues.Length != 2
-        Int[] eligibleStates = new Int[2]
-        eligibleStates[0] = BOSMER_PATH_OLD_CONTRACT
-        eligibleStates[1] = BOSMER_PATH_LIVING_STORY
-        PDV_Yffre.EligibleStateValues = eligibleStates
-    endIf
-EndFunction
-
-Function EnsureBosmerZenRuntimeIdentity()
-    if !LedgerRuntime.PDV_Zen
-        return
-    endIf
-
-    if LedgerRuntime.PDV_Zen.DeityName != "Z'en"
-        LedgerRuntime.PDV_Zen.DeityName = "Z'en"
-    endIf
-
-    if LedgerRuntime.PDV_Zen.DeityDomain == ""
-        LedgerRuntime.PDV_Zen.DeityDomain = "Exchange, Reciprocity, Restitution"
-    endIf
-
-    if LedgerRuntime.PDV_Zen.DeityIndex != 4
-        LedgerRuntime.PDV_Zen.DeityIndex = 4
-    endIf
-
-    if LedgerRuntime.PDV_Zen.Stance_Bosmer != LedgerRuntime.PDV_Zen.STANCE_NATIVE
-        LedgerRuntime.PDV_Zen.Stance_Bosmer = LedgerRuntime.PDV_Zen.STANCE_NATIVE
-    endIf
-
-    if LedgerRuntime.PDV_Zen.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
-        LedgerRuntime.PDV_Zen.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
-    endIf
-
-    if LedgerRuntime.PDV_Zen.PDV_GLO_OriginRace != PDV_GLO_OriginRace
-        LedgerRuntime.PDV_Zen.PDV_GLO_OriginRace = PDV_GLO_OriginRace
-    endIf
-
-    if LedgerRuntime.PDV_Zen.EligibleStateTrack != PDV_BosmerPathTrack
-        LedgerRuntime.PDV_Zen.EligibleStateTrack = PDV_BosmerPathTrack
-    endIf
-
-    if LedgerRuntime.PDV_Zen.EligibleStateValues.Length != 1 || LedgerRuntime.PDV_Zen.EligibleStateValues[0] != BOSMER_PATH_EXCHANGE
-        Int[] eligibleStates = new Int[1]
-        eligibleStates[0] = BOSMER_PATH_EXCHANGE
-        LedgerRuntime.PDV_Zen.EligibleStateValues = eligibleStates
-    endIf
-EndFunction
-
-Function EnsureBosmerBaanDarRuntimeIdentity()
-    if !PDV_BaanDar
-        return
-    endIf
-
-    if PDV_BaanDar.DeityName != "Baan Dar"
-        PDV_BaanDar.DeityName = "Baan Dar"
-    endIf
-
-    if PDV_BaanDar.DeityDomain == ""
-        PDV_BaanDar.DeityDomain = "Road, Theft, Survival Cunning"
-    endIf
-
-    if PDV_BaanDar.DeityIndex != 5
-        PDV_BaanDar.DeityIndex = 5
-    endIf
-
-    if PDV_BaanDar.Stance_Bosmer != PDV_BaanDar.STANCE_NATIVE
-        PDV_BaanDar.Stance_Bosmer = PDV_BaanDar.STANCE_NATIVE
-    endIf
-
-    if PDV_BaanDar.PDV_GLO_DebugLevel != LedgerRuntime.PDV_GLO_DebugLevel
-        PDV_BaanDar.PDV_GLO_DebugLevel = LedgerRuntime.PDV_GLO_DebugLevel
-    endIf
-
-    if PDV_BaanDar.PDV_GLO_OriginRace != PDV_GLO_OriginRace
-        PDV_BaanDar.PDV_GLO_OriginRace = PDV_GLO_OriginRace
-    endIf
-
-    if PDV_BaanDar.EligibleStateTrack != PDV_BosmerPathTrack
-        PDV_BaanDar.EligibleStateTrack = PDV_BosmerPathTrack
-    endIf
-
-    if PDV_BaanDar.EligibleStateValues.Length != 1 || PDV_BaanDar.EligibleStateValues[0] != BOSMER_PATH_BANDIT_ROAD
-        Int[] eligibleStates = new Int[1]
-        eligibleStates[0] = BOSMER_PATH_BANDIT_ROAD
-        PDV_BaanDar.EligibleStateValues = eligibleStates
-    endIf
-EndFunction
 
 Function EnsureTalosRuntimeIdentity()
     if !PDV_Talos
@@ -3255,7 +3113,7 @@ String Function GetPanelInstrumentState(Int originRace, String kindText, String 
     elseIf kindText == "sects"
         return GetRedguardSectLabel()
     elseIf kindText == "branch"
-        return GetBosmerPathLabel()
+        return OriginRuntime.GetBosmerPathLabel()
     endIf
     return tierLabel
 EndFunction
@@ -3317,21 +3175,11 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
     elseIf kindText == "sects"
         return "{\"sect\":\"" + PDV_DevotionRules.JsonSafeString(GetRedguardSectLabel()) + "\"}"
     elseIf kindText == "branch"
-        return "{\"path\":\"" + PDV_DevotionRules.JsonSafeString(GetBosmerPathLabel()) + "\",\"pactBound\":" + PDV_DevotionRules.BoolToJson(IsBosmerPactBound()) + ",\"evidenceDays\":" + GetBosmerPathEvidenceDays() + "}"
+        return "{\"path\":\"" + PDV_DevotionRules.JsonSafeString(OriginRuntime.GetBosmerPathLabel()) + "\",\"pactBound\":" + PDV_DevotionRules.BoolToJson(OriginRuntime.IsBosmerPactBound()) + ",\"evidenceDays\":" + OriginRuntime.GetBosmerPathEvidenceDays() + "}"
     endIf
     return "{\"piety\":" + PDV_DevotionRules.FormatTwoDecimals(piety) + ",\"pietyToday\":0.00}"
 EndFunction
 
-Int Function GetBosmerPathEvidenceDays()
-    if !PDV_BosmerPathTrack
-        return 0
-    endIf
-    Int currentPath = PDV_BosmerPathTrack.GetCurrentState()
-    if currentPath <= 0
-        return 0
-    endIf
-    return PDV_BosmerPathTrack.GetRecentEvidenceDayCount(currentPath, 7)
-EndFunction
 
 String Function GetPanelPatronNote()
     if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
@@ -3589,7 +3437,7 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
     elseIf originRace == ORIGIN_REDGUARD
         return GetRedguardSectLabel()
     elseIf originRace == ORIGIN_BOSMER
-        return GetBosmerPathLabel()
+        return OriginRuntime.GetBosmerPathLabel()
     elseIf originRace == ORIGIN_IMPERIAL
         return GetImperialConcordatLabel()
     elseIf originRace == ORIGIN_BRETON
@@ -3597,7 +3445,7 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
     elseIf originRace == ORIGIN_NORD
         return GetNordDevotionModeLabel()
     elseIf originRace == ORIGIN_ALTMER
-        return GetAltmerCrisisStateLabel()
+        return OriginRuntime.GetAltmerCrisisStateLabel()
     endIf
     return ""
 EndFunction
@@ -3940,11 +3788,11 @@ String Function DebugRouteSignalFloorLikesDislikes()
 EndFunction
 
 String Function DebugRouteSignalFloorGreenWay()
-    if !IsBosmerOrigin()
+    if !OriginRuntime.IsBosmerOrigin()
         return "Set origin to Bosmer before running Green Way signal-floor debug."
     endIf
 
-    Bool siteRouted = TryAwardBosmerYffreGreenSite("mcm_signal_floor", "mcm_signal_floor_green_site")
+    Bool siteRouted = OriginRuntime.TryAwardBosmerYffreGreenSite("mcm_signal_floor", "mcm_signal_floor_green_site")
     DebugTriggerGreenPactViolation()
     Trace(1, "SignalFloorSmoke Green Way debug routed; site=" + PDV_DevotionRules.BoolToInt(siteRouted))
     return "Green Way backend routes fired. Site=" + PDV_DevotionRules.BoolToInt(siteRouted) + ". Plant-food organic proof still requires consuming a listed plant food."
@@ -4279,7 +4127,7 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSle
     endIf
 
     if originRace == ORIGIN_BOSMER
-        HandleBosmerSleepEvents(playerRef, reason)
+        OriginRuntime.HandleBosmerSleepEvents(playerRef, reason)
     endIf
 
     if originRace == ORIGIN_BRETON
@@ -4291,7 +4139,7 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSle
     endIf
 
     if originRace == ORIGIN_ALTMER
-        HandleAltmerSleepEvents(playerRef, reason)
+        OriginRuntime.HandleAltmerSleepEvents(playerRef, reason)
     endIf
 
     if originRace == ORIGIN_NORD
@@ -4337,7 +4185,7 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             PDV_NordAncestorSubstrate.RecordHearthReturnScaled(1.0, "cooked_meal_" + reason)
             SendPrismaSubstrateProgress("ancestor", tierBefore, PDV_NordAncestorSubstrate.GetSubstrateTier(), PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
         endIf
-    elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
+    elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate && !OriginRuntime.IsAltmerFavorSuppressedByCurse()
         ; P2 (2026-08-04) widened the spine's feed set, and answers the question P5 deferred:
         ; YES, ordered study feeds the ancestral spine, as ordered craft already did.
         ;
@@ -4364,8 +4212,8 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             Int tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
             PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, craftToken + reason)
             Float grantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
-            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
-            AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
+            SendPrismaSubstrateProgress("altmer-heritage", tierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", OriginRuntime.GetAltmerHeritageTierName())
+            OriginRuntime.AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
 
             ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
             ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
@@ -4378,8 +4226,8 @@ Function HandleSubstrateActionEvent(Int eventType, String reason)
             Int studyTierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
             PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "study_" + reason)
             Float studyGrantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - studyMetricBefore
-            SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
-            AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
+            SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", OriginRuntime.GetAltmerHeritageTierName())
+            OriginRuntime.AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
 
             ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT
             ; dawn to decide whether the ledger noticed yesterday. Independent of the spine credit
@@ -4794,162 +4642,17 @@ EndFunction
 ; short three-devotional-day prompt cooldown so declining cannot reopen the menu every rest.
 ; Returns true when the menu was shown so the dream is suppressed that night. The handler
 ; guard already blocks this while curse-suppressed.
-Bool Function TryAltmerDisciplinesRite(Actor playerRef, String reason)
-    if !playerRef || !PDV_MESG_AltmerDisciplines || !IsAltmerOrigin()
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.Alt.Disc.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    ; GetDevotionalDay can be -1 before the first 06:00 boundary. Reserve zero
-    ; exactly as the shared substrate stamp does so a first-day decline sticks.
-    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
-    Int lastDeclineStamp = StorageUtil.GetIntValue(None, "PDV.Alt.Disc.LastDeclineDay")
-    if lastDeclineStamp > 0 && (todayStamp - lastDeclineStamp) < 3
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = PDV_MESG_AltmerDisciplines.Show()
-    ; B4 / fix-plan 3. Show() returns -1 when another menu or message is already up
-    ; (routine right after sleep in a heavy list). That is "not shown", never a choice:
-    ; no decline stamp, no state change, and the caller is told the menu did NOT appear
-    ; so the ancestral dream is not suppressed for a rite that never ran. The rite
-    ; retries at its next natural trigger.
-    if pressed < 0
-        Trace(2, "Altmer Disciplines rite not shown (menu busy); no decline stamped.")
-        return false
-    endIf
-    if pressed > 3
-        StorageUtil.SetIntValue(None, "PDV.Alt.Disc.LastDeclineDay", todayStamp)
-        return true                 ; "Not yet" -- short prompt cooldown only
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Alt.Disc.LastDeclineDay", 0)
-    ApplyAltmerDiscipline(playerRef, pressed)
-    return true
-EndFunction
 
 ; Clear-before-add: never two disciplines at once. Coherence reads current crisis state at
 ; dawn (no snapshot needed), so SyncAltmerDisciplines fades/restores on a crisis break.
-Function ApplyAltmerDiscipline(Actor playerRef, Int index)
-    RemoveAltmerDisciplineSpells(playerRef)
-    Spell chosen = GetAltmerDisciplineSpell(index)
-    if !chosen
-        return
-    endIf
 
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.Alt.Disc.Active", index + 1)
-    StorageUtil.SetFloatValue(None, "PDV.Alt.Disc.LastRiteTime", Utility.GetCurrentGameTime())
-    ; Surface in both Prisma spaces: a small Auri-El pulse (Ledger driver; the 7-day
-    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    LedgerRuntime.AwardPiety(PDV_AuriEl, 0.5, "Set a Discipline of Return")
-    AppendBookOfDaysEntry("You set a discipline of the Return. The road back is walked daily.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False)
-    SendPrismaToast("auriel", "good", "Discipline of Return", "It holds while you hold to the path.")
-    Trace(2, "Altmer Discipline of Return applied: " + index)
-EndFunction
 
-Function RemoveAltmerDisciplineSpells(Actor playerRef)
-    Int i = 0
-    while i < 4
-        Spell disc = GetAltmerDisciplineSpell(i)
-        if disc && playerRef.HasSpell(disc)
-            playerRef.RemoveSpell(disc)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
-Spell Function GetAltmerDisciplineSpell(Int index)
-    if index == 0
-        return PDV_SPEL_AltmerDiscipline_Alteration
-    elseIf index == 1
-        return PDV_SPEL_AltmerDiscipline_Destruction
-    elseIf index == 2
-        return PDV_SPEL_AltmerDiscipline_Illusion
-    elseIf index == 3
-        return PDV_SPEL_AltmerDiscipline_Restoration
-    endIf
-    return None
-EndFunction
 
 ; The discipline holds while the player is coherent (no unresolved crisis and not curse-
 ; suppressed). On a crisis break it goes quiet at dawn and returns at dawn on resolution.
 ; PDV.Alt.Disc.Active stays set while quiet so no re-rite is needed.
-Function SyncAltmerDisciplines(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-    Int active = StorageUtil.GetIntValue(None, "PDV.Alt.Disc.Active")
-    if active <= 0
-        return
-    endIf
-    Spell disc = GetAltmerDisciplineSpell(active - 1)
-    if !disc
-        return
-    endIf
 
-    Bool eligible = IsAltmerOrigin() && IsAltmerDisciplineCoherent()
-    if eligible
-        if !playerRef.HasSpell(disc)
-            playerRef.AddSpell(disc, False)
-            SendPrismaToast("auriel", "good", "Coherence restored", "The discipline holds again.")
-        endIf
-    else
-        if playerRef.HasSpell(disc)
-            playerRef.RemoveSpell(disc)
-            SendPrismaToast("auriel", "warning", "The discipline goes quiet", "You have wandered from coherence.")
-        endIf
-    endIf
-EndFunction
 
-Bool Function IsAltmerDisciplineCoherent()
-    if IsAltmerFavorSuppressedByCurse()
-        return false
-    endIf
-    Int crisis = GetAltmerCrisisState()
-    if crisis == ALTMER_CRISIS_NONE || crisis == ALTMER_CRISIS_SCARRED_RESOLVED
-        return true
-    endIf
-    return false
-EndFunction
-
-Function HandleAltmerSleepEvents(Actor playerRef, String reason)
-    if !playerRef || !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
-        return
-    endIf
-
-    if TryAltmerDisciplinesRite(playerRef, reason)
-        return                          ; Disciplines menu shown; suppress the dream this wake
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerAncestralDream")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    AwardAltmerAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
-    ; P4 (2026-08-03): graded rather than patron-only. This was `_activeDeity == PDV_Magnus`, which
-    ; meant a follower who had not formally committed to Magnus got NOTHING from the sleep lane --
-    ; and since 1802 is finite at 24 lifetime awards and 1804 is patron-only too, that left them
-    ; with no curated income at all. A Seeker-or-better non-patron now gets half. The patron lane
-    ; stays strictly better, so this widens access without flattening the commitment choice.
-    if PDV_Magnus
-        if _activeDeity == PDV_Magnus
-            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
-        elseIf LedgerRuntime.GetTier(PDV_Magnus) >= LedgerRuntime.TIER_SEEKER
-            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier * 0.5)
-        endIf
-    endIf
-    ; P2 (2026-08-04): the hardcoded Book of Days line that used to sit here is gone.
-    ; AwardAltmerAncestorSpinePulse now writes it via GetAltmerHeritageSourceLine, gated on the day
-    ; credit actually landing. Keeping it here too would double-log the sleep feed and would report
-    ; a dream on days the credit was already spent.
-EndFunction
 
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
     ; Retained for save/script compatibility. Imperial sleep is not a civic or
@@ -5525,315 +5228,39 @@ EndFunction
 ; Sleep-exit dispatcher. Order mirrors the Argonian one: silent declaration/rite
 ; menus first, dream text last, and a shown menu suppresses the dream that night
 ; so a MessageBox and a dream toast never stack.
-Function HandleBosmerSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
-        return
-    endIf
-
-    Int sleepCellId = 0
-    Cell sleepCell = playerRef.GetParentCell()
-    if sleepCell
-        sleepCellId = sleepCell.GetFormID()
-    endIf
-
-    Bool menuShown = TryBosmerHearthSleep(playerRef, sleepCellId, reason)
-    if !menuShown
-        menuShown = TryBosmerNaming(playerRef, sleepCellId, reason)
-    endIf
-    if !menuShown
-        TryBosmerPathDream(reason)
-    endIf
-EndFunction
 
 ; Hearth of the Telling uses the CELL you sleep in (reliable at sleep-stop).
 ; First eligible sleep prompts declaration on any Bosmer path so the Naming rite
 ; can use the same stable "declared rest place" pattern as Argonian adaptation.
 ; Tale Carried remains Living Story-only on return to the declared hearth.
-Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reason)
-    if sleepCellId == 0 || !playerRef
-        return false
-    endIf
-
-    ; fix-plan 4.2: the hearth decline cadence is a devotional-day cadence like every
-    ; other sleep rite, not a raw-midnight one -- a midnight crossed mid-sleep must not
-    ; shorten the 3-day re-prompt window. ReadZeroReserved migrates the legacy +1 stamp.
-    Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
-    Int declaredId = StorageUtil.GetIntValue(None, "PDV.BosHearth.DeclaredCell")
-    if declaredId == 0
-        if !PDV_MESG_BosmerMarkHearth
-            return false
-        endIf
-        Int declinedDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
-        if declinedDay > 0 && (todayStamp - declinedDay) < 3
-            return false
-        endIf
-
-        Utility.Wait(0.5)
-        Int pressed = PDV_MESG_BosmerMarkHearth.Show()
-        ; B4 / fix-plan 3. -1 is "not shown" -- no decline stamp, retry next sleep.
-        if pressed < 0
-            Trace(2, "Bosmer hearth menu not shown (menu busy); no decline stamped.")
-            return false
-        endIf
-        if pressed == 0
-            StorageUtil.SetIntValue(None, "PDV.BosHearth.DeclaredCell", sleepCellId)
-            StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount"))
-            SendPrismaToast("yffre", "good", "Hearth declared", "This is where your stories come home now.")
-        else
-            LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
-        endIf
-        return true
-    endIf
-
-    if sleepCellId != declaredId
-        return false
-    endIf
-    if GetBosmerPathState() != BOSMER_PATH_LIVING_STORY
-        return false
-    endIf
-
-    ; Return sleep in the declared hearth: reward only when the player has been
-    ; out gathering story (3+ new locations since last stay). Anti-farm is the
-    ; discovery delta, not sleep count.
-    Int discoveryNow = StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount")
-    Int discoveryAtLastStay = StorageUtil.GetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay")
-    if (discoveryNow - discoveryAtLastStay) >= 3
-        StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", discoveryNow)
-        if PDV_SPEL_BosmerTaleCarried
-            PDV_SPEL_BosmerTaleCarried.Cast(playerRef, playerRef)
-            SendPrismaToast("yffre", "good", "Tale carried", "You told the tale, and the telling settled.")
-            HandleBosmerLivingStoryCommunityKept(reason + "_tale_carried")
-        endIf
-    endIf
-    return false
-EndFunction
 
 ; The Naming rite: at the declared hearth or any Songs site, with a 7-day cooldown,
 ; the player retells their own form. One-active told-self, swap via re-rite
 ; (clear-before-add). "Not yet" does not spend the cooldown. Returns true when the
 ; menu was shown so the dream yields that night.
-Bool Function TryBosmerNaming(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !PDV_MESG_BosmerNaming || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
-        return false
-    endIf
-
-    Bool atSite = false
-    Int declaredHearth = StorageUtil.GetIntValue(None, "PDV.BosHearth.DeclaredCell")
-    if sleepCellId != 0 && declaredHearth != 0 && sleepCellId == declaredHearth
-        atSite = true
-    elseIf PDV_FLST_BosmerGreenSongs && playerRef.GetCurrentLocation() && PDV_FLST_BosmerGreenSongs.HasForm(playerRef.GetCurrentLocation())
-        atSite = true
-    endIf
-    if !atSite
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.BosNaming.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = PDV_MESG_BosmerNaming.Show()
-    if pressed < 0 || pressed > 3
-        return true                 ; "Not yet" -- cooldown not spent
-    endIf
-
-    ApplyBosmerNaming(playerRef, pressed)
-    return true
-EndFunction
 
 ; Clear-before-add: never two told-selves at once. Records the path the player was
 ; on so SyncBosmerNaming can fade/restore on coherence break.
-Function ApplyBosmerNaming(Actor playerRef, Int index)
-    RemoveBosmerNamingSpells(playerRef)
-    Spell chosen = GetBosmerNamingSpell(index)
-    if !chosen
-        return
-    endIf
 
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.BosNaming.Active", index + 1)
-    StorageUtil.SetIntValue(None, "PDV.BosNaming.PathAtRite", GetBosmerPathState())
-    StorageUtil.SetFloatValue(None, "PDV.BosNaming.LastRiteTime", Utility.GetCurrentGameTime())
-    SendPrismaToast("yffre", "good", "Naming", "You tell yourself anew. The shape settles into you.")
-    Trace(2, "Bosmer Naming told-self applied: " + index)
-EndFunction
 
-Function RemoveBosmerNamingSpells(Actor playerRef)
-    Int i = 0
-    while i < 4
-        Spell told = GetBosmerNamingSpell(i)
-        if told && playerRef.HasSpell(told)
-            playerRef.RemoveSpell(told)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
-Spell Function GetBosmerNamingSpell(Int index)
-    if index == 0
-        return PDV_SPEL_BosmerNaming_Hunter
-    elseIf index == 1
-        return PDV_SPEL_BosmerNaming_Speaker
-    elseIf index == 2
-        return PDV_SPEL_BosmerNaming_Wanderer
-    elseIf index == 3
-        return PDV_SPEL_BosmerNaming_Keeper
-    endIf
-    return None
-EndFunction
 
 ; The told-self holds to the path it was named on. Off that path (or, on Old
 ; Contract, in the Apostate GPC band) it goes quiet at dawn and returns at dawn
 ; when the player comes back to coherence. PDV.BosNaming.Active stays set while
 ; quiet so no re-rite is needed.
-Function SyncBosmerNaming(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-    Int active = StorageUtil.GetIntValue(None, "PDV.BosNaming.Active")
-    if active <= 0
-        return
-    endIf
-    Spell told = GetBosmerNamingSpell(active - 1)
-    if !told
-        return
-    endIf
 
-    Int pathAtRite = StorageUtil.GetIntValue(None, "PDV.BosNaming.PathAtRite")
-    Bool eligible = (GetPlayerOriginRaceIndex() == ORIGIN_BOSMER) && IsBosmerNamingCoherent(pathAtRite)
-    if eligible
-        if !playerRef.HasSpell(told)
-            playerRef.AddSpell(told, False)
-            SendPrismaToast("yffre", "good", "Told-self restored", "You are yourself again.")
-        endIf
-    else
-        if playerRef.HasSpell(told)
-            playerRef.RemoveSpell(told)
-            SendPrismaToast("yffre", "warning", "The told-self goes quiet", "You have wandered from its path.")
-        endIf
-    endIf
-EndFunction
-
-Bool Function IsBosmerNamingCoherent(Int pathAtRite)
-    if GetBosmerPathState() != pathAtRite
-        return false
-    endIf
-    if pathAtRite == BOSMER_PATH_OLD_CONTRACT && GetBosmerGreenPactCompliance() < 20
-        return false                ; Apostate band
-    endIf
-    return true
-EndFunction
 
 ; Green Dreams: armed (strong roll) the night after a path change, otherwise a
 ; rare ambient murmur. Pure flavor; no piety, no state writes beyond the dream
 ; bookkeeping keys.
-Function TryBosmerPathDream(String reason)
-    ; fix-plan 4.2: sleep-triggered cadence -- devotional day, not raw midnight.
-    Int today = LedgerRuntime.GetDevotionalDay() + 2
-    Int lastDreamDay = LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
-    if lastDreamDay > 0 && (today - lastDreamDay) < 2
-        return
-    endIf
 
-    Int dreamChance = 10
-    if StorageUtil.GetIntValue(None, "PDV.BosDream.Armed") == 1
-        dreamChance = 60
-    endIf
-
-    if Utility.RandomInt(1, 100) > dreamChance
-        return
-    endIf
-
-    SendPrismaToast("yffre", "neutral", "Green dream", GetBosmerDreamText(GetBosmerPathState()))
-    StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 0)
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
-    Trace(2, "Bosmer path dream fired (" + reason + ")")
-EndFunction
-
-String Function GetBosmerDreamText(Int pathState)
-    if pathState == BOSMER_PATH_OLD_CONTRACT
-        if GetBosmerGreenPactCompliance() < 20
-            return "You dream of green going grey, and a voice that has stopped expecting you to answer."
-        endIf
-        return "You dream the old green, ordered and exact, and you know your place in it."
-    elseIf pathState == BOSMER_PATH_EXCHANGE
-        return "You dream of a ledger no one keeps but you, and every line balancing at last."
-    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
-        return "You dream of a fire on the road, and faces that owe you nothing and share anyway."
-    endIf
-    return "You dream the Story still telling itself, and you are a line in it that has not ended."
-EndFunction
 
 ; Songs of the Green: one location-change entry. Counts every newly-seen location
 ; (for the Hearth discovery delta), awards the curated Songs sites once each,
 ; and dispatches the narrower Y'ffre green-site fanout for the signal floor.
 ; Eldergleam, Gildergreen, and the Tree Stone are held for bounded polls so
 ; broad parent locations do not fire before the player reaches the actual site.
-Function HandleBosmerLocationChange(Location loc)
-    if !loc || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
-        return
-    endIf
 
-    ; New-location counter feeds the Living Story Hearth "3+ since last stay" gate.
-    String locSeenKey = "PDV.BosLoc.Seen." + loc.GetFormID()
-    if StorageUtil.GetIntValue(None, locSeenKey) == 0
-        StorageUtil.SetIntValue(None, locSeenKey, 1)
-        StorageUtil.AdjustIntValue(None, "PDV.BosLoc.DiscoveryCount", 1)
-    endIf
-
-    Bool armEldergleam = False
-    if loc.GetFormID() == 0x000192AC
-        armEldergleam = True
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", PDV_DevotionRules.BoolToInt(armEldergleam))
-
-    Bool armGildergreen = False
-    if loc.GetFormID() == 0x00018A56
-        armGildergreen = True
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", PDV_DevotionRules.BoolToInt(armGildergreen))
-
-    Bool armTreeStone = PDV_DevotionRules.IsLocationFromFile(loc, 0x000142B6, "Dragonborn.esm")
-    StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", PDV_DevotionRules.BoolToInt(armTreeStone))
-
-    if armEldergleam || armGildergreen || armTreeStone
-        return
-    endIf
-
-    ; Temple of Kynareth interior (0x0001F87D) stays the Gildergreen song's FLST
-    ; slot id (milestone-of-6 count + Naming-at-songs check), but the vision must
-    ; NOT fire inside the temple -- suppress the interior direct award; the
-    ; Gildergreen poll awards slot 0x0001F87D at the tree instead.
-    if loc.GetFormID() == 0x0001F87D
-        return
-    endIf
-
-    TryAwardBosmerYffreLocationSite(loc)
-
-    if PDV_FLST_BosmerGreenSongs && PDV_FLST_BosmerGreenSongs.HasForm(loc)
-        AwardBosmerSong(loc.GetFormID())
-    endIf
-EndFunction
-
-Bool Function TryAwardBosmerYffreLocationSite(Location loc)
-    if PDV_DevotionRules.IsLocationFromFile(loc, 0x00003583, "Dawnguard.esm")
-        return TryAwardBosmerYffreGreenSite("ancestor_glade", "location_ancestor_glade")
-    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142DF, "Dragonborn.esm")
-        return TryAwardBosmerYffreGreenSite("allmaker_wind", "location_allmaker_wind")
-    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142DE, "Dragonborn.esm")
-        return TryAwardBosmerYffreGreenSite("allmaker_water", "location_allmaker_water")
-    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142DC, "Dragonborn.esm")
-        return TryAwardBosmerYffreGreenSite("allmaker_sun", "location_allmaker_sun")
-    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x000142A4, "Dragonborn.esm")
-        return TryAwardBosmerYffreGreenSite("allmaker_earth", "location_allmaker_earth")
-    elseIf PDV_DevotionRules.IsLocationFromFile(loc, 0x00014296, "Dragonborn.esm")
-        return TryAwardBosmerYffreGreenSite("allmaker_beast", "location_allmaker_beast")
-    endIf
-
-    return False
-EndFunction
 
 
 ; Bounded poll (OnUpdate): only while inside the armed Eldergleam sanctuary
@@ -5842,37 +5269,6 @@ EndFunction
 ; approach. Disarms on award, on leaving, or once seen. Awards with the LCTN
 ; FormID so the milestone count stays at 6. Mirrors TryArgonianEldergleamInterior
 ; (shared interior cells); "Seen.103084" is the decimal render of LCTN 0x000192AC.
-Function TryBosmerEldergleamInterior()
-    if StorageUtil.GetIntValue(None, "PDV.BosSongs.EldergleamActive") != 1
-        return
-    endIf
-
-    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
-        return
-    endIf
-
-    Bool songSeen = StorageUtil.GetIntValue(None, "PDV.BosSongs.Seen.103084") == 1
-    Bool yffreSeen = StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.eldergleam") == 1
-    if songSeen && yffreSeen
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
-        return
-    endIf
-
-    Cell parentCell = Game.GetPlayer().GetParentCell()
-    if !parentCell
-        return
-    endIf
-
-    Int cellId = parentCell.GetFormID()
-    if cellId == 0x0003A9EC || cellId == 0x0003A9E0 || cellId == 0x0003A9E3
-        if !songSeen
-            AwardBosmerSong(0x000192AC)
-        endIf
-        TryAwardBosmerYffreGreenSite("eldergleam", "location_eldergleam")
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.EldergleamActive", 0)
-    endIf
-EndFunction
 
 ; Bounded poll (OnUpdate): only while inside the armed Whiterun city LOCATION.
 ; Fires the green-song vision when the player walks up to the Gildergreen tree
@@ -5881,139 +5277,19 @@ EndFunction
 ; song's FLST slot id) so the milestone count stays at 6. The Gildergreen ref is
 ; resolved once and cached (vanilla static form; avoids a hot-loop lookup). The
 ; ~600 distance covers the Gildergreen planter without firing across the district.
-ObjectReference _bosGildergreenRef
-ObjectReference _bosYffreTreeStoneRef
 
-Function TryBosmerGildergreenProximity()
-    if StorageUtil.GetIntValue(None, "PDV.BosSongs.GildergreenActive") != 1
-        return
-    endIf
-    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
-        return
-    endIf
 
-    Bool songSeen = StorageUtil.GetIntValue(None, "PDV.BosSongs.Seen.129149") == 1
-    Bool yffreSeen = StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.gildergreen") == 1
-    if songSeen && yffreSeen
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
-        return
-    endIf
 
-    if !_bosGildergreenRef
-        _bosGildergreenRef = Game.GetFormFromFile(0x00023612, "Skyrim.esm") as ObjectReference
-    endIf
-    if !_bosGildergreenRef
-        return
-    endIf
-
-    if Game.GetPlayer().GetDistance(_bosGildergreenRef) < 600.0
-        if !songSeen
-            AwardBosmerSong(0x0001F87D)
-        endIf
-        TryAwardBosmerYffreGreenSite("gildergreen", "location_gildergreen")
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.GildergreenActive", 0)
-    endIf
-EndFunction
-
-Function TryBosmerYffreTreeStoneProximity()
-    if StorageUtil.GetIntValue(None, "PDV.Yffre.TreeStoneActive") != 1
-        return
-    endIf
-    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || StorageUtil.GetIntValue(None, "PDV.Yffre.Seen.allmaker_tree") == 1
-        StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", 0)
-        return
-    endIf
-
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
-
-    Cell parentCell = playerRef.GetParentCell()
-    if !parentCell || parentCell.IsInterior()
-        return
-    endIf
-
-    if !_bosYffreTreeStoneRef
-        _bosYffreTreeStoneRef = Game.GetFormFromFile(0x00026EEC, "Dragonborn.esm") as ObjectReference
-    endIf
-    if !_bosYffreTreeStoneRef
-        return
-    endIf
-
-    if playerRef.GetDistance(_bosYffreTreeStoneRef) < 700.0
-        TryAwardBosmerYffreGreenSite("allmaker_tree", "location_allmaker_tree")
-        StorageUtil.SetIntValue(None, "PDV.Yffre.TreeStoneActive", 0)
-    endIf
-EndFunction
-
-Bool Function TryAwardBosmerYffreGreenSite(String siteKey, String reason)
-    String seenKey = "PDV.Yffre.Seen." + siteKey
-    if StorageUtil.GetIntValue(None, seenKey) == 1
-        return False
-    endIf
-
-    if !ConsumeOncePerDaySignal("PDV.Signal.YffreGreenSite")
-        Trace(2, "Y'ffre green site capped for today: " + siteKey)
-        return False
-    endIf
-
-    StorageUtil.SetIntValue(None, seenKey, 1)
-    StorageUtil.AdjustIntValue(None, "PDV.Yffre.SiteCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Yffre.LastSite", siteKey)
-    StorageUtil.SetFloatValue(None, "PDV.Yffre.LastSiteTime", Utility.GetCurrentGameTime())
-    HandleBosmerLivingStoryNatureSite(reason)
-    Trace(2, "Y'ffre green site remembered: " + siteKey)
-    return True
-EndFunction
 
 ; One-shot award per Songs site, keyed by LCTN FormID. Small path piety + vision
 ; line; milestone MessageBox once all six are known.
-Function AwardBosmerSong(Int siteFormId)
-    String seenKey = "PDV.BosSongs.Seen." + siteFormId
-    if StorageUtil.GetIntValue(None, seenKey) == 1
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, seenKey, 1)
-    Int seenCount = StorageUtil.AdjustIntValue(None, "PDV.BosSongs.Count", 1)
-
-    ; Small path-keyed piety: route through the active path's living-world signal.
-    HandleBosmerPactPositiveSignal("green_song")
-    Debug.MessageBox("For a breath, the Story enfolds you and names you a part of it. This place still holds the blessings of Y'ffre.")
-
-    if PDV_FLST_BosmerGreenSongs && seenCount >= PDV_FLST_BosmerGreenSongs.GetSize()
-        StorageUtil.SetIntValue(None, "PDV.BosSongs.Milestone", 1)
-        Debug.MessageBox("Every Green Song is known to you now. Wherever the road goes, the Story travels with you.")
-    endIf
-    Trace(2, "Bosmer green song remembered: " + seenCount)
-EndFunction
 
 ; Scales at Rest (Exchange signature, once/day). Called from HandleBosmerExchangeSignal.
-Function TryBosmerScalesAtRest(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || !PDV_SPEL_BosmerScalesAtRest
-        return
-    endIf
-    if GetBosmerPathState() != BOSMER_PATH_EXCHANGE
-        return
-    endIf
-
-    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay") == (LedgerRuntime.GetDevotionalDay() + 2)
-        return
-    endIf
-
-    PDV_SPEL_BosmerScalesAtRest.Cast(playerRef, playerRef)
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay")
-    SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
-    Trace(2, "Bosmer Scales at Rest fired.")
-EndFunction
 
 ; Shared below-health entry point. The player alias owns combat-session sampling;
 ; this manager fans the one low-health observation to race-specific payloads.
 Function HandlePlayerBelowHealthGate(Actor playerRef)
-    TryBosmerBaanDarGap(playerRef)
+    OriginRuntime.TryBosmerBaanDarGap(playerRef)
     TryArgonianSithisNearDeathBurst(playerRef)
     TryOrcCodeHolds(playerRef)
 EndFunction
@@ -6026,28 +5302,6 @@ EndFunction
 
 ; Baan Dar Opens the Gap (Bandit Road signature, once/day). Called from the
 ; shared player below-health gate when player health drops below 20% in combat.
-Function TryBosmerBaanDarGap(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_BOSMER || !PDV_SPEL_BosmerBaanDarGap
-        return
-    endIf
-    if GetBosmerPathState() != BOSMER_PATH_BANDIT_ROAD
-        return
-    endIf
-    if !playerRef.IsInCombat()
-        return
-    endIf
-
-    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay") == (LedgerRuntime.GetDevotionalDay() + 2)
-        return
-    endIf
-
-    PDV_SPEL_BosmerBaanDarGap.Cast(playerRef, playerRef)
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay")
-    HandleBosmerBanditRoadReversal("baandar_gap_low_health")
-    SendPrismaToast("baandar", "good", "Baan Dar opens the gap", "Run.")
-    Trace(2, "Bosmer Baan Dar Opens the Gap fired.")
-EndFunction
 
 Function TryArgonianSithisNearDeathBurst(Actor playerRef)
     if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_ARGONIAN || !PDV_SPEL_ArgonianSithisNearDeathBurst
@@ -6137,13 +5391,6 @@ Function TryOrcCodeHolds(Actor playerRef)
 EndFunction
 
 ; Dawn helper: arm an elevated dream the night after a path change.
-Function ArmBosmerDreamOnPathChange()
-    Int currentPath = GetBosmerPathState()
-    if StorageUtil.GetIntValue(None, "PDV.BosDream.LastPath") != currentPath
-        StorageUtil.SetIntValue(None, "PDV.BosDream.LastPath", currentPath)
-        StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 1)
-    endIf
-EndFunction
 
 ; DEBUG seeder. Sets path, then clears the Naming/signature cooldowns and seeds
 ; the discovery counter so the Hearth/Naming gates are reachable fast. Driven from
@@ -6177,7 +5424,7 @@ Function DebugSeedBosmerVariety()
 EndFunction
 
 Function HandleGreenPactViolation(String reason)
-    if !IsBosmerOrigin()
+    if !OriginRuntime.IsBosmerOrigin()
         return
     endIf
 
@@ -6207,7 +5454,7 @@ Function HandleGreenPactViolation(String reason)
         StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive", 1)
     endIf
 
-    AdjustBosmerGreenPactCompliance(-15, reason)
+    OriginRuntime.AdjustBosmerGreenPactCompliance(-15, reason)
     if PDV_Yffre
         LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
         SendPrismaToast(GetPrismaSymbolForDeity(PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
@@ -6217,172 +5464,23 @@ Function HandleGreenPactViolation(String reason)
     Trace(2, "Green Pact violation count " + violationCount + " (" + reason + ")")
 EndFunction
 
-Function HandleBosmerLivingStorySignal(String reason)
-    if !IsBosmerOrigin() || !PDV_BosmerPathTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerLivingStory")
-    if multiplier <= 0.0
-        return
-    endIf
 
-    PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_LIVING_STORY, reason)
-    if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None, multiplier)
-    endIf
-EndFunction
 
-Function HandleBosmerExchangeSignal(String reason)
-    if !IsBosmerOrigin() || !PDV_BosmerPathTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerExchange")
-    if multiplier <= 0.0
-        return
-    endIf
 
-    PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_EXCHANGE, reason)
-    if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_EXCHANGE && LedgerRuntime.PDV_Zen
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zen, LedgerRuntime.PDV_Zen.SIGNAL_EXCHANGE, None, multiplier)
-    endIf
 
-    TryBosmerScalesAtRest(Game.GetPlayer())
-EndFunction
 
-Function HandleBosmerBanditRoadSignal(String reason)
-    if !IsBosmerOrigin() || !PDV_BosmerPathTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerBanditRoad")
-    if multiplier <= 0.0
-        return
-    endIf
 
-    PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_BANDIT_ROAD, reason)
-    if PDV_BosmerPathTrack.GetCurrentState() == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
-    endIf
-EndFunction
 
-Function HandleBosmerPactPositiveSignal(String reason)
-    if !IsBosmerOrigin() || !PDV_BosmerPathTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerPactPositive")
 
-    PDV_BosmerPathTrack.RecordEvidenceDay(BOSMER_PATH_OLD_CONTRACT, reason)
-    if IsBosmerPactBound()
-        AdjustBosmerGreenPactCompliance(5, reason)
-        if PDV_Yffre && multiplier > 0.0
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_PACT_POSITIVE, None, multiplier)
-        endIf
-        return
-    endIf
 
-    if multiplier > 0.0
-        Int currentPath = PDV_BosmerPathTrack.GetCurrentState()
-        if currentPath == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-        elseIf currentPath == BOSMER_PATH_EXCHANGE && LedgerRuntime.PDV_Zen
-            LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Zen, LedgerRuntime.PDV_Zen.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-        elseIf currentPath == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_BaanDar, PDV_BaanDar.SIGNAL_SHARED_PACT_MEMORY, None, multiplier)
-        endIf
-    endIf
-EndFunction
-
-Function HandleBosmerOldContractProperHunt(String reason)
-    if RecordBosmerFavorSignal("OldContract.ProperHunt", BOSMER_PATH_OLD_CONTRACT, reason)
-        HandleBosmerPactPositiveSignal(reason + "_proper_hunt")
-    endIf
-EndFunction
-
-Function HandleBosmerOldContractForestKept(String reason)
-    if RecordBosmerFavorSignal("OldContract.ForestKept", BOSMER_PATH_OLD_CONTRACT, reason)
-        HandleBosmerPactPositiveSignal(reason + "_forest_kept")
-    endIf
-EndFunction
-
-Function HandleBosmerLivingStoryCommunityKept(String reason)
-    if RecordBosmerFavorSignal("LivingStory.CommunityKept", BOSMER_PATH_LIVING_STORY, reason)
-        HandleBosmerLivingStorySignal(reason + "_community_kept")
-    endIf
-EndFunction
-
-Function HandleBosmerLivingStoryNatureSite(String reason)
-    if RecordBosmerFavorSignal("LivingStory.NatureSite", BOSMER_PATH_LIVING_STORY, reason)
-        HandleBosmerLivingStorySignal(reason + "_nature_site")
-    endIf
-EndFunction
-
-Function HandleBosmerExchangeDebtSettled(String reason)
-    if RecordBosmerFavorSignal("Exchange.DebtSettled", BOSMER_PATH_EXCHANGE, reason)
-        HandleBosmerExchangeSignal(reason + "_debt_settled")
-    endIf
-EndFunction
-
-Function HandleBosmerExchangeProportionateVengeance(String reason)
-    if RecordBosmerFavorSignal("Exchange.ProportionateVengeance", BOSMER_PATH_EXCHANGE, reason)
-        HandleBosmerExchangeSignal(reason + "_proportionate_vengeance")
-    endIf
-EndFunction
-
-Function HandleBosmerBanditRoadRoadLife(String reason)
-    if RecordBosmerFavorSignal("BanditRoad.RoadLife", BOSMER_PATH_BANDIT_ROAD, reason)
-        HandleBosmerBanditRoadSignal(reason + "_road_life")
-    endIf
-EndFunction
-
-Function HandleBosmerBanditRoadReversal(String reason)
-    if !CanRecordBosmerMajorFavor("BanditRoad.Reversal", 7.0, reason)
-        return
-    endIf
-
-    if RecordBosmerFavorSignal("BanditRoad.Reversal", BOSMER_PATH_BANDIT_ROAD, reason)
-        HandleBosmerBanditRoadSignal(reason + "_reversal")
-    endIf
-EndFunction
-
-Bool Function RecordBosmerFavorSignal(String favorKey, Int pathState, String reason)
-    if !IsBosmerOrigin() || !PDV_BosmerPathTrack
-        return False
-    endIf
-
-    String baseKey = "PDV.Bosmer.Favor." + favorKey
-    StorageUtil.AdjustIntValue(None, baseKey + ".Count", 1)
-    StorageUtil.SetIntValue(None, baseKey + ".Path", pathState)
-    StorageUtil.SetFloatValue(None, baseKey + ".LastTime", Utility.GetCurrentGameTime())
-    StorageUtil.AdjustIntValue(None, "PDV.Bosmer.Favor.SignalCount", 1)
-    StorageUtil.SetFloatValue(None, "PDV.Bosmer.Favor.LastSignalTime", Utility.GetCurrentGameTime())
-    Trace(2, "Bosmer favor " + favorKey + " recorded for path " + pathState + " (" + reason + ")")
-    return True
-EndFunction
-
-Bool Function CanRecordBosmerMajorFavor(String favorKey, Float cooldownDays, String reason)
-    if !IsBosmerOrigin()
-        return False
-    endIf
-
-    Float nowTime = Utility.GetCurrentGameTime()
-    String baseKey = "PDV.Bosmer.Favor." + favorKey
-    Float lastTime = StorageUtil.GetFloatValue(None, baseKey + ".LastMajorTime")
-    if lastTime > 0.0 && nowTime - lastTime < cooldownDays
-        StorageUtil.AdjustIntValue(None, baseKey + ".RejectCount", 1)
-        Trace(2, "Bosmer major favor " + favorKey + " rejected by cooldown (" + reason + ")")
-        return False
-    endIf
-
-    StorageUtil.SetFloatValue(None, baseKey + ".LastMajorTime", nowTime)
-    return True
-EndFunction
 
 Function HandleStateTransitionConfirmationRite(String reason)
-    if IsBosmerOrigin()
-        ConfirmBosmerPendingTransition(reason)
+    if OriginRuntime.IsBosmerOrigin()
+        OriginRuntime.ConfirmBosmerPendingTransition(reason)
     endIf
 EndFunction
 
@@ -9483,460 +8581,52 @@ Function HandleTalosShrineDefiance(String reason)
     endIf
 EndFunction
 
-Bool Function IsAltmerOrigin()
-    return GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
-EndFunction
 
-Bool Function IsAltmerFavorSuppressedByCurse()
-    if !IsAltmerOrigin()
-        return False
-    endIf
 
-    if PDV_CurseStateService && (PDV_CurseStateService.IsWerewolf() || PDV_CurseStateService.IsVampire())
-        return True
-    endIf
-
-    return StorageUtil.GetIntValue(None, "PDV.Curse.Altmer.ExilePressure") == 1
-EndFunction
-
-Function HandleAltmerLorkhanPressure(Int pressureTier, String sourceId)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    if IsAltmerRejectedLorkhanSurface(sourceId)
-        RecordAltmerRejectedSurface(sourceId, "lorkhan_surface_rejected")
-        Trace(2, "Altmer Lorkhan pressure rejected for source " + sourceId)
-        return
-    endIf
-
-    if pressureTier < ALTMER_LORKHAN_PRESSURE_DIRECT
-        pressureTier = ALTMER_LORKHAN_PRESSURE_DIRECT
-    elseIf pressureTier > ALTMER_LORKHAN_PRESSURE_CONTEXTUAL
-        pressureTier = ALTMER_LORKHAN_PRESSURE_CONTEXTUAL
-    endIf
-
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.LastLorkhanPressureDay", Utility.GetCurrentGameTime())
-    StorageUtil.SetIntValue(None, "PDV.Altmer.LastLorkhanPressureTier", pressureTier)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.LastLorkhanPressureSource", sourceId)
-    StorageUtil.SetIntValue(None, "PDV.Altmer.LorkhanPressureCount", StorageUtil.GetIntValue(None, "PDV.Altmer.LorkhanPressureCount") + 1)
-
-    ; The defining Altmer friction: Lorkhan adjacency costs piety. Deduct the tiered
-    ; penalty from the deity the player is building (Auri-El foundation by default),
-    ; scaled by the ThalmorAlignment faction modifier. It flows through the normal
-    ; scratch / daily-clamp path, so it paces with the rest of the economy.
-    Float lorkhanPenalty = GetAltmerLorkhanPietyPenalty(pressureTier) * GetAltmerLorkhanFactionModifier()
-    if lorkhanPenalty > 0.0
-        PDV_DeityBase lorkhanDeity = _activeDeity
-        if !lorkhanDeity
-            lorkhanDeity = PDV_AuriEl
-        endIf
-        if lorkhanDeity
-            LedgerRuntime.AwardPiety(lorkhanDeity, -lorkhanPenalty)
-            Trace(2, "Altmer Lorkhan penalty applied: -" + lorkhanPenalty + " to " + lorkhanDeity.DeityName)
-        endIf
-    endIf
-
-    if pressureTier >= ALTMER_LORKHAN_PRESSURE_MORTAL_VALIDATION && GetAltmerCrisisState() == ALTMER_CRISIS_NONE
-        SetAltmerCrisisState(ALTMER_CRISIS_DISSONANT, "lorkhan_pressure_" + sourceId)
-    endIf
-
-    Trace(2, "Altmer Lorkhan pressure routed: tier " + pressureTier + " source " + sourceId)
-EndFunction
 
 ; Tiered Lorkhan-adjacency penalty (LOCKED base values): the more directly an act
 ; affirms Lorkhan / mortal incarnation, the steeper the cost to Altmer divine devotion.
-Float Function GetAltmerLorkhanPietyPenalty(Int pressureTier)
-    if pressureTier == ALTMER_LORKHAN_PRESSURE_DIRECT
-        return 10.0
-    elseIf pressureTier == ALTMER_LORKHAN_PRESSURE_SHOR_ADJACENT
-        return 7.0
-    elseIf pressureTier == ALTMER_LORKHAN_PRESSURE_MORTAL_VALIDATION
-        return 5.0
-    elseIf pressureTier == ALTMER_LORKHAN_PRESSURE_CONTEXTUAL
-        return 2.0
-    endIf
-    return 0.0
-EndFunction
 
 ; ThalmorAlignment faction modifier scales the Lorkhan penalty. Negative bands
 ; are heterodox and soften the penalty; positive bands are orthodox and sharpen it.
-Float Function GetAltmerLorkhanFactionModifier()
-    if !PDV_ThalmorAlignmentTrack
-        return 1.0
-    endIf
-
-    Int alignment = PDV_ThalmorAlignmentTrack.GetValue()
-    if alignment <= -76
-        return 0.75
-    elseIf alignment <= -51
-        return 0.875
-    elseIf alignment >= 76
-        return 1.5
-    elseIf alignment >= 51
-        return 1.25
-    endIf
-
-    return 1.0
-EndFunction
 
 ; ThalmorAlignment is the Concordat-mirror reputation track (-100..+100, 5 states).
 ; Positive points push toward Thalmor orthodoxy (+100); negative points toward the
 ; heterodox/defiant pole. Points are absolute track adjustments (no band multiplier on
 ; the points themselves) per PDV_NextBuildPass_RecordSpec.md sec.1.
-Function ApplyAltmerAlignmentAction(String actionKey, String reason)
-    if !IsAltmerOrigin()
-        return
-    endIf
-    if !PDV_ThalmorAlignmentTrack
-        Trace(1, "ApplyAltmerAlignmentAction skipped: track missing.")
-        return
-    endIf
 
-    Int adjustment = GetAltmerThalmorPointsForAction(actionKey)
-    if adjustment == 0
-        Trace(1, "ApplyAltmerAlignmentAction skipped: unknown action " + actionKey)
-        return
-    endIf
 
-    String oldBand = GetAltmerCommittedAlignmentJournalBand()
-    PDV_ThalmorAlignmentTrack.Adjust(adjustment, reason)
-    MaybeSurfaceAltmerAlignmentBandChange(oldBand, "alignment_" + actionKey)
-    Trace(2, "Altmer ThalmorAlignment " + actionKey + " " + adjustment + " -> " + PDV_ThalmorAlignmentTrack.GetValue())
-EndFunction
 
-Function MaybeSurfaceAltmerAlignmentBandChange(String oldBand, String reason)
-    if !IsAltmerOrigin() || !PDV_ThalmorAlignmentTrack
-        return
-    endIf
-
-    String newBand = GetAltmerCommittedAlignmentJournalBand()
-    if oldBand == "" || newBand == "" || oldBand == newBand
-        StorageUtil.SetStringValue(None, "PDV.Altmer.Alignment.LastCommittedBand", newBand)
-        return
-    endIf
-
-    SendPrismaShiftToast("The Thalmor question turns in you: " + newBand + ".", "", "auri-el")
-    SurfaceTransition("reorientation", newBand, "shift", -1, "turning", True, False)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.Alignment.LastCommittedBand", newBand)
-    Trace(1, "Altmer committed alignment band " + oldBand + " -> " + newBand + " (" + reason + ")")
-EndFunction
-
-String Function GetAltmerCommittedAlignmentJournalBand()
-    if !PDV_ThalmorAlignmentTrack
-        return ""
-    endIf
-
-    String label = PDV_ThalmorAlignmentTrack.GetStateLabelAt(PDV_ThalmorAlignmentTrack.GetCommittedStateIndex())
-    if label == "OpenHeterodox"
-        return "Open Heterodoxy"
-    elseIf label == "PrivateHeterodox"
-        return "Private Heterodoxy"
-    elseIf label == "PublicOrthodox"
-        return "Public Orthodoxy"
-    elseIf label == "ThalmorEnforcer"
-        return "Thalmor-Devout"
-    endIf
-    return "Uncommitted"
-EndFunction
-
-Int Function GetAltmerThalmorPointsForAction(String actionKey)
-    if actionKey == "orthodox_rite"
-        return 2
-    elseIf actionKey == "help_thalmor_prisoner_escape"
-        return -15
-    elseIf actionKey == "kill_thalmor_agent"
-        return -20
-    elseIf actionKey == "read_banned_texts"
-        return -5
-    elseIf actionKey == "consort_with_daedra"
-        return -25
-    endIf
-
-    return 0
-EndFunction
 
 ; Emitter entry point for ThalmorAlignment actions. Enforces Altmer origin and a one-shot
 ; per (action, source form) so re-reading a banned text or re-equipping the same Daedric
 ; artifact does not repeatedly move the alignment track.
-Function HandleAltmerAlignmentSignal(String actionKey, Form sourceForm, String reason)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    Int sourceFormId = 0
-    if sourceForm
-        sourceFormId = sourceForm.GetFormID()
-    endIf
-    String guardKey = "PDV.Altmer.Alignment." + actionKey + "." + sourceFormId
-    if StorageUtil.GetIntValue(None, guardKey) > 0
-        Trace(2, "Altmer alignment signal skipped (one-shot): " + actionKey + " " + sourceFormId)
-        return
-    endIf
-    StorageUtil.SetIntValue(None, guardKey, 1)
-
-    ApplyAltmerAlignmentAction(actionKey, reason)
-EndFunction
 
 ; Shared sink for an unprovoked Thalmor kill, routed from PDV_ActionRouter's non-hostile
 ; kill path. Altmer reads it as a -20 ThalmorAlignment heterodox act (one-shot per victim
 ; via HandleAltmerAlignmentSignal); Imperial reads it as -10 Concordat defiance.
 Function HandleThalmorUnprovokedKill(Form victimForm)
-    if IsAltmerOrigin()
-        HandleAltmerAlignmentSignal("kill_thalmor_agent", victimForm, "thalmor_unprovoked_kill")
+    if OriginRuntime.IsAltmerOrigin()
+        OriginRuntime.HandleAltmerAlignmentSignal("kill_thalmor_agent", victimForm, "thalmor_unprovoked_kill")
     elseIf GetPlayerOriginRaceIndex() == 1
         ApplyImperialConcordatAction("kill_thalmor_justiciar_unprovoked", "thalmor_unprovoked_kill")
     endIf
 EndFunction
 
-Function HandleAltmerCrisisSource(Int crisisSource, String sourceId)
-    if !IsAltmerOrigin()
-        return
-    endIf
 
-    if crisisSource < ALTMER_CRISIS_SOURCE_DRAGONBORN || crisisSource > ALTMER_CRISIS_SOURCE_COMPANIONS
-        RecordAltmerRejectedSurface(sourceId, "unknown_crisis_source")
-        return
-    endIf
-
-    String seenKey = "PDV.Altmer.CrisisSeen." + crisisSource
-    if StorageUtil.GetIntValue(None, seenKey) == 1
-        RecordAltmerRejectedSurface(sourceId, "repeat_crisis_source")
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, seenKey, 1)
-    StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisSource", crisisSource)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.CrisisSourceId", sourceId)
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisStartedAt", Utility.GetCurrentGameTime())
-
-    if crisisSource == ALTMER_CRISIS_SOURCE_DRAGONBORN || crisisSource == ALTMER_CRISIS_SOURCE_SOVNGARDE
-        SetAltmerCrisisState(ALTMER_CRISIS_DISSONANT, sourceId)
-    elseIf crisisSource == ALTMER_CRISIS_SOURCE_TALOS || crisisSource == ALTMER_CRISIS_SOURCE_COMPANIONS
-        SetAltmerCrisisState(ALTMER_CRISIS_QUESTIONING, sourceId)
-    endIf
-
-    Trace(1, "Altmer crisis source accepted: " + GetAltmerCrisisSourceLabel(crisisSource) + " (" + sourceId + ")")
-EndFunction
-
-Function ResolveAltmerCrisis(Bool reassertOrthodoxy, String reason)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    if reassertOrthodoxy
-        SetAltmerCrisisState(ALTMER_CRISIS_REASSERTING, reason)
-    else
-        SetAltmerCrisisState(ALTMER_CRISIS_SCARRED_RESOLVED, reason)
-    endIf
-
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisResolvedAt", Utility.GetCurrentGameTime())
-
-    ; P3 (2026-08-03): the first shipped organic source for Auri-El's
-    ; SIGNAL_ORTHODOXY_AFFIRMATION. Holding the line through a crisis of faith and reasserting
-    ; the orthodoxy IS the costly orthodox act that signal was authored for.
-    ;
-    ; ORDER IS LOAD-BEARING -- this call MUST stay BELOW the SetAltmerCrisisState above.
-    ; HandleAltmerOrthodoxCostlyEnforcement calls RecordAltmerCrisisReassertEvidence, which on its
-    ; third evidence day calls ResolveAltmerCrisis again. That recursion terminates ONLY because
-    ; the state is already REASSERTING by the time it re-enters, so the DISSONANT/QUESTIONING
-    ; guard rejects it immediately. Move this above the state set and it loops.
-    ;
-    ; The handler is curse- and origin-gated internally, and its SurfaceP2BookReadNotice call
-    ; no-ops here because IsP2BookNoticeReason requires a "po3_book" token this reason lacks.
-    if reassertOrthodoxy
-        HandleAltmerOrthodoxCostlyEnforcement("crisis_reasserted_" + reason)
-        ; P7 (2026-08-03): Trinimac's second 2301 source. Reasserting orthodoxy through a crisis is
-        ; his beat as much as Auri-El's. Separate key from the book route's
-        ; ConsumeDailyRepeatMultiplier, so both can land on the same day -- intended: a crisis
-        ; resolution is a rare, heavy moment.
-        if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacCrisisOrthodoxy")
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 2.0)
-        endIf
-    endIf
-EndFunction
 
 ; --- Altmer crisis exit (2026-07-15, D1#6 fix) ---
 ; Reassert: three distinct devotional days of orthodox rites while the crisis is
 ; open move the line to REASSERTING; a two-day lockout then settles it
 ; SCARRED_RESOLVED at dawn. Living with it instead: after seven open days on the
 ; heterodox side of the alignment track, the crisis settles on its own.
-Bool Function RecordAltmerCrisisReassertEvidence(String reason)
-    Int crisisState = GetAltmerCrisisState()
-    if crisisState != ALTMER_CRISIS_DISSONANT && crisisState != ALTMER_CRISIS_QUESTIONING
-        return False
-    endIf
 
-    ; fix-plan 4.2: one evidence day per DEVOTIONAL day -- the crisis resolves on a
-    ; three-day count that dawn processing reads, so it must share dawn's boundary.
-    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day") == (LedgerRuntime.GetDevotionalDay() + 2)
-        return False
-    endIf
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Altmer.CrisisEvidence.Day")
-
-    Int evidenceDays = StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisEvidence.Days") + 1
-    StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Days", evidenceDays)
-    Trace(1, "Altmer crisis reassert evidence day " + evidenceDays + " (" + reason + ")")
-
-    if evidenceDays >= 3
-        StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Days", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisEvidence.Day", 0)
-        ResolveAltmerCrisis(true, "orthodoxy_reasserted_" + reason)
-        return True
-    endIf
-    return False
-EndFunction
-
-Function EvaluateAltmerCrisisAtDawn()
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    Int crisisState = GetAltmerCrisisState()
-    Float nowTime = Utility.GetCurrentGameTime()
-
-    ; P6 (2026-08-03): let a settled scar re-open the arc after ALTMER_CRISIS_REENTRY_DAYS.
-    ; This is the ONLY caller of SetAltmerCrisisState(ALTMER_CRISIS_NONE, ...) in the codebase;
-    ; without it the first resolved crisis permanently disarmed Lorkhan pressure.
-    ;
-    ; Deliberately NOT cleared here: PDV.Altmer.CrisisSeen.<source> (so re-entry needs a
-    ; DIFFERENT authored source -- the arc cannot loop on one beat) and
-    ; PDV.Altmer.VampireExileScar (a curse scar is not a crisis scar and does not heal on a timer).
-    ;
-    ; Setting NONE is intentionally silent: SetAltmerCrisisState only surfaces a toast and
-    ; Book of Days entry when the new state is non-NONE, which is right -- a scar settling is
-    ; the absence of pressure, not an event to announce.
-    if crisisState == ALTMER_CRISIS_SCARRED_RESOLVED
-        Float settledAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisSettledAt")
-        if settledAt <= 0.0
-            ; Migration: a save that scarred before P6 has no stamp. Start its clock now rather
-            ; than re-opening instantly on the first dawn after the update.
-            StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisSettledAt", nowTime)
-        elseIf (nowTime - settledAt) >= ALTMER_CRISIS_REENTRY_DAYS
-            SetAltmerCrisisState(ALTMER_CRISIS_NONE, "scar_settled")
-            SyncAltmerDisciplines(Game.GetPlayer())
-        endIf
-        return
-    endIf
-
-    if crisisState == ALTMER_CRISIS_REASSERTING
-        Float resolvedAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisResolvedAt")
-        if resolvedAt > 0.0 && (nowTime - resolvedAt) >= 2.0
-            SetAltmerCrisisState(ALTMER_CRISIS_SCARRED_RESOLVED, "reassert_lockout_complete")
-            SyncAltmerDisciplines(Game.GetPlayer())
-        endIf
-        return
-    endIf
-
-    if crisisState != ALTMER_CRISIS_DISSONANT && crisisState != ALTMER_CRISIS_QUESTIONING
-        return
-    endIf
-
-    Float startedAt = StorageUtil.GetFloatValue(None, "PDV.Altmer.CrisisStartedAt")
-    if startedAt <= 0.0 || (nowTime - startedAt) < 7.0
-        return
-    endIf
-
-    Int alignmentValue = 0
-    if PDV_ThalmorAlignmentTrack
-        alignmentValue = PDV_ThalmorAlignmentTrack.GetValue()
-    endIf
-    if alignmentValue < 0
-        ResolveAltmerCrisis(false, "lived_through_heterodox")
-        SyncAltmerDisciplines(Game.GetPlayer())
-    endIf
-EndFunction
 
 ; Active-patron heritage memory: the Altmer mirror of the Dunmer ancestor-memory
 ; dawn pulse (parity gap closed 2026-07-15). Once per dawn cycle, the daily rite
 ; also keeps faith with an active Magnus or Xarxes patron.
-Function AwardActiveAltmerHeritageMemorySignal()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER || LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE
-        return
-    endIf
 
-    ; fix-plan 4.2: the doc-comment above already calls this "once per dawn cycle" --
-    ; it now actually uses the dawn day rather than raw midnight.
-    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day") == (LedgerRuntime.GetDevotionalDay() + 2)
-        return
-    endIf
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Signal.AltmerHeritageMemory.Day")
 
-    if _activeDeity == PDV_Magnus && PDV_Magnus
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
-    elseIf _activeDeity == PDV_Xarxes && PDV_Xarxes
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_SHARED_PACT_MEMORY, None, 1.0)
-    endIf
-EndFunction
-
-Function HandleAltmerDawnSteadiness(String reason)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
-        FavorRuntime.ClearActiveFavor("altmer_curse")
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerDawnSteadiness")
-
-    RecordAltmerSourceFavor(FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
-    FavorRuntime.TryActivateContextualFavor(FavorRuntime.FAVOR_LANE_ALTMER, FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
-    if multiplier > 0.0
-        AwardAltmerDawnSignal(reason, multiplier)
-        ; Passive dawn acknowledgement is piety-only. Curated Auri-El/Magnus
-        ; books and the exact MG08 source are finite heritage substitutes.
-        if PDV_DevotionRules.StringContainsToken(reason, "eventbus_p2_altmer_auriel_") || PDV_DevotionRules.StringContainsToken(reason, "eventbus_p2_altmer_magnus_")
-            AwardAltmerAncestorSpinePulse(1.0, "curated_heritage_" + reason)
-        endIf
-    endIf
-    if ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
-        ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
-    endIf
-    Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("dawn_steadiness_" + reason)
-    AwardActiveAltmerHeritageMemorySignal()
-    if !crisisTransitioned && reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
-        SurfaceP2BookReadNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
-    elseIf !crisisTransitioned && reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
-        SurfaceP2BookReadNotice(reason, "The road of Magnus", "The discipline of light holds you to the dawn.")
-    endIf
-EndFunction
-
-Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
-        FavorRuntime.ClearActiveFavor("altmer_curse")
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerOrthodoxCostlyEnforcement")
-
-    RecordAltmerSourceFavor(FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
-    FavorRuntime.TryActivateContextualFavor(FavorRuntime.FAVOR_LANE_ALTMER, FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST, reason)
-    if multiplier > 0.0
-        AwardAltmerOrthodoxSignal(reason, multiplier)
-        AwardAltmerAncestorSpinePulse(multiplier, reason)
-    endIf
-    if PDV_Trinimac && ConsumeOncePerDaySignal("PDV.Signal.TrinimacOrthodoxPressure")
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE, None, 1.0)
-        if !IsP2BookNoticeReason(reason)
-            LedgerRuntime.SurfaceReservedSignal(PDV_Trinimac, "Orthodoxy upheld", "marks a costly defense of ancestral doctrine.")
-        endIf
-    endIf
-    if ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
-        ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
-    endIf
-    Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("orthodox_cost_" + reason)
-    if !crisisTransitioned
-        SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The ancestral record asks more of you.")
-    endIf
-EndFunction
 
 ; P7 (2026-08-03). Trinimac's curated book route. Revives SIGNAL_FALLEN_GOD_ORTHODOXY (2301), which
 ; had NO award site anywhere -- it was one of the live "wire" entries in tools/pdv_reserved_signals.json.
@@ -9945,48 +8635,10 @@ EndFunction
 ; the reason carries "trinimac" and not "xarxes", so AwardAltmerOrthodoxSignal falls through its
 ; Xarxes branch and reaches AURI-EL's SIGNAL_ORTHODOXY_AFFIRMATION. That is the second organic
 ; source P3 reserved this prefix for. Do not rename the prefix without re-reading that function.
-Function HandleAltmerTrinimacOrthodoxy(String reason)
-    if !IsAltmerOrigin() || !PDV_Trinimac
-        return
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.TrinimacFallenGodOrthodoxy")
-    if multiplier > 0.0
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
-    endIf
-    SurfaceP2BookReadNotice(reason, "Trinimac remembered", "Trinimac is named as he was, not as he was made.")
-
-    HandleAltmerOrthodoxCostlyEnforcement(reason)
-EndFunction
 
 ; P7. Trinimac's renewable beat, and the only band-keyed signal in the mod. ThalmorAlignment
 ; otherwise pins at +100 late game with no consumer but a Lorkhan multiplier; this makes the pin
 ; mean something. Requires no new detection -- event 2 already fires on hostile-humanoid kills.
-Function HandleAltmerTrinimacCivilizationDefense(String reason)
-    if !IsAltmerOrigin() || !PDV_Trinimac || !PDV_ThalmorAlignmentTrack
-        return
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        return
-    endIf
-
-    if PDV_ThalmorAlignmentTrack.GetValue() < 70
-        return
-    endIf
-
-    if !ConsumeOncePerDaySignal("PDV.Signal.TrinimacCivilizationDefended")
-        return
-    endIf
-
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_CIVILIZATION_DEFENDED, None, 1.0)
-    LedgerRuntime.SurfaceReservedSignal(PDV_Trinimac, "The project defended", "marks the ordered world held against a threat.")
-EndFunction
 
 ; --- P9 (2026-08-03): Syrabane's four wired signals -------------------------------------------
 ; He shipped with FIVE declared signals and ZERO award sites -- a closed ledger whose only income
@@ -9996,7 +8648,7 @@ EndFunction
 ;
 ; Every handler below is origin- and curse-gated, and every one caps the piety pulse.
 Bool Function IsSyrabaneSignalEligible()
-    return IsAltmerOrigin() && PDV_Syrabane && !IsAltmerFavorSuppressedByCurse()
+    return OriginRuntime.IsAltmerOrigin() && PDV_Syrabane && !OriginRuntime.IsAltmerFavorSuppressedByCurse()
 EndFunction
 
 ; --- P14 (2026-08-04): the Altmer practice focus ----------------------------------------------
@@ -10009,156 +8661,19 @@ EndFunction
 ; one you can keep anywhere.
 ;
 ; Returns the idle kind for the token: 0 = pray, 1 = study.
-Int Function HandleAltmerPracticeFocus(String reason)
-    ; A non-Altmer holding the calian gets nothing and is told nothing -- it is not their object and
-    ; there is no refusal to explain. The curse case IS explained, because that player owns the
-    ; calian and needs to know the silence is their state and not a broken item.
-    if !IsAltmerOrigin()
-        return 0
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        ShowAltmerNotification(PDV_Notif_Altmer_Calian_Unanswered, "The calian does not warm to you now.")
-        return 0
-    endIf
-
-    ; ONE cap across every lane, so switching patron cannot buy a second practice in a day.
-    if !ConsumeOncePerDaySignal("PDV.Signal.AltmerPracticeFocus")
-        ShowAltmerNotification(PDV_Notif_Altmer_Calian_AlreadyKept, "Your calian is already warm from today's practice.")
-        return GetAltmerPracticeIdleKind()
-    endIf
-
-    ; Claim the substrate day. The spine takes one +4.0 credit per devotional day whatever claims
-    ; it, so this adds no income -- it adds a way to claim the day that works indoors, in a jail
-    ; cell, mid-dungeon, anywhere the outdoor dawn observance cannot reach.
-    AwardAltmerAncestorSpinePulse(1.0, "practice_focus_" + reason)
-
-    ; Then the active lane's own signal. Deliberately routed to the PATRON's lane rather than a
-    ; fixed deity: the point is that practice feeds whatever you actually worship.
-    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity
-        if _activeDeity == PDV_Magnus && PDV_Magnus
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
-        elseIf _activeDeity == PDV_Xarxes && PDV_Xarxes
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.0)
-        elseIf _activeDeity == PDV_Trinimac && PDV_Trinimac
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Trinimac, PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 1.0)
-        elseIf _activeDeity == PDV_Syrabane && PDV_Syrabane
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
-        elseIf _activeDeity == PDV_AuriEl && PDV_AuriEl
-            LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
-        endIf
-    elseIf PDV_AuriEl
-        ; No patron, or broad worship: the foundation takes it. This is the ONLY arm that credits
-        ; Auri-El without him being chosen, and it requires a deliberate act -- unlike the free
-        ; dawn pulse P18 removed.
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
-    endIf
-
-    Trace(2, "Altmer practice focus routed (" + reason + ")")
-    return GetAltmerPracticeIdleKind()
-EndFunction
 
 ; 0 = prayer pose (foundation and martial lanes), 1 = reading pose (scholar lanes).
-Int Function GetAltmerPracticeIdleKind()
-    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity
-        return 0
-    endIf
-    if _activeDeity == PDV_Magnus || _activeDeity == PDV_Xarxes || _activeDeity == PDV_Syrabane
-        return 1
-    endIf
-    return 0
-EndFunction
 
 ; Grants the focus once, mirroring EnsureDunmerAncestralUrn.
-Function EnsureAltmerPracticeFocus()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER || !PDV_MISC_AltmerPracticeFocus
-        return
-    endIf
 
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
 
-    if playerRef.GetItemCount(PDV_MISC_AltmerPracticeFocus) <= 0
-        playerRef.AddItem(PDV_MISC_AltmerPracticeFocus, 1, True)
-        Trace(2, "Altmer practice focus granted.")
-
-        ; ONCE EVER, on a one-shot key rather than on the grant itself. This function re-grants the
-        ; calian whenever the player does not have one, so hanging the line off AddItem would say
-        ; "you have carried this since you were eighteen" about a replacement acquired a minute ago
-        ; if the player ever dropped or sold it.
-        ;
-        ; Written as a Book of Days entry, not a notification, and allowed during race-setup quiet:
-        ; the grant happens at init, when presentation is suppressed, so a notification would either
-        ; be swallowed or would have to shout over the setup flow. This is backstory being entered
-        ; in the chronicle, which is what the Book of Days is for.
-        if StorageUtil.GetIntValue(None, "PDV.Altmer.Calian.Granted") != 1
-            StorageUtil.SetIntValue(None, "PDV.Altmer.Calian.Granted", 1)
-            ; The second sentence is the ONLY discoverability nudge the calian gets. It is a MISC
-            ; item with no quest, no marker and no tutorial, so without a line telling the player it
-            ; is theirs to use, the mod's one unlimited daily Altmer act is a thing that sits in the
-            ; inventory forever. Phrased as the practice, not as a control prompt.
-            AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken. Hold it in your hands when you would remember what you are.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
-        endIf
-    endIf
-EndFunction
-
-Function HandleAltmerSyrabaneCureWard(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneCureWard")
-        return
-    endIf
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING, None, 1.0)
-    LedgerRuntime.SurfaceReservedSignal(PDV_Syrabane, "The sickness lifts", "marks a curse turned aside before it took root.")
-EndFunction
-
-Function HandleAltmerSyrabaneProtectiveWard(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    if !ConsumeOncePerDaySignal("PDV.Signal.SyrabaneProtectiveWarding")
-        return
-    endIf
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
-    LedgerRuntime.SurfaceReservedSignal(PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it reached you.")
-EndFunction
 
 ; Weekly, not daily -- the detector already gates on a near-fatal mage fight with a kill, so the
 ; rarity is the guard. Mirrors the Nord/Tsun and Khajiit/Baan Dar cadence in PDV_PlayerEvents.
-Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
-    LedgerRuntime.SurfaceReservedSignal(PDV_Syrabane, "Arcane duel survived", "marks a hostile mage outlasted and put down.")
-EndFunction
 
 ; The three vanilla ward tomes. Learning a Ward IS magical containment -- the most on-theme source
 ; in his lane. One-shot per tome via MarkP2SourceRoute upstream.
-Function HandleAltmerSyrabaneContainment(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.SyrabaneMagicalContainment")
-    if multiplier > 0.0
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Syrabane, PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
-    endIf
-    SurfaceP2BookReadNotice(reason, "The first warding", "Syrabane opens the apprentice's art to you.")
-EndFunction
 
-Function AwardAltmerDawnSignal(String reason, Float multiplier)
-    if PDV_DevotionRules.StringContainsToken(reason, "magnus") && PDV_Magnus
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
-        return
-    endIf
-
-    if PDV_AuriEl
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, multiplier)
-    endIf
-EndFunction
 
 ; The Auri-El arm below was PROVABLY UNREACHABLE in shipped play until 2026-08-03 (packet P3).
 ; SIGNAL_ORTHODOXY_AFFIRMATION carries delta 3.0 -- the largest curated delta in the Altmer set --
@@ -10172,89 +8687,8 @@ EndFunction
 ; The organic sources are ResolveAltmerCrisis (below, live now) and, once P7 lands, the Trinimac
 ; book route. That route's reason prefix "eventbus_p2_altmer_trinimac_" is reserved deliberately:
 ; it must NOT contain "xarxes" or it routes the award to the wrong god.
-Function AwardAltmerOrthodoxSignal(String reason, Float multiplier)
-    if PDV_DevotionRules.StringContainsToken(reason, "xarxes") && PDV_Xarxes
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_LINEAGE_HONORED, None, multiplier)
-        return
-    endIf
 
-    ; Hard daily cap. This lane carried only the 0.7^n repeat-decay multiplier and no ceiling, so
-    ; a delta-3.0 signal could pay out repeatedly within one day as soon as a source existed.
-    if PDV_AuriEl && ConsumeOncePerDaySignal("PDV.Signal.AuriElOrthodoxyAffirmation")
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_AuriEl, PDV_AuriEl.SIGNAL_ORTHODOXY_AFFIRMATION, None, multiplier)
-    endIf
-EndFunction
 
-Function HandleAltmerMagicSkillIncrease(String skillName)
-    if !IsAltmerOrigin() || !PDV_Magnus || !IsAltmerMagicMilestoneSkill(skillName)
-        return
-    endIf
-
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
-
-    Float skillValue = playerRef.GetActorValue(skillName)
-    Int awardedCount = 0
-
-    ; Every real increase in one of the six magic skills may claim today's
-    ; substrate credit; milestone piety remains a separate finite signal.
-    ; Enchanting is excluded: it only levels inside the enchanter menu, where
-    ; this mid-menu pulse's toast is lost and it consumes today's daily credit
-    ; before the post-menu enchant-item event (331) can surface the act-specific
-    ; substrate toast. Let event 331 own the enchant credit; this pulse still
-    ; covers the other five magic skills.
-    if skillName != "Enchanting"
-        AwardAltmerAncestorSpinePulse(1.0, "magic_skill_increase_" + skillName)
-    endIf
-
-    awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 25)
-    awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 50)
-    awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 75)
-    awardedCount += TryAwardAltmerMagicMilestone(skillName, skillValue, 100)
-
-    if awardedCount > 0
-        StorageUtil.SetStringValue(None, "PDV.Altmer.LastMagicMilestoneSkill", skillName)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.LastMagicMilestoneCount", awardedCount)
-        StorageUtil.SetFloatValue(None, "PDV.Altmer.LastMagicMilestoneTime", Utility.GetCurrentGameTime())
-        Trace(2, "Altmer magic milestone routed: " + skillName + " x" + awardedCount)
-    endIf
-EndFunction
-
-Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
-    if !IsAltmerOrigin() || multiplier <= 0.0 || IsAltmerFavorSuppressedByCurse()
-        return
-    endIf
-
-    ; TOAST PARITY (owner ruling 2026-08-06). The Book of Days line is resolved FIRST and handed to
-    ; SendPrismaSubstrateProgress as its context, so the toast carries the same sentence the
-    ; chronicle records. This ordering matters for the calian: its line is drawn at random from a
-    ; pool, so resolving it twice would let the toast and the Book entry name different lines for
-    ; one act.
-    Int tierBefore = 0
-    Int tierAfter = 0
-    Float grantedMetric = 0.0
-    if PDV_AltmerAncestorSubstrate
-        Float metricBefore = PDV_AltmerAncestorSubstrate.GetMetric()
-        tierBefore = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-        PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(multiplier, reason)
-        tierAfter = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-        grantedMetric = PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
-    endIf
-
-    String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)
-    if PDV_AltmerAncestorSubstrate
-        SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine, "auri-el", GetAltmerHeritageTierName())
-    endIf
-
-    StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Altmer.AncestorSpineSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.LastAncestorSpineReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.LastAncestorSpineTime", Utility.GetCurrentGameTime())
-    Trace(2, "Altmer ancestor spine routed with multiplier " + multiplier)
-
-EndFunction
 
 ; The calian's rotating Book of Days line. Same shape as the Khajiit moon observations: validate the
 ; JSON, exclude whatever was shown last so the same sentence never lands twice running, and fall
@@ -10263,62 +8697,7 @@ EndFunction
 ; Returns a pool index, or -1 when the JSON cannot be trusted. Records the resolved id so the next
 ; call can exclude it -- one pick, one place, so the toast and the Book entry can never disagree
 ; about which line was drawn.
-Int Function PickAltmerPracticeIndex()
-    if !IsAltmerPracticeLineJsonValid()
-        return -1
-    endIf
 
-    String lastId = StorageUtil.GetStringValue(None, "PDV.Altmer.PracticeLine.LastId")
-    Int excludedIndex = -1
-    Int i = 0
-    while i < ALTMER_PRACTICE_LINES_COUNT && excludedIndex < 0
-        if JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + i + "].id", "") == lastId
-            excludedIndex = i
-        endIf
-        i += 1
-    endWhile
-
-    ; Roll across the whole pool, or across one fewer slot and step over the excluded index, so the
-    ; repeat is skipped without biasing any other line's odds.
-    Int poolIndex = Utility.RandomInt(0, ALTMER_PRACTICE_LINES_COUNT - 1)
-    if excludedIndex >= 0
-        poolIndex = Utility.RandomInt(0, ALTMER_PRACTICE_LINES_COUNT - 2)
-        if poolIndex >= excludedIndex
-            poolIndex += 1
-        endIf
-    endIf
-
-    StorageUtil.SetStringValue(None, "PDV.Altmer.PracticeLine.LastId", JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, ".lines[" + poolIndex + "].id", ""))
-    return poolIndex
-EndFunction
-
-Bool Function IsAltmerPracticeLineJsonValid()
-    ; Load/IsGood run every call -- see _altmerPracticeLinesValidatedVersion for why they are not cached.
-    if !JsonUtil.Load(ALTMER_PRACTICE_LINES_FILE) || !JsonUtil.IsGood(ALTMER_PRACTICE_LINES_FILE)
-        _altmerPracticeLinesValidatedVersion = -1
-        return False
-    endIf
-    if _altmerPracticeLinesValidatedVersion == ALTMER_PRACTICE_LINES_VERSION
-        return True
-    endIf
-    if JsonUtil.GetPathIntValue(ALTMER_PRACTICE_LINES_FILE, ".version", -1) != ALTMER_PRACTICE_LINES_VERSION
-        return False
-    endIf
-    if JsonUtil.PathCount(ALTMER_PRACTICE_LINES_FILE, ".lines") != ALTMER_PRACTICE_LINES_COUNT
-        return False
-    endIf
-
-    Int poolIndex = 0
-    while poolIndex < ALTMER_PRACTICE_LINES_COUNT
-        String entryPath = ".lines[" + poolIndex + "]"
-        if JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".id", "") == "" || JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".title", "") == "" || JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".body", "") == ""
-            return False
-        endIf
-        poolIndex += 1
-    endWhile
-    _altmerPracticeLinesValidatedVersion = ALTMER_PRACTICE_LINES_VERSION
-    return True
-EndFunction
 
 ; P2: shared voice for the ancestral spine. Gated on the day credit ACTUALLY landing -- the
 ; substrate budget is one credit per devotional day, so most calls legitimately grant nothing and
@@ -10326,280 +8705,34 @@ EndFunction
 ; Returns the line it wrote, or "" when nothing was written, so the caller can reuse the exact text
 ; as the Prisma toast context. One resolution, two surfaces -- the toast and the chronicle can never
 ; name different pooled lines for the same act.
-String Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
-    if grantedMetric <= 0.0
-        return ""
-    endIf
-    ; The calian owns its own entry because each pooled line carries its OWN title, the way the
-    ; Khajiit moon observations do. Every other spine source shares the one "Ancestral practice"
-    ; heading below.
-    if PDV_DevotionRules.StringContainsToken(reason, "practice_focus")
-        return AppendAltmerPracticeEntry()
-    endIf
-    String sourceLine = GetAltmerHeritageSourceLine(reason)
-    AppendBookOfDaysEntry(sourceLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
-    return sourceLine
-EndFunction
 
 ; Resolves one pooled line and writes it with its own title. Kept separate from
 ; AppendAltmerHeritageVoice so that function keeps exactly one Book of Days call, which the Prisma
 ; UI audit asserts.
-String Function AppendAltmerPracticeEntry()
-    Int poolIndex = PickAltmerPracticeIndex()
-    if poolIndex < 0
-        String fallbackLine = "You kept the practice where you stood, with no shrine and no witness."
-        AppendBookOfDaysEntry(fallbackLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
-        return fallbackLine
-    endIf
-
-    String entryPath = ".lines[" + poolIndex + "]"
-    String bodyText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".body", "")
-    String titleText = JsonUtil.GetPathStringValue(ALTMER_PRACTICE_LINES_FILE, entryPath + ".title", "")
-    if bodyText == ""
-        bodyText = "You kept the practice where you stood, with no shrine and no witness."
-    endIf
-    if titleText == ""
-        titleText = "Ancestral practice"
-    endIf
-    AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, titleText)
-    return bodyText
-EndFunction
 
 ; P2: per-source voice for the ancestral spine. The reason prefixes are set by each call site;
 ; keep this in sync with them rather than inventing new ones here.
-String Function GetAltmerHeritageSourceLine(String reason)
-    if PDV_DevotionRules.StringContainsToken(reason, "dawn_observance")
-        return "You met the dawn under the open sky. The ordered life asks no more than this."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "auriel_shrine_rite")
-        return "You performed the dawn rite as your ancestors have always done."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "sleep_dream")
-        return "You awoke from a dream about the Aldmeri. It leaves an ache within you as you recall the past."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "enchantment")
-        return "You bound magicka into a lasting shape. The binding holds."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "smithing")
-        return "You worked the forge in the manner set down. The craft is older than you."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "study")
-        return "You studied. The quest for knowledge is ingrained in your heritage."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "magic_skill_increase")
-        return "You have deepened your magical skills. You are closer to perfection."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "curated_heritage")
-        return "You read an ancestral text closely. What was written is remembered."
-    endIf
 
-    ; NOTE on "practice_focus" (P14's focus token composes "practice_focus_" + the EventBus reason,
-    ; so it matches none of the arms above): it must NEVER fall to the orthodoxy default below, which
-    ; asserts the opposite of a Psijic or Heterodox player's theology. It does not, because
-    ; AppendAltmerHeritageVoice intercepts that token first and delegates to AppendAltmerPracticeEntry,
-    ; which draws an alignment-neutral pooled line. An arm here was a SECOND draw site from that pool
-    ; with its own LastId write; removed 2026-08-07 because reaching it would reintroduce the
-    ; toast/Book divergence the single-pick design exists to prevent. If you ever make this function
-    ; reachable for that token, route it back through AppendAltmerPracticeEntry -- not a new draw.
-    return "You upheld the orthodoxy at real cost. Doctrine stands on what it costs you."
-EndFunction
 
-Function RunDawnRefreshAltmerAncestor()
-    if !PDV_AltmerAncestorSubstrate
-        return
-    endIf
 
-    Bool curseActive = IsAltmerFavorSuppressedByCurse()
-    PDV_AltmerAncestorSubstrate.ProcessHeritageDawn(curseActive, "dawn")
-EndFunction
 
-Int Function TryAwardAltmerMagicMilestone(String skillName, Float skillValue, Int threshold)
-    if skillValue < (threshold as Float)
-        return 0
-    endIf
 
-    String milestoneKey = "PDV.Altmer.MagicMilestone." + skillName + "." + threshold
-    if StorageUtil.GetIntValue(None, milestoneKey) == 1
-        return 0
-    endIf
 
-    StorageUtil.SetIntValue(None, milestoneKey, 1)
-    StorageUtil.SetIntValue(None, "PDV.Altmer.LastMagicMilestoneThreshold", threshold)
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_MAGIC_MILESTONE, None, 4.0)
-    return 1
-EndFunction
 
-Bool Function IsAltmerMagicMilestoneSkill(String skillName)
-    return skillName == "Alteration" || skillName == "Conjuration" || skillName == "Destruction" || skillName == "Enchanting" || skillName == "Illusion" || skillName == "Restoration"
-EndFunction
 
-Function RecordAltmerSourceFavor(Int familyValue, String reason)
-    if !IsValidAltmerSourceFavorFamily(familyValue)
-        RecordAltmerRejectedSurface(reason, "unknown_altmer_favor_family")
-        return
-    endIf
-
-    String countKey = "PDV.Altmer.Favor." + GetAltmerFavorFamilyKey(familyValue) + ".Count"
-    StorageUtil.SetIntValue(None, countKey, StorageUtil.GetIntValue(None, countKey) + 1)
-    StorageUtil.SetIntValue(None, "PDV.Altmer.Favor.LastFamily", familyValue)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.Favor.LastReason", reason)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.Favor.LastSurfacing", FavorRuntime.GetFavorSurfacingLabel(FavorRuntime.FAVOR_LANE_ALTMER, familyValue))
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.Favor.LastGameTime", Utility.GetCurrentGameTime())
-
-    Trace(2, "Altmer source favor recorded: " + FavorRuntime.GetContextualFavorFamilyLabel(FavorRuntime.FAVOR_LANE_ALTMER, familyValue) + " (" + reason + ")")
-EndFunction
-
-Bool Function IsValidAltmerSourceFavorFamily(Int familyValue)
-    return familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS || familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST
-EndFunction
-
-String Function GetAltmerFavorFamilyKey(Int familyValue)
-    if familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS
-        return "DawnSteadiness"
-    elseIf familyValue == FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST
-        return "OrthodoxCost"
-    endIf
-
-    return "Unknown"
-EndFunction
-
-Bool Function IsAltmerRejectedLorkhanSurface(String sourceId)
-    return sourceId == "ordinary_travel" || sourceId == "ordinary_friendship" || sourceId == "generic_spellcasting" || sourceId == "generic_helping" || sourceId == "generic_combat" || sourceId == "generic_college_membership" || sourceId == "generic_anti_thalmor_violence" || sourceId == "dragonborn_repeat" || sourceId == "vampire_power_route"
-EndFunction
-
-Function RecordAltmerRejectedSurface(String sourceId, String reason)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.LastRejectedSurface", sourceId)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.LastRejectedReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.LastRejectedAt", Utility.GetCurrentGameTime())
-    StorageUtil.SetIntValue(None, "PDV.Altmer.RejectedSurfaceCount", StorageUtil.GetIntValue(None, "PDV.Altmer.RejectedSurfaceCount") + 1)
-EndFunction
 
 Bool Function DebugAssertAltmerRejectedSurface(String sourceId)
-    return IsAltmerRejectedLorkhanSurface(sourceId)
+    return OriginRuntime.IsAltmerRejectedLorkhanSurface(sourceId)
 EndFunction
 
-Int Function GetAltmerCrisisState()
-    if PDV_AltmerCrisisTrack
-        return PDV_AltmerCrisisTrack.GetCurrentState()
-    endIf
 
-    Int stateValue = StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisState")
-    if stateValue < ALTMER_CRISIS_NONE || stateValue > ALTMER_CRISIS_SCARRED_RESOLVED
-        return ALTMER_CRISIS_NONE
-    endIf
 
-    return stateValue
-EndFunction
 
-Function SetAltmerCrisisState(Int stateValue, String reason)
-    if stateValue < ALTMER_CRISIS_NONE
-        stateValue = ALTMER_CRISIS_NONE
-    elseIf stateValue > ALTMER_CRISIS_SCARRED_RESOLVED
-        stateValue = ALTMER_CRISIS_SCARRED_RESOLVED
-    endIf
 
-    Int oldState = GetAltmerCrisisState()
-    StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisState", stateValue)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.CrisisReason", reason)
-    if PDV_AltmerCrisisTrack && PDV_AltmerCrisisTrack.GetCurrentState() != stateValue
-        PDV_AltmerCrisisTrack.SetState(stateValue, reason)
-    endIf
-    if oldState != stateValue
-        Trace(1, "Altmer crisis state " + GetAltmerCrisisStateLabelForValue(oldState) + " -> " + GetAltmerCrisisStateLabelForValue(stateValue) + " (" + reason + ")")
-        ; P6: stamp when the scar actually forms. This is the single funnel for every state
-        ; change, so it catches BOTH exit paths. Deliberately not reusing
-        ; PDV.Altmer.CrisisResolvedAt: that field means different things on the two paths --
-        ; on the reassert path it marks REASSERTING entry (SCARRED_RESOLVED lands two days
-        ; later and never restamps it), on the lived-through path it marks the settle itself.
-        ; The re-entry clock needs one unambiguous meaning.
-        if stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
-            StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisSettledAt", Utility.GetCurrentGameTime())
-        endIf
-        if stateValue != ALTMER_CRISIS_NONE
-            String crisisHeadline = GetAltmerCrisisHeadline(stateValue)
-            String crisisLine = GetAltmerCrisisJournalLine(stateValue)
-            String crisisTone = GetAltmerCrisisJournalTone(stateValue)
-            SendPrismaShiftToast(crisisHeadline, crisisLine, "auri-el")
-            AppendBookOfDaysEntry(crisisLine, Utility.GetCurrentGameTime() as Int, crisisTone, "auri-el", True, 3, crisisHeadline)
-            RequestPanelRefresh()
-        endIf
-    endIf
-EndFunction
 
-String Function GetAltmerCrisisHeadline(Int stateValue)
-    if stateValue == ALTMER_CRISIS_DISSONANT
-        return "Auri-El's path is shaken"
-    elseIf stateValue == ALTMER_CRISIS_QUESTIONING
-        return "A question takes root"
-    elseIf stateValue == ALTMER_CRISIS_REASSERTING
-        return "You return to Auri-El's path"
-    elseIf stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
-        return "Auri-El's path holds"
-    endIf
 
-    return "A turning"
-EndFunction
 
-String Function GetAltmerCrisisJournalLine(Int stateValue)
-    Int crisisSource = StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisSource")
-    if stateValue == ALTMER_CRISIS_DISSONANT
-        if crisisSource == ALTMER_CRISIS_SOURCE_DRAGONBORN
-            return "The Dragonborn's claim unsettles your place on Auri-El's path."
-        elseIf crisisSource == ALTMER_CRISIS_SOURCE_SOVNGARDE
-            return "What you witnessed in Sovngarde unsettles Auri-El's path."
-        endIf
-        return "Auri-El's path no longer sits easily within you."
-    elseIf stateValue == ALTMER_CRISIS_QUESTIONING
-        if crisisSource == ALTMER_CRISIS_SOURCE_TALOS
-            return "Talos's claim has opened a question Auri-El's path cannot ignore."
-        elseIf crisisSource == ALTMER_CRISIS_SOURCE_COMPANIONS
-            return "The Companions' claim has opened a question Auri-El's path cannot ignore."
-        endIf
-        return "A question has opened between you and Auri-El's path."
-    elseIf stateValue == ALTMER_CRISIS_REASSERTING
-        return "Three days of disciplined practice steady you on Auri-El's path."
-    elseIf stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
-        return "The crisis has settled. Its scar remains, but you keep Auri-El's path."
-    endIf
 
-    return "Auri-El's path turns within you."
-EndFunction
-
-String Function GetAltmerCrisisJournalTone(Int stateValue)
-    if stateValue == ALTMER_CRISIS_REASSERTING || stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
-        return "crisis.resolve"
-    endIf
-    return "crisis.onset"
-EndFunction
-
-String Function GetAltmerCrisisStateLabel()
-    return GetAltmerCrisisStateLabelForValue(GetAltmerCrisisState())
-EndFunction
-
-String Function GetAltmerCrisisStateLabelForValue(Int stateValue)
-    if stateValue == ALTMER_CRISIS_DISSONANT
-        return "Dissonant"
-    elseIf stateValue == ALTMER_CRISIS_QUESTIONING
-        return "Questioning"
-    elseIf stateValue == ALTMER_CRISIS_REASSERTING
-        return "Reasserting"
-    elseIf stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
-        return "Scarred resolved"
-    endIf
-
-    return "None"
-EndFunction
-
-String Function GetAltmerCrisisSourceLabel(Int sourceValue)
-    if sourceValue == ALTMER_CRISIS_SOURCE_DRAGONBORN
-        return "Dragonborn identity"
-    elseIf sourceValue == ALTMER_CRISIS_SOURCE_SOVNGARDE
-        return "Sovngarde witness"
-    elseIf sourceValue == ALTMER_CRISIS_SOURCE_TALOS
-        return "Talos contradiction"
-    elseIf sourceValue == ALTMER_CRISIS_SOURCE_COMPANIONS
-        return "Companions contradiction"
-    endIf
-
-    return "Unknown"
-EndFunction
-
-String Function GetAltmerSummary()
-    return "crisis=" + GetAltmerCrisisStateLabel() + ";source=" + GetAltmerCrisisSourceLabel(StorageUtil.GetIntValue(None, "PDV.Altmer.CrisisSource")) + ";pressure=" + StorageUtil.GetIntValue(None, "PDV.Altmer.LorkhanPressureCount") + ";favor=" + FavorRuntime.GetContextualFavorFamilyLabel(FavorRuntime.FAVOR_LANE_ALTMER, StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.LastFamily")) + ";rejected=" + StorageUtil.GetIntValue(None, "PDV.Altmer.RejectedSurfaceCount") + ";curse=" + GetAltmerCurseSummary()
-EndFunction
 
 Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)
     if !playerRef
@@ -11107,29 +9240,6 @@ EndFunction
 ; reaches a broad worshipper with no patron at all. The fall line is a one-shot on the transition
 ; DOWN rather than a cadence -- a player who slips out of the top band should hear that once, not
 ; every fourth day for the rest of the game.
-Function RunDawnAltmerHeritageAmbient()
-    if !IsAltmerOrigin() || !PDV_AltmerAncestorSubstrate || IsAltmerFavorSuppressedByCurse()
-        return
-    endIf
-
-    String highKey = "PDV.Ambient.Heritage.WasHigh"
-    if PDV_AltmerAncestorSubstrate.GetSubstrateTier() >= LedgerRuntime.TIER_CHAMPION
-        StorageUtil.SetIntValue(None, highKey, 1)
-
-        String cadenceKey = "PDV.Ambient.Heritage.Day"
-        Int todayStamp = LedgerRuntime.GetDevotionalDay() + 2
-        Int lastStamp = LedgerRuntime.ReadZeroReservedDevotionalDayStamp(cadenceKey)
-        if lastStamp > 0 && (todayStamp - lastStamp) < AMBIENT_CHAMPION_CADENCE_DAYS
-            return
-        endIf
-
-        LedgerRuntime.WriteZeroReservedDevotionalDayStamp(cadenceKey)
-        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageExemplar, "You keep the old Altmer way, and you keep it well.")
-    elseIf StorageUtil.GetIntValue(None, highKey) == 1
-        StorageUtil.SetIntValue(None, highKey, 0)
-        ShowAltmerNotification(PDV_Notif_Altmer_General_HeritageQuiet, "You have let the old Altmer way slip.")
-    endIf
-EndFunction
 
 Function EmitBookOfDaysBroadLaneTierChange(Int today)
     Int originRace = GetPlayerOriginRaceIndex()
@@ -11268,32 +9378,6 @@ EndFunction
 ; An act-gated observance is a rite.
 ;
 ; Costs no income: the substrate is capped at one +4.0 credit per devotional day whatever claims it.
-Function RunDawnAwardAltmerAuriElDawn()
-    if !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
-        return
-    endIf
-
-    Int dawnDayStamp = LedgerRuntime.GetDevotionalDay() + 2
-    if StorageUtil.GetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay") == dawnDayStamp
-        return
-    endIf
-
-    ; THE ACT GATE. The player must actually meet the dawn: outdoors, under the sky, at the turn of
-    ; the day. Sleeping through it indoors is not an observance. P14's practice token will add the
-    ; indoor path for players who keep the rite privately.
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
-    Cell dawnCell = playerRef.GetParentCell()
-    if !dawnCell || dawnCell.IsInterior()
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Altmer.AuriElDawn.LastDay", dawnDayStamp)
-    AwardAltmerAncestorSpinePulse(1.0, "dawn_observance")
-    Trace(2, "Altmer dawn observance routed to the ancestral spine for devotional day " + (dawnDayStamp - 2))
-EndFunction
 
 ; P5 (2026-08-03): Xarxes's renewable curated lane, modelled on the Auri-El dawn above.
 ;
@@ -11305,27 +9389,6 @@ EndFunction
 ; Before this, Xarxes was table-only: SIGNAL_LINEAGE_HONORED is bounded by three curated books and
 ; SHARED_PACT_MEMORY requires him as the active patron, so a non-patron follower had no curated
 ; income whatsoever once those books were read.
-Function RunDawnAwardAltmerXarxesRecord()
-    if !IsAltmerOrigin() || !PDV_Xarxes || IsAltmerFavorSuppressedByCurse()
-        return
-    endIf
-
-    Int dawnDayStamp = LedgerRuntime.GetDevotionalDay() + 2
-    if StorageUtil.GetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay") == dawnDayStamp
-        return
-    endIf
-
-    ; Require study on the PREVIOUS devotional day. Stamps use the zero-reserved day+2
-    ; convention, so yesterday's stamp is exactly today's minus one. A zero here means "never
-    ; studied" and correctly fails this test rather than matching day 0.
-    if StorageUtil.GetIntValue(None, "PDV.Altmer.Xarxes.StudyDay") != (dawnDayStamp - 1)
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Altmer.XarxesRecord.LastDay", dawnDayStamp)
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Xarxes, PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.5)
-    Trace(2, "Altmer Xarxes record-kept routed for devotional day " + (dawnDayStamp - 2))
-EndFunction
 
 
 ; Daedric Princes apply piety immediately (no per-day fold into PDV.Piety), so this
@@ -12708,167 +10771,16 @@ EndFunction
 
 
 
-Function SyncAltmerRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
 
-    Bool isAltmer = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
-    SyncAltmerAncestorSubstrate(playerRef, isAltmer)
-    Bool broadOrthodoxFaithful = isAltmer && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count") >= 6
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Altmer_Orthodox_T2, broadOrthodoxFaithful, "Altmer Orthodox T2")
 
-    SyncAltmerRewardFamily(playerRef, PDV_AuriEl, PDV_Bless_Altmer_AuriEl_T1, PDV_Bless_Altmer_AuriEl_T2, PDV_Bless_Altmer_AuriEl_T3, "Auri-El")
-    SyncAltmerRewardFamily(playerRef, PDV_Magnus, PDV_Bless_Altmer_Magnus_T1, PDV_Bless_Altmer_Magnus_T2, PDV_Bless_Altmer_Magnus_T3, "Magnus")
-    SyncAltmerRewardFamily(playerRef, PDV_Trinimac, PDV_Bless_Altmer_Trinimac_T1, PDV_Bless_Altmer_Trinimac_T2, PDV_Bless_Altmer_Trinimac_T3, "Trinimac")
-    SyncAltmerRewardFamily(playerRef, PDV_Xarxes, PDV_Bless_Altmer_Xarxes_T1, PDV_Bless_Altmer_Xarxes_T2, PDV_Bless_Altmer_Xarxes_T3, "Xarxes")
-    SyncAltmerRewardFamily(playerRef, PDV_Syrabane, PDV_Bless_Altmer_Syrabane_T1, PDV_Bless_Altmer_Syrabane_T2, PDV_Bless_Altmer_Syrabane_T3, "Syrabane")
-EndFunction
 
-Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)
-    if !playerRef || !PDV_AltmerAncestorSubstrate
-        return
-    endIf
 
-    if isAltmer
-        PDV_AltmerAncestorSubstrate.RecomputeSubstrateTier()
-    else
-        PDV_AltmerAncestorSubstrate.ClearSubstrateBoons()
-    endIf
-EndFunction
 
-Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_ALTMER && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity
-    Int activeTier = LedgerRuntime.TIER_NONE
-    if isActive && deity
-        activeTier = LedgerRuntime.GetTier(deity)
-    endIf
 
-    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Altmer " + label + " T1")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Altmer " + label + " T2")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Altmer " + label + " T3")
-    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Altmer " + label)
-EndFunction
 
-Bool Function IsAltmerCoherenceNeglected()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
-        return False
-    endIf
 
-    if IsAltmerFavorSuppressedByCurse()
-        return False
-    endIf
 
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Altmer.Favor.LastGameTime")
-    if lastSource <= 0.0
-        return False
-    endIf
 
-    return (Utility.GetCurrentGameTime() - lastSource) > 3.0
-EndFunction
-
-Function SyncAltmerNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !PDV_SPEL_Neglect_Altmer
-        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(PDV_SPEL_Neglect_Altmer)
-            playerRef.AddSpell(PDV_SPEL_Neglect_Altmer, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 1)
-    else
-        if playerRef.HasSpell(PDV_SPEL_Neglect_Altmer)
-            playerRef.RemoveSpell(PDV_SPEL_Neglect_Altmer)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 0)
-    endIf
-EndFunction
-
-Function SyncBosmerRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isBosmer = GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
-    Int pathState = GetBosmerPathState()
-    Bool broadFaithful = isBosmer && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && GetBosmerFavorSignalCount() >= 6
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Bosmer_Yffre_T2, broadFaithful, "Bosmer Yffre T2")
-
-    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_OLD_CONTRACT, pathState, PDV_Yffre, PDV_Bless_Bosmer_OldContract_T1, PDV_Bless_Bosmer_OldContract_T2, PDV_Bless_Bosmer_OldContract_T3, "OldContract")
-    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_LIVING_STORY, pathState, PDV_Yffre, PDV_Bless_Bosmer_LivingStory_T1, PDV_Bless_Bosmer_LivingStory_T2, PDV_Bless_Bosmer_LivingStory_T3, "LivingStory")
-    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_EXCHANGE, pathState, LedgerRuntime.PDV_Zen, PDV_Bless_Bosmer_Exchange_T1, PDV_Bless_Bosmer_Exchange_T2, PDV_Bless_Bosmer_Exchange_T3, "Exchange")
-    SyncBosmerPathRewardFamily(playerRef, BOSMER_PATH_BANDIT_ROAD, pathState, PDV_BaanDar, PDV_Bless_Bosmer_BanditRoad_T1, PDV_Bless_Bosmer_BanditRoad_T2, PDV_Bless_Bosmer_BanditRoad_T3, "BanditRoad")
-EndFunction
-
-Function SyncBosmerPathRewardFamily(Actor playerRef, Int thisPath, Int activePath, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BOSMER && thisPath == activePath
-    Int activeTier = LedgerRuntime.TIER_NONE
-    if isActive && deity
-        activeTier = LedgerRuntime.GetTier(deity)
-    endIf
-
-    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Bosmer " + label + " T1")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Bosmer " + label + " T2")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Bosmer " + label + " T3")
-    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Bosmer " + label)
-EndFunction
-
-Int Function GetBosmerPathState()
-    if PDV_BosmerPathTrack
-        Int pathState = PDV_BosmerPathTrack.GetCurrentState()
-        if pathState >= BOSMER_PATH_OLD_CONTRACT && pathState <= BOSMER_PATH_BANDIT_ROAD
-            return pathState
-        endIf
-    endIf
-
-    return BOSMER_PATH_LIVING_STORY
-EndFunction
-
-Int Function GetBosmerFavorSignalCount()
-    return StorageUtil.GetIntValue(None, "PDV.Bosmer.Favor.SignalCount")
-EndFunction
-
-Bool Function IsBosmerPathNeglected()
-    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
-        return False
-    endIf
-
-    Int pathState = GetBosmerPathState()
-    if pathState == BOSMER_PATH_EXCHANGE
-        return LedgerRuntime.IsNeglectFlagActive(LedgerRuntime.PDV_Zen)
-    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
-        return LedgerRuntime.IsNeglectFlagActive(PDV_BaanDar)
-    endIf
-
-    return LedgerRuntime.IsNeglectFlagActive(PDV_Yffre)
-EndFunction
-
-Function SyncBosmerNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !PDV_SPEL_Neglect_Bosmer
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(PDV_SPEL_Neglect_Bosmer)
-            playerRef.AddSpell(PDV_SPEL_Neglect_Bosmer, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 1)
-    else
-        if playerRef.HasSpell(PDV_SPEL_Neglect_Bosmer)
-            playerRef.RemoveSpell(PDV_SPEL_Neglect_Bosmer)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 0)
-    endIf
-EndFunction
 
 Function SyncBretonRewards(Actor playerRef)
     if !playerRef
@@ -14219,7 +12131,7 @@ Int Function GetBroadLaneServiceCount(Int origin)
         endIf
         return LedgerRuntime.GetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_NORD_OLD) as Int
     elseIf origin == ORIGIN_BOSMER
-        return GetBosmerFavorSignalCount()
+        return OriginRuntime.GetBosmerFavorSignalCount()
     elseIf origin == ORIGIN_DUNMER
         return StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount")
     elseIf origin == ORIGIN_REDGUARD
@@ -14633,7 +12545,7 @@ Function StripAllPdvSpells(Actor playerRef)
     ; omitted, so an active Discipline of Return or Remembering of Names survived
     ; uninstall permanently while every sibling family was cleared. Both helpers are
     ; the same clear-before-add removers the rites themselves use.
-    RemoveAltmerDisciplineSpells(playerRef)
+    OriginRuntime.RemoveAltmerDisciplineSpells(playerRef)
     RemoveRedguardRememberSpells(playerRef)
     ; Same defect class, found while fixing B16: the Daedric pact boon + price spells
     ; are properties on the PDV_DaedricPath_* scripts, not on this manager, so the
@@ -14835,7 +12747,7 @@ Function DebugSetBosmerPathState(Int stateValue)
     endIf
 
     BeginRaceSetupQuietPresentation("mcm_bosmer_path")
-    InitializeBosmerStorage()
+    OriginRuntime.InitializeBosmerStorage()
     PDV_BosmerPathTrack.SetState(stateValue, "mcm_pattern")
     StorageUtil.SetIntValue(None, "PDV.Bosmer.SetupComplete", 1)
     StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactViolationCount", 0)
@@ -14844,14 +12756,14 @@ Function DebugSetBosmerPathState(Int stateValue)
     StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
 
     if stateValue == BOSMER_PATH_OLD_CONTRACT
-        SetBosmerPactBound(True, "mcm_pattern")
-        SetBosmerGreenPactCompliance(80, "mcm_pattern")
+        OriginRuntime.SetBosmerPactBound(True, "mcm_pattern")
+        OriginRuntime.SetBosmerGreenPactCompliance(80, "mcm_pattern")
     else
-        SetBosmerPactBound(False, "mcm_pattern")
-        SetBosmerGreenPactCompliance(0, "mcm_pattern")
+        OriginRuntime.SetBosmerPactBound(False, "mcm_pattern")
+        OriginRuntime.SetBosmerGreenPactCompliance(0, "mcm_pattern")
     endIf
 
-    ApplyBosmerPathPatron(stateValue, "mcm_pattern")
+    OriginRuntime.ApplyBosmerPathPatron(stateValue, "mcm_pattern")
     LedgerRuntime.RunDawnApplySpellAndNeglectLayers()
     EndRaceSetupQuietPresentation()
 EndFunction
@@ -14861,19 +12773,19 @@ Function DebugTriggerGreenPactViolation()
 EndFunction
 
 Function DebugRecordBosmerLivingStorySignal()
-    HandleBosmerLivingStorySignal("mcm")
+    OriginRuntime.HandleBosmerLivingStorySignal("mcm")
 EndFunction
 
 Function DebugRecordBosmerExchangeSignal()
-    HandleBosmerExchangeSignal("mcm")
+    OriginRuntime.HandleBosmerExchangeSignal("mcm")
 EndFunction
 
 Function DebugRecordBosmerBanditRoadSignal()
-    HandleBosmerBanditRoadSignal("mcm")
+    OriginRuntime.HandleBosmerBanditRoadSignal("mcm")
 EndFunction
 
 Function DebugRecordBosmerPactPositiveSignal()
-    HandleBosmerPactPositiveSignal("mcm")
+    OriginRuntime.HandleBosmerPactPositiveSignal("mcm")
 EndFunction
 
 Function DebugConfirmStateTransitionRite()
@@ -14940,19 +12852,19 @@ Function DebugRecordTalosShrineDefiance()
 EndFunction
 
 Function DebugRecordAltmerDawnSteadiness()
-    HandleAltmerDawnSteadiness("mcm")
+    OriginRuntime.HandleAltmerDawnSteadiness("mcm")
 EndFunction
 
 Function DebugRecordAltmerOrthodoxCostlyEnforcement()
-    HandleAltmerOrthodoxCostlyEnforcement("mcm")
+    OriginRuntime.HandleAltmerOrthodoxCostlyEnforcement("mcm")
 EndFunction
 
 Function DebugRecordAltmerDragonbornCrisis()
-    HandleAltmerCrisisSource(ALTMER_CRISIS_SOURCE_DRAGONBORN, "mcm_dragonborn")
+    OriginRuntime.HandleAltmerCrisisSource(ALTMER_CRISIS_SOURCE_DRAGONBORN, "mcm_dragonborn")
 EndFunction
 
 Function DebugRecordAltmerLorkhanPressure()
-    HandleAltmerLorkhanPressure(ALTMER_LORKHAN_PRESSURE_MORTAL_VALIDATION, "mcm_lorkhan_pressure")
+    OriginRuntime.HandleAltmerLorkhanPressure(ALTMER_LORKHAN_PRESSURE_MORTAL_VALIDATION, "mcm_lorkhan_pressure")
 EndFunction
 
 Function DebugSetNordPantheonBaseline(Int stateValue)
@@ -15054,7 +12966,7 @@ String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceInd
         if sourceIndex == 0
             LedgerRuntime.HandleSubstrateShrinePrayer("Auri-El", "", "", "mcm_debug_auriel_rite")
         elseIf sourceIndex == 1
-            HandleAltmerMagicSkillIncrease("Alteration")
+            OriginRuntime.HandleAltmerMagicSkillIncrease("Alteration")
         elseIf PDV_AltmerAncestorSubstrate
             PDV_AltmerAncestorSubstrate.RecordDailyCreditReject("altmer_passive_dawn", "mcm_debug_passive_dawn", "retired_route")
         endIf
@@ -15734,21 +13646,6 @@ Message Function GetDunmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
     return None
 EndFunction
 
-Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == PDV_AuriEl
-        return PDV_Msg_Altmer_AuriEl_Offer
-    elseIf deity == PDV_Magnus
-        return PDV_Msg_Altmer_Magnus_Offer
-    elseIf deity == PDV_Xarxes
-        return PDV_Msg_Altmer_Xarxes_Offer
-    elseIf deity == PDV_Trinimac
-        return PDV_Msg_Altmer_Trinimac_Offer
-    elseIf deity == PDV_Syrabane
-        return PDV_Msg_Altmer_Syrabane_Offer
-    endIf
-
-    return None
-EndFunction
 
 Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)
     if deity == LedgerRuntime.PDV_Stendarr
@@ -15916,17 +13813,6 @@ Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
     return deity == PDV_Azura || deity == PDV_Boethiah || deity == PDV_Mephala
 EndFunction
 
-Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
-        return False
-    endIf
-
-    return deity == PDV_AuriEl || deity == PDV_Magnus || deity == PDV_Xarxes || deity == PDV_Trinimac || deity == PDV_Syrabane
-EndFunction
 
 Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
     if !deity
@@ -16424,7 +14310,7 @@ Function SendPrismaSubstrateProgress(String substrate, Int tierBefore, Int tierA
             endIf
         endIf
         if tierAfter > tierBefore
-            AppendBookOfDaysEntry(GetAltmerHeritageTierJournalLine(tierAfter), Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 2, "Ancestral inheritance deepens")
+            AppendBookOfDaysEntry(OriginRuntime.GetAltmerHeritageTierJournalLine(tierAfter), Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 2, "Ancestral inheritance deepens")
         endIf
         return
     endIf
@@ -17181,43 +15067,6 @@ Float Function GetDunmerCurseLayerWeight(Int layer)
     return 1.0
 EndFunction
 
-Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
-    Bool suppressModal = ShouldSuppressAltmerCurseModal(reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileScar", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 0)
-        FavorRuntime.ClearActiveFavor("altmer_vampire")
-        LedgerRuntime.ClearPendingCommitment()
-        if StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown") != 1
-            ShowAltmerMessage(PDV_Msg_Altmer_VampireExiledPath_Entry, "Auri-El is closed while you flee the sun. What remains is exile: a narrow discipline, never a full return.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown", 1)
-        endIf
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 1)
-        FavorRuntime.ClearActiveFavor("altmer_werewolf")
-        LedgerRuntime.ClearPendingCommitment()
-        if StorageUtil.GetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown") != 1
-            ShowAltmerMessage(PDV_Msg_Altmer_CurseState_WerewolfHardHalt, "The whole of Altmer faith is to become spirit again. You have become a beast. Devotion stops here.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown", 1)
-        endIf
-    elseIf newState == 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown", 0)
-        if oldState == 2 && StorageUtil.GetIntValue(None, "PDV.Altmer.VampireRecognitionShown") != 1
-            ShowAltmerMessage(PDV_Msg_Altmer_VampireExiledPath_Recognition, "You are exiled from the dawn, not restored to it. A thin discipline remains, capped low.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Altmer.VampireRecognitionShown", 1)
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", PDV_DevotionRules.BoolToInt(newState != 0))
-    endIf
-EndFunction
 
 Function ApplyArgonianCurseHandlers(Int oldState, Int newState, String reason)
     if newState == 2
@@ -17411,9 +15260,6 @@ Bool Function ShouldSuppressRedguardCurseModal(String reason)
     return reason == "mcm_force_none" || reason == "mcm_force_werewolf" || reason == "mcm_force_vampire"
 EndFunction
 
-Bool Function ShouldSuppressAltmerCurseModal(String reason)
-    return reason == "mcm_force_none" || reason == "mcm_force_werewolf" || reason == "mcm_force_vampire"
-EndFunction
 
 Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppressModal)
     if _suppressCurseTransitionOutputs
@@ -17466,18 +15312,6 @@ EndFunction
 ; P11 (2026-08-04): the Altmer sibling of the Nord/Redguard/Orc notification helpers.
 ; The fallback path is the reason every Altmer notification property has to be bound: a None
 ; record does not fail, it silently downgrades to a Prisma toast with no title.
-Function ShowAltmerNotification(Message messageRecord, String fallbackText)
-    if !NotificationsEnabled()
-        return
-    endIf
-
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    SendPrismaToast("auri-el", "neutral", "", fallbackText)
-EndFunction
 
 Function ShowOrcNotification(Message messageRecord, String fallbackText)
     if !NotificationsEnabled()
@@ -17532,27 +15366,7 @@ Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool su
     Debug.MessageBox(fallbackText)
 EndFunction
 
-Function ShowAltmerMessage(Message messageRecord, String fallbackText, Bool suppressModal)
-    if _suppressCurseTransitionOutputs
-        return
-    endIf
 
-    if suppressModal
-        SendPrismaToast("auriel", "warning", "", fallbackText)
-        return
-    endIf
-
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    Debug.MessageBox(fallbackText)
-EndFunction
-
-Bool Function IsBosmerOrigin()
-    return GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
-EndFunction
 
 Bool Function IsArgonianOrigin()
     return GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
@@ -17737,7 +15551,7 @@ EndFunction
 
 Function ApplyStartupChoice(Int originRace, Int optionValue, String reason)
     if originRace == ORIGIN_BOSMER
-        ApplyBosmerInitialChoice(optionValue, reason)
+        OriginRuntime.ApplyBosmerInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_BRETON
         ApplyBretonInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_REDGUARD
@@ -19177,7 +16991,7 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
     if originRace == ORIGIN_NORD
         return GetNordDevotionModeLabel()
     elseIf originRace == ORIGIN_ALTMER
-        return "Crisis " + GetBookOfDaysAltmerCrisisLabel()
+        return "Crisis " + OriginRuntime.GetBookOfDaysAltmerCrisisLabel()
     elseIf originRace == ORIGIN_KHAJIIT
         Int focusValue = GetKhajiitFocusedEmphasis()
         if focusValue > KHAJIIT_FOCUS_NONE
@@ -19185,7 +16999,7 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
         endIf
         return "Lunar Lattice"
     elseIf originRace == ORIGIN_BOSMER
-        return GetBosmerPathLabel()
+        return OriginRuntime.GetBosmerPathLabel()
     elseIf originRace == ORIGIN_ARGONIAN
         return "Hist " + GetArgonianHistPostureLabel()
     elseIf originRace == ORIGIN_ORC
@@ -19205,20 +17019,6 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
     return "Path Unsettled"
 EndFunction
 
-String Function GetBookOfDaysAltmerCrisisLabel()
-    Int stateValue = GetAltmerCrisisState()
-    if stateValue == ALTMER_CRISIS_DISSONANT
-        return "Dissonant"
-    elseIf stateValue == ALTMER_CRISIS_QUESTIONING
-        return "Questioning"
-    elseIf stateValue == ALTMER_CRISIS_REASSERTING
-        return "Reasserting"
-    elseIf stateValue == ALTMER_CRISIS_SCARRED_RESOLVED
-        return "Scarred Resolved"
-    endIf
-
-    return "None"
-EndFunction
 
 String Function GetBookOfDaysDunmerAncestorLabel()
     if !PDV_DunmerAncestorSubstrate
@@ -19778,9 +17578,9 @@ String Function GetMedallionSectionsJson(Int originRace)
     elseIf originRace == ORIGIN_BRETON
         return MedallionSection("native", "Native worship", GetBretonMedallionEntriesJson())
     elseIf originRace == ORIGIN_ALTMER
-        return MedallionSection("native", "Native worship", GetAltmerMedallionEntriesJson())
+        return MedallionSection("native", "Native worship", OriginRuntime.GetAltmerMedallionEntriesJson())
     elseIf originRace == ORIGIN_BOSMER
-        return MedallionSection("native", "Native worship", GetBosmerNativeMedallionEntriesJson()) + "," + MedallionSection("substrate_focus", "Path focus", GetBosmerFocusMedallionEntriesJson())
+        return MedallionSection("native", "Native worship", OriginRuntime.GetBosmerNativeMedallionEntriesJson()) + "," + MedallionSection("substrate_focus", "Path focus", OriginRuntime.GetBosmerFocusMedallionEntriesJson())
     elseIf originRace == ORIGIN_DUNMER
         return MedallionSection("native", "Native worship", GetDunmerMedallionEntriesJson())
     elseIf originRace == ORIGIN_KHAJIIT
@@ -19845,27 +17645,8 @@ String Function GetBretonMedallionEntriesJson()
     return entries
 EndFunction
 
-String Function GetAltmerMedallionEntriesJson()
-    String entries = RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Light, magic, and origin memory.")
-    entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
-    entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "The founding light and ancestral ascent.")
-    entries = entries + "," + RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
-    entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Lineage, record, and ordered memory.")
-    entries = entries + "," + RosterMedallionEntry("trinimac", "Trinimac", "god", "trinimac", PDV_Trinimac, "Warrior order and unbroken nobility.")
-    return entries
-EndFunction
 
-String Function GetBosmerNativeMedallionEntriesJson()
-    String entries = RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "The Green, story, and the Old Contract.")
-    entries = entries + "," + RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", PDV_AuriEl, "Elven ancestry and high memory.")
-    entries = entries + "," + RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", PDV_Xarxes, "Record, lineage, and written memory.")
-    entries = entries + "," + RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", PDV_BaanDar, "Trickster road, masks, and survival.")
-    return entries
-EndFunction
 
-String Function GetBosmerFocusMedallionEntriesJson()
-    return RosterMedallionEntry("zen", "Z'en", "god", "zen", LedgerRuntime.PDV_Zen, "Debt, toil, exchange, and obligation.")
-EndFunction
 
 String Function GetDunmerMedallionEntriesJson()
     String entries = RosterMedallionEntry("azura", "Azura", "prince", "azura", PDV_Azura, "Dawn, dusk, prophecy, and fate.")
@@ -20065,369 +17846,31 @@ String Function GetStartupRaceId(Int originRace)
     return "unknown"
 EndFunction
 
-Bool Function HasBosmerSetupCompleted()
-    return StorageUtil.GetIntValue(None, "PDV.Bosmer.SetupComplete") == 1
-EndFunction
 
-Function ApplyBosmerInitialChoice(Int pathState, String reason)
-    if !PDV_BosmerPathTrack
-        return
-    endIf
 
-    BeginRaceSetupQuietPresentation(reason)
-    InitializeBosmerStorage()
-    PDV_BosmerPathTrack.SetState(pathState, reason)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.SetupComplete", 1)
 
-    if pathState == BOSMER_PATH_OLD_CONTRACT
-        EnterBosmerOldContract(True, reason)
-    else
-        SetBosmerPactBound(False, reason)
-        SetBosmerGreenPactCompliance(0, reason)
-        ApplyBosmerPathPatron(pathState, reason)
-    endIf
-    AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetBosmerPathLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", GetBosmerPathSymbol(pathState), True, 3, "", True)
-    EndRaceSetupQuietPresentation()
-EndFunction
 
-Function InitializeBosmerStorage()
-    if StorageUtil.GetIntValue(None, "PDV.Bosmer.Initialized") == 1
-        return
-    endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.SetupComplete", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.PactBound", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactCompliance", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.LapsedFromPact", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactViolationCount", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive", 0)
-    StorageUtil.SetFloatValue(None, "PDV.Bosmer.GreenPactWindowStart", 0.0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.Initialized", 1)
-EndFunction
 
-Bool Function IsBosmerPactBound()
-    return StorageUtil.GetIntValue(None, "PDV.Bosmer.PactBound") == 1
-EndFunction
 
-Function SetBosmerPactBound(Bool isBound, String reason)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.PactBound", PDV_DevotionRules.BoolToInt(isBound))
-    Trace(2, "Bosmer PactBound -> " + PDV_DevotionRules.BoolToInt(isBound) + " (" + reason + ")")
-EndFunction
 
-Int Function GetBosmerGreenPactCompliance()
-    return PDV_DevotionRules.ClampInt(StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactCompliance"), 0, 100)
-EndFunction
 
-Function SetBosmerGreenPactCompliance(Int value, String reason)
-    Int normalizedValue = PDV_DevotionRules.ClampInt(value, 0, 100)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactCompliance", normalizedValue)
-    Trace(2, "Bosmer GreenPactCompliance -> " + normalizedValue + " (" + reason + ")")
-EndFunction
 
-Function AdjustBosmerGreenPactCompliance(Int delta, String reason)
-    SetBosmerGreenPactCompliance(GetBosmerGreenPactCompliance() + delta, reason)
-EndFunction
 
-Int Function GetBosmerLapsedFromPact()
-    return StorageUtil.GetIntValue(None, "PDV.Bosmer.LapsedFromPact")
-EndFunction
 
-Function SetBosmerLapsedFromPact(Int value, String reason)
-    Int normalizedValue = value
-    if normalizedValue < 0
-        normalizedValue = 0
-    elseIf normalizedValue > 2
-        normalizedValue = 2
-    endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.LapsedFromPact", normalizedValue)
-    Trace(2, "Bosmer LapsedFromPact -> " + normalizedValue + " (" + reason + ")")
-EndFunction
 
-Bool Function HasBosmerTerminalRenunciation()
-    return GetBosmerLapsedFromPact() >= 2
-EndFunction
 
-Function EnterBosmerOldContract(Bool isStartupChoice, String reason)
-    if HasBosmerTerminalRenunciation()
-        Trace(1, "Old Contract entry blocked by terminal renunciation.")
-        return
-    endIf
 
-    SetBosmerPactBound(True, reason)
-    if GetBosmerLapsedFromPact() > 0
-        SetBosmerGreenPactCompliance(30, reason)
-    elseIf isStartupChoice
-        SetBosmerGreenPactCompliance(80, reason)
-    else
-        SetBosmerGreenPactCompliance(60, reason)
-    endIf
 
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactViolationCount", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive", 0)
-    StorageUtil.SetFloatValue(None, "PDV.Bosmer.GreenPactWindowStart", 0.0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-    ApplyBosmerPathPatron(BOSMER_PATH_OLD_CONTRACT, reason)
 
-    if PDV_Yffre && GetBosmerLapsedFromPact() > 0
-        LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
-    endIf
-EndFunction
 
-Function ExitBosmerOldContract(Bool countLapse, String reason)
-    if !IsBosmerPactBound()
-        return
-    endIf
-
-    SetBosmerPactBound(False, reason)
-    if countLapse
-        SetBosmerLapsedFromPact(GetBosmerLapsedFromPact() + 1, reason)
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-EndFunction
-
-Function ApplyBosmerPathPatron(Int pathState, String reason)
-    PDV_DeityBase deity = GetBosmerForegroundDeity(pathState)
-    if !deity
-        Trace(1, "Bosmer foreground deity missing for state " + pathState + " (" + reason + ")")
-        return
-    endIf
-
-    LedgerRuntime.SetActiveDeity(deity)
-    Trace(2, "Bosmer foreground patron -> " + deity.DeityName + " (" + reason + ")")
-    SurfaceTransition("reorientation", GetBosmerPathLabel(), "shift", deity.DeityIndex, "turning")
-EndFunction
-
-PDV_DeityBase Function GetBosmerForegroundDeity(Int pathState)
-    if pathState == BOSMER_PATH_OLD_CONTRACT || pathState == BOSMER_PATH_LIVING_STORY
-        return PDV_Yffre
-    elseIf pathState == BOSMER_PATH_EXCHANGE
-        return LedgerRuntime.PDV_Zen
-    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
-        return PDV_BaanDar
-    endIf
-
-    return None
-EndFunction
-
-Function EnsureBosmerCurrentPathFallback()
-    if !PDV_BosmerPathTrack || !HasBosmerSetupCompleted()
-        return
-    endIf
-
-    if PDV_BosmerPathTrack.GetCurrentState() != PDV_BosmerPathTrack.UnsetSentinel
-        return
-    endIf
-
-    PDV_BosmerPathTrack.SetState(BOSMER_PATH_LIVING_STORY, "fallback")
-    SetBosmerPactBound(False, "fallback")
-    ApplyBosmerPathPatron(BOSMER_PATH_LIVING_STORY, "fallback")
-EndFunction
-
-Function EvaluateBosmerForcedReckoning()
-    if !IsBosmerPactBound()
-        StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-        return
-    endIf
-
-    if GetBosmerGreenPactCompliance() >= 20
-        StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-        return
-    endIf
-
-    Int apostateDays = StorageUtil.GetIntValue(None, "PDV.Bosmer.ApostateDays") + 1
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", apostateDays)
-    if apostateDays < 3
-        return
-    endIf
-
-    if !PDV_MSG_BosmerReckoning
-        Debug.MessageBox("Devotion is missing the Bosmer reckoning message record.")
-        Trace(1, "Bosmer reckoning blocked: message record missing.")
-        return
-    endIf
-
-    Int choice = PDV_MSG_BosmerReckoning.Show()
-    ; B4 / fix-plan 3 -- the worst of the six. Show() returns -1 whenever another menu or
-    ; message is already up, and -1 fell into the else branch below, FORCE-SEVERING the Old
-    ; Contract pact with no player input whatsoever. Treat it as "not shown": nothing is
-    ; stamped or changed, ApostateDays stays at its 3+ value, and the reckoning re-attempts
-    ; at the next dawn (the three-dawn condition still holds).
-    if choice < 0
-        Trace(1, "Bosmer reckoning not shown (menu busy); pact untouched, retry next dawn.")
-        return
-    endIf
-    if choice == 0
-        SetBosmerGreenPactCompliance(30, "reckoning_recommit")
-        StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-        if PDV_Yffre
-            LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_RECOMMITMENT, None)
-        endIf
-    else
-        ExitBosmerOldContract(True, "reckoning_renounce")
-        PDV_BosmerPathTrack.SetState(BOSMER_PATH_LIVING_STORY, "reckoning_renounce")
-        ApplyBosmerPathPatron(BOSMER_PATH_LIVING_STORY, "reckoning_renounce")
-    endIf
-EndFunction
-
-Function EvaluateBosmerPathSuggestion()
-    if !PDV_BosmerPathTrack || !HasBosmerSetupCompleted()
-        return
-    endIf
-
-    if PDV_BosmerPathTrack.HasOfferedTransition() || PDV_BosmerPathTrack.IsTransitionPending() || PDV_BosmerPathTrack.IsTransitionLockedOut()
-        return
-    endIf
-
-    Int targetState = GetSuggestedBosmerPathState()
-    if targetState < 0
-        return
-    endIf
-
-    PDV_BosmerPathTrack.OfferTransition(targetState, "dawn_suggestion")
-    HandleBosmerSuggestionPopup(targetState)
-EndFunction
-
-Int Function GetSuggestedBosmerPathState()
-    if !PDV_BosmerPathTrack
-        return -1
-    endIf
-
-    Int currentState = PDV_BosmerPathTrack.GetCurrentState()
-    Int bestState = -1
-    Int bestScore = -1
-
-    Int livingCount = PDV_BosmerPathTrack.GetRecentEvidenceDayCount(BOSMER_PATH_LIVING_STORY, 7)
-    if currentState != BOSMER_PATH_LIVING_STORY && livingCount >= 1
-        bestState = BOSMER_PATH_LIVING_STORY
-        bestScore = 10 + livingCount
-    endIf
-
-    Int exchangeCount = PDV_BosmerPathTrack.GetRecentEvidenceDayCount(BOSMER_PATH_EXCHANGE, 7)
-    if currentState != BOSMER_PATH_EXCHANGE && exchangeCount >= 2 && (20 + exchangeCount) > bestScore
-        bestState = BOSMER_PATH_EXCHANGE
-        bestScore = 20 + exchangeCount
-    endIf
-
-    Int banditCount = PDV_BosmerPathTrack.GetRecentEvidenceDayCount(BOSMER_PATH_BANDIT_ROAD, 7)
-    if currentState != BOSMER_PATH_BANDIT_ROAD && banditCount >= 2 && (20 + banditCount) > bestScore
-        bestState = BOSMER_PATH_BANDIT_ROAD
-        bestScore = 20 + banditCount
-    endIf
-
-    Int pactCount = PDV_BosmerPathTrack.GetRecentEvidenceDayCount(BOSMER_PATH_OLD_CONTRACT, 7)
-    if currentState != BOSMER_PATH_OLD_CONTRACT && !HasBosmerTerminalRenunciation() && pactCount >= 3 && (30 + pactCount) > bestScore
-        bestState = BOSMER_PATH_OLD_CONTRACT
-    endIf
-
-    return bestState
-EndFunction
-
-Function HandleBosmerSuggestionPopup(Int targetState)
-    Message suggestionMessage = GetBosmerSuggestionMessage(targetState)
-    if !suggestionMessage
-        Debug.MessageBox("Devotion is missing the Bosmer path suggestion message record.")
-        PDV_BosmerPathTrack.ClearOfferedTransition("missing_message")
-        Trace(1, "Bosmer suggestion popup blocked for " + targetState + ": message record missing.")
-        return
-    endIf
-
-    String pathSymbol = GetBosmerPathSymbol(targetState)
-    Int choice = suggestionMessage.Show()
-    if choice == 0
-        PDV_BosmerPathTrack.AcceptOfferedTransition("popup_accept")
-        SendPrismaToast(pathSymbol, "good", "A new path stirs", "Confirm the change at the next rite.")
-    else
-        PDV_BosmerPathTrack.RefuseOfferedTransition("popup_refuse")
-        SendPrismaToast(pathSymbol, "neutral", "The call fades", "You turn aside from that path for now.")
-    endIf
-EndFunction
 
 ; Prisma symbol for a Bosmer path state (used before the path is active, so we can't
 ; rely on _activeDeity). Old Contract and Living Story both center on Y'ffre.
-String Function GetBosmerPathSymbol(Int pathState)
-    if pathState == BOSMER_PATH_EXCHANGE
-        return "zen"
-    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
-        return "baan-dar"
-    endIf
-    return "yffre"
-EndFunction
 
-Message Function GetBosmerSuggestionMessage(Int targetState)
-    if targetState == BOSMER_PATH_LIVING_STORY
-        return PDV_MSG_BosmerSuggestLivingStory
-    elseIf targetState == BOSMER_PATH_EXCHANGE
-        return PDV_MSG_BosmerSuggestExchange
-    elseIf targetState == BOSMER_PATH_BANDIT_ROAD
-        return PDV_MSG_BosmerSuggestBanditRoad
-    elseIf targetState == BOSMER_PATH_OLD_CONTRACT
-        return PDV_MSG_BosmerSuggestOldContract
-    endIf
 
-    return None
-EndFunction
 
-Function ConfirmBosmerPendingTransition(String reason)
-    if !PDV_BosmerPathTrack || !PDV_BosmerPathTrack.IsTransitionPending()
-        return
-    endIf
-
-    Int pendingState = PDV_BosmerPathTrack.GetPendingState()
-    if !CanConfirmBosmerPathState(pendingState)
-        PDV_BosmerPathTrack.CancelPendingTransition("rite_invalid")
-        SendPrismaToast(GetBosmerPathSymbol(pendingState), "warning", "The rite fails", "The new path has not yet been proven.")
-        return
-    endIf
-
-    Int currentState = PDV_BosmerPathTrack.GetCurrentState()
-    if currentState == BOSMER_PATH_OLD_CONTRACT && pendingState != BOSMER_PATH_OLD_CONTRACT
-        ExitBosmerOldContract(True, reason)
-    endIf
-
-    PDV_BosmerPathTrack.ConfirmPendingTransition(reason)
-    if pendingState == BOSMER_PATH_OLD_CONTRACT
-        EnterBosmerOldContract(False, reason)
-    else
-        SetBosmerPactBound(False, reason)
-        ApplyBosmerPathPatron(pendingState, reason)
-        if pendingState == BOSMER_PATH_LIVING_STORY && PDV_Yffre
-            LedgerRuntime.AwardCuratedSignal(PDV_Yffre, PDV_Yffre.SIGNAL_LIVING_STORY, None)
-        elseIf pendingState == BOSMER_PATH_EXCHANGE && LedgerRuntime.PDV_Zen
-            LedgerRuntime.AwardCuratedSignal(LedgerRuntime.PDV_Zen, LedgerRuntime.PDV_Zen.SIGNAL_CONFIRMATION, None)
-        elseIf pendingState == BOSMER_PATH_BANDIT_ROAD && PDV_BaanDar
-            LedgerRuntime.AwardCuratedSignal(PDV_BaanDar, PDV_BaanDar.SIGNAL_CONFIRMATION, None)
-        endIf
-    endIf
-
-    SendPrismaShiftToast(GetBosmerPathLabel(), "", GetPrismaSymbolForDeity(_activeDeity))
-    AppendBookOfDaysEntry("Y'ffre's song settles within you. Your road through the Green is the " + GetBosmerPathLabel() + ".", Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(_activeDeity), False, 3)
-    RequestPanelRefresh()
-EndFunction
-
-Bool Function CanConfirmBosmerPathState(Int targetState)
-    if !PDV_BosmerPathTrack
-        return False
-    endIf
-
-    if targetState == BOSMER_PATH_LIVING_STORY
-        return PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 1, 7)
-    elseIf targetState == BOSMER_PATH_EXCHANGE
-        return PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 2, 7)
-    elseIf targetState == BOSMER_PATH_BANDIT_ROAD
-        return PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 2, 7)
-    elseIf targetState == BOSMER_PATH_OLD_CONTRACT
-        if HasBosmerTerminalRenunciation()
-            return False
-        endIf
-        return PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 3, 7)
-    endIf
-
-    return False
-EndFunction
 
 Int Function GetPlayerOriginRaceIndex()
     if PDV_GLO_OriginRace
@@ -20647,11 +18090,11 @@ String Function GetSurveyDevotionText()
 
     if originRace != ORIGIN_NORD
         if originRace == ORIGIN_ALTMER
-            return LedgerRuntime.AppendRecentDevotionEvents(GetAltmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetAltmerSurveyText())
         elseIf originRace == ORIGIN_KHAJIIT
             return LedgerRuntime.AppendRecentDevotionEvents(GetKhajiitSurveyText())
         elseIf originRace == ORIGIN_BOSMER
-            return LedgerRuntime.AppendRecentDevotionEvents(GetBosmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetBosmerSurveyText())
         elseIf originRace == ORIGIN_ARGONIAN
             return LedgerRuntime.AppendRecentDevotionEvents(GetArgonianSurveyText())
         elseIf originRace == ORIGIN_ORC
@@ -20694,11 +18137,11 @@ String Function GetPlayerMcmSummaryLine()
     if GetPlayerOriginRaceIndex() == ORIGIN_NORD
         return GetNordDevotionModeLabel() + " | " + GetCurrentStandingLabel() + " | " + GetPlayerCursePublicLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
-        return "Altmer | " + GetAltmerCrisisStateLabel() + " | " + GetCurrentStandingLabel()
+        return "Altmer | " + OriginRuntime.GetAltmerCrisisStateLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         return "Khajiit | " + GetKhajiitFocusLabel(GetKhajiitFocusedEmphasis()) + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
-        return "Bosmer | " + GetBosmerPathLabel() + " | " + GetCurrentStandingLabel()
+        return "Bosmer | " + OriginRuntime.GetBosmerPathLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
         return "Argonian | " + GetArgonianHistPostureLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
@@ -20743,11 +18186,11 @@ String Function GetPlayerMcmModeLine()
     if GetPlayerOriginRaceIndex() == ORIGIN_NORD
         return GetNordDevotionModeLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
-        return GetAltmerCrisisStateLabel()
+        return OriginRuntime.GetAltmerCrisisStateLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         return GetKhajiitFocusLabel(GetKhajiitFocusedEmphasis())
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
-        return GetBosmerPathLabel()
+        return OriginRuntime.GetBosmerPathLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
         return "Hist " + GetArgonianHistPostureLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
@@ -20937,7 +18380,7 @@ EndFunction
 
 String Function GetPlayerCursePublicLabel()
     if GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
-        String altmerCurseLabel = GetAltmerCursePublicLabel()
+        String altmerCurseLabel = OriginRuntime.GetAltmerCursePublicLabel()
         if altmerCurseLabel != ""
             return altmerCurseLabel
         endIf
@@ -20957,122 +18400,12 @@ String Function GetPlayerCursePublicLabel()
     return "None"
 EndFunction
 
-String Function GetAltmerCursePublicLabel()
-    if IsAltmerWerewolfHalted()
-        return "Werewolf halt"
-    endIf
 
-    if IsAltmerVampireExiled()
-        return "Exiled from dawn"
-    endIf
 
-    if HasAltmerVampireExileScar()
-        return "Dawn-exile scar"
-    endIf
 
-    return ""
-EndFunction
 
-String Function GetAltmerCurseSummary()
-    if IsAltmerWerewolfHalted()
-        return "werewolf_halt"
-    endIf
 
-    if IsAltmerVampireExiled()
-        return "vampire_exile"
-    endIf
 
-    if HasAltmerVampireExileScar()
-        return "vampire_scar"
-    endIf
-
-    return "none"
-EndFunction
-
-String Function GetAltmerSurveyText()
-    String text = GetAltmerAlignmentSurveyBaseText()
-    Int crisisState = GetAltmerCrisisState()
-    if crisisState == ALTMER_CRISIS_DISSONANT
-        text = text + " The crisis has not settled; each mortal exception still tests the doctrine."
-    elseIf crisisState == ALTMER_CRISIS_SCARRED_RESOLVED
-        text = text + " The crisis is resolved, but its scar still teaches caution."
-    endIf
-
-    if IsAltmerVampireExiled()
-        text = text + " The thirst has exiled you from the dawn."
-    elseIf HasAltmerVampireExileScar()
-        text = text + " The vampire scar remains in the record, but the dawn can reach you again."
-    endIf
-
-    if IsAltmerWerewolfHalted()
-        text = text + " The beast has stopped your devotion."
-    endIf
-
-    String favor = FavorRuntime.GetFavorSurfacingLabel(FavorRuntime.FAVOR_LANE_ALTMER, StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.LastFamily"))
-    if favor != ""
-        text = text + " Last favor: " + favor + "."
-    endIf
-
-    if PDV_AltmerAncestorSubstrate
-        text = text + " Your heritage practice is " + GetAltmerHeritageTierName() + "."
-    endIf
-
-    return text
-EndFunction
-
-String Function GetAltmerHeritageLayerLabel()
-    if !PDV_AltmerAncestorSubstrate
-        return "quiet"
-    endIf
-
-    return PDV_AltmerAncestorSubstrate.GetHeritagePostureLabel()
-EndFunction
-
-String Function GetAltmerHeritageTierName()
-    if !PDV_AltmerAncestorSubstrate
-        return "Heritage quiet"
-    endIf
-    Int tierValue = PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-    if tierValue >= LedgerRuntime.TIER_CHAMPION
-        return "Exemplar Heritage"
-    elseIf tierValue >= LedgerRuntime.TIER_DEVOTED
-        return "Disciplined Heritage"
-    elseIf tierValue >= LedgerRuntime.TIER_SEEKER
-        return "Ordered Heritage"
-    endIf
-    return "Heritage quiet"
-EndFunction
-
-String Function GetAltmerHeritageTierJournalLine(Int tierValue)
-    if tierValue >= LedgerRuntime.TIER_CHAMPION
-        return "Your ancestral inheritance is visible in all you do."
-    elseIf tierValue >= LedgerRuntime.TIER_DEVOTED
-        return "Your ancestral inheritance is practiced, not merely inherited."
-    elseIf tierValue >= LedgerRuntime.TIER_SEEKER
-        return "Your ancestral inheritance begins to take shape in you."
-    endIf
-    return "Your ancestral inheritance gathers quietly."
-EndFunction
-
-String Function GetAltmerAlignmentSurveyBaseText()
-    String band = GetCurrentStandingBand()
-    if !PDV_ThalmorAlignmentTrack
-        return "Auri-El remains the foundation. Standing: " + band + "."
-    endIf
-
-    Int alignment = PDV_ThalmorAlignmentTrack.GetValue()
-    if alignment <= -76
-        return "You hold open heterodoxy: Auri-El remains the foundation, but the Thalmor cannot own the path. Standing: " + band + "."
-    elseIf alignment <= -51
-        return "You keep private heterodoxy beneath the dawn, testing doctrine without surrendering it. Standing: " + band + "."
-    elseIf alignment >= 76
-        return "You stand Thalmor-devout, enforcing the return as law and doctrine together. Standing: " + band + "."
-    elseIf alignment >= 51
-        return "You walk public orthodoxy, letting Altmeri discipline answer Skyrim's compromises. Standing: " + band + "."
-    endIf
-
-    return "You remain uncommitted in the Thalmor question, holding Auri-El's foundation while the path sharpens. Standing: " + band + "."
-EndFunction
 
 String Function GetKhajiitSurveyText()
     String band = GetCurrentStandingBand()
@@ -21148,37 +18481,6 @@ String Function GetKhajiitLunarTierLabel(Int tierValue)
     return "quiet"
 EndFunction
 
-String Function GetBosmerSurveyText()
-    if !PDV_BosmerPathTrack
-        return "The Green is here, but no path has been declared yet. Sleep and choose the Old Contract, the Living Story, the Exchange, or the Bandit Road."
-    endIf
-
-    Int pathValue = PDV_BosmerPathTrack.GetCurrentState()
-    String band = GetCurrentStandingBand()
-    String text = ""
-    if pathValue == BOSMER_PATH_OLD_CONTRACT
-        text = "You walk the Old Contract, the Green Pact kept in full. Standing: " + band + ". Compliance: " + GetBosmerComplianceBand() + ". Y'ffre holds you to the terms."
-        if IsBosmerPactBound()
-            text = text + " The Pact is binding, and you are keeping to it."
-        elseIf GetBosmerLapsedFromPact()
-            text = text + " The Pact has lapsed, and a reckoning with Y'ffre is owed."
-        else
-            text = text + " The Pact is not yet taken up; the terms wait on your word."
-        endIf
-    elseIf pathValue == BOSMER_PATH_LIVING_STORY
-        text = "You walk the Living Story, the covenant carried in memory and community. Standing: " + band + ". The Story passes through you."
-    elseIf pathValue == BOSMER_PATH_EXCHANGE
-        text = "You walk the Exchange, the world kept even debt by debt. Standing: " + band + ". Z'en weighs your account."
-    else
-        text = "You walk the Bandit Road, the exile's theology of the open road. Standing: " + band + ". Baan Dar favors the improbable."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Curse.Bosmer.RoutePressure") > 0
-        text = text + " While the curse is on you, you stand outside the living world, and the path waits until it is lifted."
-    endIf
-
-    return text
-EndFunction
 
 ; Player-facing path name. PDV_BosmerPathTrack's StateLabels are internal PascalCase
 ; tokens ("OldContract"), and EVERY caller of this function is a player surface --
@@ -21186,45 +18488,10 @@ EndFunction
 ; player as one word. Map to the authored guide copy here instead. The article stays
 ; in the prose ("...is the Old Contract.") and out of the label, so "Exchange" is
 ; correct and "The Exchange" would render "is the The Exchange."
-String Function GetBosmerPathDisplayLabelAt(Int pathState)
-    if pathState == BOSMER_PATH_OLD_CONTRACT
-        return "Old Contract"
-    elseIf pathState == BOSMER_PATH_LIVING_STORY
-        return "Living Story"
-    elseIf pathState == BOSMER_PATH_EXCHANGE
-        return "Exchange"
-    elseIf pathState == BOSMER_PATH_BANDIT_ROAD
-        return "Bandit Road"
-    endIf
 
-    return "Unsettled"
-EndFunction
-
-String Function GetBosmerPathLabel()
-    if PDV_BosmerPathTrack
-        Int pathState = PDV_BosmerPathTrack.GetCurrentState()
-        if pathState < BOSMER_PATH_OLD_CONTRACT || pathState > BOSMER_PATH_BANDIT_ROAD
-            return "Unsettled"
-        endIf
-        return GetBosmerPathDisplayLabelAt(pathState)
-    endIf
-
-    return "Unsettled"
-EndFunction
 
 ; Green Pact compliance band for the Old Contract survey readout (Architecture v3
 ; GreenPactCompliance thresholds: Apostate 0-19 / Lapsed 20-49 / Observant 50-79 / Strict 80-100).
-String Function GetBosmerComplianceBand()
-    Int compliance = GetBosmerGreenPactCompliance()
-    if compliance >= 80
-        return "Strict"
-    elseIf compliance >= 50
-        return "Observant"
-    elseIf compliance >= 20
-        return "Lapsed"
-    endIf
-    return "Apostate"
-EndFunction
 
 String Function GetArgonianSurveyText()
     if !PDV_ArgonianHistSubstrate
@@ -21747,33 +19014,8 @@ String Function GetImperialCursePostureLabel()
     return ""
 EndFunction
 
-Bool Function IsAltmerVampireExiled()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
-        return False
-    endIf
 
-    if PDV_CurseStateService && PDV_CurseStateService.GetCurseState() == 2
-        return True
-    endIf
 
-    return StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileActive") == 1
-EndFunction
-
-Bool Function IsAltmerWerewolfHalted()
-    if GetPlayerOriginRaceIndex() != ORIGIN_ALTMER
-        return False
-    endIf
-
-    if PDV_CurseStateService && PDV_CurseStateService.GetCurseState() == 1
-        return True
-    endIf
-
-    return StorageUtil.GetIntValue(None, "PDV.Altmer.WerewolfHalt") == 1
-EndFunction
-
-Bool Function HasAltmerVampireExileScar()
-    return GetPlayerOriginRaceIndex() == ORIGIN_ALTMER && StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileScar") == 1
-EndFunction
 
 String Function GetNordScarLabel()
     if HasNordVampireScar() && !IsNordVampireSuppressed()
@@ -21785,11 +19027,11 @@ EndFunction
 
 String Function DebugGetPatternProvingSummary()
     String summary = "Concordat=" + GetConcordatSummary()
-    summary = summary + "; Bosmer=" + GetBosmerSummary()
+    summary = summary + "; Bosmer=" + OriginRuntime.GetBosmerSummary()
     summary = summary + "; DunmerAncestor=" + GetDunmerAncestorSummary()
     summary = summary + "; KhajiitLunar=" + GetKhajiitLunarSummary()
     summary = summary + "; ArgonianHist=" + GetArgonianHistSummary()
-    summary = summary + "; Altmer=" + GetAltmerSummary()
+    summary = summary + "; Altmer=" + OriginRuntime.GetAltmerSummary()
     summary = summary + "; Orc=" + GetOrcSummary()
     summary = summary + "; Redguard=" + GetRedguardSummary()
     summary = summary + "; Favor=" + FavorRuntime.GetContextualFavorSummary()
@@ -21807,7 +19049,7 @@ String Function DebugGetPatternSummarySection(Int sectionIndex)
     if sectionIndex == 0
         return "Concordat: " + GetConcordatSummary()
     elseIf sectionIndex == 1
-        return "Bosmer: " + GetBosmerSummary()
+        return "Bosmer: " + OriginRuntime.GetBosmerSummary()
     elseIf sectionIndex == 2
         return "Dunmer ancestor: " + GetDunmerAncestorSummary()
     elseIf sectionIndex == 3
@@ -21815,7 +19057,7 @@ String Function DebugGetPatternSummarySection(Int sectionIndex)
     elseIf sectionIndex == 4
         return "Argonian Hist: " + GetArgonianHistSummary()
     elseIf sectionIndex == 5
-        return "Altmer: " + GetAltmerSummary()
+        return "Altmer: " + OriginRuntime.GetAltmerSummary()
     elseIf sectionIndex == 6
         return "Orc: " + GetOrcSummary()
     elseIf sectionIndex == 7
@@ -21929,21 +19171,8 @@ Float Function GetTalosEffectiveGainMultiplier()
     return 1.0
 EndFunction
 
-String Function GetBosmerSummary()
-    if !PDV_BosmerPathTrack
-        return "missing"
-    endIf
 
-    return PDV_BosmerPathTrack.GetStateLabel() + ";offered=" + PDV_BosmerPathTrack.GetOfferedStateLabel() + ";pending=" + PDV_BosmerPathTrack.GetPendingStateLabel() + ";pact=" + PDV_DevotionRules.BoolToInt(IsBosmerPactBound()) + ";gpc=" + GetBosmerGreenPactCompliance() + ";lapsed=" + GetBosmerLapsedFromPact() + ";gp=" + StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactViolationCount") + ";penalty=" + StorageUtil.GetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive") + ";favor=" + GetBosmerFavorSummary()
-EndFunction
 
-String Function GetBosmerFavorSummary()
-    return "oc=" + GetBosmerFavorCount("OldContract.ProperHunt") + "/" + GetBosmerFavorCount("OldContract.ForestKept") + ";ls=" + GetBosmerFavorCount("LivingStory.CommunityKept") + "/" + GetBosmerFavorCount("LivingStory.NatureSite") + ";ex=" + GetBosmerFavorCount("Exchange.DebtSettled") + "/" + GetBosmerFavorCount("Exchange.ProportionateVengeance") + ";br=" + GetBosmerFavorCount("BanditRoad.RoadLife") + "/" + GetBosmerFavorCount("BanditRoad.Reversal")
-EndFunction
-
-Int Function GetBosmerFavorCount(String favorKey)
-    return StorageUtil.GetIntValue(None, "PDV.Bosmer.Favor." + favorKey + ".Count")
-EndFunction
 
 String Function GetDunmerAncestorSummary()
     if !PDV_DunmerAncestorSubstrate
@@ -23334,7 +20563,7 @@ Function ResyncDevotionSpellsAfterRepair(Actor playerRef)
     LedgerRuntime.UpdateDisfavorStingRuntime()
     LedgerRuntime.ReapplyActiveDisfavorStings(playerRef)
     ; The two observance families B16 covers; both self-gate on their stored state.
-    SyncAltmerDisciplines(playerRef)
+    OriginRuntime.SyncAltmerDisciplines(playerRef)
     SyncRedguardRemembering(playerRef)
     ; The live Daedric pact re-grants its boon + price for its stored tier. Idempotent:
     ; the ActivePact pointer is unchanged, so no PendingActivation breadcrumb is left.
@@ -23475,4 +20704,5 @@ EndFunction
 Function SetPdvCCFishingPresent(Bool value)
     _pdvCCFishingPresent = value
 EndFunction
+
 

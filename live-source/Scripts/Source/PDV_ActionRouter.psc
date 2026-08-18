@@ -296,7 +296,7 @@ Function HandleStoryIncreaseSkill(String asSkill)
     endIf
 
     if PDV_Manager
-        PDV_Manager.HandleAltmerMagicSkillIncrease(asSkill)
+        PDV_Manager.OriginRuntime.HandleAltmerMagicSkillIncrease(asSkill)
     endIf
 
     RouteActionWithAttribution(EVT_INCREASE_SKILL, ATTR_DIRECT_PLAYER, GetPlayerActor() as Form, None)
@@ -315,7 +315,7 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
         ; Bosmer Songs of the Green + Hearth discovery counter. Self-contained
         ; (own per-FormID seen keys + Eldergleam arm/disarm), so it rides every
         ; change here rather than the one-shot MarkLocationSeen gate below.
-        PDV_Manager.HandleBosmerLocationChange(akNewLocation)
+        PDV_Manager.OriginRuntime.HandleBosmerLocationChange(akNewLocation)
         PDV_Manager.HandleNordLocationChange(akNewLocation)
         PDV_Manager.HandleOrcLocationChange(akNewLocation)
         PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
@@ -769,3 +769,4 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
+
