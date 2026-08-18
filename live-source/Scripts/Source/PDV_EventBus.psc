@@ -982,7 +982,7 @@ Function RouteRedguardCrownTombRespect()
         eventType = eventTypes.EVT_REDGUARD_CROWN_TOMB_RESPECT
     endIf
 
-    PDV_Manager.HandleRedguardCrownTombRespect("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleRedguardCrownTombRespect("eventbus_" + eventType)
     Trace(2, "RouteRedguardCrownTombRespect complete: " + eventType)
 EndFunction
 
@@ -998,7 +998,7 @@ Function RouteRedguardForebearRoadPassage()
         eventType = eventTypes.EVT_REDGUARD_FOREBEAR_ROAD
     endIf
 
-    PDV_Manager.HandleRedguardForebearRoadPassage("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleRedguardForebearRoadPassage("eventbus_" + eventType)
     Trace(2, "RouteRedguardForebearRoadPassage complete: " + eventType)
 EndFunction
 
@@ -1014,7 +1014,7 @@ Function RouteRedguardAshAbahDeathDuty()
         eventType = eventTypes.EVT_REDGUARD_ASHABAH_DEATH_DUTY
     endIf
 
-    PDV_Manager.HandleRedguardAshAbahDeathDuty("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleRedguardAshAbahDeathDuty("eventbus_" + eventType)
     Trace(2, "RouteRedguardAshAbahDeathDuty complete: " + eventType)
 EndFunction
 
@@ -1030,7 +1030,7 @@ Function RouteRedguardFarShoresToken()
         eventType = eventTypes.EVT_REDGUARD_FAR_SHORES_TOKEN
     endIf
 
-    PDV_Manager.HandleRedguardFarShoresToken("eventbus_" + eventType)
+    PDV_Manager.OriginRuntime.HandleRedguardFarShoresToken("eventbus_" + eventType)
     Trace(2, "RouteRedguardFarShoresToken complete: " + eventType)
 EndFunction
 
@@ -1040,7 +1040,7 @@ Function RouteRedguardAncestorSpine(String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleRedguardAncestorSpine("eventbus_p2_redguard_spine_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleRedguardAncestorSpine("eventbus_p2_redguard_spine_" + sourceId)
     Trace(2, "RouteRedguardAncestorSpine complete: " + sourceId)
 EndFunction
 
@@ -1368,7 +1368,7 @@ Function RouteBretonTraditionChoice(Int traditionValue, String sourceId)
         eventType = eventTypes.EVT_BRETON_TRADITION_CHOICE
     endIf
 
-    PDV_Manager.HandleBretonTraditionChoice(traditionValue, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleBretonTraditionChoice(traditionValue, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteBretonTraditionChoice complete: " + eventType + " tradition " + traditionValue)
 EndFunction
 
@@ -1384,7 +1384,7 @@ Function RouteBretonKnightlyVow(String sourceId)
         eventType = eventTypes.EVT_BRETON_KNIGHTLY_VOW
     endIf
 
-    PDV_Manager.HandleBretonKnightlyVow("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleBretonKnightlyVow("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteBretonKnightlyVow complete: " + eventType)
 EndFunction
 
@@ -1400,7 +1400,7 @@ Function RouteBretonHiddenArtExposure(String sourceId)
         eventType = eventTypes.EVT_BRETON_HIDDEN_ART_EXPOSURE
     endIf
 
-    PDV_Manager.HandleBretonHiddenArtExposure("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleBretonHiddenArtExposure("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteBretonHiddenArtExposure complete: " + eventType)
 EndFunction
 
@@ -1416,7 +1416,7 @@ Function RouteBretonGreenWayStanding(String sourceId)
         eventType = eventTypes.EVT_BRETON_GREEN_WAY_STANDING
     endIf
 
-    PDV_Manager.HandleBretonGreenWayStanding("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.OriginRuntime.HandleBretonGreenWayStanding("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteBretonGreenWayStanding complete: " + eventType)
 EndFunction
 
@@ -1645,7 +1645,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         detachedBroadPool = PDV_Manager.LedgerRuntime.GetActiveBroadPantheonPoolId()
     endIf
 
-    PDV_Manager.HandleBretonActionPracticeSignal(eventType, eventReason)
+    PDV_Manager.OriginRuntime.HandleBretonActionPracticeSignal(eventType, eventReason)
     if !detachedBroadEvent
         PDV_Manager.LedgerRuntime.BeginLikesDislikesSurface(eventType, logicalEventId)
     endIf
@@ -1761,7 +1761,7 @@ Function RouteRedguardLekiDuel(Form victimForm)
         Trace(1, "RouteRedguardLekiDuel skipped: PDV_Manager not assigned.")
         return
     endIf
-    PDV_Manager.HandleLekiHonorableDuel("eventbus_redguard_leki_duel")
+    PDV_Manager.OriginRuntime.HandleLekiHonorableDuel("eventbus_redguard_leki_duel")
     Trace(2, "RouteRedguardLekiDuel complete.")
 EndFunction
 
@@ -1779,5 +1779,6 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] EventBus: " + traceText)
     endIf
 EndFunction
+
 
 

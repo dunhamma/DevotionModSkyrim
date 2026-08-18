@@ -190,17 +190,17 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
             ; kill plus clean-opener evidence before the substrate can fire.
             PDV_Manager.RecordDunmerStoryVictoryEvidence(victimActor as Form, aiRelationshipRank)
         endIf
-        PDV_Manager.HandleHoonDingBreakthroughKill(victimActor as Form, eventType)
+        PDV_Manager.OriginRuntime.HandleHoonDingBreakthroughKill(victimActor as Form, eventType)
         ; A UNIQUE (named/boss) undead defeat is the marked Ash'abah death-burden that
         ; lets a Redguard switch INTO the Ash'abah sect mid-game (origin/undead/Unique
         ; gating lives in the manager). Routine undead are not Unique, so this no-ops on
         ; casual draugr fighting.
-        PDV_Manager.HandleRedguardAshAbahMajorBurden(victimActor as Form, eventType)
-        PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akLocation)
+        PDV_Manager.OriginRuntime.HandleRedguardAshAbahMajorBurden(victimActor as Form, eventType)
+        PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akLocation)
         PDV_Manager.TrackUndeadCryptClearSiteVisit(akLocation)
         ; Final-kill fast path for clearable undead sites. If the clear flag settles later,
         ; HandleStoryChangeLocation also checks the old location when the player leaves.
-        PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akLocation)
+        PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akLocation)
         PDV_Manager.HandleUndeadCryptSiteClear(akLocation)
     endIf
 EndFunction
@@ -318,9 +318,9 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
         PDV_Manager.OriginRuntime.HandleBosmerLocationChange(akNewLocation)
         PDV_Manager.HandleNordLocationChange(akNewLocation)
         PDV_Manager.HandleOrcLocationChange(akNewLocation)
-        PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
+        PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
         PDV_Manager.TrackUndeadCryptClearSiteVisit(akNewLocation)
-        PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
+        PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
         PDV_Manager.HandleUndeadCryptSiteClear(akOldLocation)
     endIf
 
@@ -496,7 +496,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         detachedBroadPool = PDV_Manager.LedgerRuntime.GetActiveBroadPantheonPoolId()
     endIf
 
-    PDV_Manager.HandleBretonActionPracticeSignal(eventType, eventReason)
+    PDV_Manager.OriginRuntime.HandleBretonActionPracticeSignal(eventType, eventReason)
     if !detachedBroadEvent
         PDV_Manager.LedgerRuntime.BeginLikesDislikesSurface(eventType, logicalEventId)
     endIf
@@ -769,5 +769,6 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
+
 
 

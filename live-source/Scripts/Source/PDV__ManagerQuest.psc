@@ -2765,7 +2765,7 @@ String Function GetPanelInstrumentState(Int originRace, String kindText, String 
     elseIf kindText == "forge"
         return GetOrcLifeModeLabel()
     elseIf kindText == "sects"
-        return GetRedguardSectLabel()
+        return OriginRuntime.GetRedguardSectLabel()
     elseIf kindText == "branch"
         return OriginRuntime.GetBosmerPathLabel()
     endIf
@@ -2827,7 +2827,7 @@ String Function GetPanelInstrumentDataJson(Int originRace, String kindText, Floa
     elseIf kindText == "forge"
         return "{\"lifeMode\":\"" + PDV_DevotionRules.JsonSafeString(GetOrcLifeModeLabel()) + "\"}"
     elseIf kindText == "sects"
-        return "{\"sect\":\"" + PDV_DevotionRules.JsonSafeString(GetRedguardSectLabel()) + "\"}"
+        return "{\"sect\":\"" + PDV_DevotionRules.JsonSafeString(OriginRuntime.GetRedguardSectLabel()) + "\"}"
     elseIf kindText == "branch"
         return "{\"path\":\"" + PDV_DevotionRules.JsonSafeString(OriginRuntime.GetBosmerPathLabel()) + "\",\"pactBound\":" + PDV_DevotionRules.BoolToJson(OriginRuntime.IsBosmerPactBound()) + ",\"evidenceDays\":" + OriginRuntime.GetBosmerPathEvidenceDays() + "}"
     endIf
@@ -2841,7 +2841,7 @@ String Function GetPanelPatronNote()
     endIf
     PDV_DaedricPathBase pactPath = GetActiveDaedricPactPath()
     if pactPath
-        if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(pactPath)
+        if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && OriginRuntime.GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(pactPath)
             return "The " + pactPath.DeityName + " pact stands within the Hidden Art; the tradition remains your practiced road."
         endIf
         return "A pact binds you; lesser devotions fall quiet."
@@ -3089,13 +3089,13 @@ String Function GetPanelQuasiPatronTierLabel(Int originRace)
     elseIf originRace == ORIGIN_DUNMER
         return "Ancestor layer: " + GetDunmerAncestorLayerLabel()
     elseIf originRace == ORIGIN_REDGUARD
-        return GetRedguardSectLabel()
+        return OriginRuntime.GetRedguardSectLabel()
     elseIf originRace == ORIGIN_BOSMER
         return OriginRuntime.GetBosmerPathLabel()
     elseIf originRace == ORIGIN_IMPERIAL
         return GetImperialConcordatLabel()
     elseIf originRace == ORIGIN_BRETON
-        return GetBretonTraditionLabel()
+        return OriginRuntime.GetBretonTraditionLabel()
     elseIf originRace == ORIGIN_NORD
         return GetNordDevotionModeLabel()
     elseIf originRace == ORIGIN_ALTMER
@@ -3771,7 +3771,7 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSle
     endIf
 
     if originRace == ORIGIN_BRETON
-        HandleBretonSleepEvents(playerRef, reason)
+        OriginRuntime.HandleBretonSleepEvents(playerRef, reason)
     endIf
 
     if originRace == ORIGIN_DUNMER
@@ -3791,7 +3791,7 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSle
     endIf
 
     if originRace == ORIGIN_REDGUARD
-        HandleRedguardSleepEvents(playerRef, reason)
+        OriginRuntime.HandleRedguardSleepEvents(playerRef, reason)
     endIf
 EndFunction
 
@@ -4128,154 +4128,21 @@ Bool Function IsOrcTrialCoherent(Int modeAtRite)
     return true
 EndFunction
 
-Function HandleRedguardSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD || !PDV_RedguardSectTrack
-        return
-    endIf
-
-    Int sleepCellId = GetInteriorSleepCellId(playerRef)
-    if sleepCellId == 0
-        return
-    endIf
-
-    String declaredKey = "PDV.Redguard.AncestralRest.DeclaredFormID"
-    if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if TryDeclareRestCell("PDV.Redguard.AncestralRest", sleepCellId)
-            ShowRedguardNotification(None, "This resting place remembers the old line.")
-            Trace(2, "Redguard ancestral-rest cell declared: " + reason)
-        endIf
-        return
-    endIf
-
-    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
-        return
-    endIf
-
-    if TryRedguardRemembering(playerRef, sleepCellId, reason)
-        return                          ; Remembering menu shown; suppress the rest-notice this wake
-    endIf
-
-    if !ConsumeOncePerDaySignal("PDV.Signal.RedguardAncestralRest")
-        return
-    endIf
-
-    RecordRedguardAncestralRest(1.0, "sleep_ancestor_rest_" + reason)
-EndFunction
 
 ; The Remembering of Names: an ancestral observance taken at the declared rest cell, with a
 ; 7-day cooldown. One-active observance, swap via re-rite (clear-before-add). "Not yet" does
 ; not spend the cooldown. Returns true when the menu was shown so the rest-notice is
 ; suppressed that night.
-Bool Function TryRedguardRemembering(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !PDV_MSG_RedguardRemembering || GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.RedRemember.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = PDV_MSG_RedguardRemembering.Show()
-    if pressed < 0 || pressed > 3
-        return true                 ; "Not yet" -- cooldown not spent
-    endIf
-
-    ApplyRedguardRemembering(playerRef, pressed)
-    return true
-EndFunction
 
 ; Clear-before-add: never two observances at once. Records the sect named-on so
 ; SyncRedguardRemembering can fade/restore on a sect shift.
-Function ApplyRedguardRemembering(Actor playerRef, Int index)
-    RemoveRedguardRememberSpells(playerRef)
-    Spell chosen = GetRedguardRememberSpell(index)
-    if !chosen
-        return
-    endIf
 
-    Int sectNow = 0
-    if PDV_RedguardSectTrack
-        sectNow = PDV_RedguardSectTrack.GetCurrentState()
-    endIf
 
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.RedRemember.Active", index + 1)
-    StorageUtil.SetIntValue(None, "PDV.RedRemember.SectAtRite", sectNow)
-    StorageUtil.SetFloatValue(None, "PDV.RedRemember.LastRiteTime", Utility.GetCurrentGameTime())
-    ; Surface in both Prisma spaces: a small Tu'whacca pulse (Ledger driver; the 7-day
-    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    LedgerRuntime.AwardPiety(PDV_Tuwhacca, 0.5, "Took up the Remembering of Names")
-    AppendBookOfDaysEntry("You remembered a name of the old line. The dead are kept in the telling.", Utility.GetCurrentGameTime() as Int, "substrate.act", "tu-whacca", False)
-    SendPrismaToast("tuwhacca", "good", "Remembering of Names", "The observance settles into you.")
-    Trace(2, "Redguard Remembering observance applied: " + index)
-EndFunction
-
-Function RemoveRedguardRememberSpells(Actor playerRef)
-    Int i = 0
-    while i < 4
-        Spell obs = GetRedguardRememberSpell(i)
-        if obs && playerRef.HasSpell(obs)
-            playerRef.RemoveSpell(obs)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
-Spell Function GetRedguardRememberSpell(Int index)
-    if index == 0
-        return PDV_SPEL_RedguardRemember_Blade
-    elseIf index == 1
-        return PDV_SPEL_RedguardRemember_Road
-    elseIf index == 2
-        return PDV_SPEL_RedguardRemember_Rest
-    elseIf index == 3
-        return PDV_SPEL_RedguardRemember_Harvest
-    endIf
-    return None
-EndFunction
 
 ; The observance holds while the sect it was named under is settled. During a sect switch
 ; (committed sect differs from the one named at rite) it goes quiet at dawn and returns at
 ; dawn once the sect settles. PDV.RedRemember.Active stays set while quiet.
-Function SyncRedguardRemembering(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-    Int active = StorageUtil.GetIntValue(None, "PDV.RedRemember.Active")
-    if active <= 0
-        return
-    endIf
-    Spell obs = GetRedguardRememberSpell(active - 1)
-    if !obs
-        return
-    endIf
 
-    Int sectAtRite = StorageUtil.GetIntValue(None, "PDV.RedRemember.SectAtRite")
-    Bool eligible = (GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD) && IsRedguardRememberingCoherent(sectAtRite)
-    if eligible
-        if !playerRef.HasSpell(obs)
-            playerRef.AddSpell(obs, False)
-            SendPrismaToast("tuwhacca", "good", "The old line settles", "Your observance returns.")
-        endIf
-    else
-        if playerRef.HasSpell(obs)
-            playerRef.RemoveSpell(obs)
-            SendPrismaToast("tuwhacca", "warning", "The observance goes quiet", "The line you named it under has shifted.")
-        endIf
-    endIf
-EndFunction
-
-Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
-    if !PDV_RedguardSectTrack
-        return false
-    endIf
-    if PDV_RedguardSectTrack.GetCurrentState() != sectAtRite
-        return false
-    endIf
-    return true
-EndFunction
 
 ; The Disciplines of Return: at rest, with a 7-day cooldown, the player sets one cultivation
 ; discipline of magic. One-active, swap via re-rite (clear-before-add). "Not yet" records a
@@ -4299,29 +4166,6 @@ Function HandleImperialSleepEvents(Actor playerRef, String reason)
     ; pantheon signal under the pacing contract.
 EndFunction
 
-Function HandleBretonSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonAncestralDream")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    AwardBretonAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
-    if GetBretonTraditionValue() != BRETON_TRADITION_HIDDEN_ART
-        return
-    endIf
-    if LedgerRuntime.PDV_Julianos
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Julianos, LedgerRuntime.PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    endIf
-    if LedgerRuntime.PDV_Mara
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
-    endIf
-    AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, "event_314", "sleep_in_bed_" + reason)
-    SurfaceP2AmbientProgressNotice("Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
-EndFunction
 
 ; Mara's Mercy scripted heal-on-rest was retired 2026-07-06. It was the second
 ; half of the Mara reward but not a real passive effect (an event-driven
@@ -5006,19 +4850,6 @@ Function HandleNordTsunAdversitySurvived(String reason)
     Trace(2, "Tsun adversity-survived routed (" + reason + ")")
 EndFunction
 
-Function HandleLekiHonorableDuel(String reason)
-    if !PDV_Leki || !IsQuestReactionDeityReachable(PDV_Leki)
-        return
-    endIf
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.LekiHonorableDuel")
-    if multiplier <= 0.0
-        Trace(2, "Leki honorable-duel blocked by daily cap (" + reason + ")")
-        return
-    endIf
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_HONORABLE_DUEL, None, multiplier)
-    LedgerRuntime.SurfaceReservedSignal(PDV_Leki, "Duel honored", "marks single combat honorably won.")
-    Trace(2, "Leki honorable-duel routed (" + reason + ")")
-EndFunction
 
 Function HandleTalosWorshipperRescued(String reason)
     if !PDV_Talos || !IsQuestReactionDeityReachable(PDV_Talos)
@@ -5751,38 +5582,8 @@ Int Function GetOrcStrongholdHoldId(Location newLocation)
     return 0
 EndFunction
 
-Function HandleRedguardCrownTombRespect(String reason)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardCrownTombRespect")
-    RecordRedguardSectSignal(REDGUARD_SECT_CROWN, multiplier, reason)
-    AwardRedguardCrownSignal(multiplier, reason)
-    Trace(2, "Redguard Crown tomb respect routed with multiplier " + multiplier)
-EndFunction
 
-Function HandleRedguardForebearRoadPassage(String reason)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardForebearRoad")
-    RecordRedguardSectSignal(REDGUARD_SECT_FOREBEAR, multiplier, reason)
-    AwardRedguardForebearSignal(multiplier)
-    Trace(2, "Redguard Forebear road passage routed with multiplier " + multiplier)
-EndFunction
-
-Function HandleRedguardAshAbahDeathDuty(String reason)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAshAbahDeathDuty")
-    RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, reason)
-    ApplyRedguardAshAbahDutyRewards(reason, multiplier)
-    Trace(2, "Redguard AshAbah death duty routed with multiplier " + multiplier)
-EndFunction
 
 ; Marked Ash'abah death-burden -- the wiring that makes mid-game Ash'abah sect ENTRY
 ; reachable. Design intent (PDV_OpenDecisions_RulingMemo / TargetEndStates): "Ash'abah is
@@ -5805,95 +5606,8 @@ EndFunction
 ; from routine duty so a real named-undead defeat reliably marks the burden even on a day
 ; routine death-duty already decayed. Called from PDV_ActionRouter.HandleStoryKillActor
 ; (the player's own killing blow only), alongside HandleHoonDingBreakthroughKill.
-Function HandleRedguardAshAbahMajorBurden(Form victimForm, Int eventType)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
 
-    Actor victimActor = victimForm as Actor
-    if !victimActor
-        return
-    endIf
-    ActorBase victimBase = victimActor.GetLeveledActorBase()
-    if !victimBase || !victimBase.IsUnique()
-        return ; routine undead -- not a marked burden, no sect switch
-    endIf
 
-    String burdenReason = ""
-    if eventType == 300 ; EVT_KILL_UNDEAD
-        burdenReason = "redguard_deathduty_major"
-    elseIf eventType == 2 && IsRedguardNamedNecromancerBurden(victimActor) ; EVT_KILLED_HOSTILE_HUMANOID_IN_COMBAT
-        burdenReason = "redguard_deathduty_major_necromancer"
-    else
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAshAbahMajorBurden")
-    if multiplier <= 0.0
-        Trace(2, "Redguard Ash'abah major burden decayed out for today; no sect mark.")
-        return
-    endIf
-
-    RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, burdenReason)
-    ApplyRedguardAshAbahDutyRewards(burdenReason, multiplier)
-    Trace(2, "Redguard Ash'abah major burden fired: " + burdenReason + " marks sect entry (eventType=" + eventType + ").")
-EndFunction
-
-Function TrackRedguardAshAbahUndeadSiteVisit(Location currentLocation)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
-
-    if !currentLocation || !PDV_FLST_RedguardAshAbahUndeadClearSites
-        return
-    endIf
-
-    if !PDV_FLST_RedguardAshAbahUndeadClearSites.HasForm(currentLocation)
-        return
-    endIf
-
-    if currentLocation.IsCleared()
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Redguard.AshAbahClearSiteArmed." + currentLocation.GetFormID(), 1)
-EndFunction
-
-Function HandleRedguardAshAbahUndeadSiteClear(Location clearedLocation)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
-
-    if !clearedLocation || !PDV_FLST_RedguardAshAbahUndeadClearSites
-        return
-    endIf
-
-    if !PDV_FLST_RedguardAshAbahUndeadClearSites.HasForm(clearedLocation)
-        return
-    endIf
-
-    if !clearedLocation.IsCleared()
-        return
-    endIf
-
-    String siteKey = "PDV.Redguard.AshAbahClearedSite." + clearedLocation.GetFormID()
-    if StorageUtil.GetIntValue(None, siteKey, 0) == 1
-        return
-    endIf
-
-    String armKey = "PDV.Redguard.AshAbahClearSiteArmed." + clearedLocation.GetFormID()
-    if StorageUtil.GetIntValue(None, armKey, 0) != 1
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, siteKey, 1)
-    StorageUtil.SetIntValue(None, armKey, 0)
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAshAbahUndeadSiteClear")
-    String burdenReason = "redguard_ashabah_burden_undead_site_clear"
-    RecordRedguardSectSignal(REDGUARD_SECT_ASHABAH, multiplier, burdenReason)
-    ApplyRedguardAshAbahDutyRewards(burdenReason, multiplier)
-    Trace(2, "Redguard Ash'abah undead-site clear fired for location " + clearedLocation.GetFormID() + " multiplier=" + multiplier)
-EndFunction
 
 Function TrackUndeadCryptClearSiteVisit(Location currentLocation)
     if !currentLocation || !PDV_FLST_UndeadCryptClearSites
@@ -6015,30 +5729,10 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
     endIf
 EndFunction
 
-Bool Function IsRedguardNamedNecromancerBurden(Actor victimActor)
-    if !victimActor
-        return False
-    endIf
-
-    if LedgerRuntime.NecromancerFaction && victimActor.IsInFaction(LedgerRuntime.NecromancerFaction)
-        return True
-    endIf
-
-    if LedgerRuntime.WarlockFaction && victimActor.IsInFaction(LedgerRuntime.WarlockFaction)
-        return True
-    endIf
-
-    return False
-EndFunction
 
 ; Shared Ash'abah death-duty rewards (Tu'whacca death-rite signal + flat heal + social
 ; stigma), fired by both the routine duty and the marked major burden so the two paths
 ; cannot drift.
-Function ApplyRedguardAshAbahDutyRewards(String reason, Float multiplier)
-    AwardRedguardAshAbahSignal(multiplier, reason)
-    TryRedguardTuwhaccaDeathRiteHeal(reason)
-    MarkRedguardAshAbahStigma(reason)
-EndFunction
 
 ; Tu'whacca's Ward / Far Shores reward, converted from a swallowed always-on
 ; HealRateMult buff (a rate-mult on Requiem's ~0 base health-regen = unfelt) to a
@@ -6046,31 +5740,6 @@ EndFunction
 ; kept (death-duty or Far Shores token), scaled by Tu'whacca tier, once per day so
 ; repeated duty cannot farm it. Magnitudes PROVISIONAL -- tune against Requiem's
 ; health economy in-game (memory: requiem-proof-heal-flat-restore-not-rate).
-Function TryRedguardTuwhaccaDeathRiteHeal(String reason)
-    if !PDV_Tuwhacca
-        return
-    endIf
-
-    Int tuwhaccaTier = LedgerRuntime.GetTier(PDV_Tuwhacca)
-    if tuwhaccaTier < LedgerRuntime.TIER_DEVOTED
-        return
-    endIf
-
-    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay") == (LedgerRuntime.GetDevotionalDay() + 2)
-        Trace(2, "Redguard Tu'whacca death-rite heal suppressed (already restored today).")
-        return
-    endIf
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Redguard.TuwhaccaDeathRiteHealDay")
-
-    Float deathRiteHeal = 30.0
-    if tuwhaccaTier >= LedgerRuntime.TIER_CHAMPION
-        deathRiteHeal = 50.0
-    endIf
-    Actor playerRef = Game.GetPlayer()
-    playerRef.RestoreActorValue("Health", deathRiteHeal)
-    Trace(2, "Redguard Tu'whacca death-rite heal fired reason=" + reason + " tier=" + tuwhaccaTier + " restore=" + deathRiteHeal)
-EndFunction
 
 ; Ash'abah social stigma -- text-only, modeled on the proven Altmer crisis surfacing
 ; (PDV_AltmerCrisisTrack / GetAltmerCrisisStateLabel) but WITHOUT any piety penalty
@@ -6083,176 +5752,19 @@ EndFunction
 ; distinction the design wants will sharpen when major-burden sources are curated.)
 ; No service penalty, no voiced lines. The notice fires only on a band crossing so
 ; repeated duty does not spam the top-left.
-Function MarkRedguardAshAbahStigma(String reason)
-    Int before = StorageUtil.GetIntValue(None, "PDV.Redguard.AshAbahStigma", 0)
-    Int stigma = before + 1
-    if stigma > 5
-        stigma = 5
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Redguard.AshAbahStigma", stigma)
 
-    if before < 3 && stigma >= 3
-        ShowRedguardNotification(None, "The tomb-smell never fully leaves you now; the clean keep their distance from the one who tends the unclean dead.")
-    elseIf before < 1 && stigma >= 1
-        ShowRedguardNotification(None, "The mark of the death-duty settles on you. Few will carry this burden, and they know it when they see you.")
-    endIf
-    Trace(2, "Redguard Ash'abah stigma marked reason=" + reason + " stigma=" + stigma + " (was " + before + ")")
-EndFunction
 
-String Function GetAshAbahStigmaLabel()
-    Int stigma = StorageUtil.GetIntValue(None, "PDV.Redguard.AshAbahStigma", 0)
-    if stigma >= 3
-        return "hollow-eyed"
-    elseIf stigma >= 1
-        return "death-touched"
-    endIf
-    return "unmarked"
-EndFunction
 
-Function HandleRedguardFarShoresToken(String reason)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
 
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardFarShoresToken")
-    EnsureRedguardSectInitialized()
-    Int currentSect = PDV_RedguardSectTrack.GetCurrentState()
-    PDV_RedguardSectTrack.RecordEvidenceDay(currentSect, reason)
-    StorageUtil.AdjustFloatValue(None, "PDV.Redguard.FarShoresToken", multiplier)
-    StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
 
-    if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireReentryNeeded") == 1 && StorageUtil.GetIntValue(None, "PDV.Curse.State") != 2
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 0)
-        HandleRedguardVampireReentryComplete(reason)
-    endIf
-    AwardRedguardFarShoresSignal(multiplier, reason)
-    TryRedguardTuwhaccaDeathRiteHeal(reason)
-    ShowRedguardNotification(PDV_Notif_Redguard_FarShoresToken_Activate, "You tend the Far Shores token and speak to Tu'whacca.")
-    Trace(2, "Redguard Far Shores token routed with multiplier " + multiplier)
-EndFunction
-
-Function HandleRedguardAncestorSpine(String reason)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAncestorSpine")
-    RecordRedguardAncestorSpinePulse(multiplier, reason)
-    SurfaceP2BookReadNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
-    Trace(2, "Redguard ancestor spine routed with multiplier " + multiplier)
-EndFunction
-
-Function RecordRedguardAncestralRest(Float multiplier, String reason)
-    RecordRedguardAncestorSpinePulse(multiplier, reason)
-    Trace(2, "Redguard ancestral rest routed with multiplier " + multiplier)
-EndFunction
-
-Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
-    if !IsRedguardOrigin() || !PDV_RedguardSectTrack || multiplier <= 0.0
-        return
-    endIf
-
-    EnsureRedguardSectInitialized()
-    Int currentSect = PDV_RedguardSectTrack.GetCurrentState()
-    RecordRedguardSectSignal(currentSect, multiplier, reason)
-    AwardRedguardAncestorSpinePietyPulse(multiplier, reason)
-    ShowRedguardNotification(PDV_Notif_Redguard_AncestorSpine_Rest, "The ancestor-line steadies behind you.")
-    RequestPanelRefresh()
-EndFunction
 
 ; Tu'whacca vampire re-entry (2026-07-15, wire): the cure sets
 ; PDV.Redguard.VampireReentryNeeded; the next authentic sect act while mortal
 ; completes the return through Tu'whacca. The flag itself is the one-shot latch.
-Function HandleRedguardVampireReentryComplete(String reason)
-    if !PDV_Tuwhacca || !IsQuestReactionDeityReachable(PDV_Tuwhacca)
-        return
-    endIf
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY, None, 1.0)
-    LedgerRuntime.SurfaceReservedSignal(PDV_Tuwhacca, "The cycle restored", "marks the return through Tu'whacca after the curse.")
-    Trace(1, "Tu'whacca vampire re-entry completed (" + reason + ")")
-EndFunction
 
-Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason)
-    if !PDV_RedguardSectTrack
-        return
-    endIf
 
-    if sectValue < REDGUARD_SECT_CROWN || sectValue > REDGUARD_SECT_ASHABAH
-        return
-    endIf
 
-    EnsureRedguardSectInitialized()
-    PDV_RedguardSectTrack.RecordEvidenceDay(sectValue, reason)
-    StorageUtil.AdjustFloatValue(None, GetRedguardSectWeightKey(sectValue), multiplier)
-    StorageUtil.SetIntValue(None, "PDV.Redguard.LastSectSignal", sectValue)
-    StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
 
-    if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireReentryNeeded") == 1 && StorageUtil.GetIntValue(None, "PDV.Curse.State") != 2
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 0)
-        HandleRedguardVampireReentryComplete(reason)
-    endIf
-
-    if multiplier <= 0.0
-        return
-    endIf
-
-    if PDV_RedguardSectTrack.GetCurrentState() == sectValue
-        MaybeShowRedguardChampionEntry(sectValue)
-        SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
-        AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)
-        RequestPanelRefresh()
-        return
-    endIf
-
-    ; LOCKED sect-switch rule: Crown <-> Forebear needs two sect-coded evidence days
-    ; inside seven, then a three-day lock-in -- one tomb visit no longer rewrites
-    ; sect identity. Ash'abah is entered only by a marked death/funerary burden
-    ; (casual undead fighting is not enough), and left by a Crown/Forebear switch.
-    Bool allowSwitch = False
-    if sectValue == REDGUARD_SECT_ASHABAH
-        allowSwitch = IsRedguardAshAbahBurden(reason)
-    else
-        allowSwitch = PDV_RedguardSectTrack.HasRecentEvidenceDays(sectValue, 2, 7) && !PDV_RedguardSectTrack.IsTransitionLockedOut()
-    endIf
-
-    if allowSwitch
-        PDV_RedguardSectTrack.SetState(sectValue, reason)
-        PDV_RedguardSectTrack.SetTransitionLockout(3.0, reason)
-        ShowRedguardSectEntry(sectValue)
-        MaybeShowRedguardChampionEntry(sectValue)
-        SurfaceTransition("reorientation", GetRedguardSectLabel(), "shift", -1, "turning")
-        SendPrismaShiftToast(GetRedguardSectLabel(), "", "sect")
-        RequestPanelRefresh()
-    endIf
-EndFunction
-
-Bool Function IsRedguardAshAbahBurden(String reason)
-    ; Token-contains, not exact-match: a marked-burden emit site may append a source
-    ; suffix (e.g. "redguard_deathduty_major_krosis"), and the exact-match form was the
-    ; original silent gap (gate correct, token never produced). Suffix/omission-proof per
-    ; the P2 book-notice fix.
-    return PDV_DevotionRules.StringContainsToken(reason, "redguard_deathduty_major") || PDV_DevotionRules.StringContainsToken(reason, "redguard_ashabah_burden")
-EndFunction
-
-Function AwardRedguardCrownSignal(Float multiplier, String reason)
-    if PDV_Tuwhacca
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_CROWN_FORM, None, multiplier)
-    endIf
-    AwardRedguardAncestorSpinePietyPulse(multiplier, "crown_tomb_" + reason)
-EndFunction
-
-Function AwardRedguardForebearSignal(Float multiplier)
-    ; Road-passage is the Forebear lane's own beat: the Forebear sect substrate credit
-    ; is recorded by the caller (RecordRedguardSectSignal). HoonDing's make-way no
-    ; longer rides road-passage -- it now fires on curated BREAKTHROUGH kills
-    ; (HandleHoonDingBreakthroughKill), so the old blunt weekly cap is retired. Leki's
-    ; sword-singing remains the focused-patron beat on the road.
-    if _activeDeity == PDV_Leki && PDV_Leki
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Leki, PDV_Leki.SIGNAL_SWORD_SINGING, None, multiplier)
-    endIf
-EndFunction
 
 ; HoonDing make-way, rebuilt (user ruling 2026-06-20). Standard make-way (signal
 ; 2501) no longer rides the mis-wired Forebear road-passage; it now fires on a
@@ -6264,74 +5776,9 @@ EndFunction
 ; weekly cap, so every genuine make-way registers but a dragon-farm day diminishes.
 ; Combat-odds detection stays post-1.0. Called from PDV_ActionRouter.HandleStoryKillActor
 ; (the player's own killing blow only).
-Function HandleHoonDingBreakthroughKill(Form victimForm, Int eventType)
-    if !IsRedguardOrigin() || !PDV_HoonDing
-        return
-    endIf
-    if _activeDeity != PDV_HoonDing
-        return
-    endIf
 
-    Bool dragonKill = eventType == 302 ; EVT_KILL_DRAGON
-    Bool listedBossKill = False
-    if !dragonKill && PDV_FLST_HoonDing_BreakthroughBosses
-        Actor victimActor = victimForm as Actor
-        if victimActor
-            ActorBase victimBase = victimActor.GetLeveledActorBase()
-            if victimBase && PDV_FLST_HoonDing_BreakthroughBosses.HasForm(victimBase)
-                listedBossKill = True
-            endIf
-        endIf
-    endIf
 
-    if !dragonKill && !listedBossKill
-        return
-    endIf
 
-    String repeatKey = "PDV.Signal.HoonDingDragon"
-    String traceLabel = "dragon"
-    if listedBossKill
-        repeatKey = "PDV.Signal.HoonDingBreakthroughBoss"
-        traceLabel = "listed boss"
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier(repeatKey)
-    if multiplier <= 0.0
-        Trace(2, "HoonDing make-way (" + traceLabel + ") decayed out for today; no award.")
-        return
-    endIf
-
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_HoonDing, PDV_HoonDing.SIGNAL_MAKE_WAY, victimForm, multiplier)
-    Trace(2, "HoonDing make-way fired: breakthrough " + traceLabel + " kill multiplier=" + multiplier)
-EndFunction
-
-Function AwardRedguardAshAbahSignal(Float multiplier, String reason)
-    if PDV_Tuwhacca
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY, None, multiplier)
-    endIf
-    AwardRedguardAncestorSpinePietyPulse(multiplier, "ashabah_death_duty_" + reason)
-EndFunction
-
-Function AwardRedguardFarShoresSignal(Float multiplier, String reason)
-    if PDV_Tuwhacca
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_FAR_SHORES_TOKEN, None, multiplier)
-    endIf
-    AwardRedguardAncestorSpinePietyPulse(multiplier, "far_shores_" + reason)
-EndFunction
-
-Function AwardRedguardAncestorSpinePietyPulse(Float multiplier, String reason)
-    if !IsRedguardOrigin() || multiplier <= 0.0
-        return
-    endIf
-
-    if PDV_Tuwhacca
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_ANCESTOR_SPINE, None, multiplier)
-    endIf
-    StorageUtil.AdjustFloatValue(None, "PDV.Redguard.AncestorSpine", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Redguard.AncestorSpineSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Redguard.LastAncestorSpineSourceReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastAncestorSpineSourceTime", Utility.GetCurrentGameTime())
-EndFunction
 
 Function HandleNordAncestorSpine(String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_NORD
@@ -6422,107 +5869,12 @@ Function RunDawnRefreshNordAncestor()
     endIf
 EndFunction
 
-Function EnsureRedguardSectInitialized()
-    if !PDV_RedguardSectTrack
-        return
-    endIf
 
-    if IsRedguardOrigin() && StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
-        return
-    endIf
 
-    if PDV_RedguardSectTrack.GetCurrentState() < REDGUARD_SECT_CROWN
-        PDV_RedguardSectTrack.SetState(REDGUARD_SECT_FOREBEAR, "redguard_default_forebear")
-    endIf
-EndFunction
 
-Bool Function IsRedguardOrigin()
-    return GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
-EndFunction
 
-String Function GetRedguardSectWeightKey(Int sectValue)
-    if sectValue == REDGUARD_SECT_CROWN
-        return "PDV.Redguard.Sect.Crown"
-    elseIf sectValue == REDGUARD_SECT_ASHABAH
-        return "PDV.Redguard.Sect.AshAbah"
-    endIf
 
-    return "PDV.Redguard.Sect.Forebear"
-EndFunction
 
-String Function GetRedguardSectLabel()
-    if !PDV_RedguardSectTrack
-        return "Sect missing"
-    endIf
-
-    EnsureRedguardSectInitialized()
-    return PDV_RedguardSectTrack.GetStateLabel()
-EndFunction
-
-Function ShowRedguardSectEntry(Int sectValue)
-    if IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-    String shownKey = GetRedguardSectEntryShownKey(sectValue)
-    if shownKey == "" || StorageUtil.GetIntValue(None, shownKey) == 1
-        return
-    endIf
-
-    if sectValue == REDGUARD_SECT_CROWN
-        ShowRedguardNotification(PDV_Notif_Redguard_Sect_Crown_Entry, "You hold the Crown way: orthodoxy kept, the old inheritance intact.")
-    elseIf sectValue == REDGUARD_SECT_FOREBEAR
-        ShowRedguardNotification(PDV_Notif_Redguard_Sect_Forebear_Entry, "You hold the Forebear way: Redguard identity carried among outsiders.")
-    elseIf sectValue == REDGUARD_SECT_ASHABAH
-        ShowRedguardNotification(PDV_Notif_Redguard_Sect_AshAbah_Entry, "You take up the Ash'abah duty: the unclean work others will not touch.")
-    endIf
-
-    StorageUtil.SetIntValue(None, shownKey, 1)
-EndFunction
-
-String Function GetRedguardSectEntryShownKey(Int sectValue)
-    if sectValue == REDGUARD_SECT_CROWN
-        return "PDV.Redguard.SectEntryShown.Crown"
-    elseIf sectValue == REDGUARD_SECT_FOREBEAR
-        return "PDV.Redguard.SectEntryShown.Forebear"
-    elseIf sectValue == REDGUARD_SECT_ASHABAH
-        return "PDV.Redguard.SectEntryShown.AshAbah"
-    endIf
-
-    return ""
-EndFunction
-
-Function MaybeShowRedguardChampionEntry(Int sectValue)
-    if IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-    String shownKey = GetRedguardChampionEntryShownKey(sectValue)
-    if shownKey == "" || StorageUtil.GetIntValue(None, shownKey) == 1
-        return
-    endIf
-
-    if sectValue == REDGUARD_SECT_CROWN
-        if PDV_Tuwhacca && LedgerRuntime.GetTier(PDV_Tuwhacca) >= LedgerRuntime.TIER_CHAMPION
-            ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Crown, "The Crown way has become more than memory. It is a public shape of your devotion.", False)
-            AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
-            StorageUtil.SetIntValue(None, shownKey, 1)
-        endIf
-    elseIf sectValue == REDGUARD_SECT_FOREBEAR
-        if PDV_HoonDing && LedgerRuntime.GetTier(PDV_HoonDing) >= LedgerRuntime.TIER_CHAMPION
-            ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_Forebear, "The Forebear way has become more than adaptation. It is a public shape of your devotion.", False)
-            AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
-            StorageUtil.SetIntValue(None, shownKey, 1)
-        endIf
-    elseIf sectValue == REDGUARD_SECT_ASHABAH
-        if PDV_Tuwhacca && LedgerRuntime.GetTier(PDV_Tuwhacca) >= LedgerRuntime.TIER_CHAMPION
-            ShowRedguardMessage(PDV_Msg_Redguard_ChampionEntry_AshAbah, "The Ash'abah duty has become more than necessity. It is a public shape of your devotion.", False)
-            AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
-            StorageUtil.SetIntValue(None, shownKey, 1)
-        endIf
-    endIf
-EndFunction
 
 ; Nord/Kyne counterpart to MaybeShowRedguardChampionEntry. The Redguard beat hangs off a SECT
 ; change, so it never collides with a tier surface; Kyne's recognition IS the tier reach, so this
@@ -6583,17 +5935,6 @@ Function ProcessQueuedNordKyneChampionEntry()
     Trace(1, "Nord/Kyne champion recognition presented.")
 EndFunction
 
-String Function GetRedguardChampionEntryShownKey(Int sectValue)
-    if sectValue == REDGUARD_SECT_CROWN
-        return "PDV.Redguard.ChampionEntryShown.Crown"
-    elseIf sectValue == REDGUARD_SECT_FOREBEAR
-        return "PDV.Redguard.ChampionEntryShown.Forebear"
-    elseIf sectValue == REDGUARD_SECT_ASHABAH
-        return "PDV.Redguard.ChampionEntryShown.AshAbah"
-    endIf
-
-    return ""
-EndFunction
 
 
 
@@ -7741,7 +7082,7 @@ Function DebugSeedBroadLane()
     if origin == ORIGIN_IMPERIAL
         LedgerRuntime.SetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_IMPERIAL, LedgerRuntime.BROAD_PANTHEON_FAITHFUL_THRESHOLD, "debug_seed_broad_lane")
     elseIf origin == ORIGIN_BRETON
-        SetBretonPracticeCount(GetBretonTraditionValue(), BRETON_PRACTICE_DEVOTED_POINTS)
+        OriginRuntime.SetBretonPracticeCount(OriginRuntime.GetBretonTraditionValue(), BRETON_PRACTICE_DEVOTED_POINTS)
     elseIf origin == ORIGIN_ORC
         StorageUtil.SetIntValue(None, "PDV.Orc.MalacathSourceCount", 6)
     elseIf origin == ORIGIN_ALTMER
@@ -7760,8 +7101,8 @@ String Function DebugGetBretonPracticeSummary()
         return "Breton practice controls require Breton origin."
     endIf
 
-    Int traditionValue = GetBretonTraditionValue()
-    Int practicePoints = GetBretonPracticeCount(traditionValue)
+    Int traditionValue = OriginRuntime.GetBretonTraditionValue()
+    Int practicePoints = OriginRuntime.GetBretonPracticeCount(traditionValue)
     Int today = LedgerRuntime.GetDevotionalDay() + 2
     Int pointDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
     Int pointsToday = 0
@@ -7770,7 +7111,7 @@ String Function DebugGetBretonPracticeSummary()
     endIf
     pointsToday = PDV_DevotionRules.ClampInt(pointsToday, 0, BRETON_PRACTICE_DAILY_MAX_POINTS)
     Int remainingToday = BRETON_PRACTICE_DAILY_MAX_POINTS - pointsToday
-    return GetBretonTraditionLabel() + ": " + practicePoints + "/" + BRETON_PRACTICE_DEVOTED_POINTS + " practice points (" + GetPublicTierBand(GetBretonPracticeTier(traditionValue)) + "). Today: " + pointsToday + "/" + BRETON_PRACTICE_DAILY_MAX_POINTS + "; remaining " + remainingToday + "."
+    return OriginRuntime.GetBretonTraditionLabel() + ": " + practicePoints + "/" + BRETON_PRACTICE_DEVOTED_POINTS + " practice points (" + GetPublicTierBand(OriginRuntime.GetBretonPracticeTier(traditionValue)) + "). Today: " + pointsToday + "/" + BRETON_PRACTICE_DAILY_MAX_POINTS + "; remaining " + remainingToday + "."
 EndFunction
 
 String Function DebugSetBretonPracticePoints(Int practicePoints)
@@ -7778,8 +7119,8 @@ String Function DebugSetBretonPracticePoints(Int practicePoints)
         return "Breton practice target ignored: set Breton origin first."
     endIf
 
-    Int traditionValue = GetBretonTraditionValue()
-    SetBretonPracticeCount(traditionValue, practicePoints)
+    Int traditionValue = OriginRuntime.GetBretonTraditionValue()
+    OriginRuntime.SetBretonPracticeCount(traditionValue, practicePoints)
     StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", LedgerRuntime.GetDevotionalDay() + 2)
     StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", 0)
     LedgerRuntime.SyncFirstTierRaceRewardRuntime()
@@ -7798,7 +7139,7 @@ String Function DebugAddBretonPracticePoints(Int requestedPoints)
 
     Int sequence = StorageUtil.GetIntValue(None, "PDV.Debug.BretonPracticePulseSeq") + 1
     StorageUtil.SetIntValue(None, "PDV.Debug.BretonPracticePulseSeq", sequence)
-    Bool applied = AwardBretonPracticePulse(GetBretonTraditionValue(), requestedPoints, "mcm_debug_" + sequence, "mcm-debug-practice")
+    Bool applied = OriginRuntime.AwardBretonPracticePulse(OriginRuntime.GetBretonTraditionValue(), requestedPoints, "mcm_debug_" + sequence, "mcm-debug-practice")
     if !applied
         return "No practice points applied. " + DebugGetBretonPracticeSummary()
     endIf
@@ -8758,7 +8099,7 @@ Float Function GetCurseGainMultiplier(PDV_DeityBase deity)
 EndFunction
 
 Float Function GetDaedricStigmaGainMultiplier(PDV_DeityBase deity)
-    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(deity) && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
+    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && OriginRuntime.GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(deity) && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
         return 1.25
     endIf
     if PDV_HircinePath && deity == PDV_HircinePath
@@ -8855,291 +8196,32 @@ EndFunction
 
 
 
-Function SyncBretonRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
 
-    Bool isBreton = GetPlayerOriginRaceIndex() == ORIGIN_BRETON
-    SyncBretonAncestorSubstrate(playerRef, isBreton)
-    if isBreton
-        EnsureBretonDruidicForkInitialized()
-    endIf
-
-    Int traditionValue = GetBretonTraditionValue()
-    ; v3 12.5 / race sheet 10.3: Breton has NO generic broad lane. The retired
-    ; generic Tradition_T1/T2 spells are force-removed so a migrated save loses
-    ; them; the broad role now lives in each tradition family's T1/T2 phase, and
-    ; the focused patron unlocks T3.
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T1, False, "Breton Tradition T1 (retired)")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Tradition_T2, False, "Breton Tradition T2 (retired)")
-
-    ; Unified model (2026-07-13): the tradition family grants T1/T2 practice only.
-    ; The former T3 slots (KnightsRoad_T3 / GreenWay_T3 / HiddenArt_T3) are now
-    ; patron-champion boons owned solely by SyncBretonChampionBoon, so the family
-    ; sync must not touch them (else it would strip a boon the champion sync just
-    ; granted - the reused-spell cross-lane strip, within Breton).
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_KNIGHTS_ROAD, traditionValue, PDV_Bless_Breton_KnightsRoad_T1, PDV_Bless_Breton_KnightsRoad_T2, "KnightsRoad")
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_HIDDEN_ART, traditionValue, PDV_Bless_Breton_HiddenArt_T1, PDV_Bless_Breton_HiddenArt_T2, "HiddenArt")
-    SyncBretonTraditionRewardFamily(playerRef, BRETON_TRADITION_GREEN_WAY, traditionValue, PDV_Bless_Breton_GreenWay_T1, PDV_Bless_Breton_GreenWay_T2, "GreenWay")
-    SyncBretonChampionBoon(playerRef, isBreton, traditionValue)
-    SyncBretonKnightlyVowCreedLossSpells(isBreton && traditionValue == BRETON_TRADITION_KNIGHTS_ROAD)
-    SyncBretonWitchcraftExposureRuptureSpell(isBreton)
-    SyncBretonDruidicForkBetrayalSpell(isBreton && GetBretonDruidicForkValue() == BRETON_DRUIDIC_FORK_BETRAYED)
-EndFunction
-
-Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)
-    if !playerRef || !PDV_BretonAncestorSubstrate
-        return
-    endIf
-
-    if isBreton
-        Trace(2, "Breton ancestor substrate retired; clearing legacy boons.")
-    endIf
-    PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
-EndFunction
 
 ; Unified model (2026-07-13): the tradition family grants T1/T2 practice tiers.
 ; A Champion boon that reuses this tradition's own T3 record replaces T2 because
 ; the T3 effects are absolute cumulative totals. A distinct patron boon remains
 ; beside T2 as the second family.
-Function SyncBretonTraditionRewardFamily(Actor playerRef, Int thisTradition, Int activeTradition, Spell t1, Spell t2, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_BRETON && thisTradition == activeTradition
-    if thisTradition == BRETON_TRADITION_GREEN_WAY && !IsBretonGreenWayForkEligible()
-        isActive = False
-    endIf
 
-    Int activeTier = LedgerRuntime.TIER_NONE
-    PDV_DeityBase presentationDeity = None
-    if isActive
-        activeTier = GetBretonTraditionTier(thisTradition)
-        presentationDeity = GetBretonTraditionPresentationDeity(thisTradition)
-    endIf
 
-    Bool hadT1Spell = LedgerRuntime.HasRewardSpell(playerRef, t1)
-    Bool hadT2Spell = LedgerRuntime.HasRewardSpell(playerRef, t2)
-    Bool wantsT1Spell = isActive && activeTier == LedgerRuntime.TIER_SEEKER
-    Bool championReplacesT2 = isActive && IsBretonPracticeTierReplacedByChampion(thisTradition)
-    Bool wantsT2Spell = isActive && activeTier >= LedgerRuntime.TIER_DEVOTED && !championReplacesT2
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, wantsT1Spell, "Breton " + label + " T1")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, wantsT2Spell, "Breton " + label + " T2")
-    MaybeShowBretonTraditionRewardPresentation(playerRef, t1, hadT1Spell, wantsT1Spell, presentationDeity, label, LedgerRuntime.TIER_SEEKER)
-    MaybeShowBretonTraditionRewardPresentation(playerRef, t2, hadT2Spell, wantsT2Spell, presentationDeity, label, LedgerRuntime.TIER_DEVOTED)
-EndFunction
-
-Bool Function IsBretonPracticeTierReplacedByChampion(Int traditionValue)
-    PDV_DeityBase championSource = GetBretonChampionSource(True, traditionValue)
-    if !championSource
-        return False
-    endIf
-
-    Spell championSpell = GetBretonPatronChampionBoon(championSource, traditionValue)
-    Spell traditionChampionSpell = None
-    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        traditionChampionSpell = PDV_Bless_Breton_KnightsRoad_T3
-    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        traditionChampionSpell = PDV_Bless_Breton_HiddenArt_T3
-    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        traditionChampionSpell = PDV_Bless_Breton_GreenWay_T3
-    endIf
-
-    return championSpell && traditionChampionSpell && championSpell == traditionChampionSpell
-EndFunction
-
-PDV_DeityBase Function GetBretonChampionSource(Bool isBreton, Int traditionValue)
-    if isBreton && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity && LedgerRuntime.GetTier(_activeDeity) >= LedgerRuntime.TIER_CHAMPION
-        return _activeDeity
-    endIf
-    if isBreton && traditionValue == BRETON_TRADITION_HIDDEN_ART
-        PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
-        if activePact && activePact.GetStoredTier() >= LedgerRuntime.TIER_CHAMPION
-            return activePact
-        endIf
-    endIf
-    return None
-EndFunction
 
 ; Unified model (2026-07-13): the active Champion patron brings their OWN
 ; champion boon, resonant or not. Exactly one is active at a time; every other
 ; Breton champion boon strips. Resonance selects the presentation line only.
-Function SyncBretonChampionBoon(Actor playerRef, Bool isBreton, Int traditionValue)
-    Spell wantSpell = None
-    PDV_DeityBase championSource = GetBretonChampionSource(isBreton, traditionValue)
-    if championSource
-        wantSpell = GetBretonPatronChampionBoon(championSource, traditionValue)
-    endIf
-
-    Bool hadWanted = wantSpell && LedgerRuntime.HasRewardSpell(playerRef, wantSpell)
-    SyncBretonChampionBoonExclusive(playerRef, wantSpell)
-    MaybeShowBretonChampionBoonPresentation(playerRef, wantSpell, hadWanted, traditionValue, championSource)
-EndFunction
 
 ; Grants wantSpell and strips every other Breton champion boon. Stendarr/Y'ffre/
 ; Daedric reuse the former tradition-T3 records; the nine below are the authored
 ; per-deity copies. SyncRaceRewardSpell no-ops on a None property, so an unbuilt
 ; record is safe.
-Function SyncBretonChampionBoonExclusive(Actor playerRef, Spell wantSpell)
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_KnightsRoad_T3, wantSpell == PDV_Bless_Breton_KnightsRoad_T3, "Breton Champion Stendarr")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_GreenWay_T3, wantSpell == PDV_Bless_Breton_GreenWay_T3, "Breton Champion Yffre")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_HiddenArt_T3, wantSpell == PDV_Bless_Breton_HiddenArt_T3, "Breton Champion HiddenArt")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Mara, wantSpell == PDV_Bless_Breton_Champion_Mara, "Breton Champion Mara")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Arkay, wantSpell == PDV_Bless_Breton_Champion_Arkay, "Breton Champion Arkay")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Akatosh, wantSpell == PDV_Bless_Breton_Champion_Akatosh, "Breton Champion Akatosh")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Julianos, wantSpell == PDV_Bless_Breton_Champion_Julianos, "Breton Champion Julianos")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Kynareth, wantSpell == PDV_Bless_Breton_Champion_Kynareth, "Breton Champion Kynareth")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Dibella, wantSpell == PDV_Bless_Breton_Champion_Dibella, "Breton Champion Dibella")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Zenithar, wantSpell == PDV_Bless_Breton_Champion_Zenithar, "Breton Champion Zenithar")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Talos, wantSpell == PDV_Bless_Breton_Champion_Talos, "Breton Champion Talos")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Breton_Champion_Magnus, wantSpell == PDV_Bless_Breton_Champion_Magnus, "Breton Champion Magnus")
-EndFunction
 
 ; Maps an active Champion patron to their Breton champion boon. Stendarr and
 ; Y'ffre reuse the tradition capstones they always were; a Daedric Hidden Art
 ; patron gets the occult practitioner cap (the prince's own reward flows through
 ; the 20C pact); the rest get their authored per-deity copy.
-Spell Function GetBretonPatronChampionBoon(PDV_DeityBase deity, Int traditionValue)
-    if !deity
-        return None
-    endIf
-    if deity == LedgerRuntime.PDV_Stendarr
-        return PDV_Bless_Breton_KnightsRoad_T3
-    elseIf deity == PDV_Yffre
-        return PDV_Bless_Breton_GreenWay_T3
-    elseIf deity == LedgerRuntime.PDV_Mara
-        return PDV_Bless_Breton_Champion_Mara
-    elseIf deity == LedgerRuntime.PDV_Arkay
-        return PDV_Bless_Breton_Champion_Arkay
-    elseIf deity == LedgerRuntime.PDV_Akatosh
-        return PDV_Bless_Breton_Champion_Akatosh
-    elseIf deity == LedgerRuntime.PDV_Julianos
-        return PDV_Bless_Breton_Champion_Julianos
-    elseIf deity == LedgerRuntime.PDV_Kynareth
-        return PDV_Bless_Breton_Champion_Kynareth
-    elseIf deity == LedgerRuntime.PDV_Dibella
-        return PDV_Bless_Breton_Champion_Dibella
-    elseIf deity == LedgerRuntime.PDV_Zenithar
-        return PDV_Bless_Breton_Champion_Zenithar
-    elseIf deity == PDV_Talos
-        return PDV_Bless_Breton_Champion_Talos
-    elseIf deity == PDV_Magnus
-        return PDV_Bless_Breton_Champion_Magnus
-    endIf
 
-    PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
-    if path && traditionValue == BRETON_TRADITION_HIDDEN_ART
-        return PDV_Bless_Breton_HiddenArt_T3
-    endIf
-    return None
-EndFunction
 
-String Function GetBretonChampionBoonDisplayName(PDV_DeityBase deity)
-    if deity == LedgerRuntime.PDV_Stendarr
-        return "Knight's Bulwark - Champion"
-    elseIf deity == PDV_Yffre
-        return "Green Way - Champion"
-    elseIf deity == LedgerRuntime.PDV_Mara
-        return "Mara's Compassion - Champion"
-    elseIf deity == LedgerRuntime.PDV_Arkay
-        return "Arkay's Ward - Champion"
-    elseIf deity == LedgerRuntime.PDV_Akatosh
-        return "Akatosh's Endurance - Champion"
-    elseIf deity == LedgerRuntime.PDV_Julianos
-        return "Julianos's Insight - Champion"
-    elseIf deity == LedgerRuntime.PDV_Kynareth
-        return "Kynareth's Sky - Champion"
-    elseIf deity == LedgerRuntime.PDV_Dibella
-        return "Dibella's Inspiration - Champion"
-    elseIf deity == LedgerRuntime.PDV_Zenithar
-        return "Zenithar's Prosperity - Champion"
-    elseIf deity == PDV_Talos
-        return "Talos's Triumph - Champion"
-    elseIf deity == PDV_Magnus
-        return "Magnus's Aperture - Champion"
-    endIf
 
-    if deity as PDV_DaedricPathBase
-        return "Hidden Art - Champion"
-    endIf
-    return "Champion blessing"
-EndFunction
 
-Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpell, Bool hadWanted, Int traditionValue, PDV_DeityBase championSource)
-    if IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-    if !playerRef || !wantSpell || !championSource || !playerRef.HasSpell(wantSpell)
-        return
-    endIf
-
-    ; The Prince milestone path already owns its toast and Book entry. Hidden Art's
-    ; practitioner capstone is an additional reward, not a second tier announcement.
-    if championSource as PDV_DaedricPathBase
-        return
-    endIf
-
-    String deityName = GetPublicDeityDisplayName(championSource)
-    String shownKey = "PDV.Breton.ChampionBoonNoticeShown." + deityName
-    if hadWanted && StorageUtil.GetIntValue(None, shownKey) == 1
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, shownKey, 1)
-    String traditionLabel = GetBretonTraditionLabel()
-    String symbolName = GetPrismaSymbolForDeity(championSource)
-    String titleText = deityName + " names you Champion"
-    String line = deityName + " names you Champion."
-    if IsBretonResonantPatronChampion(traditionValue)
-        line = deityName + " names you Champion through the " + traditionLabel + "."
-    endIf
-    if LedgerRuntime.NotifyTierUp(championSource, LedgerRuntime.TIER_CHAMPION)
-        Trace(2, "Breton champion boon marked generic tier guard: " + deityName)
-    endIf
-    SendPrismaToast(symbolName, "good", titleText, line)
-    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, LedgerRuntime.TIER_CHAMPION, titleText)
-    Trace(1, "Breton champion boon presentation shown: " + deityName + " / " + traditionLabel)
-EndFunction
-
-Function MaybeShowBretonTraditionRewardPresentation(Actor playerRef, Spell rewardSpell, Bool hadSpell, Bool wantsSpell, PDV_DeityBase deity, String traditionLabel, Int tierValue)
-    if IsRaceSetupQuietPresentationActive()
-        return
-    endIf
-    if !playerRef || !rewardSpell || !wantsSpell || !playerRef.HasSpell(rewardSpell)
-        return
-    endIf
-
-    String displayLabel = GetBretonTraditionRewardDisplayLabel(traditionLabel)
-    String shownKey = "PDV.Breton.TraditionRewardNoticeShown." + displayLabel + "." + tierValue
-    if hadSpell && StorageUtil.GetIntValue(None, shownKey) == 1
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, shownKey, 1)
-    String tierLabel = GetTierStandingLabel(tierValue)
-    String symbolName = GetPrismaSymbolForDeity(deity)
-    String titleText = displayLabel + " deepens"
-    String line = "The " + displayLabel + " names you " + tierLabel + "."
-    if tierValue >= LedgerRuntime.TIER_CHAMPION && deity
-        String deityName = GetPublicDeityDisplayName(deity)
-        titleText = deityName + " names you " + tierLabel
-        line = deityName + " names you " + tierLabel + " through the " + displayLabel + "."
-        if LedgerRuntime.NotifyTierUp(deity, tierValue)
-            Trace(2, "Breton focused Champion marked generic tier guard: " + deity.DeityName)
-        endIf
-    endIf
-    SendPrismaToast(symbolName, "good", titleText, line)
-    AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= LedgerRuntime.TIER_CHAMPION, tierValue, titleText)
-EndFunction
-
-String Function GetBretonTraditionRewardDisplayLabel(String label)
-    if label == "KnightsRoad"
-        return "Knight's Road"
-    elseIf label == "HiddenArt"
-        return "Hidden Art"
-    elseIf label == "GreenWay"
-        return "Green Way"
-    endIf
-    return label
-EndFunction
 
 ; Breton two-axis model: tradition practice earns T1/T2 by count; an active
 ; Champion patron only lifts the tradition to T3 if that patron resonates with
@@ -9147,253 +8229,27 @@ EndFunction
 ; Unified model (2026-07-13): the tradition tier is the PRACTICE tier and caps at
 ; Devoted (T2). Champion is a patron property (SyncBretonChampionBoon), no longer
 ; a tradition tier, so the old resonant->CHAMPION shortcut is gone.
-Int Function GetBretonTraditionTier(Int traditionValue)
-    return GetBretonPracticeTier(traditionValue)
-EndFunction
 
-Int Function GetBretonPracticeTier(Int traditionValue)
-    Int practiceCount = GetBretonPracticeCount(traditionValue)
-    if practiceCount >= BRETON_PRACTICE_DEVOTED_POINTS
-        return LedgerRuntime.TIER_DEVOTED
-    elseIf practiceCount >= BRETON_PRACTICE_SEEKER_POINTS
-        return LedgerRuntime.TIER_SEEKER
-    endIf
-    return LedgerRuntime.TIER_NONE
-EndFunction
 
-Int Function GetBretonPracticeCount(Int traditionValue)
-    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        return StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowCount")
-    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        return StorageUtil.GetIntValue(None, "PDV.Breton.HiddenArtCount")
-    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        return StorageUtil.GetIntValue(None, "PDV.Breton.GreenWayCount")
-    endIf
-    return 0
-EndFunction
 
-Function SetBretonPracticeCount(Int traditionValue, Int practicePoints)
-    Int normalizedPoints = PDV_DevotionRules.ClampInt(practicePoints, 0, BRETON_PRACTICE_DEVOTED_POINTS)
-    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowCount", normalizedPoints)
-    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        StorageUtil.SetIntValue(None, "PDV.Breton.HiddenArtCount", normalizedPoints)
-    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        StorageUtil.SetIntValue(None, "PDV.Breton.GreenWayCount", normalizedPoints)
-    endIf
-EndFunction
 
-Bool Function IsBretonResonantPatronChampion(Int traditionValue)
-    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity
-        return False
-    endIf
-    if LedgerRuntime.GetTier(_activeDeity) < LedgerRuntime.TIER_CHAMPION
-        return False
-    endIf
-    return IsDeityResonantWithBretonTradition(traditionValue, _activeDeity)
-EndFunction
 
-Bool Function IsBretonNonResonantPatronChampion(Int traditionValue)
-    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity
-        return False
-    endIf
-    if LedgerRuntime.GetTier(_activeDeity) < LedgerRuntime.TIER_CHAMPION
-        return False
-    endIf
-    return !IsDeityResonantWithBretonTradition(traditionValue, _activeDeity)
-EndFunction
 
-Bool Function IsDeityResonantWithBretonTradition(Int traditionValue, PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        return deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Akatosh || deity == PDV_Talos || deity == LedgerRuntime.PDV_Kynareth
-    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        return deity == PDV_Yffre || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Kynareth || deity == LedgerRuntime.PDV_Dibella
-    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
-        if path
-            return True
-        endIf
-        return deity == PDV_Magnus || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Dibella
-    endIf
-    return False
-EndFunction
 
-PDV_DeityBase Function GetBretonTraditionPresentationDeity(Int traditionValue)
-    if IsBretonResonantPatronChampion(traditionValue)
-        return _activeDeity
-    endIf
-    return GetBretonTraditionDeity(traditionValue)
-EndFunction
 
-Int Function GetBretonTraditionValue()
-    Int traditionValue = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
-    if traditionValue >= BRETON_TRADITION_KNIGHTS_ROAD && traditionValue <= BRETON_TRADITION_GREEN_WAY
-        return traditionValue
-    endIf
 
-    return BRETON_TRADITION_KNIGHTS_ROAD
-EndFunction
 
-PDV_DeityBase Function GetBretonTraditionDeity(Int traditionValue)
-    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        return LedgerRuntime.PDV_Stendarr
-    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        return PDV_Magnus
-    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        return PDV_Yffre
-    endIf
 
-    return None
-EndFunction
 
-Int Function GetBretonDruidicForkValue()
-    Int forkValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicFork", BRETON_DRUIDIC_FORK_NONE)
-    if forkValue >= BRETON_DRUIDIC_FORK_NONE && forkValue <= BRETON_DRUIDIC_FORK_BETRAYED
-        return forkValue
-    endIf
 
-    return BRETON_DRUIDIC_FORK_NONE
-EndFunction
 
-Function SetBretonDruidicFork(Int forkValue, String reason)
-    Int oldFork = GetBretonDruidicForkValue()
-    Int normalized = PDV_DevotionRules.ClampInt(forkValue, BRETON_DRUIDIC_FORK_NONE, BRETON_DRUIDIC_FORK_BETRAYED)
-    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicFork", normalized)
-    StorageUtil.SetStringValue(None, "PDV.Breton.LastDruidicForkReason", reason)
-    if PDV_GLO_State_BretonDruidicFork
-        PDV_GLO_State_BretonDruidicFork.SetValue(normalized as Float)
-    endIf
-    if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && oldFork != normalized
-        SurfaceBretonDruidicForkChange(normalized)
-    endIf
-EndFunction
 
-Function SurfaceBretonDruidicForkChange(Int forkValue)
-    if forkValue == BRETON_DRUIDIC_FORK_WEREWOLF
-        SendPrismaShiftToast("The Green Way turns wild in you.", "", "kynareth")
-        AppendBookOfDaysEntry("The beast-blood took your Green Way down a wilder road. The Werewolf path is yours now.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
-    elseIf forkValue == BRETON_DRUIDIC_FORK_BETRAYED
-        SendPrismaShiftToast("You broke faith with the Green.", "", "kynareth")
-        AppendBookOfDaysEntry("You turned from the Green Way's trust. The path remembers the betrayal.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
-    endIf
-EndFunction
 
-Function EnsureBretonDruidicForkInitialized()
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return
-    endIf
 
-    Int current = GetBretonDruidicForkValue()
-    if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicForkInitialized") != 1
-        if GetBretonTraditionValue() == BRETON_TRADITION_GREEN_WAY
-            SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, "breton_greenway_default")
-        else
-            SetBretonDruidicFork(current, "breton_non_greenway_default")
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
-    elseIf PDV_GLO_State_BretonDruidicFork
-        PDV_GLO_State_BretonDruidicFork.SetValue(current as Float)
-    endIf
-EndFunction
 
-Bool Function IsBretonGreenWayForkEligible()
-    if GetBretonTraditionValue() != BRETON_TRADITION_GREEN_WAY
-        return False
-    endIf
 
-    return GetBretonDruidicForkValue() == BRETON_DRUIDIC_FORK_DRUIDIC
-EndFunction
 
-String Function GetBretonDruidicForkLabel()
-    Int forkValue = GetBretonDruidicForkValue()
-    if forkValue == BRETON_DRUIDIC_FORK_DRUIDIC
-        return "Druidic"
-    elseIf forkValue == BRETON_DRUIDIC_FORK_WEREWOLF
-        return "Werewolf"
-    elseIf forkValue == BRETON_DRUIDIC_FORK_BETRAYED
-        return "Betrayed"
-    endIf
 
-    return "None"
-EndFunction
-
-Bool Function IsBretonTraditionNeglected()
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return False
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Breton.LastTraditionSignalTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
-EndFunction
-
-Function SyncBretonNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !PDV_SPEL_Neglect_Breton
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(PDV_SPEL_Neglect_Breton)
-            playerRef.AddSpell(PDV_SPEL_Neglect_Breton, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 1)
-    else
-        if playerRef.HasSpell(PDV_SPEL_Neglect_Breton)
-            playerRef.RemoveSpell(PDV_SPEL_Neglect_Breton)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 0)
-    endIf
-EndFunction
-
-Function SyncBretonKnightlyVowCreedLossSpells(Bool isKnightsRoadBreton)
-    Int integrityValue = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-    Bool isStrained = isKnightsRoadBreton && integrityValue >= 30 && integrityValue < 70
-    Bool isBroken = isKnightsRoadBreton && integrityValue < 30
-
-    SyncBretonCreedLossSpell(PDV_SPEL_CreedLoss_Breton_VowIntegrity, isStrained, "PDV.CreedLoss.BretonVowIntegrityActive", "The vow strains. Mercy and the shield come harder now.")
-    SyncBretonCreedLossSpell(PDV_SPEL_CreedLoss_Breton_Excommunication, isBroken, "PDV.CreedLoss.BretonExcommunicationActive", "The vow breaks. The Knight's Road is halted until repair.")
-EndFunction
-
-Function SyncBretonWitchcraftExposureRuptureSpell(Bool isBreton)
-    Bool isRuptured = isBreton && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
-    SyncBretonCreedLossSpell(PDV_SPEL_CreedLoss_Breton_ExposureRupture, isRuptured, "PDV.CreedLoss.BretonExposureRuptureActive", "Your cover is blown. The hidden art turns against you.")
-EndFunction
-
-Function SyncBretonCreedLossSpell(Spell creedLossSpell, Bool shouldBeActive, String stateKey, String noticeText = "")
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !creedLossSpell
-        StorageUtil.SetIntValue(None, stateKey, 0)
-        return
-    endIf
-
-    if shouldBeActive
-        Bool wasActive = StorageUtil.GetIntValue(None, stateKey) == 1
-        if !playerRef.HasSpell(creedLossSpell)
-            playerRef.AddSpell(creedLossSpell, False)
-        endIf
-        if !wasActive && noticeText != ""
-            SendPrismaToast("journal", "warning", "Creed strained", noticeText)
-        endIf
-        StorageUtil.SetIntValue(None, stateKey, 1)
-    else
-        if playerRef.HasSpell(creedLossSpell)
-            playerRef.RemoveSpell(creedLossSpell)
-        endIf
-        StorageUtil.SetIntValue(None, stateKey, 0)
-    endIf
-EndFunction
-
-Function SyncBretonDruidicForkBetrayalSpell(Bool shouldBeActive)
-    SyncBretonCreedLossSpell(PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal, shouldBeActive, "PDV.CreedLoss.BretonDruidicForkBetrayalActive", "The Green has turned against the broken trust.")
-EndFunction
 
 Function SyncDunmerRewards(Actor playerRef)
     if !playerRef
@@ -9545,129 +8401,12 @@ Function SyncOrcNeglectSpell(Bool shouldBeActive)
     endIf
 EndFunction
 
-Function SyncRedguardRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
 
-    Bool isRedguard = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
-    Int sectValue = GetActiveRedguardSpineSect()
-    SyncRedguardSpineBoon(playerRef, isRedguard, sectValue)
-    ; Option 2 (2026-07-16): the generic ancestor FLOOR (AncestorSpine_T1, "Ancestors' Regard -
-    ; Observant") is descoped -- the sect spine (SyncRedguardSpineBoon) is the always-on ancestor
-    ; layer. Broad progression is KEPT (owner ruling 2026-07-16): AncestorSpine_T2 remains the
-    ; broad-worship Faithful reward, so a broad Redguard at 6+ ancestor-spine sources gains
-    ; "Ancestors' Regard - Faithful" on top of the sect spine. Focused patrons stay broad-state gated
-    ; out of T2, so they carry only their sect spine.
-    Bool broadFaithful = isRedguard && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") >= 6
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T2, broadFaithful, "Redguard AncestorSpine T2")
 
-    SyncRedguardRewardFamily(playerRef, PDV_Tuwhacca, PDV_Bless_Redguard_Tuwhacca_T1, PDV_Bless_Redguard_Tuwhacca_T2, PDV_Bless_Redguard_Tuwhacca_T3, "Tuwhacca")
-    SyncRedguardRewardFamily(playerRef, PDV_HoonDing, PDV_Bless_Redguard_HoonDing_T1, PDV_Bless_Redguard_HoonDing_T2, PDV_Bless_Redguard_HoonDing_T3, "HoonDing")
-    SyncRedguardRewardFamily(playerRef, PDV_Leki, PDV_Bless_Redguard_Leki_T1, PDV_Bless_Redguard_Leki_T2, PDV_Bless_Redguard_Leki_T3, "Leki")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_FarShoresToken, isRedguard && StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken") > 0.0, "Redguard Far Shores Token")
-    if isRedguard && PDV_RedguardSectTrack
-        MaybeShowRedguardChampionEntry(PDV_RedguardSectTrack.GetCurrentState())
-    endIf
-EndFunction
 
-Function SyncRedguardSpineBoon(Actor playerRef, Bool isRedguard, Int sectValue)
-    if !playerRef
-        return
-    endIf
 
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Crown, isRedguard && sectValue == REDGUARD_SECT_CROWN, "Redguard Spine Crown")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_Forebear, isRedguard && sectValue == REDGUARD_SECT_FOREBEAR, "Redguard Spine Forebear")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_Spine_AshAbah, isRedguard && sectValue == REDGUARD_SECT_ASHABAH, "Redguard Spine AshAbah")
-EndFunction
 
-Int Function GetActiveRedguardSpineSect()
-    if PDV_RedguardSectTrack
-        EnsureRedguardSectInitialized()
-        Int sectValue = PDV_RedguardSectTrack.GetCurrentState()
-        if sectValue >= REDGUARD_SECT_CROWN && sectValue <= REDGUARD_SECT_ASHABAH
-            return sectValue
-        endIf
-    endIf
 
-    return REDGUARD_SECT_FOREBEAR
-EndFunction
-
-Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
-    Bool isActive = GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity == deity
-    Int activeTier = LedgerRuntime.TIER_NONE
-    if isActive && deity
-        activeTier = LedgerRuntime.GetTier(deity)
-    endIf
-
-    Bool hadChampionSpell = LedgerRuntime.HasRewardSpell(playerRef, t3)
-    Bool wantsChampionSpell = isActive && activeTier >= LedgerRuntime.TIER_CHAMPION
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t1, isActive && activeTier == LedgerRuntime.TIER_SEEKER, "Redguard " + label + " T1")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == LedgerRuntime.TIER_DEVOTED, "Redguard " + label + " T2")
-    LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Redguard " + label + " T3")
-    LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Redguard " + label)
-EndFunction
-
-Bool Function IsRedguardAncestorDistanceNeglected()
-    if GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD
-        return False
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Curse.Redguard.CyclePressure") > 0
-        return True
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Redguard.LastSectSignalTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
-EndFunction
-
-Function SyncRedguardNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !PDV_SPEL_Neglect_Redguard
-        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        ; Pass 5 rubric sweep (carried from Pass 2). This asked the engine the same
-        ; question twice in consecutive lines -- wasActive was computed and then the very
-        ; next line re-ran HasSpell on the same spell and the same actor. Reuse the answer.
-        Bool wasActive = playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
-        if !wasActive
-            playerRef.AddSpell(PDV_SPEL_Neglect_Redguard, False)
-        endIf
-        if !wasActive
-            EmitRedguardDeathDutyAbandonmentMinus("redguard_ancestor_distance_neglect")
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 1)
-    else
-        if playerRef.HasSpell(PDV_SPEL_Neglect_Redguard)
-            playerRef.RemoveSpell(PDV_SPEL_Neglect_Redguard)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 0)
-    endIf
-EndFunction
-
-Function EmitRedguardDeathDutyAbandonmentMinus(String reason)
-    if !IsRedguardOrigin() || !PDV_Tuwhacca
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardDeathDutyAbandonment")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    LedgerRuntime.AwardCuratedSignalScaled(PDV_Tuwhacca, PDV_Tuwhacca.SIGNAL_DEATH_DUTY_ABANDONMENT, None, multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Redguard.DeathDutyAbandonmentCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Redguard.LastDeathDutyAbandonmentReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastDeathDutyAbandonmentTime", Utility.GetCurrentGameTime())
-    Trace(2, "Redguard death-duty abandonment routed: " + reason + " multiplier=" + multiplier)
-EndFunction
 
 ; Malacath creed-violation minus: werewolf onset is a Code rupture (the beast-blood
 ; cools Malacath's regard). Hooked from ApplyOrcCurseHandlers on a transition INTO the
@@ -9975,7 +8714,7 @@ Int Function GetBroadLaneServiceCount(Int origin)
     if origin == ORIGIN_IMPERIAL
         return LedgerRuntime.GetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_IMPERIAL) as Int
     elseIf origin == ORIGIN_BRETON
-        return GetBretonPracticeCount(GetBretonTraditionValue())
+        return OriginRuntime.GetBretonPracticeCount(OriginRuntime.GetBretonTraditionValue())
     elseIf origin == ORIGIN_ORC
         return StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount")
     elseIf origin == ORIGIN_ALTMER
@@ -10401,7 +9140,7 @@ Function StripAllPdvSpells(Actor playerRef)
     ; uninstall permanently while every sibling family was cleared. Both helpers are
     ; the same clear-before-add removers the rites themselves use.
     OriginRuntime.RemoveAltmerDisciplineSpells(playerRef)
-    RemoveRedguardRememberSpells(playerRef)
+    OriginRuntime.RemoveRedguardRememberSpells(playerRef)
     ; Same defect class, found while fixing B16: the Daedric pact boon + price spells
     ; are properties on the PDV_DaedricPath_* scripts, not on this manager, so the
     ; strip above could never reach them. Malacath's price is SpeedMult -- an
@@ -11138,12 +9877,12 @@ Function DebugSetBretonTradition(Int traditionValue)
     StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", normalized)
     StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
     if normalized == BRETON_TRADITION_GREEN_WAY
-        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, "mcm_breton_tradition")
+        OriginRuntime.SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, "mcm_breton_tradition")
         if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 0) < 50
             StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", 50)
         endIf
     else
-        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_NONE, "mcm_breton_tradition")
+        OriginRuntime.SetBretonDruidicFork(BRETON_DRUIDIC_FORK_NONE, "mcm_breton_tradition")
     endIf
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
     LedgerRuntime.SyncFirstTierRaceRewardRuntime()
@@ -11158,7 +9897,7 @@ EndFunction
 Function DebugSeedBretonDruidicFrayTest()
     StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", BRETON_TRADITION_GREEN_WAY)
     StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
-    SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, "mcm_fray_test")
+    OriginRuntime.SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, "mcm_fray_test")
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", 31)
     StorageUtil.SetIntValue(None, "PDV.Breton.DruidicDecayDay", 0)
@@ -11502,33 +10241,6 @@ Message Function GetDunmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 
-Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == LedgerRuntime.PDV_Stendarr
-        return PDV_Msg_Breton_Stendarr_Offer
-    elseIf deity == LedgerRuntime.PDV_Akatosh
-        return PDV_Msg_Breton_Akatosh_Offer
-    elseIf deity == LedgerRuntime.PDV_Mara
-        return PDV_Msg_Breton_Mara_Offer
-    elseIf deity == LedgerRuntime.PDV_Arkay
-        return PDV_Msg_Breton_Arkay_Offer
-    elseIf deity == LedgerRuntime.PDV_Julianos
-        return PDV_Msg_Breton_Julianos_Offer
-    elseIf deity == LedgerRuntime.PDV_Zenithar
-        return PDV_Msg_Breton_Zenithar_Offer
-    elseIf deity == LedgerRuntime.PDV_Kynareth
-        return PDV_Msg_Breton_Kynareth_Offer
-    elseIf deity == LedgerRuntime.PDV_Dibella
-        return PDV_Msg_Breton_Dibella_Offer
-    elseIf deity == PDV_Magnus
-        return PDV_Msg_Breton_Magnus_Offer
-    elseIf deity == PDV_Talos
-        return PDV_Msg_Breton_Talos_Offer
-    elseIf deity == PDV_Yffre
-        return PDV_Msg_Breton_Yffre_Offer
-    endIf
-
-    return None
-EndFunction
 
 Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
     if deity == LedgerRuntime.PDV_Akatosh
@@ -11554,17 +10266,6 @@ Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
     return None
 EndFunction
 
-Message Function GetRedguardFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == PDV_Tuwhacca
-        return PDV_Msg_Redguard_Tuwhacca_Offer
-    elseIf deity == PDV_Leki
-        return PDV_Msg_Redguard_Leki_Offer
-    elseIf deity == PDV_HoonDing
-        return PDV_Msg_Redguard_HoonDing_Offer
-    endIf
-
-    return None
-EndFunction
 
 Function DebugAcceptPendingCommitment()
     PDV_DeityBase pendingDeity = LedgerRuntime.GetPendingCommitmentDeity()
@@ -11669,17 +10370,6 @@ Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
 EndFunction
 
 
-Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return False
-    endIf
-
-    return deity == LedgerRuntime.PDV_Kynareth || deity == PDV_Talos || deity == LedgerRuntime.PDV_Mara || deity == LedgerRuntime.PDV_Akatosh || deity == LedgerRuntime.PDV_Arkay || deity == LedgerRuntime.PDV_Stendarr || deity == LedgerRuntime.PDV_Julianos || deity == LedgerRuntime.PDV_Dibella || deity == LedgerRuntime.PDV_Zenithar || deity == PDV_Magnus || deity == PDV_Yffre || IsBretonHiddenArtDaedricOfferDeity(deity)
-EndFunction
 
 Bool Function IsBretonHiddenArtDaedricOfferDeity(PDV_DeityBase deity)
     PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
@@ -11727,31 +10417,7 @@ Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)
     return !IsImperialTalosOfferAllowed()
 EndFunction
 
-Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity, Int newTier)
-    if newTier < LedgerRuntime.TIER_CHAMPION
-        return False
-    endIf
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return False
-    endIf
-    if LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE || !_activeDeity || deity != _activeDeity
-        return False
-    endIf
 
-    return IsDeityResonantWithBretonTradition(GetBretonTraditionValue(), deity)
-EndFunction
-
-Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD
-        return False
-    endIf
-
-    return deity == PDV_Tuwhacca || deity == PDV_HoonDing || deity == PDV_Leki
-EndFunction
 
 
 Function DebugDeclinePendingCommitment()
@@ -12854,24 +11520,6 @@ EndFunction
 ; Glyphs for these fall back to journal until the Tier-1/2 design pass lands.
 
 
-Function ApplyBretonCurseHandlers(Int oldState, Int newState, String reason)
-    Bool curseActive = newState != 0
-    if curseActive
-        StorageUtil.SetIntValue(None, "PDV.Curse.Breton.RestorationState", 2)
-    elseIf oldState != 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Breton.RestorationState", 1)
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Breton.RestorationState", 0)
-    endIf
-
-    EnsureBretonDruidicForkInitialized()
-    Int forkValue = GetBretonDruidicForkValue()
-    if newState == 1 && GetBretonTraditionValue() == BRETON_TRADITION_GREEN_WAY && forkValue == BRETON_DRUIDIC_FORK_DRUIDIC
-        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_WEREWOLF, reason)
-    elseIf oldState == 1 && newState == 0 && forkValue == BRETON_DRUIDIC_FORK_WEREWOLF
-        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, reason)
-    endIf
-EndFunction
 
 ; Dunmer 4-state curse posture (LOCKED): vampire silences the ancestor layer
 ; (Silent=2), werewolf strains it (Strained=1), a cure leaves it RestoredScarred
@@ -12969,47 +11617,6 @@ Function ApplyOrcCurseHandlers(Int oldState, Int newState, String reason)
     endIf
 EndFunction
 
-Function ApplyRedguardCurseHandlers(Int oldState, Int newState, String reason)
-    Bool suppressModal = ShouldSuppressRedguardCurseModal(reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 2)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireScar", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireFeedbackShown") != 1
-            ShowRedguardMessage(PDV_Msg_Redguard_CurseState_VampireOnset, "The vampire curse interrupts Tu'whacca's cycle until cure and re-entry.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.VampireFeedbackShown", 1)
-        endIf
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfCureFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown") != 1
-            ShowRedguardMessage(PDV_Msg_Redguard_CurseState_WerewolfOnset, "The beast blood strains the route to proper mortality.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown", 1)
-        endIf
-    elseIf oldState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown") != 1
-            ShowRedguardMessage(PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry, "The thirst is gone, but the ancestors' protection stays withheld until you take up the death-duty and re-enter Tu'whacca's cycle.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown", 1)
-        endIf
-    elseIf oldState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 0)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.WerewolfCureFeedbackShown") != 1
-            ShowRedguardMessage(PDV_Msg_Redguard_CurseState_WerewolfCured, "The beast blood is quiet. The mortal road steadies again.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfCureFeedbackShown", 1)
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 0)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireFeedbackShown", 0)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown", 0)
-    endIf
-
-    StorageUtil.SetStringValue(None, "PDV.Curse.Redguard.LastReason", reason)
-EndFunction
 
 Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
     Bool suppressModal = ShouldSuppressNordCurseModal(reason)
@@ -13052,9 +11659,6 @@ Bool Function ShouldSuppressNordCurseModal(String reason)
     return reason == "mcm_force_none" || reason == "mcm_force_werewolf" || reason == "mcm_force_vampire"
 EndFunction
 
-Bool Function ShouldSuppressRedguardCurseModal(String reason)
-    return reason == "mcm_force_none" || reason == "mcm_force_werewolf" || reason == "mcm_force_vampire"
-EndFunction
 
 
 Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppressModal)
@@ -13092,18 +11696,6 @@ Function ShowNordNotification(Message messageRecord, String fallbackText)
     SendPrismaToast("kyne", "neutral", "", fallbackText)
 EndFunction
 
-Function ShowRedguardNotification(Message messageRecord, String fallbackText)
-    if !NotificationsEnabled()
-        return
-    endIf
-
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
-EndFunction
 
 ; P11 (2026-08-04): the Altmer sibling of the Nord/Redguard/Orc notification helpers.
 ; The fallback path is the reason every Altmer notification property has to be bound: a None
@@ -13140,27 +11732,6 @@ Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppres
     Debug.MessageBox(fallbackText)
 EndFunction
 
-Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool suppressModal)
-    if _suppressCurseTransitionOutputs
-        return
-    endIf
-
-    ; Past this point the function always emits something (toast, modal, or fallback box),
-    ; so the generic curse toast can stand aside for this transition.
-    _raceCurseSurfaceShown = True
-
-    if suppressModal
-        SendPrismaToast("tuwhacca", "warning", "", fallbackText)
-        return
-    endIf
-
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    Debug.MessageBox(fallbackText)
-EndFunction
 
 
 
@@ -13346,9 +11917,9 @@ Function ApplyStartupChoice(Int originRace, Int optionValue, String reason)
     if originRace == ORIGIN_BOSMER
         OriginRuntime.ApplyBosmerInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_BRETON
-        ApplyBretonInitialChoice(optionValue, reason)
+        OriginRuntime.ApplyBretonInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_REDGUARD
-        ApplyRedguardInitialChoice(optionValue, reason)
+        OriginRuntime.ApplyRedguardInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_ORC
         ApplyOrcInitialChoice(optionValue, reason)
     elseIf originRace == ORIGIN_NORD
@@ -13363,49 +11934,7 @@ String Function BuildStartupRoadJournalLine(String pathLabel)
     return "You've chosen your road: " + pathLabel + "."
 EndFunction
 
-Function ApplyBretonInitialChoice(Int traditionValue, String reason)
-    Int normalized = PDV_DevotionRules.ClampInt(traditionValue, 0, 2)
-    BeginRaceSetupQuietPresentation(reason)
-    StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", normalized)
-    StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
-    StorageUtil.SetStringValue(None, "PDV.Breton.StartupReason", reason)
-    if normalized == BRETON_TRADITION_GREEN_WAY
-        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_DRUIDIC, reason)
-        ; Seed the covenant at its open midpoint so a fresh Green Way Breton reads
-        ; "open" (50), not the rebanded fraying band (<30). Never lowers an
-        ; existing value.
-        if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 0) < 50
-            StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        endIf
-    else
-        SetBretonDruidicFork(BRETON_DRUIDIC_FORK_NONE, reason)
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
-    PDV_DeityBase traditionDeity = GetBretonTraditionDeity(normalized)
-    if traditionDeity
-        String traditionLabel = GetBretonTraditionLabel()
-        SendPrismaShiftToast("You set your tradition: " + traditionLabel + ".", "", GetPrismaSymbolForDeity(traditionDeity))
-        AppendBookOfDaysEntry(BuildStartupRoadJournalLine(traditionLabel), Utility.GetCurrentGameTime() as Int, "reorientation", GetPrismaSymbolForDeity(traditionDeity), True, 3, "", True)
-        SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
-    endIf
-    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    RequestPanelRefresh()
-    EndRaceSetupQuietPresentation()
-EndFunction
 
-Function ApplyRedguardInitialChoice(Int sectValue, String reason)
-    BeginRaceSetupQuietPresentation(reason)
-    if PDV_RedguardSectTrack
-        Int normalized = PDV_DevotionRules.ClampInt(sectValue, REDGUARD_SECT_CROWN, REDGUARD_SECT_ASHABAH)
-        PDV_RedguardSectTrack.SetState(normalized, reason)
-        AppendBookOfDaysEntry(BuildStartupRoadJournalLine(GetRedguardSectLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "sect", True, 3, "", True)
-        ShowRedguardSectEntry(normalized)
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Redguard.SetupComplete", 1)
-    LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    RequestPanelRefresh()
-    EndRaceSetupQuietPresentation()
-EndFunction
 
 Function ApplyOrcInitialChoice(Int modeValue, String reason)
     BeginRaceSetupQuietPresentation(reason)
@@ -13444,376 +11973,33 @@ Function ApplyNordInitialChoice(Int baselineValue, String reason)
     EndRaceSetupQuietPresentation()
 EndFunction
 
-Function HandleBretonTraditionChoice(Int traditionValue, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        Trace(2, "Breton tradition choice ignored for non-Breton origin.")
-        return
-    endIf
-
-    ; Tradition onboarding is explicit and start-locked: the first choice latches
-    ; it, and there is no silent mid-game switching in 1.0. A later off-tradition
-    ; source becomes cross-tradition pressure, never a silent tradition rewrite.
-    if StorageUtil.GetIntValue(None, "PDV.Breton.SetupComplete") == 1
-        if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) != traditionValue
-            StorageUtil.SetIntValue(None, "PDV.Breton.CrossTraditionPressure", StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") + 1)
-            StorageUtil.SetStringValue(None, "PDV.Breton.LastTraditionHookReason", reason)
-            Trace(2, "Breton tradition locked; off-tradition source -> cross-tradition pressure: " + reason)
-        endIf
-        return
-    endIf
-
-    ApplyBretonInitialChoice(traditionValue, reason)
-    StorageUtil.SetStringValue(None, "PDV.Breton.LastTraditionHookReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    Trace(2, "Breton tradition choice routed: " + reason)
-EndFunction
 
 ; WitchcraftExposure is not a one-way ratchet: occult signals add +25, but exposure
 ; also fades by 1 each dawn, so clean living slowly lowers cover. (The faster public
 ; Divine-cover path and the rupture creed-loss spell are record-backed refinements.)
-Function DecayBretonWitchcraftExposureAtDawn()
-    Int exposure = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-    if exposure <= 0
-        return
-    endIf
-    exposure -= 1
-    StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", exposure)
-    Trace(2, "Breton WitchcraftExposure passive decay -> " + exposure)
-EndFunction
 
 ; The Green Way is an outdoor covenant. Skyrim keeps pulling a Breton into cities
 ; and dungeons, so a live druidic covenant quietly frays without recent outdoor
 ; observance -- a small per-dawn drop mirroring the WitchcraftExposure fade.
 ; Pressure-only: no boon is withdrawn (DruidicStanding gates no reward).
-Function DecayBretonDruidicStandingAtDawn()
-    if !ShouldBretonDruidicStandingFray()
-        return
-    endIf
-
-    ; Once-per-dawn guard. fix-plan 4.2: the day+1 encoding already dodged the day-0
-    ; self-suppression trap, but on the raw-midnight day -- now the actual dawn day.
-    if LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay") == (LedgerRuntime.GetDevotionalDay() + 2)
-        return
-    endIf
-    LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay")
-
-    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-    if standingValue <= 0
-        return
-    endIf
-    standingValue = PDV_DevotionRules.ClampInt(standingValue - 1, 0, 100)
-    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", standingValue)
-    Trace(2, "Breton DruidicStanding neglect decay -> " + standingValue)
-EndFunction
 
 ; Green Way fraying applies to a live or contested druidic covenant only: the
 ; Druidic fork and the unresolved Werewolf fork. Excludes Betrayed (already under
 ; SyncBretonDruidicForkBetrayalSpell -- no double pressure) and any non-Green
 ; Breton (DruidicStanding is pressure-only and must not punish ordinary life).
-Bool Function ShouldBretonDruidicStandingFray()
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return False
-    endIf
-    if GetBretonTraditionValue() != BRETON_TRADITION_GREEN_WAY
-        return False
-    endIf
-    return GetBretonDruidicForkValue() != BRETON_DRUIDIC_FORK_BETRAYED
-EndFunction
 
-Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return
-    endIf
 
-    Trace(2, "Retired Breton ancestor spine signal ignored: " + reason + " x" + multiplier)
-EndFunction
 
-Function RunDawnRefreshBretonAncestor()
-    if !PDV_BretonAncestorSubstrate
-        return
-    endIf
 
-    PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
-EndFunction
 
-Function HandleBretonActionPracticeSignal(Int eventType, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return
-    endIf
 
-    String sourceKey = "event_" + eventType
-    if eventType == 350 || eventType == 351
-        AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
-    elseIf eventType == 300 || eventType == 301
-        AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
-    elseIf eventType == 304 || eventType == 364 || eventType == 362 || eventType == 366
-        DamageBretonPracticePressure(BRETON_TRADITION_KNIGHTS_ROAD, 10, sourceKey, reason)
-    endIf
 
-    if eventType == 313 || eventType == 334 || eventType == 303 || eventType == 333 || eventType == 300
-        AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
-    elseIf eventType == 365 || eventType == 331 || eventType == 364
-        DamageBretonPracticePressure(BRETON_TRADITION_GREEN_WAY, 10, sourceKey, reason)
-    endIf
 
-    if eventType == 341 || eventType == 342
-        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
-    elseIf eventType == 331
-        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
-    elseIf eventType == 333 || eventType == 314
-        AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_RENEWABLE_POINTS, sourceKey, reason)
-    endIf
-EndFunction
 
-Function HandleBretonQuestTagPracticeSignal(String sourceTag, Bool positive, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON || sourceTag == ""
-        return
-    endIf
 
-    String sourceKey = "tag_" + sourceTag
-    if positive
-        if sourceTag == "mercy_spare" || sourceTag == "protect_the_weak" || sourceTag == "uphold_law_justice" || sourceTag == "keep_oath"
-            AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_CURATED_POINTS, sourceKey, reason)
-        elseIf sourceTag == "honor_the_wild" || sourceTag == "the_hunt"
-            AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, BRETON_PRACTICE_CURATED_POINTS, sourceKey, reason)
-        elseIf sourceTag == "forbidden_knowledge"
-            AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_CURATED_POINTS, sourceKey, reason)
-        endIf
-    else
-        if sourceTag == "kill_the_helpless" || sourceTag == "murder_treacherous"
-            DamageBretonPracticePressure(BRETON_TRADITION_KNIGHTS_ROAD, 12, sourceKey, reason)
-        elseIf sourceTag == "defile_nature" || sourceTag == "necromancy"
-            DamageBretonPracticePressure(BRETON_TRADITION_GREEN_WAY, 12, sourceKey, reason)
-        elseIf sourceTag == "reckless_magic"
-            DamageBretonPracticePressure(BRETON_TRADITION_HIDDEN_ART, 12, sourceKey, reason)
-        endIf
-    endIf
-EndFunction
 
-Int Function ConsumeBretonPracticePointBudget(Int requestedPoints)
-    if requestedPoints <= 0
-        return 0
-    endIf
 
-    ; fix-plan 4.2: the practice-point budget is a daily cap; devotional day.
-    Int today = LedgerRuntime.GetDevotionalDay() + 2
-    Int budgetDay = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointDay", -1)
-    if budgetDay != today
-        StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointDay", today)
-        StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", 0)
-    endIf
 
-    Int pointsToday = StorageUtil.GetIntValue(None, "PDV.Breton.PracticePointsToday")
-    Int remaining = BRETON_PRACTICE_DAILY_MAX_POINTS - pointsToday
-    if remaining <= 0
-        return 0
-    endIf
-
-    Int appliedPoints = requestedPoints
-    if appliedPoints > remaining
-        appliedPoints = remaining
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Breton.PracticePointsToday", pointsToday + appliedPoints)
-    return appliedPoints
-EndFunction
-
-Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, String sourceKey, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return False
-    endIf
-    if GetBretonTraditionValue() != traditionValue
-        return False
-    endIf
-    if traditionValue == BRETON_TRADITION_GREEN_WAY && !IsBretonGreenWayForkEligible()
-        return False
-    endIf
-    if !ConsumeOncePerDaySignal("PDV.Signal.BretonPractice." + traditionValue + "." + sourceKey)
-        return False
-    endIf
-
-    Int appliedPoints = ConsumeBretonPracticePointBudget(requestedPoints)
-    if appliedPoints <= 0
-        Trace(2, "Breton practice daily cap blocked " + sourceKey + ": " + reason)
-        return False
-    endIf
-
-    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-        SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
-        StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
-    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", PDV_DevotionRules.ClampInt(exposureValue + appliedPoints, 0, 100))
-        SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
-        StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
-    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        EnsureBretonDruidicForkInitialized()
-        Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", PDV_DevotionRules.ClampInt(standingValue + appliedPoints, 0, 100))
-        SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)
-        StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
-    endIf
-
-    StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    if _qrQueueTransactionActive
-        _qrQueueNeedsBretonRewardSync = True
-    else
-        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-        RequestPanelRefresh()
-    endIf
-    Trace(2, "Breton practice pulse " + traditionValue + " +" + appliedPoints + " from " + sourceKey + ": " + reason)
-    return True
-EndFunction
-
-Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, String sourceKey, String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        return False
-    endIf
-    if GetBretonTraditionValue() != traditionValue
-        return False
-    endIf
-    if !ConsumeOncePerDaySignal("PDV.Signal.BretonPracticeDamage." + traditionValue + "." + sourceKey)
-        return False
-    endIf
-
-    if traditionValue == BRETON_TRADITION_KNIGHTS_ROAD
-        Int vowValue = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-        StorageUtil.SetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", PDV_DevotionRules.ClampInt(vowValue - damageDelta, 0, 100))
-        StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
-    elseIf traditionValue == BRETON_TRADITION_HIDDEN_ART
-        Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-        StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", PDV_DevotionRules.ClampInt(exposureValue + damageDelta, 0, 100))
-        StorageUtil.SetStringValue(None, "PDV.Breton.LastHiddenArtReason", reason)
-    elseIf traditionValue == BRETON_TRADITION_GREEN_WAY
-        EnsureBretonDruidicForkInitialized()
-        Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", PDV_DevotionRules.ClampInt(standingValue - damageDelta, 0, 100))
-        StorageUtil.SetStringValue(None, "PDV.Breton.LastGreenWayReason", reason)
-    endIf
-
-    StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    if _qrQueueTransactionActive
-        _qrQueueNeedsBretonRewardSync = True
-    else
-        LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-        RequestPanelRefresh()
-    endIf
-    Trace(2, "Breton practice pressure " + traditionValue + " from " + sourceKey + ": " + reason)
-    return True
-EndFunction
-
-Function MaybeRecordBretonCrossTraditionPressure(Int sourceTradition, String sourceKey, String reason)
-    if StorageUtil.GetIntValue(None, "PDV.Breton.SetupComplete") != 1
-        return
-    endIf
-    if GetBretonTraditionValue() == sourceTradition
-        return
-    endIf
-    if !ConsumeOncePerDaySignal("PDV.Signal.BretonCrossTradition." + sourceTradition + "." + sourceKey)
-        return
-    endIf
-
-    StorageUtil.AdjustIntValue(None, "PDV.Breton.CrossTraditionPressure", 1)
-    StorageUtil.SetStringValue(None, "PDV.Breton.LastTraditionHookReason", reason)
-EndFunction
-
-Function HandleBretonKnightlyVow(String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        Trace(2, "Breton Knightly Vow ignored for non-Breton origin.")
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonKnightlyVow")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    if LedgerRuntime.PDV_Stendarr
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Stendarr, LedgerRuntime.PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
-    endIf
-    if !AwardBretonPracticePulse(BRETON_TRADITION_KNIGHTS_ROAD, BRETON_PRACTICE_CURATED_POINTS, "handler_knightly_vow", reason)
-        MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_KNIGHTS_ROAD, "handler_knightly_vow", reason)
-    endIf
-
-    AwardBretonAncestorSpinePulse(multiplier, reason)
-    StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
-    Trace(2, "Breton Knightly Vow routed: " + reason)
-EndFunction
-
-Function HandleBretonHiddenArtExposure(String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        Trace(2, "Breton Hidden Art ignored for non-Breton origin.")
-        return
-    endIf
-
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonHiddenArtExposure")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    if PDV_Magnus
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Magnus, PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
-    endIf
-    if LedgerRuntime.PDV_Mara && PDV_DevotionRules.StringContainsToken(reason, "home")
-        LedgerRuntime.AwardCuratedSignalScaled(LedgerRuntime.PDV_Mara, LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
-    endIf
-    Bool practiceAwarded = AwardBretonPracticePulse(BRETON_TRADITION_HIDDEN_ART, BRETON_PRACTICE_CURATED_POINTS, "handler_hidden_art_exposure", reason)
-    if !practiceAwarded
-        MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_HIDDEN_ART, "handler_hidden_art_exposure", reason)
-    endIf
-    AwardBretonAncestorSpinePulse(multiplier, reason)
-    ; An approved P2 book is a distinct player acknowledgement even when the
-    ; daily practice cap has already reduced its mechanical credit.
-    SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
-    Trace(2, "Breton Hidden Art exposure routed: " + reason)
-EndFunction
-
-String Function GetBretonHiddenArtNoticeTitle(String reason)
-    if PDV_DevotionRules.StringContainsToken(reason, "hagravens")
-        return "Hagraven lore"
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "madmen_reach")
-        return "Reach-mad whispers"
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "witch_note")
-        return "A witch's note"
-    endIf
-
-    return "The Hidden Art"
-EndFunction
-
-String Function GetBretonHiddenArtNoticeText(String reason)
-    if PDV_DevotionRules.StringContainsToken(reason, "hagravens")
-        return "Old bargains leave a mark on your cover."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "madmen_reach")
-        return "Forbidden Reach lore stirs your hidden practice."
-    elseIf PDV_DevotionRules.StringContainsToken(reason, "witch_note")
-        return "A private craft presses closer to the surface."
-    endIf
-
-    return "Forbidden pages leave their mark on you."
-EndFunction
-
-Function HandleBretonGreenWayStanding(String reason)
-    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
-        Trace(2, "Breton Green Way ignored for non-Breton origin.")
-        return
-    endIf
-
-    EnsureBretonDruidicForkInitialized()
-    Float multiplier = ConsumeDailyRepeatMultiplier("PDV.Signal.BretonGreenWayStanding")
-    if multiplier <= 0.0
-        return
-    endIf
-    if PDV_Yffre
-        ; Breton-voiced Green Way signal; the Bosmer Living Story signal stays
-        ; Bosmer-only so driver rows read in the right tradition's voice.
-        LedgerRuntime.AwardCuratedSignalScaled(PDV_Yffre, PDV_Yffre.SIGNAL_GREEN_WAY, None, multiplier)
-    endIf
-    if !AwardBretonPracticePulse(BRETON_TRADITION_GREEN_WAY, BRETON_PRACTICE_CURATED_POINTS, "handler_green_way_standing", reason)
-        MaybeRecordBretonCrossTraditionPressure(BRETON_TRADITION_GREEN_WAY, "handler_green_way_standing", reason)
-    endIf
-    AwardBretonAncestorSpinePulse(multiplier, reason)
-    Trace(2, "Breton Green Way standing routed: " + reason)
-EndFunction
 
 Function HandleDunmerReclamationFocus(Int focusValue, String reason)
     if GetPlayerOriginRaceIndex() != ORIGIN_DUNMER
@@ -14765,7 +12951,7 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
     endIf
 
     if originRace == ORIGIN_BRETON
-        return GetBretonBookOfDaysPathStatusLabel()
+        return OriginRuntime.GetBretonBookOfDaysPathStatusLabel()
     endIf
 
     PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
@@ -14798,7 +12984,7 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
     elseIf originRace == ORIGIN_ORC
         return GetOrcLifeModeLabel()
     elseIf originRace == ORIGIN_REDGUARD
-        return GetRedguardSectLabel()
+        return OriginRuntime.GetRedguardSectLabel()
     elseIf originRace == ORIGIN_IMPERIAL
         return GetImperialConcordatLabel()
     elseIf originRace == ORIGIN_DUNMER
@@ -14875,7 +13061,7 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
     Float championThreshold = 85.0
     Int bretonPracticeTier = LedgerRuntime.TIER_NONE
     if originRace == ORIGIN_BRETON
-        bretonPracticeTier = GetBretonPracticeTier(GetBretonTraditionValue())
+        bretonPracticeTier = OriginRuntime.GetBretonPracticeTier(OriginRuntime.GetBretonTraditionValue())
     endIf
     if LedgerRuntime.PDV_GLO_ActiveTier
         tierValue = LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
@@ -14899,7 +13085,7 @@ String Function BuildBookOfDaysInstrumentJson(Int originRace)
     elseIf originRace == ORIGIN_BRETON
         if bretonPracticeTier > LedgerRuntime.TIER_NONE
             tierValue = bretonPracticeTier
-            pietyValue = GetBretonPracticeCount(GetBretonTraditionValue()) as Float
+            pietyValue = OriginRuntime.GetBretonPracticeCount(OriginRuntime.GetBretonTraditionValue()) as Float
         endIf
     elseIf originRace == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
         tierValue = PDV_ArgonianHistSubstrate.GetSubstrateTier()
@@ -15369,7 +13555,7 @@ String Function GetMedallionSectionsJson(Int originRace)
     elseIf originRace == ORIGIN_IMPERIAL
         return MedallionSection("native", "Native worship", GetImperialMedallionEntriesJson())
     elseIf originRace == ORIGIN_BRETON
-        return MedallionSection("native", "Native worship", GetBretonMedallionEntriesJson())
+        return MedallionSection("native", "Native worship", OriginRuntime.GetBretonMedallionEntriesJson())
     elseIf originRace == ORIGIN_ALTMER
         return MedallionSection("native", "Native worship", OriginRuntime.GetAltmerMedallionEntriesJson())
     elseIf originRace == ORIGIN_BOSMER
@@ -15383,7 +13569,7 @@ String Function GetMedallionSectionsJson(Int originRace)
     elseIf originRace == ORIGIN_ORC
         return MedallionSection("native", "Native worship", GetOrcMedallionEntriesJson())
     elseIf originRace == ORIGIN_REDGUARD
-        return MedallionSection("native", "Native worship", GetRedguardMedallionEntriesJson())
+        return MedallionSection("native", "Native worship", OriginRuntime.GetRedguardMedallionEntriesJson())
     endIf
 
     return MedallionSection("native", "Native worship", MedallionEntry("unknown", "Devotion", "substrate", "journal", None, False, "Your origin is not settled yet.", "Once your origin is known, the medallion can show the roster your people can name.", "Origin readback is pending."))
@@ -15422,21 +13608,6 @@ String Function GetImperialMedallionEntriesJson()
     return entries
 EndFunction
 
-String Function GetBretonMedallionEntriesJson()
-    String entries = RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", LedgerRuntime.PDV_Kynareth, "Sky, travel, and druidic memory.")
-    entries = entries + "," + RosterMedallionEntry("talos", "Talos", "god", "talos", PDV_Talos, "Civic defiance and Septim inheritance.")
-    entries = entries + "," + RosterMedallionEntry("mara", "Mara", "god", "mara", LedgerRuntime.PDV_Mara, "Household, mercy, and love.")
-    entries = entries + "," + RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", LedgerRuntime.PDV_Akatosh, "Time, order, and covenant.")
-    entries = entries + "," + RosterMedallionEntry("arkay", "Arkay", "god", "arkay", LedgerRuntime.PDV_Arkay, "Death, burial, and clean endings.")
-    entries = entries + "," + RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", LedgerRuntime.PDV_Stendarr, "Mercy, protection, and oath.")
-    entries = entries + "," + RosterMedallionEntry("julianos", "Julianos", "god", "julianos", LedgerRuntime.PDV_Julianos, "Learning, law, and formal craft.")
-    entries = entries + "," + RosterMedallionEntry("dibella", "Dibella", "god", "dibella", LedgerRuntime.PDV_Dibella, "Beauty, courtliness, and grace.")
-    entries = entries + "," + RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", LedgerRuntime.PDV_Zenithar, "Trade, craft, and honest work.")
-    entries = entries + "," + RosterMedallionEntry("magnus", "Magnus", "god", "magnus", PDV_Magnus, "Magic, light, and hidden inheritance.")
-    entries = entries + "," + PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Pilgrimage, endurance, and Elven memory.")
-    entries = entries + "," + RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", PDV_Yffre, "Green memory, story, and law.")
-    return entries
-EndFunction
 
 
 
@@ -15454,16 +13625,6 @@ String Function GetOrcMedallionEntriesJson()
     return RosterMedallionEntry("malacath", "Malacath", "prince", "malacath", PDV_Malacath, "Oath, code, exile, and vengeance.")
 EndFunction
 
-String Function GetRedguardMedallionEntriesJson()
-    String entries = PendingMedallionEntry("satakal", "Satakal", "god", "satakal", "Worldskin, cycle, and cosmic turning.")
-    entries = entries + "," + PendingMedallionEntry("ruptga", "Ruptga", "god", "ruptga", "Tall Papa, ancestry, and guidance.")
-    entries = entries + "," + RosterMedallionEntry("tuwhacca", "Tu'whacca", "god", "tu-whacca", PDV_Tuwhacca, "Death, passage, and the proper road.")
-    entries = entries + "," + PendingMedallionEntry("tava", "Tava", "god", "tava", "Wind, sailors, and safe passage.")
-    entries = entries + "," + RosterMedallionEntry("leki", "Leki", "god", "leki", PDV_Leki, "Sword-skill, discipline, and grace.")
-    entries = entries + "," + PendingMedallionEntry("onsi", "Onsi", "god", "onsi", "The blade, craft, and warrior making.")
-    entries = entries + "," + RosterMedallionEntry("hoon-ding", "HoonDing", "god", "hoon-ding", PDV_HoonDing, "Make-way spirit and impossible survival.")
-    return entries
-EndFunction
 
 String Function MedallionSection(String sectionId, String titleText, String entriesJson)
     return "{\"section_id\":\"" + PDV_DevotionRules.JsonSafeString(sectionId) + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\",\"entries\":[" + entriesJson + "]}"
@@ -15835,7 +13996,7 @@ String Function GetSurveyDevotionText()
     ; Hidden Art is a layered Breton tradition: its Survey owns the base practice and
     ; exposure readout, then appends its integrated Prince through the patron sentence.
     if originRace == ORIGIN_BRETON
-        return LedgerRuntime.AppendRecentDevotionEvents(GetBretonSurveyText())
+        return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetBretonSurveyText())
     endIf
 
     ; Prince-wins for races without a layered pact tradition. The tier>0 guard inside
@@ -15857,7 +14018,7 @@ String Function GetSurveyDevotionText()
         elseIf originRace == ORIGIN_ORC
             return LedgerRuntime.AppendRecentDevotionEvents(GetOrcSurveyText())
         elseIf originRace == ORIGIN_REDGUARD
-            return LedgerRuntime.AppendRecentDevotionEvents(GetRedguardSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetRedguardSurveyText())
         elseIf originRace == ORIGIN_IMPERIAL
             return LedgerRuntime.AppendRecentDevotionEvents(GetImperialSurveyText())
         elseIf originRace == ORIGIN_DUNMER
@@ -15904,11 +14065,11 @@ String Function GetPlayerMcmSummaryLine()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
         return "Orc | " + GetOrcLifeModeLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
-        return "Redguard | " + GetRedguardSectLabel() + " | " + GetCurrentStandingLabel()
+        return "Redguard | " + OriginRuntime.GetRedguardSectLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
         return "Imperial | " + GetImperialConcordatLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_BRETON
-        return "Breton | " + GetBretonTraditionLabel() + " | " + GetCurrentStandingLabel()
+        return "Breton | " + OriginRuntime.GetBretonTraditionLabel() + " | " + GetCurrentStandingLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
         return "Dunmer | " + GetDunmerAncestorLayerLabel() + " | " + GetCurrentStandingLabel()
     endIf
@@ -15953,11 +14114,11 @@ String Function GetPlayerMcmModeLine()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
         return GetOrcLifeModeLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
-        return GetRedguardSectLabel()
+        return OriginRuntime.GetRedguardSectLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
         return GetImperialConcordatLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_BRETON
-        return GetBretonTraditionLabel()
+        return OriginRuntime.GetBretonTraditionLabel()
     elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
         return GetDunmerAncestorLayerLabel()
     endIf
@@ -16216,235 +14377,16 @@ String Function GetOrcSurveyText()
     return text
 EndFunction
 
-String Function GetRedguardSurveyText()
-    if !PDV_RedguardSectTrack
-        return "The Far Shores are named, but your Redguard sect is not yet readable here."
-    endIf
 
-    String text = GetRedguardSurveySectText()
-    if StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") > 0
-        text = text + " You have read the words of the ancestors, and the dead are nearer for it."
-    endIf
-    Float farShoresWeight = StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken")
-    if farShoresWeight > 0.0
-        text = text + " The Far Shores token has been tended lately, and Tu'whacca holds the way open."
-    endIf
 
-    Int cyclePressure = StorageUtil.GetIntValue(None, "PDV.Curse.Redguard.CyclePressure")
-    if cyclePressure == 2
-        text = text + " The vampire curse has set you outside the cycle, and the Far Shores stay shut until you cure it and return through Tu'whacca."
-    elseIf cyclePressure == 1
-        text = text + " The beast strains your road to a proper death, but the ancestors only watch the closer for it."
-    endIf
 
-    return text
-EndFunction
 
-String Function GetRedguardSurveySectText()
-    Int sectValue = REDGUARD_SECT_FOREBEAR
-    if PDV_RedguardSectTrack
-        sectValue = PDV_RedguardSectTrack.GetCurrentState()
-    endIf
 
-    String standing = GetCurrentStandingBand()
-    if sectValue == REDGUARD_SECT_CROWN
-        return "You keep the Crown way: orthodox Yokudan practice carried intact in exile. Standing: " + standing + ". The ancestors are strong at your back."
-    elseIf sectValue == REDGUARD_SECT_ASHABAH
-        String ashText = "You keep the Ash'abah duty: the unclean dead are your charge. Standing: " + standing + ". Tu'whacca honors the burden few will."
-        ashText = ashText + " The duty hardens you against death and plague, but it cools your welcome among the living (Speech -5)."
-        Int stigma = StorageUtil.GetIntValue(None, "PDV.Redguard.AshAbahStigma", 0)
-        if stigma >= 3
-            ashText = ashText + " You are " + GetAshAbahStigmaLabel() + ": the clean turn their faces, and the living keep their distance from the death-handler."
-        elseIf stigma >= 1
-            ashText = ashText + " You are " + GetAshAbahStigmaLabel() + ": the mark of the duty is on you, and the squeamish step wide."
-        endIf
-        return ashText
-    endIf
 
-    return "You keep the Forebear way: Redguard identity lived among outsiders. Standing: " + standing + ". The road and the contract are your proving ground."
-EndFunction
 
-String Function GetBretonSurveyText()
-    Int tradition = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
-    if tradition < 0
-        String unchosenText = "You have not yet chosen a tradition. Breton faith takes shape on the Knight's Road, through the Hidden Art, or along the Green Way."
-        return unchosenText
-    endIf
 
-    String text = ""
-    Int practiceTier = GetBretonPracticeTier(tradition)
-    String practiceText = " Practice: " + GetPublicTierBand(practiceTier) + "."
-    if tradition == 0
-        text = "You walk the Knight's Road: vow, mercy, and protective justice." + practiceText
-        Int vow = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-        if vow >= 70
-            text = text + " Your knightly vow is intact."
-        elseIf vow >= 30
-            text = text + " Your knightly vow is strained, and the Road's favor comes harder."
-        else
-            text = text + " Your knightly vow is broken, and the Road is halted until you restore it."
-        endIf
-    elseIf tradition == 1
-        text = "You walk the Hidden Art: occult practice and the double life." + practiceText
-        Int exposure = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0)
-        if exposure >= 100
-            text = text + " Your practice is notorious, openly named, and your patron rewards the full commitment."
-        elseIf exposure >= 75
-            text = text + " Your practice is known, and your cover is close to rupture."
-        elseIf exposure >= 50
-            text = text + " Your practice is known, and the Vigilants are a real danger now."
-        elseIf exposure >= 25
-            text = text + " Your practice is suspected, and watchful eyes have begun to turn."
-        else
-            text = text + " Your practice stays hidden, unseen by those who would object."
-        endIf
-    else
-        text = "You walk the Green Way: the old druidic covenant." + practiceText
-        Int druidic = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        if druidic >= 70
-            text = text + " Y'ffre answers you steadily."
-        elseIf druidic < 30
-            text = text + " The Green Way is fraying, and the forest begins to forget you."
-        else
-            text = text + " Y'ffre is listening."
-        endIf
-    endIf
 
-    text = text + GetBretonPatronSurveySentence(tradition)
 
-    Int fork = GetBretonDruidicForkValue()
-    if fork == 1
-        text = text + " The beast in you serves the Green, and the old covenant accepts your shape."
-    elseIf fork == 2
-        text = text + " You claimed the beast for yourself, and the Green has closed against the wolf."
-    elseIf fork == 3
-        text = text + " The covenant names you betrayer, and the Green presses against the broken trust."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") > 0
-        text = text + " You are being pulled toward another tradition, and the pull weighs against the one you walk."
-    endIf
-
-    Int restoration = StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState")
-    if restoration == 2
-        text = text + " A curse has ruptured your tradition, and its road is closed to you until you are cured."
-    elseIf restoration == 1
-        text = text + " A curse sits on you, and your tradition will not hold until it is restored."
-    endIf
-
-    return text
-EndFunction
-
-String Function GetBretonTraditionLabel()
-    Int traditionValue = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
-    if traditionValue == 0
-        return "Knight's Road"
-    elseIf traditionValue == 1
-        return "Hidden Art"
-    elseIf traditionValue == 2
-        return "Green Way"
-    endIf
-
-    return "no tradition yet"
-EndFunction
-
-String Function GetBretonBookOfDaysPathStatusLabel()
-    String traditionLabel = GetBretonTraditionLabel()
-    Int practiceTier = GetBretonPracticeTier(GetBretonTraditionValue())
-    String status = traditionLabel + " Practice " + GetPublicTierBand(practiceTier)
-
-    PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
-    if activePact
-        return status + " / " + NormalizePublicDeityDisplayText(activePact.DeityName) + " Pact"
-    endIf
-
-    if _activeDeity && LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE
-        return status + " / " + GetPublicDeityDisplayName(_activeDeity) + " Focus"
-    endIf
-
-    return status
-EndFunction
-
-String Function GetBretonPatronSurveySentence(Int traditionValue)
-    PDV_DaedricPathBase activePact = GetActiveDaedricPactPath()
-    if activePact
-        String pactName = GetPublicDeityDisplayName(activePact)
-        if traditionValue == BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= LedgerRuntime.TIER_CHAMPION
-            return " Your pact with " + pactName + " has opened Hidden Art - Champion."
-        endIf
-        return " Your pact with " + pactName + " stands beside the tradition."
-    endIf
-
-    if !_activeDeity || LedgerRuntime.GetPatronState() != LedgerRuntime.PATRON_STATE_ACTIVE
-        return ""
-    endIf
-
-    String deityName = GetPublicDeityDisplayName(_activeDeity)
-    Int patronTier = LedgerRuntime.GetTier(_activeDeity)
-    if patronTier >= LedgerRuntime.TIER_CHAMPION
-        String boonName = GetBretonChampionBoonDisplayName(_activeDeity)
-        if IsDeityResonantWithBretonTradition(traditionValue, _activeDeity)
-            return " " + deityName + " is your Champion patron through this tradition. " + boonName + " stands beside your practice."
-        endIf
-        return " " + deityName + " is your Champion patron beyond this tradition. " + boonName + " stands beside your practice."
-    endIf
-
-    return " " + deityName + " is your patron focus; your tradition advances through practiced deeds."
-EndFunction
-
-String Function GetBretonKnightlyVowLabel()
-    Int integrityValue = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-    if integrityValue >= 70
-        return "intact"
-    elseIf integrityValue >= 30
-        return "strained"
-    endIf
-
-    return "broken"
-EndFunction
-
-String Function GetBretonWitchcraftExposureLabel()
-    Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0)
-    if exposureValue >= 100
-        return "notorious"
-    elseIf exposureValue >= 50
-        return "known"
-    elseIf exposureValue >= 25
-        return "suspected"
-    endIf
-
-    return "hidden"
-EndFunction
-
-String Function GetBretonDruidicStandingLabel()
-    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-    if standingValue >= 70
-        return "acknowledged"
-    elseIf standingValue < 30
-        return "fraying"
-    endIf
-
-    return "open"
-EndFunction
-
-String Function GetBretonAncestorLayerLabel()
-    if !PDV_BretonAncestorSubstrate
-        return "retired"
-    endIf
-
-    return "retired"
-EndFunction
-
-String Function GetBretonCursePostureLabel()
-    Int curseValue = StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState")
-    if curseValue == 2
-        return "a ruptured tradition"
-    elseIf curseValue == 1
-        return "restoration needed"
-    endIf
-
-    return ""
-EndFunction
 
 String Function GetDunmerSurveyText()
     String band = GetCurrentStandingBand()
@@ -16640,7 +14582,7 @@ String Function DebugGetPatternProvingSummary()
     summary = summary + "; ArgonianHist=" + OriginRuntime.GetArgonianHistSummary()
     summary = summary + "; Altmer=" + OriginRuntime.GetAltmerSummary()
     summary = summary + "; Orc=" + GetOrcSummary()
-    summary = summary + "; Redguard=" + GetRedguardSummary()
+    summary = summary + "; Redguard=" + OriginRuntime.GetRedguardSummary()
     summary = summary + "; Favor=" + FavorRuntime.GetContextualFavorSummary()
     summary = summary + "; Commitment=" + LedgerRuntime.GetCommitmentSummary()
     summary = summary + "; Neglect=" + LedgerRuntime.GetNeglectSummary()
@@ -16668,7 +14610,7 @@ String Function DebugGetPatternSummarySection(Int sectionIndex)
     elseIf sectionIndex == 6
         return "Orc: " + GetOrcSummary()
     elseIf sectionIndex == 7
-        return "Redguard: " + GetRedguardSummary()
+        return "Redguard: " + OriginRuntime.GetRedguardSummary()
     elseIf sectionIndex == 8
         return "Favor: " + FavorRuntime.GetContextualFavorSummary()
     elseIf sectionIndex == 9
@@ -16799,13 +14741,6 @@ String Function GetNordAncestorSummary()
     return PDV_NordAncestorSubstrate.GetPilotSummary()
 EndFunction
 
-String Function GetBretonAncestorSummary()
-    if !PDV_BretonAncestorSubstrate
-        return "retired"
-    endIf
-
-    return "retired"
-EndFunction
 
 String Function GetOrcSummary()
     if !PDV_OrcLifeModeTrack
@@ -16815,13 +14750,6 @@ String Function GetOrcSummary()
     return "mode=" + GetOrcLifeModeLabel() + ";stronghold=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.Stronghold")) + ";city=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.City")) + ";legion=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.LegionExile")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Orc.LastLifeModeReason")
 EndFunction
 
-String Function GetRedguardSummary()
-    if !PDV_RedguardSectTrack
-        return "missing"
-    endIf
-
-    return "sect=" + GetRedguardSectLabel() + ";crown=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Crown")) + ";forebear=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Forebear")) + ";ashabah=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.AshAbah")) + ";farShores=" + PDV_DevotionRules.FormatTwoDecimals(StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken")) + ";last=" + StorageUtil.GetStringValue(None, "PDV.Redguard.LastSectReason")
-EndFunction
 
 
 String Function GetKyneFavorSummary()
@@ -17572,7 +15500,7 @@ Int Function GetRecognitionBroadIndex(Int origin)
     elseIf origin == ORIGIN_IMPERIAL
         return 47
     elseIf origin == ORIGIN_BRETON
-        if GetBretonTraditionValue() == BRETON_TRADITION_GREEN_WAY
+        if OriginRuntime.GetBretonTraditionValue() == BRETON_TRADITION_GREEN_WAY
             return 49
         endIf
         return 48
@@ -17599,7 +15527,7 @@ Int Function GetRecognitionBroadTier(Int origin)
     if origin == ORIGIN_IMPERIAL && PDV_ImperialAncestorSubstrate
         tierValue = RecognitionMaxInt(tierValue, PDV_ImperialAncestorSubstrate.GetSubstrateTier())
     elseIf origin == ORIGIN_BRETON
-        tierValue = RecognitionMaxInt(tierValue, GetBretonPracticeTier(GetBretonTraditionValue()))
+        tierValue = RecognitionMaxInt(tierValue, OriginRuntime.GetBretonPracticeTier(OriginRuntime.GetBretonTraditionValue()))
     elseIf origin == ORIGIN_ALTMER && PDV_AltmerAncestorSubstrate
         tierValue = RecognitionMaxInt(tierValue, PDV_AltmerAncestorSubstrate.GetSubstrateTier())
     elseIf origin == ORIGIN_NORD && PDV_NordAncestorSubstrate
@@ -17909,28 +15837,11 @@ Function KickstartIfStalled()
     EnsureRecognitionModEvents()
     InvalidateNpcReligiousRecognition()
     SyncNpcReligiousRecognition()
-    ReconcileRedguardSpineRewardAfterLoad()
+    OriginRuntime.ReconcileRedguardSpineRewardAfterLoad()
     OriginRuntime.SyncKhajiitRuntimeState()
     Trace(2, "Lifecycle watchdog: manager master poll re-armed on load.")
 EndFunction
 
-Function ReconcileRedguardSpineRewardAfterLoad()
-    if GetPlayerOriginRaceIndex() != ORIGIN_REDGUARD
-        return
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1 && StorageUtil.GetIntValue(None, "PDV.Redguard.SetupComplete") != 1
-        return
-    endIf
-
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
-
-    SyncRedguardSpineBoon(playerRef, True, GetActiveRedguardSpineSect())
-    RequestPanelRefresh()
-    Trace(2, "Redguard spine reward reconciled after player load.")
-EndFunction
 
 ; --- A1 cure: one-shot actor-value repair ----------------------------------
 ; Pass 1 set the Recover flag on all 420 value-modifying magic effects that lacked it,
@@ -18132,7 +16043,7 @@ Function ResyncDevotionSpellsAfterRepair(Actor playerRef)
     LedgerRuntime.ReapplyActiveDisfavorStings(playerRef)
     ; The two observance families B16 covers; both self-gate on their stored state.
     OriginRuntime.SyncAltmerDisciplines(playerRef)
-    SyncRedguardRemembering(playerRef)
+    OriginRuntime.SyncRedguardRemembering(playerRef)
     ; The live Daedric pact re-grants its boon + price for its stored tier. Idempotent:
     ; the ActivePact pointer is unchanged, so no PendingActivation breadcrumb is left.
     PDV_DaedricPathBase livePact = GetActiveDaedricPactPath()
@@ -18217,6 +16128,18 @@ Function SetRaceCurseSurfaceShown(Bool value)
     _raceCurseSurfaceShown = value
 EndFunction
 
+Bool Function GetRaceCurseSurfaceShown()
+    return _raceCurseSurfaceShown
+EndFunction
+
+Bool Function GetQrQueueNeedsBretonRewardSync()
+    return _qrQueueNeedsBretonRewardSync
+EndFunction
+
+Function SetQrQueueNeedsBretonRewardSync(Bool value)
+    _qrQueueNeedsBretonRewardSync = value
+EndFunction
+
 Function SetQrQueueNeedsCurseRefresh(Bool value)
     _qrQueueNeedsCurseRefresh = value
 EndFunction
@@ -18272,6 +16195,7 @@ EndFunction
 Function SetPdvCCFishingPresent(Bool value)
     _pdvCCFishingPresent = value
 EndFunction
+
 
 
 

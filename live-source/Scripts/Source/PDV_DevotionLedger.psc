@@ -281,7 +281,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
 
         if amount > 0.0
             Manager.ApplyQuestReactionStigma(deity, amount, sourceTag)
-            Manager.HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
+            Manager.OriginRuntime.HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
             ; A taboo deity reaction is a real negative piety award (paths take
             ; stigma instead, which is not piety) -- fold it into the quest-fire
             ; surface as displeasure so the loss is not invisible.
@@ -290,7 +290,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
             endIf
         else
             Manager.ApplyQuestReactionPiety(deity, amount, "taboo_" + sourceTag)
-            Manager.HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
+            Manager.OriginRuntime.HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
             if !isFaucet && magnitude != "meta"
                 Manager.AccumulateQuestReactionSurface(deity, amount, magnitude)
             endIf
@@ -340,7 +340,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     Manager.SetSuppressAwardFavorToast(True)
     Manager.ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
     Manager.SetSuppressAwardFavorToast(False)
-    Manager.HandleBretonQuestTagPracticeSignal(sourceTag, appliedReactionAmount > 0.0, deityName + "." + sourceTag)
+    Manager.OriginRuntime.HandleBretonQuestTagPracticeSignal(sourceTag, appliedReactionAmount > 0.0, deityName + "." + sourceTag)
 
     ; Milestone surfacing (2026-07-05): a base quest-reaction cell is a milestone-grade
     ; beat, so a landed reaction feeds the per-quest surface accumulator; the quest
@@ -1099,7 +1099,7 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
         if surfaceTierUp && newTier > oldTier
             if Manager.ShouldSuppressImperialTalosTierSurface(deity)
                 Manager.Trace(2, "Tier reach surface suppressed for Imperial Talos while Concordat blocks offers.")
-            elseIf Manager.ShouldSuppressBretonFocusedChampionTierSurface(deity, newTier)
+            elseIf Manager.OriginRuntime.ShouldSuppressBretonFocusedChampionTierSurface(deity, newTier)
                 Manager.Trace(2, "Tier reach surface suppressed for Breton resonant Champion; tradition reward presentation owns it.")
             elseIf NotifyTierUp(deity, newTier)
                 StorageUtil.SetFormValue(None, "PDV.BookOfDays.LastTierDeity", deityForm)
@@ -2098,9 +2098,9 @@ Function RunDawnRefreshTrackStates()
     endIf
 
     if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON
-        Manager.RunDawnRefreshBretonAncestor()
-        Manager.DecayBretonWitchcraftExposureAtDawn()
-        Manager.DecayBretonDruidicStandingAtDawn()
+        Manager.OriginRuntime.RunDawnRefreshBretonAncestor()
+        Manager.OriginRuntime.DecayBretonWitchcraftExposureAtDawn()
+        Manager.OriginRuntime.DecayBretonDruidicStandingAtDawn()
     endIf
 
     if Manager.OriginRuntime.IsBosmerOrigin() && Manager.PDV_BosmerPathTrack
@@ -2110,8 +2110,8 @@ Function RunDawnRefreshTrackStates()
         Manager.OriginRuntime.ArmBosmerDreamOnPathChange()
     endIf
 
-    if Manager.IsRedguardOrigin() && Manager.PDV_RedguardSectTrack
-        Manager.SyncRedguardRemembering(Game.GetPlayer())
+    if Manager.OriginRuntime.IsRedguardOrigin() && Manager.PDV_RedguardSectTrack
+        Manager.OriginRuntime.SyncRedguardRemembering(Game.GetPlayer())
     endIf
 EndFunction
 
@@ -3577,8 +3577,8 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Breton is tradition-state gated. The chosen tradition selects exactly one focused family;
     ; the broad tradition reward remains softer and capped at Faithful.
-    Manager.SyncBretonRewards(playerRef)
-    Manager.SyncBretonNeglectSpell(Manager.IsBretonTraditionNeglected())
+    Manager.OriginRuntime.SyncBretonRewards(playerRef)
+    Manager.OriginRuntime.SyncBretonNeglectSpell(Manager.OriginRuntime.IsBretonTraditionNeglected())
 
     ; Dunmer is hybrid: ancestor substrate is always-on identity, while the Reclamation foreground
     ; remains an active-patron offer lane with one focused patron active at a time.
@@ -3592,8 +3592,8 @@ Function SyncFirstTierRaceRewardRuntime()
 
     ; Redguard is state-enum gated: the sect filters the Yokudan lane, then exactly one focused
     ; patron family can be active at a time.
-    Manager.SyncRedguardRewards(playerRef)
-    Manager.SyncRedguardNeglectSpell(Manager.IsRedguardAncestorDistanceNeglected())
+    Manager.OriginRuntime.SyncRedguardRewards(playerRef)
+    Manager.OriginRuntime.SyncRedguardNeglectSpell(Manager.OriginRuntime.IsRedguardAncestorDistanceNeglected())
 
     ; Nord is state-enum gated: the baseline selects Old Ways or Nine Divines, and only a patron
     ; from that baseline can carry focused rewards. Kyne neglect remains the existing Nord neglect.
@@ -3665,7 +3665,7 @@ Spell Function GetFirstTierRaceRewardSpellForOrigin()
         return Manager.PDV_Bless_Bosmer_Yffre_T1
     elseIf originRace == Manager.ORIGIN_BRETON
         ; Readback selector only; the grant is owned by SyncBretonTraditionRewardFamily.
-        Int bretonTradition = Manager.GetBretonTraditionValue()
+        Int bretonTradition = Manager.OriginRuntime.GetBretonTraditionValue()
         if bretonTradition == Manager.BRETON_TRADITION_HIDDEN_ART
             return Manager.PDV_Bless_Breton_HiddenArt_T1
         elseIf bretonTradition == Manager.BRETON_TRADITION_GREEN_WAY
@@ -3917,9 +3917,9 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
     elseIf originRace == Manager.ORIGIN_ALTMER
         return Manager.OriginRuntime.GetAltmerFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_BRETON
-        return Manager.GetBretonFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetBretonFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_REDGUARD
-        return Manager.GetRedguardFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetRedguardFormalCommitmentOfferMessage(deity)
     endIf
 
     return None
@@ -4017,7 +4017,7 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return Manager.IsNordOfferEligibleDeity(deity) || Manager.IsImperialOfferEligibleDeity(deity) || Manager.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.IsRedguardOfferEligibleDeity(deity) || Manager.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
+    return Manager.IsNordOfferEligibleDeity(deity) || Manager.IsImperialOfferEligibleDeity(deity) || Manager.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsRedguardOfferEligibleDeity(deity) || Manager.OriginRuntime.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
 EndFunction
 
 Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
@@ -4241,7 +4241,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     if originRace == Manager.ORIGIN_BOSMER
         StorageUtil.SetIntValue(None, "PDV.Curse.Bosmer.RoutePressure", PDV_DevotionRules.BoolToInt(curseActive))
     elseIf originRace == Manager.ORIGIN_BRETON
-        Manager.ApplyBretonCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyBretonCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_DUNMER
         Manager.ApplyDunmerCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_ALTMER
@@ -4253,7 +4253,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
     elseIf originRace == Manager.ORIGIN_ORC
         Manager.ApplyOrcCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_REDGUARD
-        Manager.ApplyRedguardCurseHandlers(oldState, newState, reason)
+        Manager.OriginRuntime.ApplyRedguardCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_KHAJIIT
         Manager.OriginRuntime.ApplyKhajiitCurseHandlers(oldState, newState, reason)
     elseIf originRace == Manager.ORIGIN_NORD
@@ -4565,6 +4565,7 @@ Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
         playerRef.AddSpell(bandSpell, False)
     endIf
 EndFunction
+
 
 
 
