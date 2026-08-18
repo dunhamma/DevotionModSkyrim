@@ -51,9 +51,18 @@ extraction qualified to `PDV_DevotionRules.ClampValue`. (The other 2 prisma FAIL
 deployed to Devotion-V3Dev, resolved at Gate B.) **Do G6 gate-modernization (ledger-generated gate needles)
 BEFORE heavy extraction** so gates stay truthful instead of going stale one needle at a time.
 
-Next: sweep step 2 (AncestorSpine — needs grant-fact) + Part B/C/D; **G6 gate-modernization (moved up)**; then
-**FAVOR** code extraction (instance methods + property decls + manager backref, ESP hosting deferred to the
-batched houseCARL/V3-profile session), then GATE 0.5. Everything below is the original groundwork context.
+**G6 DONE (mechanism built + proven):** `tools/lib/pdv_symbol_home.mjs` — a ledger-driven resolver
+(`symbolHome`/`callTokenPattern`/`definitionFile`/`isRetired`) that tells a gate a symbol's current
+module/script + qualified call form + real definition file, from the region map + ledger. Gates now derive
+needles instead of hardcoding them, so extraction won't re-stale them. Converted `pdv_prisma_ui_audit`,
+`pdv_prisma_roster_parity`, `pdv_verify`, `pdv_prisma_to_oneoh_audit`; fixed the JsonSafeString definition
+check to read the extracted `PDV_DevotionRules` (was silently reading the 1.5 install). Committed `3c7d459f`.
+When future modules extract, convert any remaining symbol-pinning gates the same way (use the resolver, don't
+hand-patch). Reclassification (6 fns RULES->MANAGER) also committed; region map RULES=19, MANAGER=190.
+
+Next: sweep step 2 (AncestorSpine — needs the grant-fact decision) + Part B/C/D; then **FAVOR** code extraction
+(instance methods + property decls + `PDV__ManagerQuest` backref; ESP host record + property fills deferred to
+the batched houseCARL/V3-profile session), then GATE 0.5. Everything below is the original groundwork context.
 
 ---
 
