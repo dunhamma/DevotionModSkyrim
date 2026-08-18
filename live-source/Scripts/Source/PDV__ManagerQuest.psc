@@ -642,6 +642,9 @@ Int Property DISFAVOR_MAX_ACTIVE_DOMAINS = 3 AutoReadOnly
 ; (v2: active-pact-only sync + milestone presentation refresh; v3: collapse a
 ; co-held patron+Prince, keep higher tier, tie -> Prince).
 Int Property DAEDRIC_PACT_VERSION = 3 AutoReadOnly
+; Separate schema key from PDV.Daedric.PactVersion (owned by MigrateDaedricPactsIfNeeded).
+; Bump when the consent-gate migration must re-run on existing saves.
+Int Property DAEDRIC_CONSENT_SCHEMA_VERSION = 1 AutoReadOnly
 Float Property TIER_DOWN_HYSTERESIS = 5.0 AutoReadOnly
 ; --- P10 (2026-08-03): Long Devotion, the post-Champion accrual layer -------------------------
 ; The ladder terminated flat at Champion (85) while PIETY_MAX is 200, so 115 points of headroom
@@ -976,6 +979,7 @@ PDV_DaedricPathBase _kidSanguinePath = None
 Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
 PDV_DaedricPathBase _pendingDaedricMilestonePath = None
+PDV_DeityBase _pendingCommitmentOfferDeity = None
 Int _pendingDaedricMilestoneOldTier = 0
 Int _pendingDaedricMilestoneNewTier = 0
 String _pendingDaedricMilestoneReason = ""
@@ -993,6 +997,9 @@ Event OnInit()
     RegisterManagerShoutSignals()
     EnsureLikesDislikesTable()
     EnsurePrinceLikesDislikesTable()
+    ; MigrateDaedricPactsIfNeeded / MigrateBroadPantheonPools were removed on V3 (Part A
+    ; migration sweep); only the consent-gate migration is carried over from 1.5.0e.
+    MigrateDaedricConsentIfNeeded()
     EnsureRecognitionModEvents()
     RefreshPatronMirrors()
     UpdateContextualFavorRuntime()
@@ -1039,6 +1046,7 @@ Event OnUpdate()
         HandleDiegeticLoad("update")
     endIf
     ProcessQueuedDaedricMilestonePresentation()
+    ProcessQueuedCommitmentOffer()
     ProcessQueuedNordKyneChampionEntry()
     ProcessPendingDaedricActivation()
     ProcessPendingDaedricLapse()
@@ -1094,6 +1102,7 @@ Event OnUpdate()
         RegisterManagerShoutSignals()
         EnsureLikesDislikesTable()
         EnsurePrinceLikesDislikesTable()
+        MigrateDaedricConsentIfNeeded()
         EnsureKhajiitObserveMoonsPower()
         _shoutRefreshTicks = 0
     endIf
@@ -4427,6 +4436,19 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
         return
     endIf
 
+    ; Hard daily cap: one credited live signal per path per source per devotional day.
+    ; Distinct key namespace (PDV.Daedric.Signal.<pathIndex>.<sourceId>) from any soft-cap
+    ; prefix so the .Day book-keeping never collides.
+    if !ConsumeOncePerDaySignal("PDV.Daedric.Signal." + pathIndex + "." + sourceId)
+        if GetDebugLevel() >= 2
+            Debug.Trace("[PDV] Daedric live signal daily-capped for " + path.DeityName + ": " + sourceId)
+        endIf
+        return
+    endIf
+    ; Feed the offer recency gate (HasRecentCommitmentSignalDays) so the formal Prince
+    ; offer can fire once enough distinct signal-days accrue.
+    RecordCommitmentSignalDay(path)
+
     Int tierBefore = path.GetStoredTier()
     path.AddCommitmentSignal(sourceId)
     path.AdjustStoredPiety(10.0, sourceId)
@@ -4436,7 +4458,7 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     ; single active pact again, even without a tier change. OnTierChange covers
     ; first-commit and tier-ups; this covers switch-back. A sub-threshold (tier 0)
     ; Prince never steals the active pact from a committed one.
-    if tierAfter > 0 && !path.IsActiveDaedricPact()
+    if tierAfter > 0 && !path.IsActiveDaedricPact() && path.HasDaedricPactConsent()
         ; Activation itself is the exclusivity seam (handled in MakeActiveDaedricPact ->
         ; PendingActivation -> ProcessPendingDaedricActivation), so this funnel does not
         ; sever the patron directly: a tier-up already auto-activated via OnTierChange
@@ -4697,6 +4719,14 @@ Int Function GetTier(PDV_DeityBase deity)
     return StorageUtil.GetFloatValue(deityForm, "PDV.Tier") as Int
 EndFunction
 
+; @module: FAVOR-prereq
+; Public accessor so extracted modules (FAVOR) can read the active patron deity
+; through the manager backref. _activeDeity is a bare script variable written in
+; many manager sites; a getter is sufficient because external read-sites only read.
+PDV_DeityBase Function GetActiveDeity()
+    return _activeDeity
+EndFunction
+
 Int Function GetActiveDeityIndex()
     if _activeDeity
         return _activeDeity.DeityIndex
@@ -4919,12 +4949,10 @@ Function ProcessPendingDaedricActivation()
     if path
         SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")
     endIf
-    if GetPatronState() == PATRON_STATE_ACTIVE
-        SetActiveDeity(None)
-        if path
-            SurfaceSwitchSeverance("patron_to_prince", path.DeityName)
-        endIf
-    elseIf path && !HasRecentDaedricMilestoneJournal(path)
+    ; Patron<->Prince severance is retired: an active divine patron is no longer cut when
+    ; a Prince pact activates (a pact now requires explicit consent, so both can coexist).
+    ; The Prisma shift toast above and this Book-of-Days line still surface the activation.
+    if path && !HasRecentDaedricMilestoneJournal(path)
         AppendBookOfDaysEntry(path.DeityName + " claims your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "daedric", true)
     endIf
 EndFunction
@@ -12004,11 +12032,36 @@ Function EnsurePrinceLikesDislikesTable()
     StorageUtil.SetIntValue(None, "PDV.PLD.Version", PRINCE_LD_VERSION)
 EndFunction
 
-; Hard-switch migration. Saves from before the one-active-pact model could have
-; stacked every committed Prince's boon+price spells. Strip all sixteen paths'
-; pact spells, then re-establish a single active pact = the most-advanced committed
-; Prince. Version-gated so it runs once per save. Curse spells are not pact spells
-; and are untouched.
+; Consent-gate migration. Legacy saves could hold an active Prince pact committed before
+; the consent latch existed. Such a pact would keep piety capped at 84 forever (ClampPiety
+; parks below Champion without consent), so clear the un-consented pact and let the formal
+; offer re-fire. PDV.Piety is PRESERVED (never touched here). Version-gated on a key that is
+; SEPARATE from PDV.Daedric.PactVersion so it never fights MigrateDaedricPactsIfNeeded.
+Function MigrateDaedricConsentIfNeeded()
+    if StorageUtil.GetIntValue(None, "PDV.Daedric.ConsentSchema") >= DAEDRIC_CONSENT_SCHEMA_VERSION
+        return
+    endIf
+
+    Int i = 0
+    Int count = GetDaedricPathCount()
+    while i < count
+        PDV_DaedricPathBase path = GetDaedricPathAtListIndex(i)
+        if path && path.IsActiveDaedricPact() && !path.HasDaedricPactConsent()
+            ; Same clearing calls migration uses: strip the live pact spells and null the
+            ; active-pact pointer. PDV.Piety is deliberately left intact.
+            path.ClearLiveDaedricPactSpells()
+            StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
+            if GetDebugLevel() >= 1
+                Debug.Trace("[PDV] Daedric consent migration: cleared un-consented pact for " + path.DeityName + " (piety preserved)")
+            endIf
+        endIf
+        i += 1
+    endWhile
+
+    StorageUtil.SetIntValue(None, "PDV.Daedric.ConsentSchema", DAEDRIC_CONSENT_SCHEMA_VERSION)
+    RequestPanelRefresh()
+EndFunction
+
 Function LoadPrinceLikesDislikesTable()
     if !PDV_FLST_DaedricPaths_All
         return
@@ -19737,6 +19790,21 @@ Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)
     Trace(1, "Commitment seed debug: " + deity.DeityName + "[" + deity.DeityIndex + "] days=" + GetRecentCommitmentSignalDayCount(deity, 7))
 EndFunction
 
+; Form-based twin of DebugSeedCommitmentSignalDaysByIndex. Daedric-path indices do not
+; resolve through GetDeityByIndex, so the index seeder misses a Prince; seed by form
+; directly to make a path offer-ready.
+Function DebugSeedCommitmentSignalDaysForDeity(PDV_DeityBase deity)
+    if !deity
+        return
+    endIf
+    Form deityForm = deity as Form
+    Int currentDay = Utility.GetCurrentGameTime() as Int
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalLatestDay", currentDay + 1)
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.SignalPreviousDay", currentDay)
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedActive", 1)
+    StorageUtil.SetIntValue(deityForm, "PDV.Commitment.DebugSeedDay", currentDay)
+EndFunction
+
 Function DebugResetCommitmentStateByIndex(Int deityIndex)
     PDV_DeityBase deity = GetDeityByIndex(deityIndex)
     if deity
@@ -19781,11 +19849,12 @@ Function EvaluateFormalCommitmentOffer()
         return
     endIf
 
-    if GetPendingCommitmentDeityIndex() == candidate.DeityIndex
+    if StorageUtil.GetFormValue(None, "PDV.Commitment.PendingDeityForm") == (candidate as Form)
         return
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", candidate.DeityIndex)
+    StorageUtil.SetFormValue(None, "PDV.Commitment.PendingDeityForm", candidate as Form)
     StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", Utility.GetCurrentGameTime())
     Trace(1, "Commitment offer pending for " + candidate.DeityName + ".")
     ShowFormalCommitmentOffer(candidate)
@@ -19794,6 +19863,14 @@ EndFunction
 Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
     Message offerMessage = GetFormalCommitmentOfferMessage(deity)
     if !offerMessage
+        return
+    endIf
+
+    ; A blocking Message.Show cannot display over an open menu (it renders nothing and
+    ; burns the one-shot). Stash the offer and let ProcessQueuedCommitmentOffer replay it
+    ; from the poll once menus close.
+    if Utility.IsInMenuMode()
+        _pendingCommitmentOfferDeity = deity
         return
     endIf
 
@@ -19809,7 +19886,25 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
     endIf
 EndFunction
 
+Function ProcessQueuedCommitmentOffer()
+    if !_pendingCommitmentOfferDeity
+        return
+    endIf
+
+    PDV_DeityBase deity = _pendingCommitmentOfferDeity
+    _pendingCommitmentOfferDeity = None
+    ; ShowFormalCommitmentOffer re-stashes if a menu is somehow still open, so this drain
+    ; is self-healing.
+    ShowFormalCommitmentOffer(deity)
+EndFunction
+
 Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    ; Any Daedric path uses the single shared Prince-pact offer message, ahead of the
+    ; per-race divine dispatch (a path is offer-eligible regardless of origin race).
+    if (deity as PDV_DaedricPathBase)
+        return (deity as PDV_DaedricPathBase).GetCommitmentOfferMessage()
+    endIf
+
     Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_NORD
         return GetNordFormalCommitmentOfferMessage(deity)
@@ -19981,8 +20076,23 @@ Function DebugAcceptPendingCommitment()
 
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Refused", 0)
-    SetActiveDeity(pendingDeity)
-    SyncFirstTierRaceRewardRuntime()
+    PDV_DaedricPathBase pendingPath = pendingDeity as PDV_DaedricPathBase
+    if pendingPath
+        ; A Prince pact: record consent (unblocks ClampPiety's Champion park) and make it
+        ; the single active pact. A path is NOT a divine patron, so SetActiveDeity is not
+        ; called for it.
+        pendingPath.SetDaedricPactConsent(True)
+        ; Commit PDV.Tier from current piety before activating the pact. The standing readers
+        ; (GetActiveDaedricPactPath) ignore a pact whose tier is still 0, which left the Book
+        ; of Days at Distant. The old auto-commit reached MakeActiveDaedricPact via
+        ; RecomputeStoredTier; the direct consent call must do the same.
+        pendingPath.RecomputeStoredTier("commitment_accept")
+        pendingPath.MakeActiveDaedricPact()
+        RequestPanelRefresh()
+    else
+        SetActiveDeity(pendingDeity)
+        SyncFirstTierRaceRewardRuntime()
+    endIf
     DispatchDiegeticCue("offer", pendingDeity.DeityName, "accept", pendingDeity, "revelation")
     SendPrismaToast(GetPrismaSymbolForDeity(pendingDeity), "good", BuildCommitmentOfferAcceptToastLine(pendingDeity), "")
     ClearPendingCommitment()
@@ -20004,25 +20114,43 @@ Bool Function IsPendingCommitmentStillAcceptable(PDV_DeityBase deity)
 EndFunction
 
 PDV_DeityBase Function GetBestFormalCommitmentOfferCandidate()
-    if !PDV_FLST_AllDeities
-        return None
-    endIf
-
     PDV_DeityBase bestDeity = None
     Float bestWeight = -1.0
-    Int i = 0
-    Int count = PDV_FLST_AllDeities.GetSize()
-    while i < count
-        PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
-        if IsEligibleForFormalCommitmentOffer(deity)
-            Float weight = GetFormalCommitmentOfferWeight(deity)
-            if !bestDeity || weight > bestWeight
-                bestDeity = deity
-                bestWeight = weight
+
+    ; Divine deities live in PDV_FLST_AllDeities; Daedric Princes live in their own list
+    ; (PDV_FLST_DaedricPaths_All) and are NOT members of PDV_FLST_AllDeities. Scan both so a
+    ; Prince pact-consent offer can fire.
+    if PDV_FLST_AllDeities
+        Int i = 0
+        Int count = PDV_FLST_AllDeities.GetSize()
+        while i < count
+            PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
+            if IsEligibleForFormalCommitmentOffer(deity)
+                Float weight = GetFormalCommitmentOfferWeight(deity)
+                if !bestDeity || weight > bestWeight
+                    bestDeity = deity
+                    bestWeight = weight
+                endIf
             endIf
-        endIf
-        i += 1
-    endWhile
+            i += 1
+        endWhile
+    endIf
+
+    if PDV_FLST_DaedricPaths_All
+        Int j = 0
+        Int pathCount = PDV_FLST_DaedricPaths_All.GetSize()
+        while j < pathCount
+            PDV_DeityBase deity = PDV_FLST_DaedricPaths_All.GetAt(j) as PDV_DeityBase
+            if IsEligibleForFormalCommitmentOffer(deity)
+                Float weight = GetFormalCommitmentOfferWeight(deity)
+                if !bestDeity || weight > bestWeight
+                    bestDeity = deity
+                    bestWeight = weight
+                endIf
+            endIf
+            j += 1
+        endWhile
+    endIf
 
     return bestDeity
 EndFunction
@@ -20072,7 +20200,14 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity)
+    return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity) || IsDaedricPactOfferEligibleDeity(deity)
+EndFunction
+
+; Any Daedric path (a PDV_DaedricPathBase) is formal-offer-eligible regardless of origin
+; race -- the pact is the consent gate for Champion. The Breton Hidden Art branch inside
+; IsBretonOfferEligibleDeity is now a subset of this.
+Bool Function IsDaedricPactOfferEligibleDeity(PDV_DeityBase deity)
+    return (deity as PDV_DaedricPathBase) != None
 EndFunction
 
 ; Nord's defining mechanic: deeds reveal which god noticed you. Any deity in the
@@ -20277,7 +20412,130 @@ EndFunction
 
 Function ClearPendingCommitment()
     StorageUtil.SetIntValue(None, "PDV.Commitment.PendingDeityIndex", -1)
+    StorageUtil.SetFormValue(None, "PDV.Commitment.PendingDeityForm", None)
     StorageUtil.SetFloatValue(None, "PDV.Commitment.OfferedAt", 0.0)
+EndFunction
+
+; ===== Daedric pact-consent debug harness (Sanguine test subject) =====
+; Deterministic MCM smoke for the 1.5.0e pact-consent gate. Sanguine is the
+; reported-bug subject. Each helper composes existing surfaces -- SetStoredPiety,
+; DebugSeedCommitmentSignalDaysByIndex, EvaluateFormalCommitmentOffer, the
+; Accept/Decline/Refuse handlers, HandleKIDAction, MigrateDaedricConsentIfNeeded --
+; and returns a one-line readback for the MCM to ShowMessage.
+
+String Function DebugYesNo(Bool flag)
+    if flag
+        return "Y"
+    endIf
+    return "N"
+EndFunction
+
+; Shared setup: leave Sanguine offer-eligible (Devoted-threshold piety + two recent
+; commitment signal-days, offer/refuse flags cleared) with consent withheld and no
+; active pact. Preconditions met; the consent latch is the only thing missing.
+Function DebugSeedSanguineOfferReadyCore()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return
+    endIf
+    sanguinePath.SetStoredPiety(COMMITMENT_OFFER_THRESHOLD, "mcm_consent_seed")
+    DebugSeedCommitmentSignalDaysForDeity(sanguinePath)
+    Form sanguineForm = sanguinePath as Form
+    StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Offered", 0)
+    StorageUtil.SetIntValue(sanguineForm, "PDV.Commitment.Refused", 0)
+    StorageUtil.SetFloatValue(sanguineForm, "PDV.Commitment.DeclinedAt", 0.0)
+    ClearPendingCommitment()
+    sanguinePath.SetDaedricPactConsent(False)
+    sanguinePath.ClearLiveDaedricPactSpells()
+    StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
+EndFunction
+
+String Function DebugSanguineConsentReadback()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return "Sanguine path is not available."
+    endIf
+    Int schema = StorageUtil.GetIntValue(None, "PDV.Daedric.ConsentSchema")
+    return "Sanguine piety=" + PDV_DevotionRules.FormatTwoDecimals(sanguinePath.GetStoredPiety()) + " tier=" + sanguinePath.GetStoredTier() + "; consent=" + DebugYesNo(sanguinePath.HasDaedricPactConsent()) + "; activePact=" + DebugYesNo(sanguinePath.IsActiveDaedricPact()) + "; consentSchema=" + schema + " (target " + DAEDRIC_CONSENT_SCHEMA_VERSION + ")"
+EndFunction
+
+String Function DebugSeedSanguineOfferReady()
+    if !GetDaedricPathByName("Sanguine")
+        return "Sanguine path is not available."
+    endIf
+    DebugSeedSanguineOfferReadyCore()
+    return "Seeded Sanguine offer-ready (no consent). " + DebugSanguineConsentReadback()
+EndFunction
+
+String Function DebugEvaluateConsentOfferReport()
+    Int pendingBefore = GetPendingCommitmentDeityIndex()
+    EvaluateFormalCommitmentOffer()
+    Int pendingAfter = GetPendingCommitmentDeityIndex()
+    if pendingAfter < 0
+        return "Evaluate: no commitment offer fired (pending none). Patron state=" + GetPatronStateLabel() + "."
+    endIf
+    PDV_DeityBase pendingDeity = GetDeityByIndex(pendingAfter)
+    String pendingName = "index " + pendingAfter
+    if pendingDeity
+        pendingName = pendingDeity.DeityName
+    endIf
+    return "Evaluate: offer pending for " + pendingName + " (was index " + pendingBefore + "). It replays as the 3-button pact message once the MCM closes."
+EndFunction
+
+String Function DebugConsentDivinePatronThenRaiseSanguine()
+    if !PDV_Akatosh
+        return "PDV_Akatosh is not wired; cannot set a divine patron."
+    endIf
+    ; A divine patron must suppress the Daedric pact offer and survive the raise.
+    SetActiveDeity(PDV_Akatosh, True)
+    DebugSeedSanguineOfferReadyCore()
+    EvaluateFormalCommitmentOffer()
+    Int pendingAfter = GetPendingCommitmentDeityIndex()
+    String pendingLabel = "none"
+    if pendingAfter >= 0
+        PDV_DeityBase pendingDeity = GetDeityByIndex(pendingAfter)
+        if pendingDeity
+            pendingLabel = pendingDeity.DeityName
+        else
+            pendingLabel = "index " + pendingAfter
+        endIf
+    endIf
+    String patronLabel = "none"
+    if _activeDeity
+        patronLabel = _activeDeity.DeityName
+    endIf
+    return "Divine patron=" + patronLabel + " (state " + GetPatronStateLabel() + "); Sanguine raised to offer-ready; offer pending=" + pendingLabel + " (expect none -> suppressed)."
+EndFunction
+
+String Function DebugFireSanguineAlcoholTwice()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return "Sanguine path is not available."
+    endIf
+    Float before = sanguinePath.GetStoredPiety()
+    HandleKIDAction("sanguine_alcohol", None)
+    Float afterFirst = sanguinePath.GetStoredPiety()
+    HandleKIDAction("sanguine_alcohol", None)
+    Float afterSecond = sanguinePath.GetStoredPiety()
+    return "sanguine_alcohol x2: piety " + PDV_DevotionRules.FormatTwoDecimals(before) + " -> " + PDV_DevotionRules.FormatTwoDecimals(afterFirst) + " -> " + PDV_DevotionRules.FormatTwoDecimals(afterSecond) + " (2nd hit capped by once-per-day)."
+EndFunction
+
+String Function DebugForceUnconsentedPactThenMigrate()
+    PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
+    if !sanguinePath
+        return "Sanguine path is not available."
+    endIf
+    ; Reproduce the pre-consent defect: an ACTIVE pact with no recorded consent.
+    sanguinePath.SetStoredPiety(COMMITMENT_OFFER_THRESHOLD, "mcm_consent_unconsented")
+    sanguinePath.SetDaedricPactConsent(False)
+    sanguinePath.MakeActiveDaedricPact()
+    sanguinePath.SetDaedricPactConsent(False)
+    Float pietyBefore = sanguinePath.GetStoredPiety()
+    Bool activeBefore = sanguinePath.IsActiveDaedricPact()
+    ; Bump the consent schema back so the guarded migration re-runs against the state.
+    StorageUtil.SetIntValue(None, "PDV.Daedric.ConsentSchema", 0)
+    MigrateDaedricConsentIfNeeded()
+    return "Un-consented pact forced (active=" + DebugYesNo(activeBefore) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(pietyBefore) + "). After migrate: activePact=" + DebugYesNo(sanguinePath.IsActiveDaedricPact()) + " (expect N), piety=" + PDV_DevotionRules.FormatTwoDecimals(sanguinePath.GetStoredPiety()) + " (preserved), consentSchema=" + StorageUtil.GetIntValue(None, "PDV.Daedric.ConsentSchema") + "."
 EndFunction
 
 Int Function GetPendingCommitmentDeityIndex()
@@ -20285,6 +20543,11 @@ Int Function GetPendingCommitmentDeityIndex()
 EndFunction
 
 PDV_DeityBase Function GetPendingCommitmentDeity()
+    Form pendingForm = StorageUtil.GetFormValue(None, "PDV.Commitment.PendingDeityForm")
+    if pendingForm
+        return pendingForm as PDV_DeityBase
+    endIf
+
     Int deityIndex = GetPendingCommitmentDeityIndex()
     if deityIndex < 0
         return None
@@ -27595,10 +27858,16 @@ Function HandleKIDAction(String actionKey, Form sourceForm)
         bodyText = "You consumed " + sourceName + "; Namira marks the taboo embraced."
         symbolName = "namira"
     elseIf actionKey == "sanguine_alcohol"
+        ; Hard once-per-day cap (not the soft decaying multiplier): drinking spam credits
+        ; Sanguine at most once per devotional day. Distinct key prefix (PDV.Signal.KIDOnce.*)
+        ; from the soft-cap prefix (PDV.Signal.KID.*) so their .Day keys never collide.
+        if !ConsumeOncePerDaySignal("PDV.Signal.KIDOnce.sanguine_alcohol")
+            return
+        endIf
         PDV_DaedricPathBase sanguinePath = GetDaedricPathByName("Sanguine")
         if sanguinePath
             Int tierBefore = sanguinePath.GetStoredTier()
-            sanguinePath.AdjustStoredPiety(1.0 * multiplier, "kid_revel")
+            sanguinePath.AdjustStoredPiety(1.0, "kid_revel")
             ShowDaedricMilestonePresentation(sanguinePath, tierBefore, sanguinePath.GetStoredTier(), False)
         endIf
         titleText = "Sanguine's revel"

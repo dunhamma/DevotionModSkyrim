@@ -148,6 +148,15 @@ Int _oidCommitmentReset = -1
 Int _oidAcceptCommitmentOffer = -1
 Int _oidDeclineCommitmentOffer = -1
 Int _oidRefuseCommitmentOffer = -1
+Int _oidConsentSeedSanguine = -1
+Int _oidConsentEvaluate = -1
+Int _oidConsentAccept = -1
+Int _oidConsentNotYet = -1
+Int _oidConsentRefuse = -1
+Int _oidConsentDivineThenRaise = -1
+Int _oidConsentAlcoholTwice = -1
+Int _oidConsentForceMigrate = -1
+Int _oidConsentReadback = -1
 Int _oidHircineReset = -1
 Int _oidHircineHuntRite = -1
 Int _oidHircineRenounce = -1
@@ -584,6 +593,24 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Declines the pending commitment offer and postpones it.")
     elseIf a_option == _oidRefuseCommitmentOffer
         SetInfoText("Refuses the pending commitment offer and applies rupture/cooldown.")
+    elseIf a_option == _oidConsentSeedSanguine
+        SetInfoText("Sets Sanguine to Devoted piety with two recent commitment signal-days, clears consent and any active pact. Leaves the offer's preconditions met with consent withheld.")
+    elseIf a_option == _oidConsentEvaluate
+        SetInfoText("Runs the formal commitment-offer evaluator now and reports whether an offer would fire and for which deity. The 3-button pact message replays after the menu closes.")
+    elseIf a_option == _oidConsentAccept
+        SetInfoText("Accepts the pending commitment: records pact consent and makes Sanguine the single active pact. Shows the consent readback afterward.")
+    elseIf a_option == _oidConsentNotYet
+        SetInfoText("Declines/postpones the pending commitment offer. Shows the consent readback afterward.")
+    elseIf a_option == _oidConsentRefuse
+        SetInfoText("Refuses the pending commitment offer (rupture/cooldown). Shows the consent readback afterward.")
+    elseIf a_option == _oidConsentDivineThenRaise
+        SetInfoText("Sets a divine patron active, then raises Sanguine to offer-ready. The Daedric offer should be SUPPRESSED and the divine patron should survive.")
+    elseIf a_option == _oidConsentAlcoholTwice
+        SetInfoText("Fires the sanguine_alcohol KID action twice and reports Sanguine piety before/after so the second hit is seen capped by the once-per-day gate.")
+    elseIf a_option == _oidConsentForceMigrate
+        SetInfoText("Forces an active pact with no recorded consent, then re-runs the consent migration. The pact should clear while PDV.Piety is preserved.")
+    elseIf a_option == _oidConsentReadback
+        SetInfoText("Shows Sanguine stored piety and tier, pact consent, active-pact state, and the consent-schema version.")
     elseIf a_option == _oidHircineReset
         SetInfoText("Resets the Hircine proving ledger, residue, and curse state to a clean baseline.")
     elseIf a_option == _oidHircineHuntRite
@@ -1465,6 +1492,88 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidRefuseCommitmentOffer
         RunPatternAction("Refuse the pending commitment offer?", 15)
+        return
+    endIf
+
+    if a_option == _oidConsentSeedSanguine
+        PDV__ManagerQuest mgrConsentSeed = GetManagerService()
+        if mgrConsentSeed
+            ShowMessage(mgrConsentSeed.DebugSeedSanguineOfferReady(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentEvaluate
+        PDV__ManagerQuest mgrConsentEval = GetManagerService()
+        if mgrConsentEval
+            ShowMessage(mgrConsentEval.DebugEvaluateConsentOfferReport(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentAccept
+        PDV__ManagerQuest mgrConsentAccept = GetManagerService()
+        if mgrConsentAccept
+            mgrConsentAccept.DebugAcceptPendingCommitment()
+            ShowMessage(mgrConsentAccept.DebugSanguineConsentReadback(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentNotYet
+        PDV__ManagerQuest mgrConsentNotYet = GetManagerService()
+        if mgrConsentNotYet
+            mgrConsentNotYet.DebugDeclinePendingCommitment()
+            ShowMessage(mgrConsentNotYet.DebugSanguineConsentReadback(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentRefuse
+        PDV__ManagerQuest mgrConsentRefuse = GetManagerService()
+        if mgrConsentRefuse
+            mgrConsentRefuse.DebugRefusePendingCommitment()
+            ShowMessage(mgrConsentRefuse.DebugSanguineConsentReadback(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentDivineThenRaise
+        PDV__ManagerQuest mgrConsentDivine = GetManagerService()
+        if mgrConsentDivine
+            ShowMessage(mgrConsentDivine.DebugConsentDivinePatronThenRaiseSanguine(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentAlcoholTwice
+        PDV__ManagerQuest mgrConsentAlcohol = GetManagerService()
+        if mgrConsentAlcohol
+            ShowMessage(mgrConsentAlcohol.DebugFireSanguineAlcoholTwice(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentForceMigrate
+        PDV__ManagerQuest mgrConsentMigrate = GetManagerService()
+        if mgrConsentMigrate
+            ShowMessage(mgrConsentMigrate.DebugForceUnconsentedPactThenMigrate(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentReadback
+        PDV__ManagerQuest mgrConsentReadback = GetManagerService()
+        if mgrConsentReadback
+            ShowMessage(mgrConsentReadback.DebugSanguineConsentReadback(), False, "$OK", "")
+        endIf
         return
     endIf
 
@@ -2428,6 +2537,18 @@ Function BuildDaedricPage()
     _oidAcceptCommitmentOffer = AddTextOption("Accept commitment", "Preserve piety", OPTION_FLAG_NONE)
     _oidDeclineCommitmentOffer = AddTextOption("Decline commitment", "Postpone", OPTION_FLAG_NONE)
     _oidRefuseCommitmentOffer = AddTextOption("Refuse commitment", "Cooldown", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Daedric pact consent (Sanguine)", OPTION_FLAG_NONE)
+    _oidConsentSeedSanguine = AddTextOption("[Consent] Seed Sanguine to offer-ready", "Devoted, no consent", OPTION_FLAG_NONE)
+    _oidConsentEvaluate = AddTextOption("[Consent] Evaluate offer now", "Report pending", OPTION_FLAG_NONE)
+    _oidConsentAccept = AddTextOption("[Consent] Accept pending", "Consent + pact", OPTION_FLAG_NONE)
+    _oidConsentNotYet = AddTextOption("[Consent] Not-yet pending", "Postpone", OPTION_FLAG_NONE)
+    _oidConsentRefuse = AddTextOption("[Consent] Refuse pending", "Rupture/cooldown", OPTION_FLAG_NONE)
+    _oidConsentDivineThenRaise = AddTextOption("[Consent] Divine patron then raise Sanguine", "Expect suppressed", OPTION_FLAG_NONE)
+    _oidConsentAlcoholTwice = AddTextOption("[Consent] Fire sanguine_alcohol x2", "2nd hit capped", OPTION_FLAG_NONE)
+    _oidConsentForceMigrate = AddTextOption("[Consent] Force un-consented pact + migrate", "Piety preserved", OPTION_FLAG_NONE)
+    _oidConsentReadback = AddTextOption("[Consent] Readback", "State summary", OPTION_FLAG_NONE)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
@@ -4175,6 +4296,15 @@ Function ResetAllOptionIds()
     _oidQuestReactionQueueStatus = -1
     _oidReDetectOrigin = -1
     _oidRefuseCommitmentOffer = -1
+    _oidConsentSeedSanguine = -1
+    _oidConsentEvaluate = -1
+    _oidConsentAccept = -1
+    _oidConsentNotYet = -1
+    _oidConsentRefuse = -1
+    _oidConsentDivineThenRaise = -1
+    _oidConsentAlcoholTwice = -1
+    _oidConsentForceMigrate = -1
+    _oidConsentReadback = -1
     _oidReloadQuestMatrix = -1
     _oidRepairStats = -1
     _oidResetBretonPractice = -1
