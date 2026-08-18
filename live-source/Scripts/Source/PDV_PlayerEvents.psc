@@ -2891,14 +2891,8 @@ Bool Function MarkGenericBookRead(Form bookForm)
     Float seenDay = StorageUtil.GetFloatValue(None, dayKey)
 
     if seenDay <= 0.0
-        ; Migration: a pre-P15 save carries the old `.Seen` int with no timestamp. Treat that as
-        ; "read just now", NOT as never-read -- otherwise an existing library would all become
-        ; re-creditable at once on the first load after the update.
-        String legacyKey = "PDV.BookRead." + bookForm.GetFormID() + ".Seen"
-        if StorageUtil.GetIntValue(None, legacyKey) == 1
-            StorageUtil.SetFloatValue(None, dayKey, nowTime)
-            return false
-        endIf
+        ; First sighting of this book on this save: stamp the day and credit it. (Pre-P15 `.Seen`
+        ; legacy-migration branch removed -- not-save-safe; a fresh save carries no `.Seen` int.)
         StorageUtil.SetFloatValue(None, dayKey, nowTime)
         return true
     endIf

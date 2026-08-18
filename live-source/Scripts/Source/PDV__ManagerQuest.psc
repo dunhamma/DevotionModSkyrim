@@ -14416,16 +14416,10 @@ EndFunction
 ; Manager-owned daily stamps use the same zero-reserved encoding as substrates.
 ; Existing +1 stamps are migrated once per key through a sibling encoding flag.
 Int Function ReadZeroReservedDevotionalDayStamp(String keyName)
-    Int stamp = StorageUtil.GetIntValue(None, keyName)
-    String encodingKey = keyName + ".Encoding"
-    if StorageUtil.GetIntValue(None, encodingKey) < 2
-        if stamp > 0
-            stamp += 1
-            StorageUtil.SetIntValue(None, keyName, stamp)
-        endIf
-        StorageUtil.SetIntValue(None, encodingKey, 2)
-    endIf
-    return stamp
+    ; Legacy ".Encoding < 2" +1-stamp fixup removed (not-save-safe: a fresh save only ever
+    ; carries the +2 write scheme). The +2 WriteZeroReservedDevotionalDayStamp scheme stays
+    ; live -- gates compare == GetDevotionalDay()+2.
+    return StorageUtil.GetIntValue(None, keyName)
 EndFunction
 
 Function WriteZeroReservedDevotionalDayStamp(String keyName)
@@ -16101,7 +16095,11 @@ Function SyncFirstTierRaceRewardRuntime()
     ; owns it as the Substrate_Mid slot. Managing it in this generic T1 path
     ; would fight the substrate grant and strip Khajiit Lunar Road.
     SyncRaceRewardSpell(playerRef, PDV_Bless_Orc_Malacath_T1, shouldBeActive && activeReward == PDV_Bless_Orc_Malacath_T1, "Orc T1")
-    SyncRaceRewardSpell(playerRef, PDV_Bless_Redguard_AncestorSpine_T1, shouldBeActive && activeReward == PDV_Bless_Redguard_AncestorSpine_T1, "Redguard T1")
+    ; Redguard AncestorSpine_T1 is intentionally absent here: descoped 2026-07-16 (the
+    ; Crown/Forebear/Ash'abah sect spine is the sole ancestor layer). The selector returns
+    ; None for Redguard, so activeReward can never equal it -- this line only ever stripped,
+    ; which is dead on a not-save-safe fresh save. The property and reward functions stay for
+    ; gate assertions and the still-live T2 broad-worship path; uninstall teardown still clears it.
 
     if shouldBeActive
         StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Active", 1)
@@ -21683,7 +21681,6 @@ Function EnsureExplicitStartupChoice(Int originRace)
         ApplyStartupChoice(originRace, defaultOption, "startup_missing_message_default")
         RecordStartupEvent("startup_confirmed")
         StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
-        StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
         return
     endIf
 
@@ -21701,7 +21698,6 @@ Function EnsureExplicitStartupChoice(Int originRace)
     ApplyStartupChoice(originRace, selection, "startup_choice")
     RecordStartupEvent("startup_confirmed")
     StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
-    StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
 EndFunction
 
 Bool Function ConfirmStartupSelection(Int originRace, Message choiceMessage, Int expectedSelection)
@@ -21766,7 +21762,6 @@ Function EnsureInfoOnlyStartup(Int originRace)
     Debug.MessageBox(GetStartupInfoOnlyText(originRace))
     RecordStartupEvent("startup_info_acknowledged")
     StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
-    StorageUtil.SetIntValue(None, "PDV.Startup.OriginHandled", originRace)
 EndFunction
 
 Function RecordStartupEvent(String eventName)
@@ -21895,7 +21890,6 @@ Function ApplyOrcInitialChoice(Int modeValue, String reason)
     if PDV_Malacath
         SetActiveDeity(PDV_Malacath)
     endIf
-    StorageUtil.SetIntValue(None, "PDV.Orc.SetupComplete", 1)
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     EndRaceSetupQuietPresentation()
@@ -21915,8 +21909,6 @@ Function ApplyNordInitialChoice(Int baselineValue, String reason)
         baselineLabel = "Nine Divines"
     endIf
     AppendBookOfDaysEntry(BuildStartupRoadJournalLine(baselineLabel), Utility.GetCurrentGameTime() as Int, "reorientation", "journal", True, 3, "", True)
-    StorageUtil.SetIntValue(None, "PDV.Nord.SetupComplete", 1)
-    StorageUtil.SetStringValue(None, "PDV.Nord.StartupReason", reason)
     SyncFirstTierRaceRewardRuntime()
     RequestPanelRefresh()
     EndRaceSetupQuietPresentation()

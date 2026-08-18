@@ -4,10 +4,27 @@
 2026-08-13** (shipped in #79; e.g. `39fb7aa4`, `af7e668e`) — `MigrateDaedricPactsIfNeeded`,
 `MigrateBroadPantheonPools`, `RunAuthoriaQuestReactionKeySweep`, and
 `MigrateLegacyCompositeMetricOnce` are verified absent from `live-source`. **Still deferred**
-(entangled with live paths): `RepairBookOfDaysJournalText` and the `AncestorSpine_T1` strip —
-both confirmed still live; see the handoff. Audits/contracts reconciled to the removal on
-`feature/v3-big-update` 2026-08-17 (broad-pantheon + substrate-pacing audits green). ·
-**Prereq:** the owner has committed to a **not-save-safe** next update (fresh saves required).
+the handoff. Audits/contracts reconciled to the removal on `feature/v3-big-update` 2026-08-17
+(broad-pantheon + substrate-pacing audits green). · **Prereq:** the owner has committed to a
+**not-save-safe** next update (fresh saves required).
+
+**UPDATE 2026-08-18 (on `feature/v3-big-update`, post-1.5.0e-merge `65ca5c89`):** `RepairBookOfDaysJournalText`
+was removed earlier (FAVOR-handoff step 1). This pass landed the rest of the static sweep:
+- **AncestorSpine_T1 strip (step 2):** grant-fact resolved by *code* (the correct liveness test, not
+  the two wrong ones) — `GetFirstTierRaceRewardSpellForOrigin()` returns `None` for Redguard, so the
+  `SyncFirstTierRaceRewardRuntime` line only ever stripped. Removed that runtime descope line; property
+  `PDV_Bless_Redguard_AncestorSpine_T1` + reward fns + uninstall teardown preserved.
+- **Part B:** `ReadZeroReservedDevotionalDayStamp` legacy `.Encoding<2` branch (verified 0 other
+  `.Encoding` readers; `+2` write scheme kept); `EnsureHistMaintenanceStampEncoding` legacy body
+  (`PDV_Substrate_ArgonianHist`); book-read `.Seen` legacy branch (`PDV_PlayerEvents.MarkGenericBookRead`,
+  verified the `PDV.P2Source.*.Seen` sibling is a different, live key).
+- **Part C:** write-only `PDV.Startup.OriginHandled` (x3), `PDV.Orc.SetupComplete`,
+  `PDV.Nord.SetupComplete`+`StartupReason` (all verified 0 reads). Redguard/Breton/Bosmer kept.
+- **Part D (Prisma dead-path): DEFERRED** — optional; it pulls the Prisma bridge + mandatory
+  `index.html` cache-key recompute into scope, out of this sweep.
+- **New candidate flagged, NOT touched:** `MigrateDaedricConsentIfNeeded` (1.5.0e fn, live in V3 via the
+  merge) is likely dead on a not-save-safe fresh save — needs an owner call before removal.
+Proof: 3 files compile 0/0; parity vs HEAD = changed=8 (exactly the edited fns), removed=0, added=0.
 
 > Focused follow-up to the startup-message removal (`bec76abc`, `7afd5396`). Precedence for any
 > "is it done": live readback / re-run gate > `AGENTS.md` > this doc. Every anchor below is in
