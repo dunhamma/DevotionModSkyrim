@@ -2701,8 +2701,21 @@ String Function ResolveShrinePrayerJournalLabel(String primaryDeityName, String 
         return "Tu'whacca"
     endIf
 
+    ; Resolve the alias to its deity record and use the canonical display name (e.g. the
+    ; lowercase catalog key "talos" -> "Talos"). The special-case returns above still win for
+    ; race display overrides (Kyne, Auri-El, ...); this only fixes the default fallthrough,
+    ; which previously returned the raw lowercase alias. Falls back to the old normalize path
+    ; for a shrineLabel/name that does not resolve to a deity.
     if shrineLabel != ""
+        PDV_DeityBase labelDeity = LedgerRuntime.GetShrinePrayerDeityByName(shrineLabel)
+        if labelDeity
+            return GetPublicDeityDisplayName(labelDeity)
+        endIf
         return NormalizePublicDeityDisplayText(shrineLabel)
+    endIf
+    PDV_DeityBase primaryDeity = LedgerRuntime.GetShrinePrayerDeityByName(primaryDeityName)
+    if primaryDeity
+        return GetPublicDeityDisplayName(primaryDeity)
     endIf
     return NormalizePublicDeityDisplayText(primaryDeityName)
 EndFunction
