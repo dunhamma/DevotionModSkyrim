@@ -794,17 +794,27 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 ; -- Gain provider (ADR D1) --
-; DELEGATING PLACEHOLDER. GetImperialCurseGainMultiplier still lives in
-; PDV__ManagerQuest and is NOT moved by this tranche; this body changes when the
-; provider seam lands and the function moves here. The Imperial race gate inside
-; the manager function becomes redundant once this override is race-selected,
-; but it is deliberately left in place for now.
+; Imperial vampire rupture: the Nine Divines path HALTS while undead (no civic piety
+; accrues) and leaves a one-way history scar; cure lifts the halt but the scar remains.
+; While an Imperial bears the vampire halt, the Nine Divines path stops growing: positive
+; civic piety accrues at 0x. Losses still apply; the scar persists post-cure.
+; Moved from PDV__ManagerQuest in the provider seam (Phase A3). The manager's Imperial race
+; gate is dropped: this adapter is only ever instantiated for an Imperial player, so the
+; race-index check could never fail here.
+Float Function GetImperialCurseGainMultiplier(PDV_DeityBase deity)
+    if StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
+        return 0.0
+    endIf
+
+    return 1.0
+EndFunction
+
 Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)
     ; Composes with Parent: the base owns the cross-race curse factor and dropping it here
     ; would silently lose it for this race.
     Float factor = Parent.GetProviderGainMultiplier(deity, phase)
     if phase == Manager.PHASE_AT_DAWN
-        factor = factor * Manager.GetImperialCurseGainMultiplier(deity)
+        factor = factor * GetImperialCurseGainMultiplier(deity)
     endIf
 
     return factor

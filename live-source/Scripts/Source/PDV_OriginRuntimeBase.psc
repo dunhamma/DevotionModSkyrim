@@ -9368,10 +9368,9 @@ EndFunction
 ; PDV__ManagerQuest; bare manager-member references qualified via Manager.;
 ; LedgerRuntime.X -> Manager.LedgerRuntime.X; FavorRuntime.X -> Manager.FavorRuntime.X;
 ; reads of shared manager script vars route through existing manager accessors
-; (GetActiveDeity, GetSuppressCurseTransitionOutputs). The two gain-multiplier
-; fns GetOrcLifeModeGainMultiplier / GetImperialCurseGainMultiplier are DEFERRED
-; (remain in the manager; reached by LEDGER via Manager.Get...); no moved body
-; calls them.
+; (GetActiveDeity, GetSuppressCurseTransitionOutputs). The race-specific gain-multiplier
+; fns GetOrcLifeModeGainMultiplier / GetImperialCurseGainMultiplier now live in their race
+; adapters (Phase A3, D1); no moved body here calls them.
 ; ============================================================================
 
 Function HandleOrcSleepEvents(Actor playerRef, String reason)
@@ -10909,10 +10908,11 @@ EndFunction
 ; references qualified via Manager.; LedgerRuntime.X -> Manager.LedgerRuntime.X;
 ; reads of shared manager script vars route through existing manager accessors
 ; (GetActiveDeity, GetQrQueueTransactionActive); writes through existing setters
-; (SetSuppressAwardFavorToast, SetQrQueueNeedsCurseRefresh). The 3 gain-
-; multiplier fns GetCurseGainMultiplier / GetOrcLifeModeGainMultiplier /
-; GetImperialCurseGainMultiplier remain DEFERRED in the manager (reached by
-; LEDGER via Manager.Get...); no moved body calls them.
+; (SetSuppressAwardFavorToast, SetQrQueueNeedsCurseRefresh). The 3 gain-multiplier fns are
+; no longer in the manager: GetCurseGainMultiplier moved to this base and
+; GetOrcLifeModeGainMultiplier / GetImperialCurseGainMultiplier to their race adapters
+; (Phase A3, D1). The provider seam sources each scalar once; no moved body reaches them by
+; the old Manager.Get... path.
 ; ============================================================================
 
 Function EnsureTalosRuntimeIdentity()
@@ -12028,9 +12028,30 @@ EndFunction
 ;    check), so the base owns it for every race. A race adapter that adds its own factor
 ;    MUST compose with Parent so this one is not lost. Applies on award and on decay --
 ;    the same scalar, sourced once. --
+
+; Cross-race curse factor. Moved from PDV__ManagerQuest in the provider seam (Phase A3, D1)
+; so the provider no longer reaches back through Manager for the scalar it owns. Curse-state
+; and Hircine-path reads qualify through the Manager backref (properties consolidate in
+; Phase F).
+Float Function GetCurseGainMultiplier(PDV_DeityBase deity)
+    if !deity || !Manager.PDV_CurseStateService
+        return 1.0
+    endIf
+
+    if deity == Manager.PDV_HircinePath
+        if Manager.PDV_CurseStateService.IsWerewolf()
+            return 1.5
+        elseIf Manager.PDV_CurseStateService.IsVampire()
+            return 0.5
+        endIf
+    endIf
+
+    return 1.0
+EndFunction
+
 Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)
     if phase == Manager.PHASE_PER_EVENT || phase == Manager.PHASE_DECAY
-        return Manager.GetCurseGainMultiplier(deity)
+        return GetCurseGainMultiplier(deity)
     endIf
 
     return 1.0

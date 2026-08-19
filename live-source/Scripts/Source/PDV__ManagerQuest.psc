@@ -3778,29 +3778,6 @@ EndFunction
 
 
 
-Float Function GetOrcLifeModeGainMultiplier(PDV_DeityBase deity)
-    if !deity || !OriginRuntime.IsOrcOrigin()
-        return 1.0
-    endIf
-
-    if deity.DeityName != "Malacath"
-        return 1.0
-    endIf
-
-    OriginRuntime.EnsureOrcLifeModeInitialized()
-    if !PDV_OrcLifeModeTrack
-        return 1.0
-    endIf
-
-    Int modeValue = PDV_OrcLifeModeTrack.GetCurrentState()
-    if modeValue == ORC_LIFE_MODE_STRONGHOLD
-        return ORC_RATE_MULT_STRONGHOLD
-    elseIf modeValue == ORC_LIFE_MODE_LEGION_EXILE
-        return ORC_RATE_MULT_LEGIONEXILE
-    endIf
-
-    return ORC_RATE_MULT_CITY
-EndFunction
 
 
 
@@ -5603,24 +5580,6 @@ String Function GetCCContentStatusLine()
     endIf
 
     return detected + " | integration on"
-EndFunction
-
-
-
-Float Function GetCurseGainMultiplier(PDV_DeityBase deity)
-    if !deity || !PDV_CurseStateService
-        return 1.0
-    endIf
-
-    if deity == PDV_HircinePath
-        if PDV_CurseStateService.IsWerewolf()
-            return 1.5
-        elseIf PDV_CurseStateService.IsVampire()
-            return 0.5
-        endIf
-    endIf
-
-    return 1.0
 EndFunction
 
 
@@ -7431,22 +7390,6 @@ EndFunction
 
 
 
-; Imperial vampire rupture: the Nine Divines path HALTS while undead (no civic piety
-; accrues) and leaves a one-way history scar; cure lifts the halt but the scar remains.
-
-; While an Imperial bears the vampire halt, the Nine Divines path stops growing:
-; positive civic piety accrues at 0x. Losses still apply; the scar persists post-cure.
-Float Function GetImperialCurseGainMultiplier(PDV_DeityBase deity)
-    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
-        return 1.0
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
-        return 0.0
-    endIf
-
-    return 1.0
-EndFunction
 
 
 
@@ -9372,7 +9315,7 @@ String Function DebugGetDecaySummaryByIndex(Int deityIndex)
         multiplier = LedgerRuntime.BROAD_WORSHIP_DECAY_MULTIPLIER
     endIf
 
-    return "deity=" + deity.DeityName + ";state=" + LedgerRuntime.GetPatronStateLabel() + ";active=" + PDV_DevotionRules.BoolToInt(deity == _activeDeity) + ";broad=" + PDV_DevotionRules.BoolToInt(LedgerRuntime.IsBroadWorshipActive()) + ";p=" + PDV_DevotionRules.FormatTwoDecimals(piety) + ";tier=" + LedgerRuntime.GetTier(deity) + ";lastEvent=" + PDV_DevotionRules.FormatTwoDecimals(lastEvent) + ";lastDecayDay=" + lastDecayDay + ";rate=" + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetCurseGainMultiplier(deity) * DaedricRuntime.GetDaedricStigmaGainMultiplier(deity)) + ";floor=" + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.GetDecayFloorForDeity(deity, piety))
+    return "deity=" + deity.DeityName + ";state=" + LedgerRuntime.GetPatronStateLabel() + ";active=" + PDV_DevotionRules.BoolToInt(deity == _activeDeity) + ";broad=" + PDV_DevotionRules.BoolToInt(LedgerRuntime.IsBroadWorshipActive()) + ";p=" + PDV_DevotionRules.FormatTwoDecimals(piety) + ";tier=" + LedgerRuntime.GetTier(deity) + ";lastEvent=" + PDV_DevotionRules.FormatTwoDecimals(lastEvent) + ";lastDecayDay=" + lastDecayDay + ";rate=" + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * OriginRuntime.GetCurseGainMultiplier(deity) * DaedricRuntime.GetDaedricStigmaGainMultiplier(deity)) + ";floor=" + PDV_DevotionRules.FormatTwoDecimals(LedgerRuntime.GetDecayFloorForDeity(deity, piety))
 EndFunction
 
 

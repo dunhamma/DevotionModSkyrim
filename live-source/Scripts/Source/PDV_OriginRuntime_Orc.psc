@@ -1150,17 +1150,41 @@ Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool supp
 EndFunction
 
 ; -- Gain provider (ADR D1) --
-; DELEGATING PLACEHOLDER. GetOrcLifeModeGainMultiplier still lives in
-; PDV__ManagerQuest and is NOT moved by this tranche; this body changes when the
-; provider seam lands and the function moves here. The Orc race gate inside the
-; manager function becomes redundant once this override is race-selected, but it
-; is deliberately left in place for now.
+; GetOrcLifeModeGainMultiplier now lives here (moved from PDV__ManagerQuest in the provider
+; seam, Phase A3). The manager's Orc race gate is dropped: this adapter is only ever
+; instantiated for an Orc player, so !IsOrcOrigin() could never be true here. The life-mode
+; track and rate consts qualify through the Manager backref (properties consolidate in
+; Phase F).
+Float Function GetOrcLifeModeGainMultiplier(PDV_DeityBase deity)
+    if !deity
+        return 1.0
+    endIf
+
+    if deity.DeityName != "Malacath"
+        return 1.0
+    endIf
+
+    EnsureOrcLifeModeInitialized()
+    if !Manager.PDV_OrcLifeModeTrack
+        return 1.0
+    endIf
+
+    Int modeValue = Manager.PDV_OrcLifeModeTrack.GetCurrentState()
+    if modeValue == Manager.ORC_LIFE_MODE_STRONGHOLD
+        return Manager.ORC_RATE_MULT_STRONGHOLD
+    elseIf modeValue == Manager.ORC_LIFE_MODE_LEGION_EXILE
+        return Manager.ORC_RATE_MULT_LEGIONEXILE
+    endIf
+
+    return Manager.ORC_RATE_MULT_CITY
+EndFunction
+
 Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)
     ; Composes with Parent: the base owns the cross-race curse factor and dropping it here
     ; would silently lose it for this race.
     Float factor = Parent.GetProviderGainMultiplier(deity, phase)
     if phase == Manager.PHASE_AT_DAWN
-        factor = factor * Manager.GetOrcLifeModeGainMultiplier(deity)
+        factor = factor * GetOrcLifeModeGainMultiplier(deity)
     endIf
 
     return factor
