@@ -83,11 +83,6 @@ EndFunction
 
 Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String reason)
     UpdateContextualFavorRuntime()
-    if IsFavorActive()
-        Manager.Trace(2, "Contextual favor suppressed: another favor is active.")
-        return False
-    endIf
-
     if !IsEligibleForFavorLane(laneValue)
         Manager.Trace(2, "Contextual favor blocked: lane " + GetContextualFavorLaneLabel(laneValue) + " is not currently eligible.")
         return False
@@ -108,6 +103,15 @@ Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String 
     if !favorSpell || !playerRef
         Manager.Trace(1, "Contextual favor blocked: missing player or spell for " + GetContextualFavorFamilyLabel(laneValue, familyValue))
         return False
+    endIf
+
+    ; A newly earned favor SUPERSEDES the active one rather than being dropped: the
+    ; player just earned this moment, so losing it silently reads as unresponsive.
+    ; Retired HERE, after every gate has passed -- retiring at the old rejection site
+    ; would clear the active favor even when the incoming one is then blocked by
+    ; cooldown or eligibility, leaving the player with nothing.
+    if IsFavorActive()
+        ClearActiveFavor("superseded")
     endIf
 
     playerRef.AddSpell(favorSpell, False)
