@@ -327,3 +327,66 @@ against the tree before reporting it.
    t3 Breton/Redguard, t4 Nord/Dunmer, t5 Orc/Imperial), **each in its own worktree**.
 3. Supervised: DAEDRIC ESP wiring + GATE 0.5 (needs a fresh save).
 4. Artifact refresh checkpoint 1 (already done this session; refresh again after DAEDRIC wiring).
+
+---
+
+## UPDATE -- 2026-08-19 session 6: DAEDRIC ESP HOST WIRED; B2 adapters built
+
+### DAEDRIC ESP wiring -- DONE and verified (owner-authorised in-place write)
+- Host quest created: **`071793:Devotion.esp` = PDV_DaedricRuntime**, `Flags = StartGameEnabled`,
+  VMAD script `PDV_DaedricRuntime` (Local), one property `Manager -> 00C325:Devotion.esp`.
+  ANAM auto-set to 0 (CK parity for an alias-less quest).
+- Manager forward-ref filled: `PDV__ManagerQuest` VMAD properties **510 -> 511**, new `[510] =
+  DaedricRuntime -> 071793`.
+- **SEQ regenerated: 44 -> 45 start-game-enabled quests** (176 -> 180 bytes). houseCARL wrote it
+  into a fresh `houseCARL - houseCARL_SEQ_002` folder, which is NOT in modlist.txt and is inert;
+  the live copy was deployed over `Devotion-V3Dev/SEQ/Devotion.seq` (old one backed up), matching
+  how the working SEQ has always been carried in the mod's own folder.
+- **Verification:** `check_errors` on Devotion.esp = 0 dangling / 0 missing masters / 0 unscannable.
+  Masters `Skyrim.esm, Dawnguard.esm, HearthFires.esm, Dragonborn.esm` -- game master first, order
+  correct. ESP size moved MONOTONICALLY UP across both writes (657928 -> 658072 -> 658098), and
+  the FIRST record was re-read after the SECOND write and is intact -- so no silent revert.
+- Backups: `Devotion.esp.pre-daedric-backup`, `SEQ/Devotion.seq.pre-daedric-backup`.
+
+### GATE 0.5 for DAEDRIC is BLOCKED, and the reason is sequencing
+The deployed V3Dev build is **LEDGER-era**: `Devotion-V3Dev/Scripts/PDV__ManagerQuest.pex`
+(2026-08-18 19:19) contains **zero** `OriginRuntime` references, and `PDV_DaedricRuntime.pex` is
+not deployed at all.
+
+This branch's manager depends on `OriginRuntime`, so deploying DAEDRIC's scripts would drag the
+ORIGIN extraction in with it -- and ORIGIN has no host quest, so every `Manager.OriginRuntime.*`
+call would hit None. Wiring ORIGIN now is also wrong: `PDV_2_0_ORIGIN_AdapterSplit_Plan.md` s7 is
+explicit that ORIGIN wiring must wait so **the monolith shape is never wired**.
+
+So the correct order is: finish the adapter split -> wire ORIGIN -> deploy -> run GATE 0.5 for
+ORIGIN and DAEDRIC together. The DAEDRIC ESP host is authored and waiting; nothing about it needs
+redoing.
+
+**Cosmetic consequence meanwhile:** a V3Dev run will log a bind failure for quest 071793 (script
+not deployed) and one "property cannot be initialized" warning for the manager's new
+DaedricRuntime property -- the same class as the ~198 stale-fill warnings already in the log.
+Both vanish on deployment. If V3Dev needs to be pristine for testing before then, restore
+`Devotion.esp.pre-daedric-backup` and `SEQ/Devotion.seq.pre-daedric-backup`.
+
+### B2 -- all 10 adapters built (606 functions), NOT yet reconciled
+Five isolated worktrees, five branches, each compiling 0/0:
+
+| tranche | branch | races | fns | script vars moved |
+|---|---|---|---|---|
+| t1 | `claude/v3-adapters-t1` | Altmer 85 / Bosmer 79 | 164 | 3 |
+| t2 | `claude/v3-adapters-t2` | Khajiit 88 / Argonian 46 | 134 | 9 |
+| t3 | `claude/v3-adapters-t3` | Breton 68 / Redguard 59 | 127 | 0 |
+| t4 | `claude/v3-adapters-t4` | Nord 47 / Dunmer 38 | 85 | 5 |
+| t5 | `claude/v3-adapters-t5` | Orc 62 / Imperial 34 | 96 | 0 |
+
+**Not one shared script variable across the whole fan-out** -- no base accessor pairs needed.
+Adapters never touched the base, so the five branches merge without conflict.
+
+### NEXT -- B3 central reconciliation (the remaining ORIGIN work)
+1. Merge the five adapter branches.
+2. Bring all 10 adapters onto the **corrected 21-virtual** signatures (they were built against the
+   first, defective cut -- see the ADR's "Corrections after the pilot").
+3. Re-route the ~25 base->lane calls through virtuals BEFORE deleting anything.
+4. Delete the lane originals from `PDV_OriginRuntimeBase`, verifying with the same
+   function-count arithmetic that proved DAEDRIC (manager 444 -> 397 = exactly 47).
+5. Then B4 provider seam, B5 ORIGIN wiring, and GATE 0.5 for ORIGIN + DAEDRIC together.
