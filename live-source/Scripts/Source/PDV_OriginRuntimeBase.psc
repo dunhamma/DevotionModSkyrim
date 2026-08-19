@@ -12166,6 +12166,16 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     return False
 EndFunction
 
+; Value-returning sibling of HandleContextualSignal, for the few lane entry points whose
+; RETURN a caller actually consumes -- HandleContextualSignal's Bool means handled/not-handled
+; and cannot carry a payload. Two known cases: the Khajiit moon-observation generation token
+; (PDV_ObserveMoonsEffect reads it and rejects stale completions) and the Altmer practice-focus
+; value the EventBus returns onward. Actor extends Form, so a player argument rides contextForm.
+; 0 is the inert default: no adapter answered, nothing happened.
+Int Function HandleContextualQuery(String signalId, String reason = "", Form contextForm = None)
+    return 0
+EndFunction
+
 Function HandleLocationChange(Form newLocation = None)
 EndFunction
 

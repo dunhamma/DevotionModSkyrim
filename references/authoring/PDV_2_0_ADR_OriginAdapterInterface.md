@@ -32,12 +32,15 @@ is one-named-verb-per-signal, and it collapses almost entirely into a single key
 inert defaults; each adapter overrides only what its race implements. Race identity becomes
 object identity: no race switchboard survives at the boundary.
 
-### The interface
+### The interface (21 virtuals -- CORRECTED after the adapter pilot)
+
+Signatures below are the corrected ones, taken from real usage. See "Corrections after
+the pilot" at the end for what was wrong in the first cut and why it mattered.
 
 Lifecycle
-- `Function ApplyInitialChoice()`
+- `Function ApplyInitialChoice(Int choiceValue, String reason)`
 - `Function EnsureRuntimeWiring()`
-- `Function ApplyCurseHandlers()`
+- `Function ApplyCurseHandlers(Int oldState, Int newState, String reason)`
 - `Function EvaluateAtDawn()`
 
 State
@@ -46,12 +49,13 @@ State
 - `String Function GetOriginSummary()`
 - `String Function GetSurveyFragment()`
 - `Bool Function IsRaceLaneNeglected()`
-- `String Function GetOriginDetailLabel(String key)` -- long tail
-- `Int Function GetOriginDetailValue(String key)` -- long tail
+- `String Function GetOriginDetailLabel(String detailKey)` -- long tail
+- `Int Function GetOriginDetailValue(String detailKey)` -- long tail
 
 Signals
-- `Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)`
-- `Function HandleLocationChange()`
+- `Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)`
+- `Int Function HandleContextualQuery(String signalId, String reason = "", Form contextForm = None)` -- value-returning siblings
+- `Function HandleLocationChange(Form newLocation = None)`
 
 Upkeep
 - `Function SyncRaceRewards()`
@@ -59,15 +63,16 @@ Upkeep
 
 Patron / offers
 - `Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)`
-- `String Function GetFormalCommitmentOfferMessage()`
+- `Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)`
 
 Presentation
-- `Function ShowOriginNotification(String messageKey)`
+- `Function ShowOriginNotification(Message messageRecord, String fallbackText)`
+- `Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)`
 
 Provider (see below)
 - `Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)`
 
-Defaults on the base: `""`, `0`, `False`, no-op, and `1.0` for the multiplier.
+Defaults on the base: `""`, `0`, `False`, `None`, no-op, and `1.0` for the multiplier.
 
 ### Why these verbs and not others
 
@@ -76,12 +81,14 @@ races -- under ten different names -- become one verb each:
 
 - `GetSurveyText` exists on 9 races (`GetNordSurveyBaseText` on the tenth).
 - `SyncNeglectSpell` on 10, `SyncRewards` on 9, `ApplyCurseHandlers` on 10.
-- The neglect predicate exists on **all ten** and is named differently every time:
+- The neglect predicate exists on **nine** races and is named differently every time:
   `IsAltmerCoherenceNeglected`, `IsBosmerPathNeglected`, `IsKhajiitLunarNeglected`,
   `IsArgonianHistNeglected`, `IsBretonTraditionNeglected`,
   `IsRedguardAncestorDistanceNeglected`, `IsDunmerAncestorNeglected`,
-  `IsOrcCodeNeglected`, `IsImperialCivicNeglected`, plus the Nord vampire-suppression
-  variant. One concept, ten spellings -- exactly what a virtual is for.
+  `IsOrcCodeNeglected`, `IsImperialCivicNeglected`. One concept, nine spellings -- exactly
+  what a virtual is for. **Nord is the exception and has none** (see the neglect-pool ruling
+  below); an earlier draft of this ADR wrongly counted Nord's vampire-suppression predicate
+  as the tenth.
 - Same for the primary state label: Tradition / Focus / Sect / LifeMode / Path /
   DevotionMode / Concordat / AncestorLayer / CulturalPractice / CrisisState.
 
@@ -197,3 +204,99 @@ tranche pair -- t1 Altmer/Bosmer, t2 Khajiit/Argonian, t3 Breton/Redguard, t4 No
 t5 Orc/Imperial); remap call sites and wire birth-race selection; build the provider seam on
 this interface; then ESP wiring. ORIGIN stays inert until the split lands, so the monolith
 shape is never wired.
+
+## Corrections after the pilot (2026-08-19)
+
+The first cut of this interface was designed from a verb-NAME survey without checking
+arity or return types against the real functions. Five adapter agents built against it and
+three independently hit the same defects. Corrected in `3e32f235`; the listing above is
+the corrected form.
+
+| Was | Is | Why it mattered |
+|---|---|---|
+| `ApplyCurseHandlers()` | `(Int oldState, Int newState, String reason)` | all 9 race handlers take 3 args; a 3-arg child of a 0-arg base is a compile error, so it was simply unimplementable |
+| `ApplyInitialChoice()` | `(Int choiceValue, String reason)` | 5 race handlers take 2 args |
+| `String Get...OfferMessage()` | `Message ...(PDV_DeityBase deity)` | 6 races return a Message record keyed by deity |
+| `...DetailLabel(String key)` | `(String detailKey)` | `key` resolves to Skyrim's vanilla `Key` form type |
+| `HandleContextualSignal(...)` | `+ String reason = ""` | callers build the reason dynamically |
+| `HandleLocationChange()` | `(Form newLocation = None)` | re-sampling `GetCurrentLocation()` is not provably the caller's `akNewLocation` |
+| `ShowOriginNotification(String)` | `(Message, String)` + new `ShowOriginMessage(Message, String, Bool)` | the real notifiers take a Message record, and a modal variant exists |
+
+Two of these deserve to be remembered rather than just fixed.
+
+**The `key` defect was invisible to compilation.** The base stub compiled clean because it
+never READ the parameter; the error ("key is not a variable") only appears once an adapter
+implements the body. A green compile on a stub proves nothing about a signature.
+
+**The missing `reason` slot was not merely cosmetic.** `HandleAltmerDawnSteadiness`
+**branches on the exact reason string**, so substituting the signalId would have silently
+taken the wrong branch -- a behavior change that no compile or reconstruction-parity check
+would catch. 31 of t1's 49 dispatched ids target a verb taking a caller-composed reason,
+and reasons are player-visible in the Ledger.
+
+## Open items the pilot surfaced (for the central removal pass)
+
+1. **The base calls DOWN into the lanes.** At least 13 tranche-1 and 7 tranche-2 base
+   bodies call race functions directly. Deleting the lane originals from the base breaks
+   the base itself unless those calls are re-routed through virtuals first. Most map onto
+   existing virtuals; `BridgeKhajiitMatrixFocus` (two String args) has no home yet.
+2. **Cross-lane dispatchers.** `HandleThalmorUnprovokedKill` branches Altmer AND calls an
+   Imperial verb, so it belongs to neither adapter alone; it needs a joint t1/t5 decision.
+3. **Non-Bool entry points.** Three Khajiit magic-effect entries and
+   `HandleAltmerPracticeFocus` return `Bool`/`Int` values a caller consumes, so they
+   cannot ride `HandleContextualSignal` (which returns Bool as handled/not-handled).
+4. **`SyncRaceRewards()` arity fill** uses `Game.GetPlayer()` where the lane function took
+   a player argument -- provably equivalent at the single live call site
+   (`PDV_DevotionLedger.psc:3570/3575`) but it is new code, not a move.
+5. **`GetKhajiitLunarAlignmentMultiplier` has zero call sites anywhere.** Copied and
+   unwired. Do not delete it on "no references" alone.
+
+## Ruling: neglect is THREE pools, and Nord has no race-lane one (2026-08-19)
+
+Raised by the owner while reviewing the adapter reports: is race-lane neglect meant to flow
+to the deities/princes while the broad lane covers culture, or are they separate pools?
+
+Read from `PDV_DevotionLedger.RunDawnApplySpellAndNeglectLayers()` (:2147) and the
+first-tier race sync (:3581-3605), they are **three separate pools**, and the mapping is not
+the one the question supposed:
+
+1. **Patron / deity pool** -- focused-worship lapse for an active patron, including Princes.
+   The `GetPatronState() != PATRON_STATE_ACTIVE` branch.
+2. **Race / culture-lane pool** -- per-race cultural practice: `SyncBretonNeglectSpell(IsBretonTraditionNeglected())`,
+   `SyncOrcNeglectSpell(IsOrcCodeNeglected())`, `SyncArgonianNeglectSpell(IsArgonianHistNeglected())`.
+   **This is the culture lane** -- it is the race lane, not the broad one.
+3. **Broad-lane pool** -- a full-pantheon worshipper who goes quiet. Gated on
+   `IsBroadWorshipActive()`, keyed off the global `PDV.Devotion.LastActTime` stamp, and it
+   `return`s early, so it is mutually exclusive with the other two.
+
+The in-code comment on pool 3 records the owner ruling of 2026-06-27 and explains the
+asymmetry: Nord broad reuses the Kyne weather spell as its broad-lane neglect "for now;
+per-race broad-lane neglect spells are a follow-on. Other races: no broad spell yet." That
+is why `IsBroadLaneLapsed()`'s only consumer is Nord-gated at the call site.
+
+**Therefore `IsRaceLaneNeglected()` stays UN-OVERRIDDEN for Nord.** Nord has no
+race/culture-lane neglect predicate at all -- it appears in the broad pool (Kyne spell) and
+the patron pool (`SyncNordPatronNeglectSpells`) only. Mapping it to
+`IsNordVampireSuppressed()` would equate curse-suppression with lane lapse, which is a third
+and unrelated thing. The base default `False` is the honest answer.
+
+## Ruling: the Dunmer urn rides the normal signal path (2026-08-19)
+
+Also raised by the owner: should the Dunmer ancestral urn use the new value channel?
+
+No. `HandleDunmerPortableShrinePrayer(String reason)` and `HandleDunmerPlayerHomeBonus(String reason)`
+are both **void**; `PDV_DunmerAncestralUrn` (a MISC `OnEquipped` ObjectReference script) fires
+through `PDV_EventBus.RouteDunmerPortableShrinePrayer()` and consumes nothing back. It rides
+`HandleContextualSignal` unchanged.
+
+The instinct was still sound, and pointed at a real hazard from the other direction: the urn
+path depends entirely on the `reason` argument (`"eventbus_" + eventType`), which is exactly
+the slot the first interface omitted. Had that shipped, the urn would have kept working while
+silently losing its provenance string.
+
+## Known orphan: GetKhajiitLunarAlignmentMultiplier
+
+Zero call sites anywhere. Copied into the Khajiit adapter, unwired, and **deliberately kept**.
+Owner states the design intent: *when the deity you are aligned with has their moon cycle
+turn, you get a multiplier bonus.* So it is a dropped feature with a known purpose, not dead
+code -- do not remove it on a "no references" sweep. Wiring it is a separate work item.
