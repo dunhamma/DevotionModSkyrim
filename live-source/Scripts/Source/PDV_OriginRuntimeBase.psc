@@ -11834,9 +11834,11 @@ String Function MedallionSection(String sectionId, String titleText, String entr
     return "{\"section_id\":\"" + PDV_DevotionRules.JsonSafeString(sectionId) + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\",\"entries\":[" + entriesJson + "]}"
 EndFunction
 
+; Delegates to the manager so there is exactly ONE implementation. Kept here because ~255
+; in-module callers use the bare name.
 Int Function GetPlayerOriginRaceIndex()
-    if Manager.PDV_GLO_OriginRace
-        return Manager.PDV_GLO_OriginRace.GetValueInt()
+    if Manager
+        return Manager.GetPlayerOriginRaceIndex()
     endIf
 
     return -1

@@ -789,7 +789,7 @@ Function RunDawnConsolidateDaedricWeek()
 EndFunction
 
 Float Function GetDaedricStigmaGainMultiplier(PDV_DeityBase deity)
-    if Manager.OriginRuntime.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON && Manager.OriginRuntime.GetBretonTraditionValue() == Manager.BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(deity) && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
+    if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON && Manager.OriginRuntime.GetBretonTraditionValue() == Manager.BRETON_TRADITION_HIDDEN_ART && IsBretonHiddenArtDaedricOfferDeity(deity) && StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure") >= 100
         return 1.25
     endIf
     if Manager.PDV_HircinePath && deity == Manager.PDV_HircinePath

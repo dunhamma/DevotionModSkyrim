@@ -1058,7 +1058,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidSeedBroadLane
         String seedPrompt = "Seed the current race's broad-worship lane directly to T2? This bypasses normal accumulation and is reward/UI proof only."
-        if PDV_Manager && PDV_Manager.OriginRuntime.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
+        if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
             seedPrompt = "Set the active Breton tradition directly to 50 practice points (Devoted)? This bypasses daily pacing and is reward/UI proof only."
         endIf
         if ShowMessage(seedPrompt, True, "$Yes", "$No")
@@ -2011,7 +2011,7 @@ Function BuildPlayerPage()
 
         ; Surface each moon-path's standing and the current god in strength for
         ; players who want a detailed readout beyond the emergence ceremony.
-        if PDV_Manager.OriginRuntime.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_KHAJIIT
+        if PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_KHAJIIT
             AddHeaderOption("Moon-paths", OPTION_FLAG_NONE)
             Int khajiitFocus = 1
             while khajiitFocus <= 5
@@ -2354,10 +2354,10 @@ String Function DiegeticD1Label()
 EndFunction
 
 String Function GetBroadLaneSeedLabel()
-    if PDV_Manager && PDV_Manager.OriginRuntime.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_IMPERIAL
+    if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_IMPERIAL
         return "Imperial pool 50"
     endIf
-    if PDV_Manager && PDV_Manager.OriginRuntime.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
+    if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
         return "Breton practice 50"
     endIf
     return "Origin lane T2"
@@ -2432,7 +2432,7 @@ Function BuildStatePage()
     _oidBretonHiddenArt = AddTextOption("Breton -> Hidden Art", "Tradition", OPTION_FLAG_NONE)
     _oidBretonGreenWay = AddTextOption("Breton -> Green Way", "Tradition", OPTION_FLAG_NONE)
     Int bretonPracticeFlags = OPTION_FLAG_DISABLED
-    if PDV_Manager && PDV_Manager.OriginRuntime.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
+    if PDV_Manager && PDV_Manager.GetPlayerOriginRaceIndex() == PDV_Manager.ORIGIN_BRETON
         bretonPracticeFlags = OPTION_FLAG_NONE
     endIf
     AddHeaderOption("Breton practice", bretonPracticeFlags)
@@ -2461,7 +2461,7 @@ EndFunction
 Function BuildDaedricPage()
     SyncSelection()
     if _selectedCurseProofOrigin < 0 && PDV_Manager
-        _selectedCurseProofOrigin = PDV_Manager.OriginRuntime.GetPlayerOriginRaceIndex()
+        _selectedCurseProofOrigin = PDV_Manager.GetPlayerOriginRaceIndex()
     endIf
     SetCursorFillMode(TOP_TO_BOTTOM)
 
@@ -3731,7 +3731,7 @@ Function ShowPatternSummaryBrief()
         return
     endIf
 
-    Int raceSection = manager.DebugGetPatternSummaryRaceSection(manager.OriginRuntime.GetPlayerOriginRaceIndex())
+    Int raceSection = manager.DebugGetPatternSummaryRaceSection(manager.GetPlayerOriginRaceIndex())
     if raceSection < 0
         raceSection = 0
     endIf
@@ -3787,7 +3787,7 @@ Function ShowPatternSummaryPaged()
     endIf
 
     Int total = manager.DebugGetPatternSummarySectionCount()
-    Int raceSection = manager.DebugGetPatternSummaryRaceSection(manager.OriginRuntime.GetPlayerOriginRaceIndex())
+    Int raceSection = manager.DebugGetPatternSummaryRaceSection(manager.GetPlayerOriginRaceIndex())
     Int shown = 0
 
     if raceSection >= 0

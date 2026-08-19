@@ -846,6 +846,20 @@ PDV_DeityBase _pendingCommitmentOfferDeity = None
 ; the origin global is written by the PDV_Origin bootstrap and can be rewritten by the
 ; curse-proof debug path, so re-resolving is how the binding stays truthful.
 ; Returns False (leaving the previous binding alone) when the race is not yet known.
+; The player's origin race, read straight from the global. This is MANAGER state, not adapter
+; state -- and it must stay here, because it is the gate that decides whether the adapter can
+; be bound at all. Reaching it through OriginRuntime was a None trap: an unbound call does not
+; halt in Papyrus, it logs and returns the default 0, which IS ORIGIN_NORD. That is what made
+; the startup popup fire before RaceMenu and everything read as Nord.
+; Returns -1 while the race is not yet captured.
+Int Function GetPlayerOriginRaceIndex()
+    if PDV_GLO_OriginRace
+        return PDV_GLO_OriginRace.GetValueInt()
+    endIf
+
+    return -1
+EndFunction
+
 Bool Function ResolveOriginRuntime()
     if !PDV_FLST_OriginAdapters || !PDV_GLO_OriginRace
         return False
@@ -1309,7 +1323,7 @@ Bool Function IsQueuedQuestReactionCellCheapSkip(String deityName, String valenc
     ; Keep either form for a deity the player's origin roster can still show even
     ; when a Nord chose the other baseline. Every other cell must be reachable
     ; on the current lane before it enters the persisted worker snapshot.
-    if (stance == "TABOO" || stance == "HOSTILE") && OriginRuntime.IsDashboardDeityInOriginRoster(deity, OriginRuntime.GetPlayerOriginRaceIndex())
+    if (stance == "TABOO" || stance == "HOSTILE") && OriginRuntime.IsDashboardDeityInOriginRoster(deity, GetPlayerOriginRaceIndex())
         return False
     endIf
 
@@ -1691,7 +1705,7 @@ Bool Function IsQuestReactionNameMatch(String recordName, String requestedName)
 EndFunction
 
 String Function GetQuestReactionStance(String deityName, PDV_DeityBase deity)
-    String raceLabel = OriginRuntime.GetOriginRaceLabel(OriginRuntime.GetPlayerOriginRaceIndex())
+    String raceLabel = OriginRuntime.GetOriginRaceLabel(GetPlayerOriginRaceIndex())
     String stance = JsonUtil.GetStringValue(QUEST_REACTION_MATRIX_FILE, "stance." + raceLabel + "." + deityName)
     if stance != ""
         return stance
@@ -1738,7 +1752,7 @@ Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
         return True
     endIf
 
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_NORD
         return OriginRuntime.IsNordOfferEligibleDeity(deity)
     endIf
@@ -2188,7 +2202,7 @@ EndFunction
 
 
 String Function BuildReorientationJournalLine(String surfaceKey)
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_ALTMER
         return "Your soul records where you stand in the Thalmor question: " + surfaceKey + "."
     elseIf originRace == ORIGIN_BRETON
@@ -2226,7 +2240,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         return False
     endIf
 
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     Bool pantheonBroadPresentation = LedgerRuntime.IsPantheonBroadPoolPresentationActive(originRace)
     String originLabel = "Unknown"
     if originRace >= 0
@@ -2371,7 +2385,7 @@ EndFunction
 String Function GetDashboardJson()
     String gods = ""
     Int shown = 0
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
 
     PDV_DeityBase tracked = _activeDeity
     if !tracked
@@ -2635,7 +2649,7 @@ String Function GetPanelPatronNote()
     endIf
     PDV_DaedricPathBase pactPath = DaedricRuntime.GetActiveDaedricPactPath()
     if pactPath
-        if OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_BRETON && OriginRuntime.GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && DaedricRuntime.IsBretonHiddenArtDaedricOfferDeity(pactPath)
+        if GetPlayerOriginRaceIndex() == ORIGIN_BRETON && OriginRuntime.GetBretonTraditionValue() == BRETON_TRADITION_HIDDEN_ART && DaedricRuntime.IsBretonHiddenArtDaedricOfferDeity(pactPath)
             return "The " + pactPath.DeityName + " pact stands within the Hidden Art; the tradition remains your practiced road."
         endIf
         return "A pact binds you; lesser devotions fall quiet."
@@ -2701,7 +2715,7 @@ String Function GetPanelActsJson()
     ; Quasi-patron: show current substrate/state-track mode as the headline act
     ; when there is no scoring patron; gives the player their mode at a glance.
     if !_activeDeity && !actsPact
-        Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+        Int originRace = GetPlayerOriginRaceIndex()
         String quasiLabel = GetPanelQuasiPatronTierLabel(originRace)
         if quasiLabel != ""
             items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject(GetPanelQuasiPatronSymbol(originRace), "neutral", "Current practice", quasiLabel))
@@ -2722,7 +2736,7 @@ String Function GetPanelRitesJson()
         items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject(GetPrismaSymbolForDeity(_activeDeity), "", "Keep " + activeName + "'s rites", "Act in keeping with " + activeName + " to deepen this bond."))
     else
         ; Quasi-patron: tell the player what kind of acts build their path.
-        Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+        Int originRace = GetPlayerOriginRaceIndex()
         String patronName = GetPanelQuasiPatronName(originRace)
         String patronSymbol = GetPanelQuasiPatronSymbol(originRace)
         if patronName != "Devotion"
@@ -2775,7 +2789,7 @@ String Function GetPanelRelationsJson()
         endIf
     endIf
 
-    if OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
+    if GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN && PDV_ArgonianHistSubstrate
         items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("hist", "neutral", "Hist relation", OriginRuntime.GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetHistRelation())))
         items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("journal", "neutral", "People relation", OriginRuntime.GetArgonianLayerStrengthLabel(PDV_ArgonianHistSubstrate.GetPeopleRelation())))
         String voidTone = "neutral"
@@ -3171,7 +3185,7 @@ EndFunction
 
 
 String Function ResolveShrinePrayerJournalLabel(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel)
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
 
     if originRace == ORIGIN_NORD && LedgerRuntime.ShrinePrayerHasAlias(primaryDeityName, secondaryDeityName, tertiaryDeityName, "Kyne")
         return "Kyne"
@@ -3349,7 +3363,7 @@ EndFunction
 ; Any positive void seeds the 3 Sithis signals so IsVoidFullyActive() is true.
 ; Not gated behind debug level on purpose -- it is an explicit named dispatcher.
 Function DebugSeedArgonian(Float histValue, Float peopleValue, Float voidValue)
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_ARGONIAN
+    if GetPlayerOriginRaceIndex() != ORIGIN_ARGONIAN
         Debug.MessageBox("PDV seed: player origin is not Argonian (set PDV_GLO_OriginRace to 7 first).")
         return
     endIf
@@ -3464,7 +3478,7 @@ EndFunction
 ; the debug MCM dev page (Bosmer path buttons + "Seed Bosmer variety"); the
 ; path-independent half is DebugSeedBosmerVariety below.
 Function DebugSeedBosmer(Int pathIndex)
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
+    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
         Debug.MessageBox("PDV seed: player origin is not Bosmer (set origin to Bosmer first).")
         return
     endIf
@@ -3479,7 +3493,7 @@ EndFunction
 ; are reachable on the CURRENT path without changing it. Wired to the dev-page
 ; "Seed Bosmer variety" button (RunPatternAction 56).
 Function DebugSeedBosmerVariety()
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
+    if GetPlayerOriginRaceIndex() != ORIGIN_BOSMER
         Debug.MessageBox("PDV seed: player origin is not Bosmer (set origin to Bosmer first).")
         return
     endIf
@@ -4238,7 +4252,7 @@ EndFunction
 ; voice lives in PDV_DiegeticDirector.ResolveJournalLine -- bespoke for Khajiit/Dunmer/
 ; Imperial/Altmer as of 6g; remaining races use the generic journal fallback.)
 String Function BuildModeChangeLine(String modeLabel)
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_NORD
         return "The road turns beneath you. You keep the gods now as: " + modeLabel + "."
     elseIf originRace == ORIGIN_DUNMER
@@ -4293,7 +4307,7 @@ String Function BuildBookOfDaysDigestLine()
         return "At dawn, your acts fed " + names + "."
     endIf
 
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_DUNMER
         return "The day's offerings were noted; the ash remembers, and settles with the dawn."
     elseIf originRace == ORIGIN_KHAJIIT
@@ -4427,7 +4441,7 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
     ; Book of Days entry). Only fires on an UP-crossing from a lower tier -- if the deity
     ; is already at/above the target, reset it first, or use the piety-today + dawn path.
     LedgerRuntime.RecomputeTier(deity, True)
-    if OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && OriginRuntime.GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT && OriginRuntime.GetKhajiitFocusForDeity(deity) != KHAJIIT_FOCUS_NONE
         OriginRuntime.EvaluateKhajiitFocusedEmphasis()
     endIf
     ; Resync the race reward family so a focused/emphasis reward (Khajiit emphasis, an
@@ -4587,7 +4601,7 @@ EndFunction
 ; tradition to 50 practice points. This is not pacing proof.
 Function DebugSeedBroadLane()
     LedgerRuntime.SetBroadWorship()
-    Int origin = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int origin = GetPlayerOriginRaceIndex()
     if origin == ORIGIN_IMPERIAL
         LedgerRuntime.SetBroadPantheonStanding(LedgerRuntime.BROAD_PANTHEON_IMPERIAL, LedgerRuntime.BROAD_PANTHEON_FAITHFUL_THRESHOLD, "debug_seed_broad_lane")
     elseIf origin == ORIGIN_BRETON
@@ -4606,7 +4620,7 @@ Function DebugSeedBroadLane()
 EndFunction
 
 String Function DebugGetBretonPracticeSummary()
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return "Breton practice controls require Breton origin."
     endIf
 
@@ -4624,7 +4638,7 @@ String Function DebugGetBretonPracticeSummary()
 EndFunction
 
 String Function DebugSetBretonPracticePoints(Int practicePoints)
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return "Breton practice target ignored: set Breton origin first."
     endIf
 
@@ -4639,7 +4653,7 @@ String Function DebugSetBretonPracticePoints(Int practicePoints)
 EndFunction
 
 String Function DebugAddBretonPracticePoints(Int requestedPoints)
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return "Breton practice pulse ignored: set Breton origin first."
     endIf
     if requestedPoints != BRETON_PRACTICE_RENEWABLE_POINTS && requestedPoints != BRETON_PRACTICE_CURATED_POINTS
@@ -4657,7 +4671,7 @@ EndFunction
 
 String Function DebugResetBretonPracticePoints()
     String summary = DebugSetBretonPracticePoints(0)
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         return summary
     endIf
     return "Practice points and today's debug budget reset. " + summary
@@ -4693,7 +4707,7 @@ Function DebugResetDeityByIndex(Int deityIndex)
         deity.OnTierChange(oldTier, LedgerRuntime.TIER_NONE)
         LedgerRuntime.RefreshPatronMirrors()
     endIf
-    if OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+    if GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         OriginRuntime.EvaluateKhajiitFocusedEmphasis()
         OriginRuntime.SyncKhajiitRuntimeState()
     endIf
@@ -6599,7 +6613,7 @@ EndFunction
 
 ; Forces the Breton tradition (Knight's Road / Hidden Art / Green Way).
 Function DebugSetBretonTradition(Int traditionValue)
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_BRETON
+    if GetPlayerOriginRaceIndex() != ORIGIN_BRETON
         Trace(1, "Breton tradition debug-set ignored: set Breton origin first")
         return
     endIf
@@ -6693,7 +6707,7 @@ EndFunction
 ; curse/Hist/substrate lanes (Dunmer, Argonian, Imperial) use their own mechanisms and are not primed
 ; here. Ensure Curse none first (an active curse suppresses several lanes).
 Function DebugPrimeRaceLaneNeglect()
-    Int origin = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int origin = GetPlayerOriginRaceIndex()
     ; Clamp to a tiny positive epsilon rather than letting this go <= 0.0 on any save whose
     ; clock hasn't reached day 10 yet -- every Is<Race>Neglected check guards lastSource <= 0.0
     ; as its "never set" sentinel, so a negative/zero backdate silently defeats the whole prime
@@ -7402,7 +7416,7 @@ EndFunction
 ; While an Imperial bears the vampire halt, the Nine Divines path stops growing:
 ; positive civic piety accrues at 0x. Losses still apply; the scar persists post-cure.
 Float Function GetImperialCurseGainMultiplier(PDV_DeityBase deity)
-    if OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
+    if GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL
         return 1.0
     endIf
 
@@ -7440,7 +7454,7 @@ Function EnsureUnifiedStartupChoice()
         return
     endIf
 
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     if originRace < 0
         return
     endIf
@@ -8203,7 +8217,7 @@ String Function BuildJournalPayloadJson()
         entries = entries + entry
         i += 1
     endWhile
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     String pathInfo = BuildBookOfDaysPathInfo(originRace)
     String j = "{\"mode\":\"journal\",\"journal\":{"
     j = j + "\"title\":\"Book of Days\""
@@ -8367,7 +8381,7 @@ String Function GetJournalByline()
     if _activeDeity
         return "kept for " + GetPublicDeityDisplayName(_activeDeity)
     endIf
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     if originRace == ORIGIN_KHAJIIT
         return "kept beneath the moons"
     elseIf originRace == ORIGIN_ARGONIAN
@@ -8829,7 +8843,7 @@ EndFunction
 
 String Function ExportDevotionReport()
     String nl = "\n"
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     Float gameDay = Utility.GetCurrentGameTime()
 
     String report = "=== Devotion Bug Report Snapshot ==="
@@ -8910,7 +8924,7 @@ String Function ExportDevotionReport()
 EndFunction
 
 String Function GetSurveyDevotionText()
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     if originRace < 0
         return LedgerRuntime.AppendRecentDevotionEvents("Devotion has not settled yet. Wait a moment, then survey again.")
     endIf
@@ -8974,29 +8988,29 @@ String Function GetPlayerMcmSummaryLine()
         return NormalizePublicDeityDisplayText(summaryPact.DeityName) + " | Pact | " + GetCurrentStandingLabel()
     endIf
 
-    if OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() == ORIGIN_NORD
         return OriginRuntime.GetNordDevotionModeLabel() + " | " + GetCurrentStandingLabel() + " | " + OriginRuntime.GetPlayerCursePublicLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
         return "Altmer | " + OriginRuntime.GetAltmerCrisisStateLabel() + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         return "Khajiit | " + OriginRuntime.GetKhajiitFocusLabel(OriginRuntime.GetKhajiitFocusedEmphasis()) + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
         return "Bosmer | " + OriginRuntime.GetBosmerPathLabel() + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
         return "Argonian | " + OriginRuntime.GetArgonianHistPostureLabel() + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_ORC
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
         return "Orc | " + OriginRuntime.GetOrcLifeModeLabel() + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
         return "Redguard | " + OriginRuntime.GetRedguardSectLabel() + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
         return "Imperial | " + OriginRuntime.GetImperialConcordatLabel() + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_BRETON
         return "Breton | " + OriginRuntime.GetBretonTraditionLabel() + " | " + GetCurrentStandingLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
         return "Dunmer | " + OriginRuntime.GetDunmerAncestorLayerLabel() + " | " + GetCurrentStandingLabel()
     endIf
 
-    return OriginRuntime.GetOriginRaceLabel(OriginRuntime.GetPlayerOriginRaceIndex()) + " | " + LedgerRuntime.GetPatronStateLabel() + " | " + GetCurrentStandingLabel()
+    return OriginRuntime.GetOriginRaceLabel(GetPlayerOriginRaceIndex()) + " | " + LedgerRuntime.GetPatronStateLabel() + " | " + GetCurrentStandingLabel()
 EndFunction
 
 String Function GetPlayerMcmPatronLine()
@@ -9023,25 +9037,25 @@ String Function GetPlayerMcmModeLine()
         return GetStartupMcmLine()
     endIf
 
-    if OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_NORD
+    if GetPlayerOriginRaceIndex() == ORIGIN_NORD
         return OriginRuntime.GetNordDevotionModeLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_ALTMER
         return OriginRuntime.GetAltmerCrisisStateLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_KHAJIIT
         return OriginRuntime.GetKhajiitFocusLabel(OriginRuntime.GetKhajiitFocusedEmphasis())
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_BOSMER
         return OriginRuntime.GetBosmerPathLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_ARGONIAN
         return "Hist " + OriginRuntime.GetArgonianHistPostureLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_ORC
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_ORC
         return OriginRuntime.GetOrcLifeModeLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_REDGUARD
         return OriginRuntime.GetRedguardSectLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_IMPERIAL
         return OriginRuntime.GetImperialConcordatLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_BRETON
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_BRETON
         return OriginRuntime.GetBretonTraditionLabel()
-    elseIf OriginRuntime.GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
+    elseIf GetPlayerOriginRaceIndex() == ORIGIN_DUNMER
         return OriginRuntime.GetDunmerAncestorLayerLabel()
     endIf
 
@@ -9049,7 +9063,7 @@ String Function GetPlayerMcmModeLine()
 EndFunction
 
 String Function GetStartupMcmLine()
-    Int originRace = OriginRuntime.GetPlayerOriginRaceIndex()
+    Int originRace = GetPlayerOriginRaceIndex()
     Int startupMode = GetStartupModeForOrigin(originRace)
     if startupMode == STARTUP_MODE_EXPLICIT_CHOICE
         if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") != 1
@@ -9088,14 +9102,14 @@ String Function GetCurrentStandingLabel()
         tierValue = standingPact.GetStoredTier()
     elseIf _activeDeity
         tierValue = LedgerRuntime.GetTier(_activeDeity)
-    elseIf OriginRuntime.GetBroadLaneTierForOrigin(OriginRuntime.GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
-        tierValue = OriginRuntime.GetBroadLaneTierForOrigin(OriginRuntime.GetPlayerOriginRaceIndex())
+    elseIf OriginRuntime.GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
+        tierValue = OriginRuntime.GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex())
     elseIf LedgerRuntime.PDV_GLO_ActiveTier
         tierValue = LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
     endIf
 
-    if !_activeDeity && !standingPact && OriginRuntime.GetBroadLaneTierForOrigin(OriginRuntime.GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
-        return OriginRuntime.GetBroadLaneStandingLabel(OriginRuntime.GetPlayerOriginRaceIndex(), tierValue)
+    if !_activeDeity && !standingPact && OriginRuntime.GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
+        return OriginRuntime.GetBroadLaneStandingLabel(GetPlayerOriginRaceIndex(), tierValue)
     endIf
 
     if tierValue >= LedgerRuntime.TIER_CHAMPION
@@ -9122,8 +9136,8 @@ String Function GetCurrentStandingBand()
         tierValue = standingPact.GetStoredTier()
     elseIf _activeDeity
         tierValue = LedgerRuntime.GetTier(_activeDeity)
-    elseIf OriginRuntime.GetBroadLaneTierForOrigin(OriginRuntime.GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
-        tierValue = OriginRuntime.GetBroadLaneTierForOrigin(OriginRuntime.GetPlayerOriginRaceIndex())
+    elseIf OriginRuntime.GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex()) > LedgerRuntime.TIER_NONE
+        tierValue = OriginRuntime.GetBroadLaneTierForOrigin(GetPlayerOriginRaceIndex())
     elseIf LedgerRuntime.PDV_GLO_ActiveTier
         tierValue = LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
     endIf
@@ -9883,7 +9897,7 @@ Int Function ResolveNpcRecognitionIdentity()
         return GetRecognitionFocusedIndex(_activeDeity)
     endIf
     if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_BROAD
-        return GetRecognitionBroadIndex(OriginRuntime.GetPlayerOriginRaceIndex())
+        return GetRecognitionBroadIndex(GetPlayerOriginRaceIndex())
     endIf
     return -1
 EndFunction
@@ -9899,7 +9913,7 @@ Int Function ResolveNpcRecognitionBand(Int identityIndex)
     if _activeDeity
         return LedgerRuntime.GetTier(_activeDeity)
     endIf
-    return GetRecognitionBroadTier(OriginRuntime.GetPlayerOriginRaceIndex())
+    return GetRecognitionBroadTier(GetPlayerOriginRaceIndex())
 EndFunction
 
 Int Function GetRecognitionFocusedIndex(PDV_DeityBase deity)
