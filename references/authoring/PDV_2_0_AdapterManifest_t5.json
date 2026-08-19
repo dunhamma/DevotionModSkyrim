@@ -1,0 +1,213 @@
+{
+  "manifest": "PDV 2.0 ORIGIN adapter split -- tranche t5 (Orc + Imperial)",
+  "status": "LIVING",
+  "authored": "2026-08-19",
+  "branch": "claude/v3-adapters-t5",
+  "contract": "references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md",
+  "tranchePlan": "references/authoring/PDV_2_0_ORIGIN_AdapterSplit_Plan.md section 4",
+  "sourceOfTruth": "live-source/Scripts/Source/PDV_OriginRuntimeBase.psc",
+  "duplicationNote": "Lane functions were COPIED, not moved. The originals are still in PDV_OriginRuntimeBase.psc; a same-signature child function is simply an override, so the duplication compiles. A later central pass removes the originals using the copiedFunctions lists below.",
+  "compile": {
+    "command": "PDV_COMPILE_SOURCE_ROOT=<worktree>/live-source/Scripts/Source PDV_COMPILE_OUTPUT_ROOT=<scratch> node tools/pdv_compile.mjs --script PDV_OriginRuntime_Orc --script PDV_OriginRuntime_Imperial --skip-verify",
+    "exitCode": 0,
+    "result": "PASS both scripts, 0 errors / 0 warnings",
+    "asciiGuard": "node tools/pdv_ascii_guard.mjs -- clean, exit 0"
+  },
+  "verbatimProof": "Each adapter's copied region was re-extracted from the adapter file and diffed against the exact PDV_OriginRuntimeBase line ranges it came from. Both diffs are empty, so the bodies are byte-identical and still reconstruct against origin_golden.json.",
+
+  "races": {
+    "Orc": {
+      "script": "live-source/Scripts/Source/PDV_OriginRuntime_Orc.psc",
+      "scriptname": "PDV_OriginRuntime_Orc extends PDV_OriginRuntimeBase",
+      "sourceLineRanges": ["9377-9518", "9525-10095", "10109-10233", "10462-10525", "10740-10772", "10894-10900"],
+      "copiedFunctionCount": 62,
+      "copiedFunctions": [
+        "HandleOrcSleepEvents", "TryOrcTrialOfIron", "ApplyOrcTrialOfIron", "RemoveOrcTrialSpells",
+        "GetOrcTrialSpell", "SyncOrcTrialOfIron", "IsOrcTrialCoherent", "TryOrcCodeHolds",
+        "HandleOrcStoryCraftForge", "HandleOrcStrongholdForge", "HandleOrcLocationChange",
+        "HandleOrcStrongholdPresence", "HandleOrcBloodKinCrisis", "HandleOrcCityDignity",
+        "HandleOrcLegionService", "HandleOrcSelfMadeCommunity", "HandleOrcMalacathConduct",
+        "HandleOrcOathBreak", "HandleOrcFourHoldsVisit", "RecordOrcLifeModeSignal",
+        "ApplyOrcLifeModeSwitch", "IsOrcMajorLifeModeGate", "GetOrcLifeModeSubstrateToken",
+        "EvaluateOrcLifeModeAtDawn", "AwardOrcStrongholdForgeSignal", "AwardOrcBloodKinSignal",
+        "AwardOrcCityDignitySignal", "AwardOrcLegionServiceSignal", "AwardOrcSelfMadeCommunitySignal",
+        "AwardOrcBroadConductSignal", "AwardOrcOathBreakSignal", "AwardOrcFourHoldsVisitSignal",
+        "AwardOrcAncestorSpineSignal", "GetOrcFourHoldsVisitCount", "GetOrcFourHoldsNotice",
+        "GetOrcFourHoldsFallback", "ConsumeDailyOrcNotice", "MaybeShowOrcWatchersNotice",
+        "GetOrcWatchersNotice", "GetOrcWatchersFallback", "MaybeShowOrcHearthHeldNotice",
+        "MaybeShowOrcHearthHeldMissedCadenceNotice", "EnsureOrcLifeModeInitialized", "IsOrcOrigin",
+        "GetOrcLifeModeWeightKey", "GetOrcLifeModeLabel", "GetOrcStrongholdHoldId", "SyncOrcRewards",
+        "SyncOrcSpineBoon", "GetActiveOrcRewardMode", "SyncOrcRewardFamily", "IsOrcCodeNeglected",
+        "SyncOrcNeglectSpell", "EmitMalacathCurseCodeRuptureMinus", "EmitMalacathBrokenFaithKinMinus",
+        "ApplyOrcCurseHandlers", "ShowOrcNotification", "ShowOrcMessage", "ApplyOrcInitialChoice",
+        "GetOrcMedallionEntriesJson", "GetOrcSurveyText", "GetOrcSummary"
+      ],
+      "scriptVarsMoved": [],
+      "scriptVarsFlaggedShared": [],
+      "scriptVarNote": "Checked per function, not per file: no Orc lane body reads or writes a bare script variable. The base declares none for Orc (its declared vars are Altmer/Bosmer, Khajiit, Dunmer and Nord only), and the single textual hit for '_activeDeity' inside the Orc range is a COMMENT in ApplyOrcInitialChoice, not a reference. Nothing had to move; nothing needs a base accessor pair.",
+      "virtualsOverridden": [
+        "EnsureRuntimeWiring", "EvaluateAtDawn", "GetOriginStateLabel", "GetOriginStateValue",
+        "GetOriginSummary", "GetSurveyFragment", "IsRaceLaneNeglected", "GetOriginDetailLabel",
+        "GetOriginDetailValue", "HandleContextualSignal", "HandleLocationChange", "SyncRaceRewards",
+        "SyncNeglectSpells", "ShowOriginNotification", "GetProviderGainMultiplier"
+      ],
+      "virtualsNotOverridden": {
+        "ApplyInitialChoice": "SIGNATURE GAP. ApplyOrcInitialChoice(Int modeValue, String reason) needs the chosen life mode and a reason; the frozen virtual takes nothing. Needs a base-side carrier (the SetDawnHadActivity precedent) or a widened virtual before it can be delegated. Live caller today: PDV__ManagerQuest.psc:7550.",
+        "ApplyCurseHandlers": "SIGNATURE GAP. ApplyOrcCurseHandlers(Int oldState, Int newState, String reason); the frozen virtual takes nothing. Live caller today: PDV_DevotionLedger.psc:4254.",
+        "IsOfferEligibleDeity": "N/A for Orc. Malacath is the innate Orc spine (activated at origin), so there is no Orc offer lane; the base default False is correct.",
+        "GetFormalCommitmentOfferMessage": "N/A for Orc, same reason."
+      },
+      "virtualDelegationNotes": {
+        "GetOriginStateValue": "Delegates to GetActiveOrcRewardMode(), which is the life-mode track value clamped to CITY..LEGION_EXILE with CITY as the missing-track default.",
+        "HandleLocationChange": "BEHAVIOR DELTA TO REVIEW. HandleOrcLocationChange(Location newLocation) needs a Location the frozen virtual cannot carry, so the override reads Game.GetPlayer().GetCurrentLocation(). The live caller (PDV_ActionRouter.HandleStoryChangeLocation:320) passes akNewLocation. Equivalent in the normal Story-event path, but not provably identical -- a Location-typed carrier would close it."
+      },
+      "signalIdCount": 11,
+      "signalIdMap": {
+        "sleep": "HandleOrcSleepEvents(contextForm as Actor | Game.GetPlayer(), signalId)",
+        "story-craft-forge": "HandleOrcStoryCraftForge(contextForm as Location)",
+        "stronghold-forge": "HandleOrcStrongholdForge(signalId)",
+        "stronghold-presence": "HandleOrcStrongholdPresence(magnitude as Int /* holdId */, signalId)",
+        "blood-kin-crisis": "HandleOrcBloodKinCrisis(signalId)",
+        "city-dignity": "HandleOrcCityDignity(signalId)",
+        "legion-service": "HandleOrcLegionService(signalId)",
+        "self-made-community": "HandleOrcSelfMadeCommunity(signalId)",
+        "malacath-conduct": "HandleOrcMalacathConduct(magnitude as Int /* modeValue */, signalId)",
+        "oath-break": "HandleOrcOathBreak(signalId)",
+        "four-holds-visit": "HandleOrcFourHoldsVisit(magnitude as Int /* holdId */, signalId)"
+      },
+      "detailKeys": {
+        "label": {
+          "medallion-entries": "GetOrcMedallionEntriesJson()",
+          "life-mode": "GetOrcLifeModeLabel()",
+          "life-mode-weight-key": "GetOrcLifeModeWeightKey(GetActiveOrcRewardMode())",
+          "life-mode-substrate-token": "GetOrcLifeModeSubstrateToken(GetActiveOrcRewardMode())"
+        },
+        "value": {
+          "life-mode": "GetActiveOrcRewardMode()",
+          "four-holds-visits": "GetOrcFourHoldsVisitCount()"
+        }
+      },
+      "notificationKeys": {
+        "hearth-held": "MaybeShowOrcHearthHeldNotice(messageKey)",
+        "hearth-held-missed-cadence": "MaybeShowOrcHearthHeldMissedCadenceNotice()",
+        "watchers": "MaybeShowOrcWatchersNotice(GetActiveOrcRewardMode(), messageKey)"
+      },
+      "providerOverride": {
+        "virtual": "Float GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)",
+        "status": "DELEGATING PLACEHOLDER",
+        "delegatesTo": "Manager.GetOrcLifeModeGainMultiplier(deity) when phase == 1 (AT_DAWN); 1.0 otherwise",
+        "functionStillLivesIn": "PDV__ManagerQuest.psc:3677",
+        "bodyChangesWhen": "the provider seam lands and GetOrcLifeModeGainMultiplier moves into this adapter",
+        "redundantGate": "The 'GetPlayerOriginRaceIndex() != ORIGIN_ORC -> return 1.0' gate at the top of the manager function becomes redundant once this override is race-selected (one adapter per playthrough). It is DELIBERATELY LEFT IN PLACE by this tranche and must be removed with the seam, not before.",
+        "phaseEvidence": "Both deferred multipliers are consumed only from PDV_DevotionLedger.ProcessDawn (lines 2029-2030), so phase 1 == AT_DAWN is the only live phase today."
+      }
+    },
+
+    "Imperial": {
+      "script": "live-source/Scripts/Source/PDV_OriginRuntime_Imperial.psc",
+      "scriptname": "PDV_OriginRuntime_Imperial extends PDV_OriginRuntimeBase",
+      "sourceLineRanges": ["9520-9523", "10097-10107", "10235-10460", "10527-10738", "10774-10892"],
+      "copiedFunctionCount": 34,
+      "copiedFunctions": [
+        "HandleImperialSleepEvents", "BuildImperialConcordatBookLine", "IsImperialVampireStateActive",
+        "SyncImperialRewards", "SyncImperialAncestorSubstrate", "SyncImperialRewardFamily",
+        "IsImperialCivicNeglected", "SyncImperialNeglectSpell", "ApplyConcordatPressure",
+        "ApplyImperialConcordatAction", "GetImperialConcordatPressureForAction",
+        "GetImperialFormalCommitmentOfferMessage", "IsImperialOfferEligibleDeity",
+        "IsImperialTalosOfferAllowed", "ShouldSuppressImperialTalosTierSurface",
+        "ApplyImperialCurseHandlers", "GetImperialCivicFamilyFromSource", "GetImperialCivicFamilyLabel",
+        "AwardImperialCivicFamilySignal", "AwardImperialPatronCivicSignal",
+        "AwardImperialAncestorSpinePulse", "RunDawnRefreshImperialAncestor", "HandleImperialCivicService",
+        "HandleImperialTalosPressure", "HandleImperialPatronCivicFavor", "GetImperialMedallionEntriesJson",
+        "GetImperialSurveyText", "GetImperialConcordatLabel", "FormatImperialConcordatLabel",
+        "BuildImperialConcordatSurveySentence", "GetImperialCivicLayerLabel", "GetImperialCivicTierName",
+        "GetImperialCursePostureLabel", "GetConcordatSummary"
+      ],
+      "scriptVarsMoved": [],
+      "scriptVarsFlaggedShared": [],
+      "scriptVarNote": "Checked per function, not per file: no Imperial lane body reads or writes a bare script variable. Nothing had to move; nothing needs a base accessor pair.",
+      "namingCaveat": "ApplyConcordatPressure, GetConcordatSummary, BuildImperialConcordatSurveySentence and FormatImperialConcordatLabel carry no 'Imperial' in the name but are Imperial-lane: ApplyConcordatPressure hard-gates on ORIGIN_IMPERIAL and the rest read PDV_ConcordatStandingTrack. The base separately keeps a GENERIC Concordat/Talos block (EnsureTalosRuntimeIdentity, HandleTalosBetrayal, GetTalosTrackGainMultiplier, ...) from tranche 6 -- that stays on the base and was NOT copied.",
+      "virtualsOverridden": [
+        "EvaluateAtDawn", "GetOriginStateLabel", "GetOriginStateValue", "GetOriginSummary",
+        "GetSurveyFragment", "IsRaceLaneNeglected", "GetOriginDetailLabel", "GetOriginDetailValue",
+        "HandleContextualSignal", "SyncRaceRewards", "SyncNeglectSpells", "IsOfferEligibleDeity",
+        "GetProviderGainMultiplier"
+      ],
+      "virtualsNotOverridden": {
+        "ApplyInitialChoice": "N/A. The Imperial lane has no initial-choice entry point (no ApplyImperialInitialChoice exists).",
+        "EnsureRuntimeWiring": "N/A. The Imperial lane has no Ensure* wiring function.",
+        "ApplyCurseHandlers": "SIGNATURE GAP. ApplyImperialCurseHandlers(Int oldState, Int newState, String reason); the frozen virtual takes nothing. Live caller today: PDV_DevotionLedger.psc:4252.",
+        "GetFormalCommitmentOfferMessage": "SIGNATURE AND RETURN-TYPE GAP. GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity) returns a Message record; the frozen virtual returns String and takes no deity. Live caller today: PDV_DevotionLedger.psc:3914, which needs the Message. This one needs an ADR amendment, not a workaround.",
+        "HandleLocationChange": "N/A. No Imperial location handler.",
+        "ShowOriginNotification": "N/A. No Imperial lane notification helper."
+      },
+      "virtualDelegationNotes": {
+        "GetOriginStateValue": "Reads Manager.PDV_ConcordatStandingTrack.GetValue() (PDV_ReputationTrack.GetValue returns Int) with a None guard. There is no existing named Imperial getter for the raw standing value, so this is the one override that is not a pure delegation."
+      },
+      "signalIdCount": 5,
+      "signalIdMap": {
+        "sleep": "HandleImperialSleepEvents(contextForm as Actor | Game.GetPlayer(), signalId)",
+        "civic-service": "HandleImperialCivicService(signalId)",
+        "patron-civic-favor": "HandleImperialPatronCivicFavor(signalId)",
+        "talos-pressure-private": "HandleImperialTalosPressure(True, signalId)",
+        "talos-pressure-public": "HandleImperialTalosPressure(False, signalId)"
+      },
+      "notRoutedThroughSignals": "ApplyImperialConcordatAction(String actionKey, String reason) takes a closed enum of 8 action keys and is called with an explicit key by the manager/router. Per the ADR the keyed verb collapses the Handle* family, so this stays a named adapter function rather than being fanned out into 8 synthetic signal ids.",
+      "detailKeys": {
+        "label": {
+          "medallion-entries": "GetImperialMedallionEntriesJson()",
+          "concordat": "GetImperialConcordatLabel()",
+          "concordat-book-line": "BuildImperialConcordatBookLine(GetImperialConcordatLabel())",
+          "civic-layer": "GetImperialCivicLayerLabel()",
+          "civic-tier": "GetImperialCivicTierName()",
+          "curse-posture": "GetImperialCursePostureLabel()"
+        },
+        "value": {
+          "concordat-standing": "Manager.PDV_ConcordatStandingTrack.GetValue()",
+          "vampire-halt": "IsImperialVampireStateActive() as 1/0",
+          "talos-offer-allowed": "IsImperialTalosOfferAllowed() as 1/0"
+        }
+      },
+      "providerOverride": {
+        "virtual": "Float GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)",
+        "status": "DELEGATING PLACEHOLDER",
+        "delegatesTo": "Manager.GetImperialCurseGainMultiplier(deity) when phase == 1 (AT_DAWN); 1.0 otherwise",
+        "functionStillLivesIn": "PDV__ManagerQuest.psc:7334",
+        "bodyChangesWhen": "the provider seam lands and GetImperialCurseGainMultiplier moves into this adapter",
+        "redundantGate": "The 'OriginRuntime.GetPlayerOriginRaceIndex() != ORIGIN_IMPERIAL -> return 1.0' gate at the top of the manager function becomes redundant once this override is race-selected. It is DELIBERATELY LEFT IN PLACE by this tranche and must be removed with the seam, not before.",
+        "phaseEvidence": "Consumed only from PDV_DevotionLedger.ProcessDawn:2030."
+      }
+    }
+  },
+
+  "crossCuttingFindings": [
+    {
+      "id": "T5-1",
+      "severity": "review",
+      "title": "HandleContextualSignal drops the `String reason` every lane handler takes",
+      "detail": "The frozen virtual is (String signalId, Form contextForm, Float magnitude). Every Orc and Imperial Handle* function takes a trailing `String reason` that is written into StorageUtil ('PDV.Orc.LastLifeModeReason', 'PDV.Orc.LastBrokenFaithKinReason', ...) and into Trace text. The dispatch substitutes the signalId for the reason. Behavior is preserved; the stored/traced reason STRING changes. This is exactly the dispatch-layer delta the ADR says parity cannot cover and that needs a hand behavior review. If reason fidelity matters, the virtual needs a fourth `String reason = \"\"` parameter -- an ADR amendment, not an adapter change.",
+      "affects": ["Orc", "Imperial"]
+    },
+    {
+      "id": "T5-2",
+      "severity": "blocking-for-callsite-remap",
+      "title": "Four frozen virtuals cannot carry their lane function's arguments",
+      "detail": "ApplyInitialChoice (Orc: modeValue+reason), ApplyCurseHandlers (Orc and Imperial: oldState+newState+reason), HandleLocationChange (Orc: Location), GetFormalCommitmentOfferMessage (Imperial: takes PDV_DeityBase, returns Message not String). Three are left unoverridden and one (HandleLocationChange) is delegated with a current-location read. The central call-site remap cannot retire the named calls in PDV_DevotionLedger.psc:3914/4252/4254, PDV__ManagerQuest.psc:7550 and PDV_ActionRouter.psc:320 until the ADR interface is amended or base-side carriers are added.",
+      "affects": ["Orc", "Imperial"]
+    },
+    {
+      "id": "T5-3",
+      "severity": "informational",
+      "title": "`key` is a reserved form type in Papyrus",
+      "detail": "The base declares GetOriginDetailLabel(String key) / GetOriginDetailValue(String key) and compiles only because its default bodies never touch the parameter. Any adapter that actually reads it fails with 'key is not a variable' (Key is a Skyrim MiscObject subtype). Both adapters here name the parameter `detailKey`. Overrides match on parameter TYPES, not names, so this is legal -- but every remaining adapter will hit it, and the base declaration should be renamed when it is next touched.",
+      "affects": ["Orc", "Imperial", "all remaining adapters"]
+    },
+    {
+      "id": "T5-4",
+      "severity": "informational",
+      "title": "PDV_GainModifierProvider does not exist yet",
+      "detail": "The ADR states `PDV_OriginRuntimeBase extends PDV_GainModifierProvider`. On this branch the base still `extends Quest` and there is no PDV_GainModifierProvider.psc. Both provider overrides here are plain virtual overrides of the base's own GetProviderGainMultiplier and are inert (identity 1.0 outside dawn) until the seam lands.",
+      "affects": ["Orc", "Imperial"]
+    }
+  ]
+}
