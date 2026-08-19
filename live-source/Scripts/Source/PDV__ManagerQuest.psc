@@ -730,6 +730,9 @@ PDV_DeityBase _activeDeity
 PDV_ContextualFavorRuntime Property FavorRuntime Auto
 PDV_DevotionLedger Property LedgerRuntime Auto
 PDV_OriginRuntimeBase Property OriginRuntime Auto
+; The ten race adapters, in ORIGIN_* index order (NORD=0 .. REDGUARD=9). Exactly one is
+; ever bound to OriginRuntime above, chosen by birth race in ResolveOriginRuntime().
+FormList Property PDV_FLST_OriginAdapters Auto
 PDV_DaedricRuntime Property DaedricRuntime Auto
 
 Int Property DebugCommand = 0 Auto
@@ -833,7 +836,35 @@ Bool Property AutoPushPrismaPanel = False Auto
 Bool Property AllowPrismaBlockingSurfaces = False Auto
 PDV_DeityBase _pendingCommitmentOfferDeity = None
 
+; Bind OriginRuntime to the adapter for the player's birth race. This is the ONE place
+; race selects behaviour: after this, every Manager.OriginRuntime.X call dispatches
+; polymorphically and no caller tests the race. Idempotent and safe to call repeatedly --
+; the origin global is written by the PDV_Origin bootstrap and can be rewritten by the
+; curse-proof debug path, so re-resolving is how the binding stays truthful.
+; Returns False (leaving the previous binding alone) when the race is not yet known.
+Bool Function ResolveOriginRuntime()
+    if !PDV_FLST_OriginAdapters || !PDV_GLO_OriginRace
+        return False
+    endIf
+
+    Int raceIndex = PDV_GLO_OriginRace.GetValueInt()
+    if raceIndex < ORIGIN_NORD || raceIndex > ORIGIN_REDGUARD
+        return False
+    endIf
+
+    PDV_OriginRuntimeBase picked = PDV_FLST_OriginAdapters.GetAt(raceIndex) as PDV_OriginRuntimeBase
+    if !picked
+        Trace(1, "Origin adapter missing for race index " + raceIndex)
+        return False
+    endIf
+
+    OriginRuntime = picked
+    return True
+EndFunction
+
 Event OnInit()
+    ; Must precede every OriginRuntime call below.
+    ResolveOriginRuntime()
     InitializePreflightState()
     EnsurePhase8RuntimeWiring()
     EnsureAkatoshRuntimeIdentity()
@@ -6741,6 +6772,8 @@ Bool Function DebugSetCurseProofOriginRace(Int originRace)
     endIf
 
     PDV_GLO_OriginRace.SetValue(originRace as Float)
+    ; The race just changed, so the bound adapter must change with it.
+    ResolveOriginRuntime()
     if PDV_ImperialAncestorSubstrate
         PDV_ImperialAncestorSubstrate.RecomputeSubstrateTier()
     endIf
