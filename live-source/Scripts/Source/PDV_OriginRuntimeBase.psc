@@ -266,31 +266,7 @@ Spell Function GetBosmerNamingSpell(Int index)
 EndFunction
 
 Function SyncBosmerNaming(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-    Int active = StorageUtil.GetIntValue(None, "PDV.BosNaming.Active")
-    if active <= 0
-        return
-    endIf
-    Spell told = GetBosmerNamingSpell(active - 1)
-    if !told
-        return
-    endIf
-
-    Int pathAtRite = StorageUtil.GetIntValue(None, "PDV.BosNaming.PathAtRite")
-    Bool eligible = (GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER) && IsBosmerNamingCoherent(pathAtRite)
-    if eligible
-        if !playerRef.HasSpell(told)
-            playerRef.AddSpell(told, False)
-            Manager.SendPrismaToast("yffre", "good", "Told-self restored", "You are yourself again.")
-        endIf
-    else
-        if playerRef.HasSpell(told)
-            playerRef.RemoveSpell(told)
-            Manager.SendPrismaToast("yffre", "warning", "The told-self goes quiet", "You have wandered from its path.")
-        endIf
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsBosmerNamingCoherent(Int pathAtRite)
@@ -523,11 +499,7 @@ Function TryBosmerScalesAtRest(Actor playerRef)
 EndFunction
 
 Function ArmBosmerDreamOnPathChange()
-    Int currentPath = GetBosmerPathState()
-    if StorageUtil.GetIntValue(None, "PDV.BosDream.LastPath") != currentPath
-        StorageUtil.SetIntValue(None, "PDV.BosDream.LastPath", currentPath)
-        StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 1)
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerLivingStorySignal(String reason)
@@ -547,37 +519,11 @@ Function HandleBosmerLivingStorySignal(String reason)
 EndFunction
 
 Function HandleBosmerExchangeSignal(String reason)
-    if !IsBosmerOrigin() || !Manager.PDV_BosmerPathTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerExchange")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    Manager.PDV_BosmerPathTrack.RecordEvidenceDay(Manager.BOSMER_PATH_EXCHANGE, reason)
-    if Manager.PDV_BosmerPathTrack.GetCurrentState() == Manager.BOSMER_PATH_EXCHANGE && Manager.LedgerRuntime.PDV_Zen
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.LedgerRuntime.PDV_Zen, Manager.LedgerRuntime.PDV_Zen.SIGNAL_EXCHANGE, None, multiplier)
-    endIf
-
-    TryBosmerScalesAtRest(Game.GetPlayer())
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerBanditRoadSignal(String reason)
-    if !IsBosmerOrigin() || !Manager.PDV_BosmerPathTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.BosmerBanditRoad")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    Manager.PDV_BosmerPathTrack.RecordEvidenceDay(Manager.BOSMER_PATH_BANDIT_ROAD, reason)
-    if Manager.PDV_BosmerPathTrack.GetCurrentState() == Manager.BOSMER_PATH_BANDIT_ROAD && Manager.PDV_BaanDar
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_BaanDar, Manager.PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerPactPositiveSignal(String reason)
@@ -609,21 +555,15 @@ Function HandleBosmerPactPositiveSignal(String reason)
 EndFunction
 
 Function HandleBosmerOldContractProperHunt(String reason)
-    if RecordBosmerFavorSignal("OldContract.ProperHunt", Manager.BOSMER_PATH_OLD_CONTRACT, reason)
-        HandleBosmerPactPositiveSignal(reason + "_proper_hunt")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerOldContractForestKept(String reason)
-    if RecordBosmerFavorSignal("OldContract.ForestKept", Manager.BOSMER_PATH_OLD_CONTRACT, reason)
-        HandleBosmerPactPositiveSignal(reason + "_forest_kept")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerLivingStoryCommunityKept(String reason)
-    if RecordBosmerFavorSignal("LivingStory.CommunityKept", Manager.BOSMER_PATH_LIVING_STORY, reason)
-        HandleBosmerLivingStorySignal(reason + "_community_kept")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerLivingStoryNatureSite(String reason)
@@ -633,31 +573,19 @@ Function HandleBosmerLivingStoryNatureSite(String reason)
 EndFunction
 
 Function HandleBosmerExchangeDebtSettled(String reason)
-    if RecordBosmerFavorSignal("Exchange.DebtSettled", Manager.BOSMER_PATH_EXCHANGE, reason)
-        HandleBosmerExchangeSignal(reason + "_debt_settled")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerExchangeProportionateVengeance(String reason)
-    if RecordBosmerFavorSignal("Exchange.ProportionateVengeance", Manager.BOSMER_PATH_EXCHANGE, reason)
-        HandleBosmerExchangeSignal(reason + "_proportionate_vengeance")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerBanditRoadRoadLife(String reason)
-    if RecordBosmerFavorSignal("BanditRoad.RoadLife", Manager.BOSMER_PATH_BANDIT_ROAD, reason)
-        HandleBosmerBanditRoadSignal(reason + "_road_life")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBosmerBanditRoadReversal(String reason)
-    if !CanRecordBosmerMajorFavor("BanditRoad.Reversal", 7.0, reason)
-        return
-    endIf
-
-    if RecordBosmerFavorSignal("BanditRoad.Reversal", Manager.BOSMER_PATH_BANDIT_ROAD, reason)
-        HandleBosmerBanditRoadSignal(reason + "_reversal")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function RecordBosmerFavorSignal(String favorKey, Int pathState, String reason)
@@ -710,48 +638,7 @@ Bool Function IsAltmerFavorSuppressedByCurse()
 EndFunction
 
 Function HandleAltmerLorkhanPressure(Int pressureTier, String sourceId)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    if IsAltmerRejectedLorkhanSurface(sourceId)
-        RecordAltmerRejectedSurface(sourceId, "lorkhan_surface_rejected")
-        Manager.Trace(2, "Altmer Lorkhan pressure rejected for source " + sourceId)
-        return
-    endIf
-
-    if pressureTier < Manager.ALTMER_LORKHAN_PRESSURE_DIRECT
-        pressureTier = Manager.ALTMER_LORKHAN_PRESSURE_DIRECT
-    elseIf pressureTier > Manager.ALTMER_LORKHAN_PRESSURE_CONTEXTUAL
-        pressureTier = Manager.ALTMER_LORKHAN_PRESSURE_CONTEXTUAL
-    endIf
-
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.LastLorkhanPressureDay", Utility.GetCurrentGameTime())
-    StorageUtil.SetIntValue(None, "PDV.Altmer.LastLorkhanPressureTier", pressureTier)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.LastLorkhanPressureSource", sourceId)
-    StorageUtil.SetIntValue(None, "PDV.Altmer.LorkhanPressureCount", StorageUtil.GetIntValue(None, "PDV.Altmer.LorkhanPressureCount") + 1)
-
-    ; The defining Altmer friction: Lorkhan adjacency costs piety. Deduct the tiered
-    ; penalty from the deity the player is building (Auri-El foundation by default),
-    ; scaled by the ThalmorAlignment faction modifier. It flows through the normal
-    ; scratch / daily-clamp path, so it paces with the rest of the economy.
-    Float lorkhanPenalty = GetAltmerLorkhanPietyPenalty(pressureTier) * GetAltmerLorkhanFactionModifier()
-    if lorkhanPenalty > 0.0
-        PDV_DeityBase lorkhanDeity = Manager.GetActiveDeity()
-        if !lorkhanDeity
-            lorkhanDeity = Manager.PDV_AuriEl
-        endIf
-        if lorkhanDeity
-            Manager.LedgerRuntime.AwardPiety(lorkhanDeity, -lorkhanPenalty)
-            Manager.Trace(2, "Altmer Lorkhan penalty applied: -" + lorkhanPenalty + " to " + lorkhanDeity.DeityName)
-        endIf
-    endIf
-
-    if pressureTier >= Manager.ALTMER_LORKHAN_PRESSURE_MORTAL_VALIDATION && GetAltmerCrisisState() == Manager.ALTMER_CRISIS_NONE
-        SetAltmerCrisisState(Manager.ALTMER_CRISIS_DISSONANT, "lorkhan_pressure_" + sourceId)
-    endIf
-
-    Manager.Trace(2, "Altmer Lorkhan pressure routed: tier " + pressureTier + " source " + sourceId)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Float Function GetAltmerLorkhanPietyPenalty(Int pressureTier)
@@ -859,52 +746,11 @@ Int Function GetAltmerThalmorPointsForAction(String actionKey)
 EndFunction
 
 Function HandleAltmerAlignmentSignal(String actionKey, Form sourceForm, String reason)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    Int sourceFormId = 0
-    if sourceForm
-        sourceFormId = sourceForm.GetFormID()
-    endIf
-    String guardKey = "PDV.Altmer.Alignment." + actionKey + "." + sourceFormId
-    if StorageUtil.GetIntValue(None, guardKey) > 0
-        Manager.Trace(2, "Altmer alignment signal skipped (one-shot): " + actionKey + " " + sourceFormId)
-        return
-    endIf
-    StorageUtil.SetIntValue(None, guardKey, 1)
-
-    ApplyAltmerAlignmentAction(actionKey, reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleAltmerCrisisSource(Int crisisSource, String sourceId)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    if crisisSource < Manager.ALTMER_CRISIS_SOURCE_DRAGONBORN || crisisSource > Manager.ALTMER_CRISIS_SOURCE_COMPANIONS
-        RecordAltmerRejectedSurface(sourceId, "unknown_crisis_source")
-        return
-    endIf
-
-    String seenKey = "PDV.Altmer.CrisisSeen." + crisisSource
-    if StorageUtil.GetIntValue(None, seenKey) == 1
-        RecordAltmerRejectedSurface(sourceId, "repeat_crisis_source")
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, seenKey, 1)
-    StorageUtil.SetIntValue(None, "PDV.Altmer.CrisisSource", crisisSource)
-    StorageUtil.SetStringValue(None, "PDV.Altmer.CrisisSourceId", sourceId)
-    StorageUtil.SetFloatValue(None, "PDV.Altmer.CrisisStartedAt", Utility.GetCurrentGameTime())
-
-    if crisisSource == Manager.ALTMER_CRISIS_SOURCE_DRAGONBORN || crisisSource == Manager.ALTMER_CRISIS_SOURCE_SOVNGARDE
-        SetAltmerCrisisState(Manager.ALTMER_CRISIS_DISSONANT, sourceId)
-    elseIf crisisSource == Manager.ALTMER_CRISIS_SOURCE_TALOS || crisisSource == Manager.ALTMER_CRISIS_SOURCE_COMPANIONS
-        SetAltmerCrisisState(Manager.ALTMER_CRISIS_QUESTIONING, sourceId)
-    endIf
-
-    Manager.Trace(1, "Altmer crisis source accepted: " + GetAltmerCrisisSourceLabel(crisisSource) + " (" + sourceId + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ResolveAltmerCrisis(Bool reassertOrthodoxy, String reason)
@@ -1050,38 +896,7 @@ Function AwardActiveAltmerHeritageMemorySignal()
 EndFunction
 
 Function HandleAltmerDawnSteadiness(String reason)
-    if !IsAltmerOrigin()
-        return
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
-        Manager.FavorRuntime.ClearActiveFavor("altmer_curse")
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerDawnSteadiness")
-
-    RecordAltmerSourceFavor(Manager.FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
-    Manager.FavorRuntime.TryActivateContextualFavor(Manager.FavorRuntime.FAVOR_LANE_ALTMER, Manager.FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS, reason)
-    if multiplier > 0.0
-        AwardAltmerDawnSignal(reason, multiplier)
-        ; Passive dawn acknowledgement is piety-only. Curated Auri-El/Magnus
-        ; books and the exact MG08 source are finite heritage substitutes.
-        if PDV_DevotionRules.StringContainsToken(reason, "eventbus_p2_altmer_auriel_") || PDV_DevotionRules.StringContainsToken(reason, "eventbus_p2_altmer_magnus_")
-            AwardAltmerAncestorSpinePulse(1.0, "curated_heritage_" + reason)
-        endIf
-    endIf
-    if Manager.ConsumeOncePerDaySignal("PDV.Signal.AltmerAlignmentRite")
-        ApplyAltmerAlignmentAction("orthodox_rite", "rite_" + reason)
-    endIf
-    Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("dawn_steadiness_" + reason)
-    AwardActiveAltmerHeritageMemorySignal()
-    if !crisisTransitioned && reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
-        Manager.SurfaceP2BookReadNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
-    elseIf !crisisTransitioned && reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
-        Manager.SurfaceP2BookReadNotice(reason, "The road of Magnus", "The discipline of light holds you to the dawn.")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
@@ -1119,22 +934,7 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
 EndFunction
 
 Function HandleAltmerTrinimacOrthodoxy(String reason)
-    if !IsAltmerOrigin() || !Manager.PDV_Trinimac
-        return
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        RecordAltmerRejectedSurface(reason, "curse_suppressed_altmer_favor")
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.TrinimacFallenGodOrthodoxy")
-    if multiplier > 0.0
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Trinimac, Manager.PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
-    endIf
-    Manager.SurfaceP2BookReadNotice(reason, "Trinimac remembered", "Trinimac is named as he was, not as he was made.")
-
-    HandleAltmerOrthodoxCostlyEnforcement(reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleAltmerTrinimacCivilizationDefense(String reason)
@@ -1159,52 +959,7 @@ Function HandleAltmerTrinimacCivilizationDefense(String reason)
 EndFunction
 
 Int Function HandleAltmerPracticeFocus(String reason)
-    ; A non-Altmer holding the calian gets nothing and is told nothing -- it is not their object and
-    ; there is no refusal to explain. The curse case IS explained, because that player owns the
-    ; calian and needs to know the silence is their state and not a broken item.
-    if !IsAltmerOrigin()
-        return 0
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        ShowAltmerNotification(Manager.PDV_Notif_Altmer_Calian_Unanswered, "The calian does not warm to you now.")
-        return 0
-    endIf
-
-    ; ONE cap across every lane, so switching patron cannot buy a second practice in a day.
-    if !Manager.ConsumeOncePerDaySignal("PDV.Signal.AltmerPracticeFocus")
-        ShowAltmerNotification(Manager.PDV_Notif_Altmer_Calian_AlreadyKept, "Your calian is already warm from today's practice.")
-        return GetAltmerPracticeIdleKind()
-    endIf
-
-    ; Claim the substrate day. The spine takes one +4.0 credit per devotional day whatever claims
-    ; it, so this adds no income -- it adds a way to claim the day that works indoors, in a jail
-    ; cell, mid-dungeon, anywhere the outdoor dawn observance cannot reach.
-    AwardAltmerAncestorSpinePulse(1.0, "practice_focus_" + reason)
-
-    ; Then the active lane's own signal. Deliberately routed to the PATRON's lane rather than a
-    ; fixed deity: the point is that practice feeds whatever you actually worship.
-    if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
-        if Manager.GetActiveDeity() == Manager.PDV_Magnus && Manager.PDV_Magnus
-            Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Magnus, Manager.PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
-        elseIf Manager.GetActiveDeity() == Manager.PDV_Xarxes && Manager.PDV_Xarxes
-            Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Xarxes, Manager.PDV_Xarxes.SIGNAL_RECORD_KEPT, None, 1.0)
-        elseIf Manager.GetActiveDeity() == Manager.PDV_Trinimac && Manager.PDV_Trinimac
-            Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Trinimac, Manager.PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, 1.0)
-        elseIf Manager.GetActiveDeity() == Manager.PDV_Syrabane && Manager.PDV_Syrabane
-            Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Syrabane, Manager.PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
-        elseIf Manager.GetActiveDeity() == Manager.PDV_AuriEl && Manager.PDV_AuriEl
-            Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_AuriEl, Manager.PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
-        endIf
-    elseIf Manager.PDV_AuriEl
-        ; No patron, or broad worship: the foundation takes it. This is the ONLY arm that credits
-        ; Auri-El without him being chosen, and it requires a deliberate act -- unlike the free
-        ; dawn pulse P18 removed.
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_AuriEl, Manager.PDV_AuriEl.SIGNAL_DAWN_ACKNOWLEDGMENT, None, 1.0)
-    endIf
-
-    Manager.Trace(2, "Altmer practice focus routed (" + reason + ")")
-    return GetAltmerPracticeIdleKind()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function GetAltmerPracticeIdleKind()
@@ -1252,44 +1007,19 @@ Function EnsureAltmerPracticeFocus()
 EndFunction
 
 Function HandleAltmerSyrabaneCureWard(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    if !Manager.ConsumeOncePerDaySignal("PDV.Signal.SyrabaneCureWard")
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Syrabane, Manager.PDV_Syrabane.SIGNAL_CURSE_DISEASE_WARDING, None, 1.0)
-    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Syrabane, "The sickness lifts", "marks a curse turned aside before it took root.")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleAltmerSyrabaneProtectiveWard(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    if !Manager.ConsumeOncePerDaySignal("PDV.Signal.SyrabaneProtectiveWarding")
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Syrabane, Manager.PDV_Syrabane.SIGNAL_PROTECTIVE_WARDING, None, 1.0)
-    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Syrabane, "The ward holds", "marks hostile magic stopped before it reached you.")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleAltmerSyrabaneAntiMageSurvival(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Syrabane, Manager.PDV_Syrabane.SIGNAL_ANTI_MAGE_SURVIVAL, None, 1.0)
-    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Syrabane, "Arcane duel survived", "marks a hostile mage outlasted and put down.")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleAltmerSyrabaneContainment(String reason)
-    if !IsSyrabaneSignalEligible()
-        return
-    endIf
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.SyrabaneMagicalContainment")
-    if multiplier > 0.0
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Syrabane, Manager.PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
-    endIf
-    Manager.SurfaceP2BookReadNotice(reason, "The first warding", "Syrabane opens the apprentice's art to you.")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
@@ -1511,12 +1241,7 @@ String Function GetAltmerHeritageSourceLine(String reason)
 EndFunction
 
 Function RunDawnRefreshAltmerAncestor()
-    if !Manager.PDV_AltmerAncestorSubstrate
-        return
-    endIf
-
-    Bool curseActive = IsAltmerFavorSuppressedByCurse()
-    Manager.PDV_AltmerAncestorSubstrate.ProcessHeritageDawn(curseActive, "dawn")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function TryAwardAltmerMagicMilestone(String skillName, Float skillValue, Int threshold)
@@ -1570,7 +1295,7 @@ String Function GetAltmerFavorFamilyKey(Int familyValue)
 EndFunction
 
 Bool Function IsAltmerRejectedLorkhanSurface(String sourceId)
-    return sourceId == "ordinary_travel" || sourceId == "ordinary_friendship" || sourceId == "generic_spellcasting" || sourceId == "generic_helping" || sourceId == "generic_combat" || sourceId == "generic_college_membership" || sourceId == "generic_anti_thalmor_violence" || sourceId == "dragonborn_repeat" || sourceId == "vampire_power_route"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function RecordAltmerRejectedSurface(String sourceId, String reason)
@@ -1675,7 +1400,7 @@ String Function GetAltmerCrisisJournalTone(Int stateValue)
 EndFunction
 
 String Function GetAltmerCrisisStateLabel()
-    return GetAltmerCrisisStateLabelForValue(GetAltmerCrisisState())
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetAltmerCrisisStateLabelForValue(Int stateValue)
@@ -1946,19 +1671,7 @@ Function SyncBosmerNeglectSpell(Bool shouldBeActive)
 EndFunction
 
 Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == Manager.PDV_AuriEl
-        return Manager.PDV_Msg_Altmer_AuriEl_Offer
-    elseIf deity == Manager.PDV_Magnus
-        return Manager.PDV_Msg_Altmer_Magnus_Offer
-    elseIf deity == Manager.PDV_Xarxes
-        return Manager.PDV_Msg_Altmer_Xarxes_Offer
-    elseIf deity == Manager.PDV_Trinimac
-        return Manager.PDV_Msg_Altmer_Trinimac_Offer
-    elseIf deity == Manager.PDV_Syrabane
-        return Manager.PDV_Msg_Altmer_Syrabane_Offer
-    endIf
-
-    return None
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)
@@ -1974,41 +1687,7 @@ Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)
 EndFunction
 
 Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
-    Bool suppressModal = ShouldSuppressAltmerCurseModal(reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileScar", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 0)
-        Manager.FavorRuntime.ClearActiveFavor("altmer_vampire")
-        Manager.LedgerRuntime.ClearPendingCommitment()
-        if StorageUtil.GetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown") != 1
-            ShowAltmerMessage(Manager.PDV_Msg_Altmer_VampireExiledPath_Entry, "Auri-El is closed while you flee the sun. What remains is exile: a narrow discipline, never a full return.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown", 1)
-        endIf
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 1)
-        Manager.FavorRuntime.ClearActiveFavor("altmer_werewolf")
-        Manager.LedgerRuntime.ClearPendingCommitment()
-        if StorageUtil.GetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown") != 1
-            ShowAltmerMessage(Manager.PDV_Msg_Altmer_CurseState_WerewolfHardHalt, "The whole of Altmer faith is to become spirit again. You have become a beast. Devotion stops here.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown", 1)
-        endIf
-    elseIf newState == 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileActive", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHalt", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.VampireExileFeedbackShown", 0)
-        StorageUtil.SetIntValue(None, "PDV.Altmer.WerewolfHaltFeedbackShown", 0)
-        if oldState == 2 && StorageUtil.GetIntValue(None, "PDV.Altmer.VampireRecognitionShown") != 1
-            ShowAltmerMessage(Manager.PDV_Msg_Altmer_VampireExiledPath_Recognition, "You are exiled from the dawn, not restored to it. A thin discipline remains, capped low.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Altmer.VampireRecognitionShown", 1)
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Altmer.ExilePressure", PDV_DevotionRules.BoolToInt(newState != 0))
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function ShouldSuppressAltmerCurseModal(String reason)
@@ -2051,18 +1730,7 @@ Bool Function IsBosmerOrigin()
 EndFunction
 
 String Function GetBookOfDaysAltmerCrisisLabel()
-    Int stateValue = GetAltmerCrisisState()
-    if stateValue == Manager.ALTMER_CRISIS_DISSONANT
-        return "Dissonant"
-    elseIf stateValue == Manager.ALTMER_CRISIS_QUESTIONING
-        return "Questioning"
-    elseIf stateValue == Manager.ALTMER_CRISIS_REASSERTING
-        return "Reasserting"
-    elseIf stateValue == Manager.ALTMER_CRISIS_SCARRED_RESOLVED
-        return "Scarred Resolved"
-    endIf
-
-    return "None"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function HasBosmerSetupCompleted()
@@ -2070,40 +1738,11 @@ Bool Function HasBosmerSetupCompleted()
 EndFunction
 
 Function ApplyBosmerInitialChoice(Int pathState, String reason)
-    if !Manager.PDV_BosmerPathTrack
-        return
-    endIf
-
-    Manager.BeginRaceSetupQuietPresentation(reason)
-    InitializeBosmerStorage()
-    Manager.PDV_BosmerPathTrack.SetState(pathState, reason)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.SetupComplete", 1)
-
-    if pathState == Manager.BOSMER_PATH_OLD_CONTRACT
-        EnterBosmerOldContract(True, reason)
-    else
-        SetBosmerPactBound(False, reason)
-        SetBosmerGreenPactCompliance(0, reason)
-        ApplyBosmerPathPatron(pathState, reason)
-    endIf
-    Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(GetBosmerPathLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", GetBosmerPathSymbol(pathState), True, 3, "", True)
-    Manager.EndRaceSetupQuietPresentation()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function InitializeBosmerStorage()
-    if StorageUtil.GetIntValue(None, "PDV.Bosmer.Initialized") == 1
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.SetupComplete", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.PactBound", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactCompliance", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.LapsedFromPact", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactViolationCount", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.GreenPactPenaltyActive", 0)
-    StorageUtil.SetFloatValue(None, "PDV.Bosmer.GreenPactWindowStart", 0.0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.Initialized", 1)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsBosmerPactBound()
@@ -2111,8 +1750,7 @@ Bool Function IsBosmerPactBound()
 EndFunction
 
 Function SetBosmerPactBound(Bool isBound, String reason)
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.PactBound", PDV_DevotionRules.BoolToInt(isBound))
-    Manager.Trace(2, "Bosmer PactBound -> " + PDV_DevotionRules.BoolToInt(isBound) + " (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function GetBosmerGreenPactCompliance()
@@ -2190,15 +1828,7 @@ Function ExitBosmerOldContract(Bool countLapse, String reason)
 EndFunction
 
 Function ApplyBosmerPathPatron(Int pathState, String reason)
-    PDV_DeityBase deity = GetBosmerForegroundDeity(pathState)
-    if !deity
-        Manager.Trace(1, "Bosmer foreground deity missing for state " + pathState + " (" + reason + ")")
-        return
-    endIf
-
-    Manager.LedgerRuntime.SetActiveDeity(deity)
-    Manager.Trace(2, "Bosmer foreground patron -> " + deity.DeityName + " (" + reason + ")")
-    Manager.SurfaceTransition("reorientation", GetBosmerPathLabel(), "shift", deity.DeityIndex, "turning")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 PDV_DeityBase Function GetBosmerForegroundDeity(Int pathState)
@@ -2214,81 +1844,15 @@ PDV_DeityBase Function GetBosmerForegroundDeity(Int pathState)
 EndFunction
 
 Function EnsureBosmerCurrentPathFallback()
-    if !Manager.PDV_BosmerPathTrack || !HasBosmerSetupCompleted()
-        return
-    endIf
-
-    if Manager.PDV_BosmerPathTrack.GetCurrentState() != Manager.PDV_BosmerPathTrack.UnsetSentinel
-        return
-    endIf
-
-    Manager.PDV_BosmerPathTrack.SetState(Manager.BOSMER_PATH_LIVING_STORY, "fallback")
-    SetBosmerPactBound(False, "fallback")
-    ApplyBosmerPathPatron(Manager.BOSMER_PATH_LIVING_STORY, "fallback")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function EvaluateBosmerForcedReckoning()
-    if !IsBosmerPactBound()
-        StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-        return
-    endIf
-
-    if GetBosmerGreenPactCompliance() >= 20
-        StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-        return
-    endIf
-
-    Int apostateDays = StorageUtil.GetIntValue(None, "PDV.Bosmer.ApostateDays") + 1
-    StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", apostateDays)
-    if apostateDays < 3
-        return
-    endIf
-
-    if !Manager.PDV_MSG_BosmerReckoning
-        Debug.MessageBox("Devotion is missing the Bosmer reckoning message record.")
-        Manager.Trace(1, "Bosmer reckoning blocked: message record missing.")
-        return
-    endIf
-
-    Int choice = Manager.PDV_MSG_BosmerReckoning.Show()
-    ; B4 / fix-plan 3 -- the worst of the six. Show() returns -1 whenever another menu or
-    ; message is already up, and -1 fell into the else branch below, FORCE-SEVERING the Old
-    ; Contract pact with no player input whatsoever. Treat it as "not shown": nothing is
-    ; stamped or changed, ApostateDays stays at its 3+ value, and the reckoning re-attempts
-    ; at the next dawn (the three-dawn condition still holds).
-    if choice < 0
-        Manager.Trace(1, "Bosmer reckoning not shown (menu busy); pact untouched, retry next dawn.")
-        return
-    endIf
-    if choice == 0
-        SetBosmerGreenPactCompliance(30, "reckoning_recommit")
-        StorageUtil.SetIntValue(None, "PDV.Bosmer.ApostateDays", 0)
-        if Manager.PDV_Yffre
-            Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Yffre, Manager.PDV_Yffre.SIGNAL_RECOMMITMENT, None)
-        endIf
-    else
-        ExitBosmerOldContract(True, "reckoning_renounce")
-        Manager.PDV_BosmerPathTrack.SetState(Manager.BOSMER_PATH_LIVING_STORY, "reckoning_renounce")
-        ApplyBosmerPathPatron(Manager.BOSMER_PATH_LIVING_STORY, "reckoning_renounce")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function EvaluateBosmerPathSuggestion()
-    if !Manager.PDV_BosmerPathTrack || !HasBosmerSetupCompleted()
-        return
-    endIf
-
-    if Manager.PDV_BosmerPathTrack.HasOfferedTransition() || Manager.PDV_BosmerPathTrack.IsTransitionPending() || Manager.PDV_BosmerPathTrack.IsTransitionLockedOut()
-        return
-    endIf
-
-    Int targetState = GetSuggestedBosmerPathState()
-    if targetState < 0
-        return
-    endIf
-
-    Manager.PDV_BosmerPathTrack.OfferTransition(targetState, "dawn_suggestion")
-    HandleBosmerSuggestionPopup(targetState)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function GetSuggestedBosmerPathState()
@@ -2386,34 +1950,7 @@ String Function GetAltmerCurseSummary()
 EndFunction
 
 String Function GetAltmerSurveyText()
-    String text = GetAltmerAlignmentSurveyBaseText()
-    Int crisisState = GetAltmerCrisisState()
-    if crisisState == Manager.ALTMER_CRISIS_DISSONANT
-        text = text + " The crisis has not settled; each mortal exception still tests the doctrine."
-    elseIf crisisState == Manager.ALTMER_CRISIS_SCARRED_RESOLVED
-        text = text + " The crisis is resolved, but its scar still teaches caution."
-    endIf
-
-    if IsAltmerVampireExiled()
-        text = text + " The thirst has exiled you from the dawn."
-    elseIf HasAltmerVampireExileScar()
-        text = text + " The vampire scar remains in the record, but the dawn can reach you again."
-    endIf
-
-    if IsAltmerWerewolfHalted()
-        text = text + " The beast has stopped your devotion."
-    endIf
-
-    String favor = Manager.FavorRuntime.GetFavorSurfacingLabel(Manager.FavorRuntime.FAVOR_LANE_ALTMER, StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.LastFamily"))
-    if favor != ""
-        text = text + " Last favor: " + favor + "."
-    endIf
-
-    if Manager.PDV_AltmerAncestorSubstrate
-        text = text + " Your heritage practice is " + GetAltmerHeritageTierName() + "."
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetAltmerHeritageTierName()
@@ -2463,35 +2000,7 @@ String Function GetAltmerAlignmentSurveyBaseText()
 EndFunction
 
 String Function GetBosmerSurveyText()
-    if !Manager.PDV_BosmerPathTrack
-        return "The Green is here, but no path has been declared yet. Sleep and choose the Old Contract, the Living Story, the Exchange, or the Bandit Road."
-    endIf
-
-    Int pathValue = Manager.PDV_BosmerPathTrack.GetCurrentState()
-    String band = Manager.GetCurrentStandingBand()
-    String text = ""
-    if pathValue == Manager.BOSMER_PATH_OLD_CONTRACT
-        text = "You walk the Old Contract, the Green Pact kept in full. Standing: " + band + ". Compliance: " + GetBosmerComplianceBand() + ". Y'ffre holds you to the terms."
-        if IsBosmerPactBound()
-            text = text + " The Pact is binding, and you are keeping to it."
-        elseIf GetBosmerLapsedFromPact()
-            text = text + " The Pact has lapsed, and a reckoning with Y'ffre is owed."
-        else
-            text = text + " The Pact is not yet taken up; the terms wait on your word."
-        endIf
-    elseIf pathValue == Manager.BOSMER_PATH_LIVING_STORY
-        text = "You walk the Living Story, the covenant carried in memory and community. Standing: " + band + ". The Story passes through you."
-    elseIf pathValue == Manager.BOSMER_PATH_EXCHANGE
-        text = "You walk the Exchange, the world kept even debt by debt. Standing: " + band + ". Z'en weighs your account."
-    else
-        text = "You walk the Bandit Road, the exile's theology of the open road. Standing: " + band + ". Baan Dar favors the improbable."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Curse.Bosmer.RoutePressure") > 0
-        text = text + " While the curse is on you, you stand outside the living world, and the path waits until it is lifted."
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetBosmerPathDisplayLabelAt(Int pathState)
@@ -2601,23 +2110,7 @@ Int Function GetKhajiitFocusForDeityName(String deityName)
 EndFunction
 
 Function BridgeKhajiitMatrixFocus(String deityName, String magnitude)
-    Int focusValue = GetKhajiitFocusForDeityName(deityName)
-    if focusValue == Manager.KHAJIIT_FOCUS_NONE
-        return
-    endIf
-
-    Float base = Manager.KHAJIIT_FOCUS_MATRIX_DELTA
-    if magnitude == "milestone"
-        base = Manager.KHAJIIT_FOCUS_MATRIX_DELTA * 2.0
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitMatrixFocus." + deityName)
-    if multiplier <= 0.0
-        return
-    endIf
-
-    AdjustKhajiitFocusedEmphasis(focusValue, base * multiplier, "matrix_focus_" + deityName)
-    Manager.Trace(2, "Khajiit matrix focus bridge: " + deityName + " focus +" + (base * multiplier))
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function GetLunarPresidingFocus(Int phaseIndex)
@@ -2643,21 +2136,7 @@ Int Function GetLunarPresidingFocus(Int phaseIndex)
 EndFunction
 
 Int Function GetKhajiitFocusForDeity(PDV_DeityBase deity)
-    if !deity
-        return Manager.KHAJIIT_FOCUS_NONE
-    elseIf deity == Manager.PDV_Khenarthi
-        return Manager.KHAJIIT_FOCUS_KHENARTHI
-    elseIf deity == Manager.PDV_Azura
-        return Manager.KHAJIIT_FOCUS_AZURAH
-    elseIf deity == Manager.PDV_BaanDar
-        return Manager.KHAJIIT_FOCUS_BAANDAR
-    elseIf deity == Manager.PDV_Rajhin
-        return Manager.KHAJIIT_FOCUS_RAJHIN
-    elseIf deity == Manager.PDV_Alkosh
-        return Manager.KHAJIIT_FOCUS_ALKOSH
-    endIf
-
-    return Manager.KHAJIIT_FOCUS_NONE
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function GetCurrentLunarPresidingFocus()
@@ -2927,14 +2406,7 @@ Function ProcessKhajiitAlkoshWordDrip()
 EndFunction
 
 String Function GetArgonianCulturalNextThresholdText(Float metric)
-    if metric < 1.0
-        return "Root Memory at 1"
-    elseIf metric < 25.0
-        return "River-Kept Practice at 25"
-    elseIf metric < 75.0
-        return "Rooted Adaptation at 75"
-    endIf
-    return "Rooted Adaptation"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetArgonianCulturalPracticeLabel()
@@ -3147,23 +2619,7 @@ Function TryArgonianNearWaterMaintenance()
 EndFunction
 
 Function HandleArgonianSapVision()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.ArgWaters.SapVision") == 1
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.ArgWaters.SapVision", 1)
-    Manager.PDV_ArgonianHistSubstrate.SetHistRelation(Manager.PDV_ArgonianHistSubstrate.GetHistRelation() + 1.0, "sleeping_tree_sap")
-    Manager.PDV_ArgonianHistSubstrate.StampHistMaintenance("sleeping_tree_sap")
-    Manager.PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_hist", "sleeping_tree_sap")
-    if Manager.PDV_Hist
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, 1.0)
-    endIf
-    Debug.MessageBox("The sap is strange and far from home, but it resonates, and the Hist stirs within.")
-    Manager.Trace(2, "Sleeping Tree Sap vision fired.")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleArgonianShadowscaleKill(Actor playerRef)
@@ -3201,21 +2657,11 @@ Function HandleArgonianShadowscaleKill(Actor playerRef)
 EndFunction
 
 Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
-    ; Compatibility ingress is intentionally inert. Only the validated
-    ; two-second Observe the Moons power may award observance credit.
-    Manager.Trace(2, "Legacy moon observance ignored: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitLunarSubstrate(String sourceId)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || !Manager.PDV_KhajiitLunarSubstrate
-        return
-    endIf
-
-    ; Curated books and exact quest milestones are cultural substitutes. They
-    ; claim the shared substrate day only; deity piety/focus remains on its own
-    ; specifically authored receiver route.
-    Manager.PDV_KhajiitLunarSubstrate.RecordCulturalSubstitute("khajiit_lunar_source", "p2_khajiit_lunar_" + sourceId)
-    Manager.RequestPanelRefresh()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function EnsureKhajiitObserveMoonsPower()
@@ -3553,149 +2999,43 @@ String Function GetKhajiitMoonContemplationText(Int messageIndex)
 EndFunction
 
 Function HandleKhajiitRoadHome(String reason)
-    if !IsKhajiitOrigin() || !Manager.PDV_KhajiitLunarSubstrate
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitRoadHome")
-    Float metricBefore = Manager.PDV_KhajiitLunarSubstrate.GetMetric()
-    Int tierBefore = Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()
-    Manager.PDV_KhajiitLunarSubstrate.RecordRoadHomeCadence(reason)
-    Int tierAfter = Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()
-    Float grantedMetric = Manager.PDV_KhajiitLunarSubstrate.GetMetric() - metricBefore
-    AdjustKhajiitFocusedEmphasis(Manager.KHAJIIT_FOCUS_KHENARTHI, Manager.KHAJIIT_FOCUS_SIGNAL_DELTA * multiplier, reason)
-    if Manager.PDV_Khenarthi
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Khenarthi, Manager.PDV_Khenarthi.SIGNAL_ROAD_HOME, None, multiplier)
-    endIf
-    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
-
-    ; Road-home recognition owns one presentation per 06:00 devotional cycle,
-    ; independently of the shared lunar +4 budget. If another authentic lunar
-    ; practice already spent that budget, the rest is still acknowledged without
-    ; implying that it granted more substrate progress.
-    String presentationDayKey = "PDV.Khajiit.RoadHome.PresentationDay"
-    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
-    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp(presentationDayKey) != todayStamp
-        Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp(presentationDayKey)
-        if grantedMetric > 0.0
-            Manager.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
-        else
-            String cappedContext = "The road home was remembered. Today's lunar practice was already marked."
-            SendPrismaSubstrateToast("lunar", "act", cappedContext, "lunar", GetKhajiitLunarTierLabel(tierAfter))
-            Manager.AppendBookOfDaysEntry(cappedContext, Utility.GetCurrentGameTime() as Int, "substrate.act", "lunar", False)
-        endIf
-    endIf
-    Manager.NotifyDiegeticRoutineFavor("khajiit_road_home")
-    Manager.RequestPanelRefresh()
-    Manager.Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
-    ; Retired anchor/circuit ingress must never award metric or piety.
-    Manager.Trace(2, "Retired Khajiit road anchor ignored: " + anchorId + " (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitBaanDarRoadTrick(String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_BAANDAR, "PDV.Signal.KhajiitBaanDarRoadTrick", "Baan Dar road trick", reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitRajhinElegantTheft(String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_RAJHIN, "PDV.Signal.KhajiitRajhinElegantTheft", "Rajhin elegant theft", reason)
-    ; Night theft is shadow-coded behavior; it accrues toward the ShadowDrift boundary.
-    RecordKhajiitShadowEvidence("rajhin_night_theft_" + reason)
-    Manager.SendPrismaShiftToast("Elegant theft", "Rajhin purrs.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_RAJHIN))
-    Manager.LedgerRuntime.RecordRecentDevotionEvent("Rajhin: theft with style")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitAlkoshDragonOrder(String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh dragon order", reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitFocusedSource(String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    Int focusValue = GetKhajiitFocusedEmphasis()
-    if focusValue == Manager.KHAJIIT_FOCUS_NONE
-        focusValue = GetActiveLunarFavoredFocus()
-    endIf
-    if focusValue == Manager.KHAJIIT_FOCUS_NONE
-        focusValue = Manager.KHAJIIT_FOCUS_AZURAH
-    endIf
-
-    RecordKhajiitFocusSignal(focusValue, "PDV.Signal.KhajiitFocusedSource", "Khajiit focused source", reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitFocusedSourceForFocus(Int focusValue, String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    if focusValue < Manager.KHAJIIT_FOCUS_KHENARTHI || focusValue > Manager.KHAJIIT_FOCUS_ALKOSH
-        HandleKhajiitFocusedSource(reason)
-        return
-    endIf
-
-    RecordKhajiitFocusSignal(focusValue, "PDV.Signal.KhajiitFocusedSource", "Khajiit focused source", reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitAlkoshNamedDragon(String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    Float multiplier = RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_ALKOSH, "PDV.Signal.KhajiitAlkoshDragonOrder", "Alkosh named dragon", reason)
-    if Manager.PDV_Alkosh
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Alkosh, Manager.PDV_Alkosh.SIGNAL_NAMED_DRAGON, None, multiplier)
-    endIf
-    AwardKhajiitSubstrateSubstitute("khajiit_alkosh_milestone", reason)
-    Manager.Trace(1, "Khajiit Alkosh named-dragon beat routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitAlkoshGenericDragon(String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    Int weekStamp = ((Utility.GetCurrentGameTime() as Int) / 7) + 1
-    if StorageUtil.GetIntValue(None, "PDV.Signal.KhajiitAlkoshGenericDragon.Week") == weekStamp
-        Manager.Trace(2, "Khajiit Alkosh generic-dragon nudge suppressed by weekly cap (" + reason + ")")
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Signal.KhajiitAlkoshGenericDragon.Week", weekStamp)
-    AdjustKhajiitFocusedEmphasis(Manager.KHAJIIT_FOCUS_ALKOSH, Manager.KHAJIIT_FOCUS_SIGNAL_DELTA * 0.25, reason)
-    Manager.Trace(2, "Khajiit Alkosh generic-dragon emphasis nudge routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitBaanDarReversal(String reason)
-    if !IsKhajiitOrigin()
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhajiitBaanDarReversal")
-    StorageUtil.AdjustIntValue(None, "PDV.Signal.KhajiitBaanDarReversal.CountAll", 1)
-    StorageUtil.SetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime", Utility.GetCurrentGameTime())
-    StorageUtil.SetStringValue(None, "PDV.Khajiit.LastLunarSourceReason", reason)
-    AdjustKhajiitFocusedEmphasis(Manager.KHAJIIT_FOCUS_BAANDAR, Manager.KHAJIIT_FOCUS_SIGNAL_DELTA * 2.0 * multiplier, reason)
-    if Manager.PDV_BaanDar
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_BaanDar, Manager.PDV_BaanDar.SIGNAL_BANDIT_ROAD, None, multiplier)
-    endIf
-    AwardKhajiitSubstrateSubstitute("khajiit_baandar_reversal", reason)
-    Manager.Trace(1, "Khajiit Baan Dar near-fatal reversal routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Float Function RecordKhajiitFocusSignal(Int focusValue, String keyPrefix, String label, String reason)
@@ -3747,34 +3087,15 @@ Function PulseKhajiitFocusPiety(Int focusValue, Float multiplier)
 EndFunction
 
 Function HandleKhajiitAzurahDesecration(String reason)
-    if !IsKhajiitOrigin() || !Manager.PDV_Azura
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Azura, Manager.PDV_Azura.SIGNAL_DESECRATION, None)
-    Manager.Trace(2, "Khajiit Azurah desecration routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitKhenarthiCaravanHarm(String reason)
-    if !IsKhajiitOrigin() || !Manager.PDV_Khenarthi
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Khenarthi, Manager.PDV_Khenarthi.SIGNAL_CARAVAN_HARM, None)
-    Manager.Trace(2, "Khajiit Khenarthi caravan-harm routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitKhenarthiCaravanAid(String reason)
-    if !IsKhajiitOrigin() || !Manager.PDV_Khenarthi
-        return
-    endIf
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.KhenarthiCaravanAid")
-    if multiplier <= 0.0
-        Manager.Trace(2, "Khajiit Khenarthi caravan-aid blocked by daily cap (" + reason + ")")
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Khenarthi, Manager.PDV_Khenarthi.SIGNAL_CARAVAN_AID, None, multiplier)
-    AwardKhajiitSubstrateSubstitute("khajiit_caravan_defense", reason)
-    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Khenarthi, "Caravan defended", "marks the caravan road kept safe.")
-    Manager.Trace(2, "Khajiit Khenarthi caravan-aid routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitRajhinLegendMade(String reason)
@@ -3799,27 +3120,15 @@ Function AwardKhajiitSubstrateSubstitute(String sourceId, String reason)
 EndFunction
 
 Function HandleKhajiitRajhinBotchedTheft(String reason)
-    if !IsKhajiitOrigin() || !Manager.PDV_Rajhin
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Rajhin, Manager.PDV_Rajhin.SIGNAL_BOTCHED_THEFT, None)
-    Manager.Trace(2, "Khajiit Rajhin botched-theft routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitAlkoshChaosAid(String reason)
-    if !IsKhajiitOrigin() || !Manager.PDV_Alkosh
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Alkosh, Manager.PDV_Alkosh.SIGNAL_CHAOS_AID, None)
-    Manager.Trace(2, "Khajiit Alkosh chaos-aid routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleKhajiitBaanDarBetrayal(String reason)
-    if !IsKhajiitOrigin() || !Manager.PDV_BaanDar
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_BaanDar, Manager.PDV_BaanDar.SIGNAL_BETRAYAL, None)
-    Manager.Trace(2, "Khajiit Baan Dar betrayal routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsKhajiitOrigin()
@@ -3827,15 +3136,7 @@ Bool Function IsKhajiitOrigin()
 EndFunction
 
 Int Function GetKhajiitLunarPosture()
-    if Manager.PDV_KhajiitLunarPostureTrack
-        Int value = Manager.PDV_KhajiitLunarPostureTrack.GetCurrentState()
-        if value < 0
-            return Manager.KHAJIIT_LUNAR_POSTURE_NORMAL
-        endIf
-        return value
-    endIf
-
-    return Manager.KHAJIIT_LUNAR_POSTURE_NORMAL
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function DeriveKhajiitLunarPosture()
@@ -3883,198 +3184,43 @@ Function RecordKhajiitShadowEvidence(String reason)
 EndFunction
 
 Function RefreshKhajiitLunarPosture(String reason)
-    if !Manager.PDV_KhajiitLunarPostureTrack || !IsKhajiitOrigin()
-        return
-    endIf
-
-    Int oldPosture = GetKhajiitLunarPosture()
-    Int newPosture = DeriveKhajiitLunarPosture()
-    if newPosture == oldPosture
-        return
-    endIf
-
-    Manager.PDV_KhajiitLunarPostureTrack.SetState(newPosture, reason)
-    Manager.Trace(1, "Khajiit lunar posture " + oldPosture + " -> " + newPosture + " (" + reason + ")")
-
-    if newPosture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
-        ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_ShadowDriftEntry, "You have drifted into shadow. The moons grow distant; the Lattice loosens toward the dark between the stars.", False)
-    endIf
-
-    if newPosture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
-        Manager.AppendBookOfDaysEntry("The moonlight scatters from your path. Corruption is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
-    elseIf newPosture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
-        Manager.AppendBookOfDaysEntry("You slipped into the moons' shadow. Darkness is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
-    endIf
-
-    Manager.SendPrismaShiftToast(GetKhajiitLunarPostureDisplayLabelAt(newPosture), GetKhajiitLunarPostureReadout(newPosture), "lunar")
-    Manager.RequestPanelRefresh()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetKhajiitLunarPostureDisplayLabelAt(Int posture)
-    if posture == Manager.KHAJIIT_LUNAR_POSTURE_STRAINED
-        return "Lattice strained"
-    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
-        return "Lattice thinned"
-    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
-        return "Drifting to shadow"
-    endIf
-
-    return "Lattice clear"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetKhajiitLunarPostureReadout(Int posture)
-    if posture == Manager.KHAJIIT_LUNAR_POSTURE_STRAINED
-        return "The Lattice holds you, but strained. The beast-shape is a competing form, and the caravans keep their distance."
-    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
-        return "The Lattice still holds you, corrupted and thinned. The moons do not disown the undead, but the community does."
-    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
-        return "You have drifted into shadow. The moons grow distant; the Lattice loosens toward the dark between the stars."
-    endIf
-
-    return "The Lunar Lattice holds you cleanly. The moons know your form, and the road knows your step."
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool suppressModal)
-    if Manager.GetSuppressCurseTransitionOutputs()
-        return
-    endIf
-
-    ; Past this point the function always emits something (toast, modal, or fallback box),
-    ; so the generic curse toast can stand aside for this transition.
-    Manager.SetRaceCurseSurfaceShown(True)
-
-    if suppressModal
-        Manager.SendPrismaToast("lunar", "warning", "", fallbackText)
-        return
-    endIf
-
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    Debug.MessageBox(fallbackText)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ApplyKhajiitCurseHandlers(Int oldState, Int newState, String reason)
-    if newState == 2
-        if StorageUtil.GetIntValue(None, "PDV.Khajiit.VampireOnsetShown") != 1
-            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_VampireOnset, "The thirst has taken you, little moon. The Lattice does not cast you out, but the caravans will fear you.", False)
-            StorageUtil.SetIntValue(None, "PDV.Khajiit.VampireOnsetShown", 1)
-        endIf
-    elseIf newState == 1
-        if StorageUtil.GetIntValue(None, "PDV.Khajiit.WerewolfOnsetShown") != 1
-            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_WerewolfOnset, "Hircine has given you another shape. You are still Khajiit -- strained, watched, but not erased.", False)
-            StorageUtil.SetIntValue(None, "PDV.Khajiit.WerewolfOnsetShown", 1)
-        endIf
-    elseIf newState == 0
-        if oldState == 2
-            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_VampireCured, "The thirst is gone. The corruption lifts from the Lattice; walk back into the moonlight.", False)
-        elseIf oldState == 1
-            ShowKhajiitMessage(Manager.PDV_Msg_Khajiit_CurseState_WerewolfCured, "The wolf is set down, little moon. The Lattice holds a single shape once more.", False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Khajiit.VampireOnsetShown", 0)
-        StorageUtil.SetIntValue(None, "PDV.Khajiit.WerewolfOnsetShown", 0)
-    endIf
-
-    RefreshKhajiitLunarPosture("curse_" + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleArgonianHistMaintenance(String reason)
-    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianHistMaintenance")
-    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
-    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.PDV_ArgonianHistSubstrate.RecordHistMaintenanceScaled(multiplier, reason)
-    RefreshArgonianHistPosture(reason)
-    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    ; Double-route: the substrate carries the reward gating; a small honest +1 Hist pulse keeps
-    ; the universal piety layer (decay/neglect/creed-loss) honest.
-    if Manager.PDV_Hist
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
-    endIf
-    StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
-    Manager.SurfaceP2BookReadNotice(reason, "The Hist remembers", "The reading carries the smell of home.")
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Hist memory stirred.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
-    Manager.Trace(2, "Argonian Hist maintenance routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleArgonianPeopleSupport(String reason)
-    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianPeopleSupport")
-    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
-    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.PDV_ArgonianHistSubstrate.RecordPeopleSupportScaled(multiplier, reason)
-    RefreshArgonianHistPosture(reason)
-    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "Your people were supported.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
-    Manager.Trace(2, "Argonian People support routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleArgonianBedOfChoiceReturn(String reason)
-    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianBedOfChoice")
-    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
-    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.PDV_ArgonianHistSubstrate.RecordBedOfChoiceReturnScaled(multiplier, reason)
-    RefreshArgonianHistPosture(reason)
-    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The chosen rest took root.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
-    Manager.Trace(2, "Argonian bed-of-choice return routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleArgonianVoidSignal(String reason)
-    if !IsArgonianOrigin() || !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ArgonianVoidSignal")
-    Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
-    Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.PDV_ArgonianHistSubstrate.RecordVoidSignalScaled(multiplier, reason)
-    RefreshArgonianHistPosture(reason)
-    Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    ; Void piety belongs to Sithis only after the relation is explicitly active.
-    if Manager.PDV_Sithis && Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Sithis, Manager.PDV_Sithis.SIGNAL_VOID_THRESHOLD, None, multiplier)
-    endIf
-    ; Void overreach: leaning deep into the Void (fully active) while Hist maintenance has
-    ; lapsed below its non-curse floor is the curated major loss for the Hist.
-    if Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive() && Manager.PDV_ArgonianHistSubstrate.GetHistRelation() <= Manager.PDV_ArgonianHistSubstrate.HistNonCurseFloor
-        EmitHistVoidOverreachMinus(reason)
-    endIf
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Void was noticed.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
-    Manager.Trace(2, "Argonian Void signal routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function RunDawnRefreshArgonianHist()
-    if !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-
-    Bool curseActive = False
-    if Manager.PDV_CurseStateService && Manager.PDV_CurseStateService.GetCurseState() != 0
-        curseActive = True
-    endIf
-
-    Manager.PDV_ArgonianHistSubstrate.ProcessHistDistanceDawn(curseActive, "dawn")
-    Manager.PDV_ArgonianHistSubstrate.ProcessCulturalPracticeDawn(curseActive, "dawn")
-    RefreshArgonianHistPosture("dawn")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function RefreshArgonianHistPosture(String reason)
@@ -4586,33 +3732,7 @@ String Function GetKhajiitFocusSymbol(Int focusValue)
 EndFunction
 
 Function ApplyArgonianCurseHandlers(Int oldState, Int newState, String reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_SILENCED)
-        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.VampireScar", 1)
-        if StorageUtil.GetIntValue(None, "PDV.Argonian.VampireFeedbackShown") != 1
-            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_VampireOnset, "You are undead now. The Hist falls silent.", False)
-            StorageUtil.SetIntValue(None, "PDV.Argonian.VampireFeedbackShown", 1)
-        endIf
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_STRAINED)
-        if StorageUtil.GetIntValue(None, "PDV.Argonian.WerewolfFeedbackShown") != 1
-            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_WerewolfOnset, "The beast is in you. The Hist relation strains, but does not sever.", False)
-            StorageUtil.SetIntValue(None, "PDV.Argonian.WerewolfFeedbackShown", 1)
-        endIf
-    elseIf oldState != 0 && newState == 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_DISTANT)
-        if oldState == 2
-            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_VampireCured, "The undeath is lifted. The Hist reaches again slowly.", False)
-            StorageUtil.SetIntValue(None, "PDV.Argonian.VampireFeedbackShown", 0)
-        elseIf oldState == 1
-            ShowArgonianMessage(Manager.PDV_Msg_Argonian_CurseState_WerewolfCured, "The beast is set down. The shape settles.", False)
-            StorageUtil.SetIntValue(None, "PDV.Argonian.WerewolfFeedbackShown", 0)
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Argonian.HistPosture", Manager.ARGONIAN_HIST_POSTURE_NORMAL)
-    endIf
-
-    RefreshArgonianHistPosture(reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppressModal)
@@ -4657,63 +3777,11 @@ Function EnsureArgonianHistSapToken()
 EndFunction
 
 String Function GetKhajiitSurveyText()
-    String band = Manager.GetCurrentStandingBand()
-    Int focusValue = GetKhajiitFocusedEmphasis()
-    String text = ""
-    if focusValue > Manager.KHAJIIT_FOCUS_NONE
-        text = "You walk inside the Lunar Lattice, and " + GetKhajiitFocusLabel(focusValue) + " leads your devotion now. Standing: " + band + ". You did not choose it; you were walking it."
-    else
-        text = "You walk inside the Lunar Lattice, broad and unfocused, held by the moons and the road. Standing: " + band + ". No god leads yet, and that is whole."
-    endIf
-
-    if Manager.PDV_KhajiitLunarSubstrate
-        text = text + " Your moon practice is " + GetKhajiitLunarTierLabel(Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier()) + "."
-        if StorageUtil.GetIntValue(None, "PDV.Khajiit.LunarSourceCount") > 0
-            text = text + " A lunar source has been read and remembered."
-        endIf
-        if Manager.PDV_KhajiitLunarSubstrate.GetRoadHomeCount() > 0
-            text = text + " The road-home cadence has begun to carry weight."
-        endIf
-    else
-        text = text + " The moons have not yet taken the measure of your practice."
-    endIf
-
-    Int presiding = GetCurrentLunarPresidingFocus()
-    if presiding > Manager.KHAJIIT_FOCUS_NONE
-        if GetActiveLunarFavoredFocus() == presiding
-            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength, and your focused blessing resonates."
-        else
-            text = text + " " + GetKhajiitFocusLabel(presiding) + " is in strength."
-        endIf
-    endIf
-
-    Int posture = GetKhajiitLunarPosture()
-    if posture != Manager.KHAJIIT_LUNAR_POSTURE_NORMAL
-        text = text + "\n\n" + GetKhajiitLunarPostureReadout(posture)
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetKhajiitFocusStandingLine(Int focusValue)
-    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
-    if !deity
-        return "not yet wired"
-    endIf
-
-    String line = Manager.GetTierStandingLabel(Manager.LedgerRuntime.GetTier(deity)) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(Manager.LedgerRuntime.GetPiety(deity))
-    if GetKhajiitFocusedEmphasis() == focusValue
-        line = line + " (leading)"
-    endIf
-    if GetCurrentLunarPresidingFocus() == focusValue
-        if GetActiveLunarFavoredFocus() == focusValue
-            line = line + " (in strength, resonating)"
-        else
-            line = line + " (in strength)"
-        endIf
-    endIf
-
-    return line
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetKhajiitLunarTierLabel(Int tierValue)
@@ -4729,61 +3797,15 @@ String Function GetKhajiitLunarTierLabel(Int tierValue)
 EndFunction
 
 String Function GetArgonianSurveyText()
-    if !Manager.PDV_ArgonianHistSubstrate
-        return "Far from Black Marsh, the Hist is distant and your practice is still settling."
-    endIf
-
-    Float histRel = Manager.PDV_ArgonianHistSubstrate.GetHistRelation()
-    String text = "Far from Black Marsh, Hist memory is " + GetArgonianLayerStrengthLabel(histRel)
-    Float peopleRel = Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation()
-    if peopleRel >= 70.0
-        text = text + " and the People are near."
-    elseIf peopleRel >= 35.0
-        text = text + " and the People are with you."
-    elseIf peopleRel > 0.0
-        text = text + " and the People are scattered."
-    else
-        text = text + " and the People are far off."
-    endIf
-
-    if Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        text = text + " Sithis is awake, but the Hist remains first."
-    else
-        Float voidRel = Manager.PDV_ArgonianHistSubstrate.GetVoidRelation()
-        if voidRel >= 35.0
-            text = text + " Sithis stirs at the edge."
-        elseIf voidRel > 0.0
-            text = text + " Sithis waits at the edge."
-        endIf
-    endIf
-
-    text = text + " Cultural practice: " + GetArgonianCulturalPracticeLabel() + "."
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetArgonianLayerStrengthLabel(Float value)
-    if value >= 70.0
-        return "held"
-    elseIf value >= 35.0
-        return "present"
-    elseIf value > 0.0
-        return "thin"
-    endIf
-
-    return "distant"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetArgonianVoidStrengthLabel(Float value)
-    if Manager.PDV_ArgonianHistSubstrate && Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        return "awake"
-    elseIf value >= 35.0
-        return "stirring"
-    elseIf value > 0.0
-        return "at the edge"
-    endIf
-
-    return "dormant"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetArgonianHistPostureLabel()
@@ -4911,50 +3933,19 @@ Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
 EndFunction
 
 Function HandleLekiHonorableDuel(String reason)
-    if !Manager.PDV_Leki || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Leki)
-        return
-    endIf
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.LekiHonorableDuel")
-    if multiplier <= 0.0
-        Manager.Trace(2, "Leki honorable-duel blocked by daily cap (" + reason + ")")
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Leki, Manager.PDV_Leki.SIGNAL_HONORABLE_DUEL, None, multiplier)
-    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Leki, "Duel honored", "marks single combat honorably won.")
-    Manager.Trace(2, "Leki honorable-duel routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleRedguardCrownTombRespect(String reason)
-    if !IsRedguardOrigin() || !Manager.PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardCrownTombRespect")
-    RecordRedguardSectSignal(Manager.REDGUARD_SECT_CROWN, multiplier, reason)
-    AwardRedguardCrownSignal(multiplier, reason)
-    Manager.Trace(2, "Redguard Crown tomb respect routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleRedguardForebearRoadPassage(String reason)
-    if !IsRedguardOrigin() || !Manager.PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardForebearRoad")
-    RecordRedguardSectSignal(Manager.REDGUARD_SECT_FOREBEAR, multiplier, reason)
-    AwardRedguardForebearSignal(multiplier)
-    Manager.Trace(2, "Redguard Forebear road passage routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleRedguardAshAbahDeathDuty(String reason)
-    if !IsRedguardOrigin() || !Manager.PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAshAbahDeathDuty")
-    RecordRedguardSectSignal(Manager.REDGUARD_SECT_ASHABAH, multiplier, reason)
-    ApplyRedguardAshAbahDutyRewards(reason, multiplier)
-    Manager.Trace(2, "Redguard AshAbah death duty routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleRedguardAshAbahMajorBurden(Form victimForm, Int eventType)
@@ -5122,37 +4113,11 @@ String Function GetAshAbahStigmaLabel()
 EndFunction
 
 Function HandleRedguardFarShoresToken(String reason)
-    if !IsRedguardOrigin() || !Manager.PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardFarShoresToken")
-    EnsureRedguardSectInitialized()
-    Int currentSect = Manager.PDV_RedguardSectTrack.GetCurrentState()
-    Manager.PDV_RedguardSectTrack.RecordEvidenceDay(currentSect, reason)
-    StorageUtil.AdjustFloatValue(None, "PDV.Redguard.FarShoresToken", multiplier)
-    StorageUtil.SetStringValue(None, "PDV.Redguard.LastSectReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Redguard.LastSectSignalTime", Utility.GetCurrentGameTime())
-
-    if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireReentryNeeded") == 1 && StorageUtil.GetIntValue(None, "PDV.Curse.State") != 2
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 0)
-        HandleRedguardVampireReentryComplete(reason)
-    endIf
-    AwardRedguardFarShoresSignal(multiplier, reason)
-    TryRedguardTuwhaccaDeathRiteHeal(reason)
-    ShowRedguardNotification(Manager.PDV_Notif_Redguard_FarShoresToken_Activate, "You tend the Far Shores token and speak to Tu'whacca.")
-    Manager.Trace(2, "Redguard Far Shores token routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleRedguardAncestorSpine(String reason)
-    if !IsRedguardOrigin() || !Manager.PDV_RedguardSectTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAncestorSpine")
-    RecordRedguardAncestorSpinePulse(multiplier, reason)
-    Manager.SurfaceP2BookReadNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
-    Manager.Trace(2, "Redguard ancestor spine routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
@@ -6062,43 +5027,11 @@ Function EmitRedguardDeathDutyAbandonmentMinus(String reason)
 EndFunction
 
 Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == Manager.LedgerRuntime.PDV_Stendarr
-        return Manager.PDV_Msg_Breton_Stendarr_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Akatosh
-        return Manager.PDV_Msg_Breton_Akatosh_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Mara
-        return Manager.PDV_Msg_Breton_Mara_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Arkay
-        return Manager.PDV_Msg_Breton_Arkay_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Julianos
-        return Manager.PDV_Msg_Breton_Julianos_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Zenithar
-        return Manager.PDV_Msg_Breton_Zenithar_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Kynareth
-        return Manager.PDV_Msg_Breton_Kynareth_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Dibella
-        return Manager.PDV_Msg_Breton_Dibella_Offer
-    elseIf deity == Manager.PDV_Magnus
-        return Manager.PDV_Msg_Breton_Magnus_Offer
-    elseIf deity == Manager.PDV_Talos
-        return Manager.PDV_Msg_Breton_Talos_Offer
-    elseIf deity == Manager.PDV_Yffre
-        return Manager.PDV_Msg_Breton_Yffre_Offer
-    endIf
-
-    return None
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Message Function GetRedguardFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == Manager.PDV_Tuwhacca
-        return Manager.PDV_Msg_Redguard_Tuwhacca_Offer
-    elseIf deity == Manager.PDV_Leki
-        return Manager.PDV_Msg_Redguard_Leki_Offer
-    elseIf deity == Manager.PDV_HoonDing
-        return Manager.PDV_Msg_Redguard_HoonDing_Offer
-    endIf
-
-    return None
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
@@ -6140,64 +5073,11 @@ Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)
 EndFunction
 
 Function ApplyBretonCurseHandlers(Int oldState, Int newState, String reason)
-    Bool curseActive = newState != 0
-    if curseActive
-        StorageUtil.SetIntValue(None, "PDV.Curse.Breton.RestorationState", 2)
-    elseIf oldState != 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Breton.RestorationState", 1)
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Breton.RestorationState", 0)
-    endIf
-
-    EnsureBretonDruidicForkInitialized()
-    Int forkValue = GetBretonDruidicForkValue()
-    if newState == 1 && GetBretonTraditionValue() == Manager.BRETON_TRADITION_GREEN_WAY && forkValue == Manager.BRETON_DRUIDIC_FORK_DRUIDIC
-        SetBretonDruidicFork(Manager.BRETON_DRUIDIC_FORK_WEREWOLF, reason)
-    elseIf oldState == 1 && newState == 0 && forkValue == Manager.BRETON_DRUIDIC_FORK_WEREWOLF
-        SetBretonDruidicFork(Manager.BRETON_DRUIDIC_FORK_DRUIDIC, reason)
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ApplyRedguardCurseHandlers(Int oldState, Int newState, String reason)
-    Bool suppressModal = ShouldSuppressRedguardCurseModal(reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 2)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireScar", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireFeedbackShown") != 1
-            ShowRedguardMessage(Manager.PDV_Msg_Redguard_CurseState_VampireOnset, "The vampire curse interrupts Tu'whacca's cycle until cure and re-entry.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.VampireFeedbackShown", 1)
-        endIf
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfCureFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown") != 1
-            ShowRedguardMessage(Manager.PDV_Msg_Redguard_CurseState_WerewolfOnset, "The beast blood strains the route to proper mortality.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown", 1)
-        endIf
-    elseIf oldState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireReentryNeeded", 1)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown") != 1
-            ShowRedguardMessage(Manager.PDV_Msg_Redguard_CurseState_VampireCured_TuwhaccaReEntry, "The thirst is gone, but the ancestors' protection stays withheld until you take up the death-duty and re-enter Tu'whacca's cycle.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.VampireCureFeedbackShown", 1)
-        endIf
-    elseIf oldState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 0)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Redguard.WerewolfCureFeedbackShown") != 1
-            ShowRedguardMessage(Manager.PDV_Msg_Redguard_CurseState_WerewolfCured, "The beast blood is quiet. The mortal road steadies again.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfCureFeedbackShown", 1)
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Redguard.CyclePressure", 0)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.VampireFeedbackShown", 0)
-        StorageUtil.SetIntValue(None, "PDV.Redguard.WerewolfFeedbackShown", 0)
-    endIf
-
-    StorageUtil.SetStringValue(None, "PDV.Curse.Redguard.LastReason", reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function ShouldSuppressRedguardCurseModal(String reason)
@@ -6240,102 +5120,23 @@ Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool su
 EndFunction
 
 Function ApplyBretonInitialChoice(Int traditionValue, String reason)
-    Int normalized = PDV_DevotionRules.ClampInt(traditionValue, 0, 2)
-    Manager.BeginRaceSetupQuietPresentation(reason)
-    StorageUtil.SetIntValue(None, "PDV.Breton.Tradition", normalized)
-    StorageUtil.SetIntValue(None, "PDV.Breton.SetupComplete", 1)
-    StorageUtil.SetStringValue(None, "PDV.Breton.StartupReason", reason)
-    if normalized == Manager.BRETON_TRADITION_GREEN_WAY
-        SetBretonDruidicFork(Manager.BRETON_DRUIDIC_FORK_DRUIDIC, reason)
-        ; Seed the covenant at its open midpoint so a fresh Green Way Breton reads
-        ; "open" (50), not the rebanded fraying band (<30). Never lowers an
-        ; existing value.
-        if StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 0) < 50
-            StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        endIf
-    else
-        SetBretonDruidicFork(Manager.BRETON_DRUIDIC_FORK_NONE, reason)
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicForkInitialized", 1)
-    PDV_DeityBase traditionDeity = GetBretonTraditionDeity(normalized)
-    if traditionDeity
-        String traditionLabel = GetBretonTraditionLabel()
-        Manager.SendPrismaShiftToast("You set your tradition: " + traditionLabel + ".", "", Manager.GetPrismaSymbolForDeity(traditionDeity))
-        Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(traditionLabel), Utility.GetCurrentGameTime() as Int, "reorientation", Manager.GetPrismaSymbolForDeity(traditionDeity), True, 3, "", True)
-        Manager.SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
-    endIf
-    Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
-    Manager.EndRaceSetupQuietPresentation()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ApplyRedguardInitialChoice(Int sectValue, String reason)
-    Manager.BeginRaceSetupQuietPresentation(reason)
-    if Manager.PDV_RedguardSectTrack
-        Int normalized = PDV_DevotionRules.ClampInt(sectValue, Manager.REDGUARD_SECT_CROWN, Manager.REDGUARD_SECT_ASHABAH)
-        Manager.PDV_RedguardSectTrack.SetState(normalized, reason)
-        Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(GetRedguardSectLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "sect", True, 3, "", True)
-        ShowRedguardSectEntry(normalized)
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Redguard.SetupComplete", 1)
-    Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
-    Manager.EndRaceSetupQuietPresentation()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBretonTraditionChoice(Int traditionValue, String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
-        Manager.Trace(2, "Breton tradition choice ignored for non-Breton origin.")
-        return
-    endIf
-
-    ; Tradition onboarding is explicit and start-locked: the first choice latches
-    ; it, and there is no silent mid-game switching in 1.0. A later off-tradition
-    ; source becomes cross-tradition pressure, never a silent tradition rewrite.
-    if StorageUtil.GetIntValue(None, "PDV.Breton.SetupComplete") == 1
-        if StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1) != traditionValue
-            StorageUtil.SetIntValue(None, "PDV.Breton.CrossTraditionPressure", StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") + 1)
-            StorageUtil.SetStringValue(None, "PDV.Breton.LastTraditionHookReason", reason)
-            Manager.Trace(2, "Breton tradition locked; off-tradition source -> cross-tradition pressure: " + reason)
-        endIf
-        return
-    endIf
-
-    ApplyBretonInitialChoice(traditionValue, reason)
-    StorageUtil.SetStringValue(None, "PDV.Breton.LastTraditionHookReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    Manager.Trace(2, "Breton tradition choice routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function DecayBretonWitchcraftExposureAtDawn()
-    Int exposure = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure")
-    if exposure <= 0
-        return
-    endIf
-    exposure -= 1
-    StorageUtil.SetIntValue(None, "PDV.Breton.WitchcraftExposure", exposure)
-    Manager.Trace(2, "Breton WitchcraftExposure passive decay -> " + exposure)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function DecayBretonDruidicStandingAtDawn()
-    if !ShouldBretonDruidicStandingFray()
-        return
-    endIf
-
-    ; Once-per-dawn guard. fix-plan 4.2: the day+1 encoding already dodged the day-0
-    ; self-suppression trap, but on the raw-midnight day -- now the actual dawn day.
-    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay") == (Manager.LedgerRuntime.GetDevotionalDay() + 2)
-        return
-    endIf
-    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Breton.DruidicDecayDay")
-
-    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-    if standingValue <= 0
-        return
-    endIf
-    standingValue = PDV_DevotionRules.ClampInt(standingValue - 1, 0, 100)
-    StorageUtil.SetIntValue(None, "PDV.Breton.DruidicStanding", standingValue)
-    Manager.Trace(2, "Breton DruidicStanding neglect decay -> " + standingValue)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function ShouldBretonDruidicStandingFray()
@@ -6357,11 +5158,7 @@ Function AwardBretonAncestorSpinePulse(Float multiplier, String reason)
 EndFunction
 
 Function RunDawnRefreshBretonAncestor()
-    if !Manager.PDV_BretonAncestorSubstrate
-        return
-    endIf
-
-    Manager.PDV_BretonAncestorSubstrate.ClearSubstrateBoons()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBretonActionPracticeSignal(Int eventType, String reason)
@@ -6546,54 +5343,11 @@ Function MaybeRecordBretonCrossTraditionPressure(Int sourceTradition, String sou
 EndFunction
 
 Function HandleBretonKnightlyVow(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
-        Manager.Trace(2, "Breton Knightly Vow ignored for non-Breton origin.")
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.BretonKnightlyVow")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    if Manager.LedgerRuntime.PDV_Stendarr
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.LedgerRuntime.PDV_Stendarr, Manager.LedgerRuntime.PDV_Stendarr.SIGNAL_MERCY, None, multiplier)
-    endIf
-    if !AwardBretonPracticePulse(Manager.BRETON_TRADITION_KNIGHTS_ROAD, Manager.BRETON_PRACTICE_CURATED_POINTS, "handler_knightly_vow", reason)
-        MaybeRecordBretonCrossTraditionPressure(Manager.BRETON_TRADITION_KNIGHTS_ROAD, "handler_knightly_vow", reason)
-    endIf
-
-    AwardBretonAncestorSpinePulse(multiplier, reason)
-    StorageUtil.SetStringValue(None, "PDV.Breton.LastKnightlyVowReason", reason)
-    Manager.Trace(2, "Breton Knightly Vow routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleBretonHiddenArtExposure(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
-        Manager.Trace(2, "Breton Hidden Art ignored for non-Breton origin.")
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.BretonHiddenArtExposure")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    if Manager.PDV_Magnus
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Magnus, Manager.PDV_Magnus.SIGNAL_DISCIPLINED_STUDY, None, multiplier)
-    endIf
-    if Manager.LedgerRuntime.PDV_Mara && PDV_DevotionRules.StringContainsToken(reason, "home")
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.LedgerRuntime.PDV_Mara, Manager.LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
-    endIf
-    Bool practiceAwarded = AwardBretonPracticePulse(Manager.BRETON_TRADITION_HIDDEN_ART, Manager.BRETON_PRACTICE_CURATED_POINTS, "handler_hidden_art_exposure", reason)
-    if !practiceAwarded
-        MaybeRecordBretonCrossTraditionPressure(Manager.BRETON_TRADITION_HIDDEN_ART, "handler_hidden_art_exposure", reason)
-    endIf
-    AwardBretonAncestorSpinePulse(multiplier, reason)
-    ; An approved P2 book is a distinct player acknowledgement even when the
-    ; daily practice cap has already reduced its mechanical credit.
-    Manager.SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
-    Manager.Trace(2, "Breton Hidden Art exposure routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetBretonHiddenArtNoticeTitle(String reason)
@@ -6621,50 +5375,11 @@ String Function GetBretonHiddenArtNoticeText(String reason)
 EndFunction
 
 Function HandleBretonGreenWayStanding(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
-        Manager.Trace(2, "Breton Green Way ignored for non-Breton origin.")
-        return
-    endIf
-
-    EnsureBretonDruidicForkInitialized()
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.BretonGreenWayStanding")
-    if multiplier <= 0.0
-        return
-    endIf
-    if Manager.PDV_Yffre
-        ; Breton-voiced Green Way signal; the Bosmer Living Story signal stays
-        ; Bosmer-only so driver rows read in the right tradition's voice.
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Yffre, Manager.PDV_Yffre.SIGNAL_GREEN_WAY, None, multiplier)
-    endIf
-    if !AwardBretonPracticePulse(Manager.BRETON_TRADITION_GREEN_WAY, Manager.BRETON_PRACTICE_CURATED_POINTS, "handler_green_way_standing", reason)
-        MaybeRecordBretonCrossTraditionPressure(Manager.BRETON_TRADITION_GREEN_WAY, "handler_green_way_standing", reason)
-    endIf
-    AwardBretonAncestorSpinePulse(multiplier, reason)
-    Manager.Trace(2, "Breton Green Way standing routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetRedguardSurveyText()
-    if !Manager.PDV_RedguardSectTrack
-        return "The Far Shores are named, but your Redguard sect is not yet readable here."
-    endIf
-
-    String text = GetRedguardSurveySectText()
-    if StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") > 0
-        text = text + " You have read the words of the ancestors, and the dead are nearer for it."
-    endIf
-    Float farShoresWeight = StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken")
-    if farShoresWeight > 0.0
-        text = text + " The Far Shores token has been tended lately, and Tu'whacca holds the way open."
-    endIf
-
-    Int cyclePressure = StorageUtil.GetIntValue(None, "PDV.Curse.Redguard.CyclePressure")
-    if cyclePressure == 2
-        text = text + " The vampire curse has set you outside the cycle, and the Far Shores stay shut until you cure it and return through Tu'whacca."
-    elseIf cyclePressure == 1
-        text = text + " The beast strains your road to a proper death, but the ancestors only watch the closer for it."
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetRedguardSurveySectText()
@@ -6692,74 +5407,7 @@ String Function GetRedguardSurveySectText()
 EndFunction
 
 String Function GetBretonSurveyText()
-    Int tradition = StorageUtil.GetIntValue(None, "PDV.Breton.Tradition", -1)
-    if tradition < 0
-        String unchosenText = "You have not yet chosen a tradition. Breton faith takes shape on the Knight's Road, through the Hidden Art, or along the Green Way."
-        return unchosenText
-    endIf
-
-    String text = ""
-    Int practiceTier = GetBretonPracticeTier(tradition)
-    String practiceText = " Practice: " + Manager.GetPublicTierBand(practiceTier) + "."
-    if tradition == 0
-        text = "You walk the Knight's Road: vow, mercy, and protective justice." + practiceText
-        Int vow = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-        if vow >= 70
-            text = text + " Your knightly vow is intact."
-        elseIf vow >= 30
-            text = text + " Your knightly vow is strained, and the Road's favor comes harder."
-        else
-            text = text + " Your knightly vow is broken, and the Road is halted until you restore it."
-        endIf
-    elseIf tradition == 1
-        text = "You walk the Hidden Art: occult practice and the double life." + practiceText
-        Int exposure = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0)
-        if exposure >= 100
-            text = text + " Your practice is notorious, openly named, and your patron rewards the full commitment."
-        elseIf exposure >= 75
-            text = text + " Your practice is known, and your cover is close to rupture."
-        elseIf exposure >= 50
-            text = text + " Your practice is known, and the Vigilants are a real danger now."
-        elseIf exposure >= 25
-            text = text + " Your practice is suspected, and watchful eyes have begun to turn."
-        else
-            text = text + " Your practice stays hidden, unseen by those who would object."
-        endIf
-    else
-        text = "You walk the Green Way: the old druidic covenant." + practiceText
-        Int druidic = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-        if druidic >= 70
-            text = text + " Y'ffre answers you steadily."
-        elseIf druidic < 30
-            text = text + " The Green Way is fraying, and the forest begins to forget you."
-        else
-            text = text + " Y'ffre is listening."
-        endIf
-    endIf
-
-    text = text + GetBretonPatronSurveySentence(tradition)
-
-    Int fork = GetBretonDruidicForkValue()
-    if fork == 1
-        text = text + " The beast in you serves the Green, and the old covenant accepts your shape."
-    elseIf fork == 2
-        text = text + " You claimed the beast for yourself, and the Green has closed against the wolf."
-    elseIf fork == 3
-        text = text + " The covenant names you betrayer, and the Green presses against the broken trust."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Breton.CrossTraditionPressure") > 0
-        text = text + " You are being pulled toward another tradition, and the pull weighs against the one you walk."
-    endIf
-
-    Int restoration = StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState")
-    if restoration == 2
-        text = text + " A curse has ruptured your tradition, and its road is closed to you until you are cured."
-    elseIf restoration == 1
-        text = text + " A curse sits on you, and your tradition will not hold until it is restored."
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetBretonTraditionLabel()
@@ -6776,20 +5424,7 @@ String Function GetBretonTraditionLabel()
 EndFunction
 
 String Function GetBretonBookOfDaysPathStatusLabel()
-    String traditionLabel = GetBretonTraditionLabel()
-    Int practiceTier = GetBretonPracticeTier(GetBretonTraditionValue())
-    String status = traditionLabel + " Practice " + Manager.GetPublicTierBand(practiceTier)
-
-    PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
-    if activePact
-        return status + " / " + Manager.NormalizePublicDeityDisplayText(activePact.DeityName) + " Pact"
-    endIf
-
-    if Manager.GetActiveDeity() && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE
-        return status + " / " + Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " Focus"
-    endIf
-
-    return status
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetBretonPatronSurveySentence(Int traditionValue)
@@ -6911,79 +5546,11 @@ Function EnsureNordOrkeyRewardRuntimeWiring()
 EndFunction
 
 Function HandleDunmerPortableShrinePrayer(String reason)
-    if Manager.PDV_DunmerAncestorSubstrate
-        ; Layer 1 (ancestor substrate) is silenced under vampirism, halved under the
-        ; beast. Layer 2 (Reclamation memory) still answers, so it routes regardless.
-        Float layerWeight = GetDunmerCurseLayerWeight(1)
-        if layerWeight > 0.0
-            Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerPortableShrinePrayer") * layerWeight
-            Float metricBefore = Manager.PDV_DunmerAncestorSubstrate.GetMetric()
-            Int tierBefore = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            Manager.PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
-            Int tierAfter = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
-            ; The Ledger driver for the ancestral layer. Sits inside the layerWeight guard on purpose:
-            ; vampirism silences this layer entirely, so a silenced prayer must not record one either.
-            ; Self-caps to the first prayer of the devotional day; patron-independent by ruling.
-            AwardDunmerAncestorSpinePulse(multiplier, reason)
-        else
-            Manager.Trace(2, "Dunmer ancestor layer silenced by curse posture (" + reason + ")")
-        endIf
-        Manager.NotifyDiegeticRoutineFavor("dunmer_portable_shrine")
-        Bool twilightAwarded = TryAwardDunmerTwilightWindowSignal(reason)
-        if !twilightAwarded
-            AwardActiveDunmerReclamationMemorySignal()
-        endIf
-        ; Home presence changes the substrate/ward only. The portable prayer
-        ; already supplied the one deity-piety pulse for this logical act.
-        ; Home-prayer bonus (11a, reworked 2026-07-04): praying with the portable urn at
-        ; your declared ancestor-home fires the bigger home progress step + arms the
-        ; ancestor watch (once-per-day near-death save until dawn).
-        ; HandleDunmerPlayerHomeBonus self-gates on curse posture.
-        if IsPlayerAtDunmerDeclaredHome(Game.GetPlayer())
-            _dunmerHomePrayerContext = True
-            HandleDunmerPlayerHomeBonus(reason + "_home")
-            _dunmerHomePrayerContext = False
-        endIf
-        Manager.RequestPanelRefresh()
-        Manager.Trace(2, "Dunmer portable shrine prayer routed (" + reason + ")")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleDunmerPlayerHomeBonus(String reason)
-    Actor homePlayer = Game.GetPlayer()
-    if !_dunmerHomePrayerContext || !IsPlayerAtDunmerDeclaredHome(homePlayer)
-        if Manager.PDV_DunmerAncestorSubstrate
-            Manager.PDV_DunmerAncestorSubstrate.RecordDailyCreditReject("dunmer_home_prayer", reason, "requires_paired_home_prayer")
-        endIf
-        Manager.Trace(2, "Dunmer home-only substrate route rejected (" + reason + ")")
-        return
-    endIf
-    if Manager.PDV_DunmerAncestorSubstrate
-        Float layerWeight = GetDunmerCurseLayerWeight(1)
-        if layerWeight > 0.0
-            Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerHomeBonus") * layerWeight
-            Float metricBefore = Manager.PDV_DunmerAncestorSubstrate.GetMetric()
-            Int tierBefore = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            Manager.PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)
-            Int tierAfter = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Prayers within the home feel more meaningful.", "ancestor", GetDunmerAncestorLayerLabel())
-            ; Ancestor watch (11a rework 2026-07-04): the home prayer no longer heals on
-            ; the spot; it arms a once-per-day near-death save that lasts until dawn (the
-            ; BaanDar-style low-health watcher, PDV_T3DailyLowHealthSaveEffect on the
-            ; PDV_SPEL_Dunmer_AncestorWatch ability). ProcessDawn disarms it, so each
-            ; day's protection must be re-earned with a fresh home prayer.
-            if homePlayer && Manager.PDV_SPEL_Dunmer_AncestorWatch && !homePlayer.HasSpell(Manager.PDV_SPEL_Dunmer_AncestorWatch)
-                homePlayer.AddSpell(Manager.PDV_SPEL_Dunmer_AncestorWatch, False)
-                Manager.Trace(2, "Dunmer ancestor watch armed (" + reason + ")")
-            endIf
-        else
-            Manager.Trace(2, "Dunmer home rite silenced by curse posture (" + reason + ")")
-        endIf
-        Manager.NotifyDiegeticRoutineFavor("dunmer_home_bonus")
-        Manager.RequestPanelRefresh()
-        Manager.Trace(2, "Dunmer player-home bonus routed (" + reason + ")")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function DisarmDunmerAncestorWatch()
@@ -7017,17 +5584,7 @@ Bool Function IsPlayerAtDunmerDeclaredHome(Actor playerRef)
 EndFunction
 
 Function HandleNordTsunAdversitySurvived(String reason)
-    if !Manager.PDV_Tsun || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Tsun)
-        return
-    endIf
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.NordTsunAdversity")
-    if multiplier <= 0.0
-        Manager.Trace(2, "Tsun adversity blocked by daily cap (" + reason + ")")
-        return
-    endIf
-    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Tsun, Manager.PDV_Tsun.SIGNAL_ADVERSITY_SURVIVED, None, multiplier)
-    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Tsun, "Adversity survived", "marks a hard fight endured to its end.")
-    Manager.Trace(2, "Tsun adversity-survived routed (" + reason + ")")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleNordLocationChange(Location newLocation)
@@ -7090,17 +5647,7 @@ Function RecordNordHearthReturn(String reason, Float multiplier)
 EndFunction
 
 Function RunDawnRefreshNordAncestor()
-    if !Manager.PDV_NordAncestorSubstrate
-        return
-    endIf
-
-    Int postureBefore = Manager.PDV_NordAncestorSubstrate.GetAncestorPosture()
-    Bool curseActive = IsNordVampireSuppressed()
-    Manager.PDV_NordAncestorSubstrate.ProcessAncestorDawn(curseActive, "dawn")
-    Int postureAfter = Manager.PDV_NordAncestorSubstrate.GetAncestorPosture()
-    if postureBefore > Manager.PDV_NordAncestorSubstrate.POSTURE_FORGOTTEN && postureAfter == Manager.PDV_NordAncestorSubstrate.POSTURE_FORGOTTEN
-        ShowNordNotification(Manager.PDV_Notif_Nord_General_AncestorsQuiet, "The ancestors are quiet.")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function MaybeShowNordKyneChampionEntry(PDV_DeityBase deity, Int newTier)
@@ -7158,45 +5705,11 @@ Function ProcessQueuedNordKyneChampionEntry()
 EndFunction
 
 Function SyncKyneNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Kyne
-        StorageUtil.SetIntValue(None, "PDV.Neglect.KyneSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Kyne)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Kyne, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.KyneSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Kyne)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Kyne)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.KyneSpellActive", 0)
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function SyncNordPatronNeglectSpells()
-    ; Per-patron Nord neglect (follow-on, owner ruling 2026-06-27): each focusable NON-Kyne Nord
-    ; patron gets its own gentle flat neglect spell, applied only when it is the player's active
-    ; patron AND flagged neglected (recency lapse). Kyne keeps its dedicated spell
-    ; (SyncKyneNeglectSpell). Idempotent and self-clearing: each spell is set to its exact correct
-    ; state, so calling this from any branch (focused / broad / uncommitted / Prince) removes a stale
-    ; spell after a patron switch. No-ops entirely until the ESP batch authors the four records.
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
-    Bool isNord = GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
-    Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.PDV_SPEL_Neglect_Shor,  isNord && Manager.GetActiveDeity() == Manager.PDV_Shor  && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Shor))
-    Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.PDV_SPEL_Neglect_Tsun,  isNord && Manager.GetActiveDeity() == Manager.PDV_Tsun  && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Tsun))
-    Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.PDV_SPEL_Neglect_Stuhn, isNord && Manager.GetActiveDeity() == Manager.PDV_Stuhn && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Stuhn))
-    Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.PDV_SPEL_Neglect_Talos, isNord && Manager.GetActiveDeity() == Manager.PDV_Talos && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Talos))
-    ; Nord Old Ways patrons (Orkey/Dibella roster). _activeDeity keys on the internal Arkay/Dibella
-    ; deity, not the "Orkey" display name; the spell record carries the Orkey-facing name.
-    Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.LedgerRuntime.PDV_SPEL_Neglect_Arkay,   isNord && Manager.GetActiveDeity() == Manager.LedgerRuntime.PDV_Arkay   && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.LedgerRuntime.PDV_Arkay))
-    Manager.LedgerRuntime.SyncOnePatronNeglectSpell(playerRef, Manager.LedgerRuntime.PDV_SPEL_Neglect_Dibella, isNord && Manager.GetActiveDeity() == Manager.LedgerRuntime.PDV_Dibella && Manager.LedgerRuntime.IsNeglectFlagActive(Manager.LedgerRuntime.PDV_Dibella))
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function SyncDunmerRewards(Actor playerRef)
@@ -7334,50 +5847,11 @@ Int Function GetNordPantheonBaselineState()
 EndFunction
 
 Message Function GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == Manager.PDV_Kyne
-        return Manager.PDV_Msg_Nord_Kyne_Offer
-    elseIf deity == Manager.PDV_Shor
-        return Manager.PDV_Msg_Nord_Shor_Offer
-    elseIf deity == Manager.PDV_Tsun
-        return Manager.PDV_Msg_Nord_Tsun_Offer
-    elseIf deity == Manager.PDV_Stuhn
-        return Manager.PDV_Msg_Nord_Stuhn_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Akatosh
-        return Manager.PDV_Msg_Nord_Akatosh_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Mara
-        return Manager.PDV_Msg_Nord_Mara_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Arkay
-        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_OLD_WAYS
-            return Manager.PDV_Msg_Nord_Orkey_Offer
-        endIf
-        return Manager.PDV_Msg_Nord_Arkay_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Stendarr
-        return Manager.PDV_Msg_Nord_Stendarr_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Zenithar
-        return Manager.PDV_Msg_Nord_Zenithar_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Julianos
-        return Manager.PDV_Msg_Nord_Julianos_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Dibella
-        return Manager.PDV_Msg_Nord_Dibella_Offer
-    elseIf deity == Manager.PDV_Talos
-        return Manager.PDV_Msg_Nord_Talos_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Kynareth
-        return Manager.PDV_Msg_Nord_Kynareth_Offer
-    endIf
-
-    return None
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Message Function GetDunmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == Manager.PDV_Azura
-        return Manager.PDV_Msg_Dunmer_Azura_Offer
-    elseIf deity == Manager.PDV_Boethiah
-        return Manager.PDV_Msg_Dunmer_Boethiah_Offer
-    elseIf deity == Manager.PDV_Mephala
-        return Manager.PDV_Msg_Dunmer_Mephala_Offer
-    endIf
-
-    return None
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsKyneCommitmentSignalReady()
@@ -7424,15 +5898,7 @@ Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
 EndFunction
 
 Function ApplyDunmerCurseHandlers(Int oldState, Int newState, String reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Dunmer.Posture", 2)
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Dunmer.Posture", 1)
-    elseIf oldState != 0 && newState == 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Dunmer.Posture", 3)
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Dunmer.Posture", 0)
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Float Function GetDunmerCurseLayerWeight(Int layer)
@@ -7452,40 +5918,7 @@ Float Function GetDunmerCurseLayerWeight(Int layer)
 EndFunction
 
 Function ApplyNordCurseHandlers(Int oldState, Int newState, String reason)
-    Bool suppressModal = ShouldSuppressNordCurseModal(reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Nord.VampireActive", 1)
-        StorageUtil.SetIntValue(None, "PDV.Nord.VampireScar", 1)
-        StorageUtil.SetIntValue(None, "PDV.Nord.VampireCureFeedbackShown", 0)
-        Manager.FavorRuntime.ClearActiveFavor("nord_vampire")
-        Manager.LedgerRuntime.ClearPendingCommitment()
-        if StorageUtil.GetIntValue(None, "PDV.Nord.VampireFeedbackShown") != 1
-            ShowNordMessage(Manager.PDV_Msg_Nord_CurseState_VampireOnset, "Sovngarde is closed while the thirst remains. Cure the curse, and the scar will still be remembered.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Nord.VampireFeedbackShown", 1)
-        endIf
-    elseIf oldState == 2 && newState != 2
-        StorageUtil.SetIntValue(None, "PDV.Nord.VampireActive", 0)
-        StorageUtil.SetIntValue(None, "PDV.Nord.VampireFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Nord.VampireCureFeedbackShown") != 1
-            ShowNordMessage(Manager.PDV_Msg_Nord_CurseState_VampireCured, "The thirst is gone. The road opens again, but the scar remains.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Nord.VampireCureFeedbackShown", 1)
-        endIf
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 0)
-        if StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfFeedbackShown") != 1
-            ShowNordMessage(Manager.PDV_Msg_Nord_CurseState_WerewolfOnset, "The hunt pulls against Sovngarde. Master the beast, or it will master you.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 1)
-        endIf
-    elseIf newState == 0
-        StorageUtil.SetIntValue(None, "PDV.Nord.VampireActive", 0)
-        ; oldState == 2 is claimed by the vampire-cure branch above, so reaching
-        ; here with oldState == 1 is the werewolf cure and nothing else.
-        if oldState == 1 && StorageUtil.GetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown") != 1
-            ShowNordMessage(Manager.PDV_Msg_Nord_CurseState_WerewolfCured, "The hunt is set down. Hircine's hold is broken, and Sovngarde calls you once more.", suppressModal)
-            StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfCureFeedbackShown", 1)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Nord.WerewolfFeedbackShown", 0)
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function ShouldSuppressNordCurseModal(String reason)
@@ -7528,58 +5961,15 @@ Function ShowNordNotification(Message messageRecord, String fallbackText)
 EndFunction
 
 Function ApplyNordInitialChoice(Int baselineValue, String reason)
-    Manager.BeginRaceSetupQuietPresentation(reason)
-    Int normalized = PDV_DevotionRules.ClampInt(baselineValue, Manager.NORD_BASELINE_OLD_WAYS, Manager.NORD_BASELINE_NINE_DIVINES)
-    StorageUtil.SetIntValue(None, "PDV.NordPantheonBaseline.DebugState", normalized)
-    if Manager.PDV_NordPantheonBaselineTrack
-        Manager.PDV_NordPantheonBaselineTrack.SetState(normalized, reason)
-    endIf
-
-    Manager.LedgerRuntime.SetBroadWorship()
-    String baselineLabel = "Old Ways"
-    if normalized == Manager.NORD_BASELINE_NINE_DIVINES
-        baselineLabel = "Nine Divines"
-    endIf
-    Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(baselineLabel), Utility.GetCurrentGameTime() as Int, "reorientation", "journal", True, 3, "", True)
-    Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
-    Manager.EndRaceSetupQuietPresentation()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleDunmerReclamationFocus(Int focusValue, String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
-        Manager.Trace(2, "Dunmer Reclamation focus ignored for non-Dunmer origin.")
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerReclamationFocus")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    Float layerWeight = GetDunmerCurseLayerWeight(2) * multiplier
-    if Manager.PDV_DunmerAncestorSubstrate && GetDunmerCurseLayerWeight(1) > 0.0
-        Manager.PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "reclamation_source_" + reason)
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocus", PDV_DevotionRules.ClampInt(focusValue, 0, 2))
-    StorageUtil.SetIntValue(None, "PDV.Dunmer.ReclamationFocusCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") + 1)
-    StorageUtil.SetStringValue(None, "PDV.Dunmer.LastReclamationReason", reason)
-    AwardDunmerReclamationFocusSignal(focusValue, layerWeight)
-    if focusValue == 0
-        Manager.SurfaceP2BookReadNotice(reason, "Azura's twilight", "The Reclamation turns toward her.")
-    elseIf focusValue == 1
-        Manager.SurfaceP2BookReadNotice(reason, "Boethiah's proving", "The Reclamation turns toward struggle.")
-    else
-        Manager.SurfaceP2BookReadNotice(reason, "Mephala's web", "The Reclamation turns toward secrets.")
-    endIf
-    Manager.Trace(2, "Dunmer Reclamation focus routed: " + reason + " weight " + layerWeight)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleDunmerHonorableVictory(Form victimForm)
-    ; Canonical player-alias ingress. It records only the clean-combat half; a
-    ; single caller cannot award until Story Manager independently confirms the
-    ; hostile, non-murder classification for the same victim.
-    RecordDunmerCombatVictoryEvidence(victimForm)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function RecordDunmerCombatVictoryEvidence(Form victimForm)
@@ -7627,21 +6017,7 @@ Function TryResolveDunmerHonorableVictory(Form victimForm)
 EndFunction
 
 Function HandleDunmerDeviationPrice(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
-        Manager.Trace(2, "Dunmer deviation price ignored for non-Dunmer origin.")
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.DunmerDeviationPrice")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Dunmer.DeviationPriceCount", StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") + 1)
-    StorageUtil.SetStringValue(None, "PDV.Dunmer.LastDeviationReason", reason)
-    AwardDunmerDeviationPriceSignal(multiplier)
-    SurfaceDunmerDeviationPriceNotice()
-    Manager.Trace(2, "Dunmer deviation price routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function SurfaceDunmerDeviationPriceNotice()
@@ -7696,14 +6072,7 @@ Bool Function TryAwardDunmerTwilightWindowSignal(String reason)
 EndFunction
 
 Function HandleDunmerOutdoorGoodDaedraShrine(String reason)
-    if TryAwardDunmerTwilightWindowSignal(reason)
-        if Manager.PDV_DunmerAncestorSubstrate && GetDunmerCurseLayerWeight(1) > 0.0
-            Manager.PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "good_daedra_altar_" + reason)
-        endIf
-        Manager.SendPrismaToast("journal", "good", "Good Daedra", "The Good Daedra hear the ash-prayer.")
-    elseIf GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER
-        Manager.SendPrismaToast("journal", "neutral", "Shrine quiet", "The shrine is quiet in this hour.")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function GetDunmerTwilightWindow(Float gameTime)
@@ -7945,55 +6314,19 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
 EndFunction
 
 Function HandleNordOldWaysState(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
-        Manager.Trace(2, "Nord Old Ways state ignored for non-Nord origin.")
-        return
-    endIf
-
-    if RouteNordFamily(reason, "PDV.Nord.OldWaysContextCount", "PDV.Nord.LastOldWaysReason", "PDV.Nord.LastOldWaysSignalTime", "Nord Old Ways state")
-        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
-            Manager.SurfaceP2BookReadNotice(reason, "Faith of the Holds", "The Divines honored in the holds stand nearer.")
-        else
-            Manager.SurfaceP2BookReadNotice(reason, "The Old Ways", "The elder gods of the Nords stand nearer.")
-        endIf
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleNordKyneTalosContext(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
-        Manager.Trace(2, "Nord Kyne/Talos context ignored for non-Nord origin.")
-        return
-    endIf
-
-    RouteNordFamily(reason, "PDV.Nord.KyneTalosContextCount", "PDV.Nord.LastKyneTalosReason", "PDV.Nord.LastKyneTalosSignalTime", "Nord Kyne/Talos context")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleNordHircineArkayEdge(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
-        Manager.Trace(2, "Nord Hircine/Arkay edge ignored for non-Nord origin.")
-        return
-    endIf
-
-    if RouteNordFamily(reason, "PDV.Nord.HircineArkayEdgeCount", "PDV.Nord.LastHircineArkayReason", "PDV.Nord.LastHircineArkaySignalTime", "Nord Hircine/Arkay edge")
-        Manager.SurfaceP2BookReadNotice(reason, "Hunt and grave", "Beast and rest blur at the edges.")
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetBookOfDaysDunmerAncestorLabel()
-    if !Manager.PDV_DunmerAncestorSubstrate
-        return "Unreadable"
-    endIf
-
-    Int tierValue = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-    if tierValue >= 3
-        return "Strong"
-    elseIf tierValue == 2
-        return "Steady"
-    elseIf tierValue == 1
-        return "Beginning"
-    endIf
-
-    return "Quiet"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function UsesNordOldWaysDeityNames()
@@ -8043,40 +6376,7 @@ Bool Function IsNordVampireSuppressed()
 EndFunction
 
 String Function GetNordSurveyBaseText()
-    String band = Manager.GetCurrentStandingBand()
-    if IsNordVampireSuppressed()
-        return "Standing: " + band + ". Sovngarde is closed while the thirst remains. Cure the curse to reopen the road."
-    endIf
-
-    String contextText = GetNordContextSurveyText()
-    if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
-        String focusedText = "Standing: " + band + ". " + Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " names you."
-        if IsFocusedPantheonBoonSuspended()
-            return focusedText + " The commitment remains, but its boon is suspended until 50 piety." + contextText
-        endIf
-        if StorageUtil.GetIntValue(None, "PDV.Neglect.ActiveCount") > 0
-            return focusedText + " The bond is thinning and needs attention." + contextText
-        endIf
-        return focusedText + " The bond holds." + contextText
-    endIf
-
-    if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD
-        Int baselineState = GetNordPantheonBaselineState()
-        if baselineState == Manager.NORD_BASELINE_NINE_DIVINES
-            return "Standing: " + band + ". You walk the Nine Divines as a Nord walks them: weather, hearth, hold, and the old breath underneath." + contextText
-        endIf
-
-        return "Standing: " + band + ". You honor the Old Ways broadly." + contextText
-    endIf
-
-    if Manager.PDV_HircinePath
-        String hircineSummary = Manager.PDV_HircinePath.GetPilotSummary()
-        if hircineSummary != "missing"
-            return "Standing: " + band + ". The hunt pulls at the edge of the Old Ways. No patron has claimed you, but the beast is listening." + contextText
-        endIf
-    endIf
-
-    return "Standing: " + band + ". No Nord patron has answered yet. Keep the rites, and the road will grow clearer." + contextText
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetNordContextSurveyText()
@@ -8107,49 +6407,11 @@ String Function GetNordAncestorLayerLabel()
 EndFunction
 
 String Function GetNordDevotionModeLabel()
-    if IsNordVampireSuppressed()
-        return "Vampire rupture"
-    endIf
-
-    if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
-        return "Focused " + Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity())
-    endIf
-
-    if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD
-        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
-            return "Broad Nine Divines"
-        endIf
-
-        return "Broad Old Ways"
-    endIf
-
-    return "Unsettled"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetDunmerSurveyText()
-    String band = Manager.GetCurrentStandingBand()
-    Int reclamationFocus = StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1)
-    String text = ""
-    if reclamationFocus == 0
-        text = "Azura holds your focus; the ash-prayer carries beneath her. Your standing with Azura is " + band + "."
-    elseIf reclamationFocus == 1
-        text = "Boethiah holds your focus; the ash-prayer carries beneath. Your standing with Boethiah is " + band + "."
-    elseIf reclamationFocus == 2
-        text = "Mephala holds your focus; the ash-prayer carries beneath. Your standing with Mephala is " + band + "."
-    else
-        text = "The ash-prayer holds and the three Good Daedra answer together. Your standing with the Reclamations is " + band + ". No single Reclamation has your name yet."
-    endIf
-
-    Int posture = StorageUtil.GetIntValue(None, "PDV.Curse.Dunmer.Posture")
-    if posture == 1
-        text = text + " Something in you pulls against the ancestors. The beast, or an unclean rite, makes the ash-prayer carry thinly."
-    elseIf posture == 2
-        text = text + " The ash-prayer meets no answer; the ancestors do not speak to the undead."
-    elseIf posture == 3
-        text = text + " The ancestors answer again; your posture is restored, but scarred."
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetDunmerAncestorLayerLabel()
@@ -8170,15 +6432,7 @@ String Function GetDunmerAncestorLayerLabel()
 EndFunction
 
 String Function GetDunmerReclamationFocusLabel(Int focusValue)
-    if focusValue == 0
-        return "Azura"
-    elseIf focusValue == 1
-        return "Boethiah"
-    elseIf focusValue == 2
-        return "Mephala"
-    endIf
-
-    return "unset"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetNordScarLabel()
@@ -8224,31 +6478,7 @@ Spell Function GetOrcTrialSpell(Int index)
 EndFunction
 
 Function SyncOrcTrialOfIron(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-    Int active = StorageUtil.GetIntValue(None, "PDV.OrcTrial.Active")
-    if active <= 0
-        return
-    endIf
-    Spell disc = GetOrcTrialSpell(active - 1)
-    if !disc
-        return
-    endIf
-
-    Int modeAtRite = StorageUtil.GetIntValue(None, "PDV.OrcTrial.ModeAtRite")
-    Bool eligible = (GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC) && IsOrcTrialCoherent(modeAtRite)
-    if eligible
-        if !playerRef.HasSpell(disc)
-            playerRef.AddSpell(disc, False)
-            Manager.SendPrismaToast("malacath", "good", "The Code holds", "Your discipline returns.")
-        endIf
-    else
-        if playerRef.HasSpell(disc)
-            playerRef.RemoveSpell(disc)
-            Manager.SendPrismaToast("malacath", "warning", "The discipline goes quiet", "The standing you swore it under has broken.")
-        endIf
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsOrcTrialCoherent(Int modeAtRite)
@@ -8262,8 +6492,7 @@ Bool Function IsOrcTrialCoherent(Int modeAtRite)
 EndFunction
 
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
-    ; Retained for save/script compatibility. Imperial sleep is not a civic or
-    ; pantheon signal under the pacing contract.
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleOrcStoryCraftForge(Location craftLocation)
@@ -8328,88 +6557,27 @@ Function HandleOrcStrongholdPresence(Int holdId, String reason)
 EndFunction
 
 Function HandleOrcBloodKinCrisis(String reason)
-    if !IsOrcOrigin() || !Manager.PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    RecordOrcLifeModeSignal(Manager.ORC_LIFE_MODE_STRONGHOLD, 1.0, reason)
-    ; Curated award (dead-wiring burndown Wave 1, 2026-07-07): this handler recorded
-    ; life-mode progress but -- unlike its CityDignity/LegionService/SelfMadeCommunity
-    ; siblings -- never dispatched the curated signal, so BLOOD_KIN could never bank.
-    ; The crisis is a one-shot quest milestone (The Cursed Tribe resolution); the latch
-    ; keeps a save-reload edge from ever double-banking it.
-    if StorageUtil.GetIntValue(None, "PDV.Signal.OrcBloodKinCrisis.Awarded") != 1
-        StorageUtil.SetIntValue(None, "PDV.Signal.OrcBloodKinCrisis.Awarded", 1)
-        AwardOrcBloodKinSignal(1.0)
-    endIf
-    Manager.Trace(2, "Orc Blood-Kin crisis routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleOrcCityDignity(String reason)
-    if !IsOrcOrigin() || !Manager.PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCityDignity")
-    RecordOrcLifeModeSignal(Manager.ORC_LIFE_MODE_CITY, multiplier, reason)
-    AwardOrcCityDignitySignal(multiplier)
-    Manager.Trace(2, "Orc City dignity routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleOrcLegionService(String reason)
-    if !IsOrcOrigin() || !Manager.PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.OrcLegionService")
-    RecordOrcLifeModeSignal(Manager.ORC_LIFE_MODE_LEGION_EXILE, multiplier, reason)
-    AwardOrcLegionServiceSignal(multiplier)
-    Manager.Trace(2, "Orc Legion or exile service routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleOrcSelfMadeCommunity(String reason)
-    if !IsOrcOrigin() || !Manager.PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.OrcSelfMadeCommunity")
-    RecordOrcLifeModeSignal(Manager.ORC_LIFE_MODE_CITY, multiplier, reason)
-    AwardOrcSelfMadeCommunitySignal(multiplier)
-    if multiplier > 0.0
-        MaybeShowOrcHearthHeldNotice(reason)
-    endIf
-    Manager.Trace(2, "Orc self-made community routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleOrcMalacathConduct(Int modeValue, String reason)
-    if !IsOrcOrigin() || !Manager.PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    EnsureOrcLifeModeInitialized()
-    if modeValue < Manager.ORC_LIFE_MODE_CITY || modeValue > Manager.ORC_LIFE_MODE_LEGION_EXILE
-        modeValue = Manager.PDV_OrcLifeModeTrack.GetCurrentState()
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.OrcMalacathConduct")
-    RecordOrcLifeModeSignal(modeValue, multiplier, reason)
-    AwardOrcBroadConductSignal(multiplier)
-    StorageUtil.AdjustFloatValue(None, "PDV.Orc.MalacathConduct", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.MalacathSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastMalacathSourceReason", reason)
-    Manager.SurfaceP2BookReadNotice(reason, "The Code of Malacath", "Malacath weighs your conduct against it.")
-    Manager.Trace(2, "Orc Malacath conduct routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleOrcOathBreak(String reason)
-    if !IsOrcOrigin()
-        return
-    endIf
-
-    AwardOrcOathBreakSignal()
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.OathBreakCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Orc.LastOathBreakReason", reason)
-    Manager.Trace(2, "Orc oath-break routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleOrcFourHoldsVisit(Int holdId, String reason)
@@ -8516,38 +6684,7 @@ String Function GetOrcLifeModeSubstrateToken(Int modeValue)
 EndFunction
 
 Function EvaluateOrcLifeModeAtDawn()
-    if !Manager.PDV_OrcLifeModeTrack || !IsOrcOrigin()
-        return
-    endIf
-
-    EnsureOrcLifeModeInitialized()
-    Int currentMode = Manager.PDV_OrcLifeModeTrack.GetCurrentState()
-
-    if !Manager.PDV_OrcLifeModeTrack.IsTransitionLockedOut()
-        Int bestMode = -1
-        Float bestWeight = -1.0
-        Int candidate = Manager.ORC_LIFE_MODE_CITY
-        while candidate <= Manager.ORC_LIFE_MODE_LEGION_EXILE
-            if candidate != currentMode && Manager.PDV_OrcLifeModeTrack.HasRecentEvidenceDays(candidate, 2, 7)
-                Float candidateWeight = StorageUtil.GetFloatValue(None, GetOrcLifeModeWeightKey(candidate))
-                if bestMode < 0 || candidateWeight > bestWeight
-                    bestMode = candidate
-                    bestWeight = candidateWeight
-                endIf
-            endIf
-            candidate += 1
-        endWhile
-
-        if bestMode >= 0
-            ApplyOrcLifeModeSwitch(bestMode, "orc_dawn_softswitch")
-            return
-        endIf
-    endIf
-
-    if currentMode > Manager.ORC_LIFE_MODE_CITY && !Manager.PDV_OrcLifeModeTrack.HasRecentEvidenceDays(currentMode, 1, 14)
-        ApplyOrcLifeModeSwitch(Manager.ORC_LIFE_MODE_CITY, "orc_dawn_lapse_to_city")
-        Manager.RequestPanelRefresh()
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function AwardOrcStrongholdForgeSignal(Float multiplier)
@@ -8784,11 +6921,7 @@ Int Function GetOrcStrongholdHoldId(Location newLocation)
 EndFunction
 
 String Function BuildImperialConcordatBookLine(String modeLabel)
-    if modeLabel == "Concordat Enforcer"
-        return "Under the White-Gold Concordat, you are a Concordat Enforcer."
-    endIf
-
-    return "Under the White-Gold Concordat, you are " + modeLabel + "."
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsImperialVampireStateActive()
@@ -9053,27 +7186,7 @@ Int Function GetImperialConcordatPressureForAction(String actionKey)
 EndFunction
 
 Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    if deity == Manager.LedgerRuntime.PDV_Akatosh
-        return Manager.PDV_Msg_Imperial_Akatosh_Offer
-    elseIf deity == Manager.PDV_Talos && IsImperialTalosOfferAllowed()
-        return Manager.PDV_Msg_Imperial_Talos_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Kynareth
-        return Manager.PDV_Msg_Imperial_Kynareth_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Mara
-        return Manager.PDV_Msg_Imperial_Mara_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Zenithar
-        return Manager.PDV_Msg_Imperial_Zenithar_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Arkay
-        return Manager.PDV_Msg_Imperial_Arkay_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Stendarr
-        return Manager.PDV_Msg_Imperial_Stendarr_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Julianos
-        return Manager.PDV_Msg_Imperial_Julianos_Offer
-    elseIf deity == Manager.LedgerRuntime.PDV_Dibella
-        return Manager.PDV_Msg_Imperial_Dibella_Offer
-    endIf
-
-    return None
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)
@@ -9113,45 +7226,11 @@ Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)
 EndFunction
 
 Function ApplyImperialCurseHandlers(Int oldState, Int newState, String reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 1)
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHistory", 1)
-        if Manager.PDV_ImperialAncestorSubstrate
-            Manager.PDV_ImperialAncestorSubstrate.SetMetric(0.0, "vampire_onset")
-            Manager.PDV_ImperialAncestorSubstrate.ClearSubstrateBoons()
-        endIf
-        StorageUtil.SetFloatValue(None, Manager.LedgerRuntime.GetBroadPantheonScratchKey(Manager.LedgerRuntime.BROAD_PANTHEON_IMPERIAL), 0.0)
-        Manager.FavorRuntime.ClearActiveFavor("imperial_vampire")
-    elseIf newState == 1
-        ; Werewolf strains but does not halt the civic path the way undeath does.
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
-    elseIf oldState == 2 && newState == 0
-        ; Cured: the halt lifts, but VampireHistory stays set as the scar.
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
-        if Manager.PDV_ImperialAncestorSubstrate
-            Manager.PDV_ImperialAncestorSubstrate.SetMetric(20.0, "vampire_cure_seed")
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Imperial.VampireHalt", 0)
-    endIf
-    Manager.LedgerRuntime.SyncBroadPantheonRewards(Game.GetPlayer())
-    SyncImperialRewards(Game.GetPlayer())
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ApplyOrcCurseHandlers(Int oldState, Int newState, String reason)
-    if newState == 2
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 2)
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.VampireScar", 1)
-    elseIf newState == 1
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 1)
-        if !Manager.GetSuppressCurseTransitionOutputs()
-            EmitMalacathCurseCodeRuptureMinus("werewolf_onset_" + reason)
-        endIf
-    elseIf oldState != 0
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 0)
-    else
-        StorageUtil.SetIntValue(None, "PDV.Curse.Orc.CodePressure", 0)
-    endIf
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function ShowOrcNotification(Message messageRecord, String fallbackText)
@@ -9186,21 +7265,7 @@ Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppres
 EndFunction
 
 Function ApplyOrcInitialChoice(Int modeValue, String reason)
-    Manager.BeginRaceSetupQuietPresentation(reason)
-    if Manager.PDV_OrcLifeModeTrack
-        Manager.PDV_OrcLifeModeTrack.SetState(PDV_DevotionRules.ClampInt(modeValue, Manager.ORC_LIFE_MODE_CITY, Manager.ORC_LIFE_MODE_LEGION_EXILE), reason)
-        Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(GetOrcLifeModeLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "malacath", True, 3, "", True)
-    endIf
-    ; Malacath is the single innate Orc spine (not chosen, not offered) -- activate him as the
-    ; patron at origin so the life-mode reward ladder (gated on _activeDeity==PDV_Malacath) is
-    ; reachable in normal play; without this the whole Malacath progression was a dead no-op.
-    ; Owner ruling 2026-06-27.
-    if Manager.PDV_Malacath
-        Manager.LedgerRuntime.SetActiveDeity(Manager.PDV_Malacath)
-    endIf
-    Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
-    Manager.EndRaceSetupQuietPresentation()
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Int Function GetImperialCivicFamilyFromSource(String sourceId)
@@ -9284,202 +7349,35 @@ Function AwardImperialPatronCivicSignal(Float multiplier)
 EndFunction
 
 Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL || multiplier <= 0.0 || IsImperialVampireStateActive()
-        return
-    endIf
-
-    Int tierBefore = 0
-    if Manager.PDV_ImperialAncestorSubstrate
-        Float metricBefore = Manager.PDV_ImperialAncestorSubstrate.GetMetric()
-        tierBefore = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-        Manager.PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(multiplier, reason)
-        Int tierAfter = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Your public service steadies your devotion.", "journal", GetImperialCivicTierName())
-    endIf
-
-    StorageUtil.AdjustFloatValue(None, "PDV.Imperial.AncestralStanding", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Imperial.AncestorSpineSourceCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastAncestorSpineReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Imperial.LastAncestorSpineTime", Utility.GetCurrentGameTime())
-    Manager.Trace(2, "Imperial ancestor spine routed with multiplier " + multiplier)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function RunDawnRefreshImperialAncestor()
-    if !Manager.PDV_ImperialAncestorSubstrate
-        return
-    endIf
-
-    Manager.PDV_ImperialAncestorSubstrate.ProcessCivicDawn(IsImperialVampireStateActive(), "dawn")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleImperialCivicService(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
-        Manager.Trace(2, "Imperial civic service ignored for non-Imperial origin.")
-        return
-    endIf
-    if IsImperialVampireStateActive()
-        Manager.Trace(2, "Imperial civic service blocked by vampirism: " + reason)
-        return
-    endIf
-
-    Int civicFamily = GetImperialCivicFamilyFromSource(reason)
-    if civicFamily == Manager.IMPERIAL_CIVIC_UNKNOWN
-        Manager.Trace(1, "Imperial civic service ignored: missing civic family token in " + reason)
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialCivicService." + GetImperialCivicFamilyLabel(civicFamily))
-    if multiplier <= 0.0
-        return
-    endIf
-
-    ; Legacy CivicServiceCount is frozen after broad-pool migration.
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicServiceReason", reason)
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastCivicFamily", GetImperialCivicFamilyLabel(civicFamily))
-    StorageUtil.SetFloatValue(None, "PDV.Imperial.LastCivicServiceTime", Utility.GetCurrentGameTime())
-    AwardImperialCivicFamilySignal(civicFamily, multiplier)
-    AwardImperialAncestorSpinePulse(multiplier, reason)
-    Manager.Trace(2, "Imperial civic service routed: " + reason + " family " + GetImperialCivicFamilyLabel(civicFamily))
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleImperialTalosPressure(Bool isPrivate, String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
-        Manager.Trace(2, "Imperial Talos pressure ignored for non-Imperial origin.")
-        return
-    endIf
-    if IsImperialVampireStateActive()
-        Manager.Trace(2, "Imperial Talos pressure blocked by vampirism: " + reason)
-        return
-    endIf
-
-    String repeatKey = "PDV.Signal.ImperialPublicTalosPressure"
-    if isPrivate
-        repeatKey = "PDV.Signal.ImperialPrivateTalosPressure"
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier(repeatKey)
-    if multiplier <= 0.0
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
-
-    if isPrivate
-        StorageUtil.SetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") + 1)
-        if Manager.PDV_Talos
-            Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Talos, Manager.PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
-        endIf
-    else
-        StorageUtil.SetIntValue(None, "PDV.Imperial.PublicTalosPressureCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PublicTalosPressureCount") + 1)
-        if Manager.PDV_Talos
-            Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Talos, Manager.PDV_Talos.SIGNAL_DEFIANCE_MILESTONE, None, multiplier)
-        endIf
-    endIf
-
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastTalosPressureReason", reason)
-    AwardImperialAncestorSpinePulse(multiplier, reason)
-    Manager.SurfaceP2BookReadNotice(reason, "The name of Talos", "The question of the Ninth presses harder.")
-    Manager.Trace(2, "Imperial Talos pressure routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Function HandleImperialPatronCivicFavor(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
-        Manager.Trace(2, "Imperial patron civic favor ignored for non-Imperial origin.")
-        return
-    endIf
-    if IsImperialVampireStateActive()
-        Manager.Trace(2, "Imperial patron civic favor blocked by vampirism: " + reason)
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.ImperialPatronCivicFavor")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Imperial.PatronCivicFavorCount", StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") + 1)
-    StorageUtil.SetStringValue(None, "PDV.Imperial.LastPatronCivicFavorReason", reason)
-    AwardImperialPatronCivicSignal(multiplier)
-    AwardImperialAncestorSpinePulse(multiplier, reason)
-    Manager.Trace(2, "Imperial patron civic favor routed: " + reason)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetOrcSurveyText()
-    if !Manager.PDV_OrcLifeModeTrack
-        return "Malacath watches, but the shape of your life has not settled yet. Carry the code a while, then survey again."
-    endIf
-
-    EnsureOrcLifeModeInitialized()
-    String band = Manager.GetCurrentStandingBand()
-    Int mode = Manager.PDV_OrcLifeModeTrack.GetCurrentState()
-    String text = ""
-    if mode == Manager.ORC_LIFE_MODE_STRONGHOLD
-        text = "You carry Malacath's code inside the stronghold, where forge, kin, and oath hold it with you. Standing: " + band + "."
-    elseIf mode == Manager.ORC_LIFE_MODE_LEGION_EXILE
-        text = "You carry Malacath's code under foreign discipline. The contract is the oath; the endurance is the strength. Standing: " + band + "."
-    else
-        text = "You carry Malacath's code in the city, alone, with no stronghold to confirm it. Standing: " + band + ". Malacath watches what no one else does."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") > 0
-        text = text + " You have sought out the old tellings of Malacath, and kept them."
-    endIf
-    Int cursePressure = StorageUtil.GetIntValue(None, "PDV.Curse.Orc.CodePressure")
-    if cursePressure == 2
-        text = text + " The thirst sets you outside the test until it is cured."
-    elseIf cursePressure == 1
-        text = text + " The beast in you is being weighed against the code, not turned away from."
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetImperialSurveyText()
-    String band = Manager.GetCurrentStandingBand()
-    String concordat = GetImperialConcordatLabel()
-    String text = ""
-    if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
-        text = Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
-        if IsFocusedPantheonBoonSuspended()
-            text = text + " The commitment remains, but its boon is suspended until 50 piety."
-        endIf
-    else
-        text = "You worship the Nine Divines broadly, and your standing is " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.PrivateTalosPressureCount") > 0
-        text = text + " You have kept Talos at hidden shrines, away from watching eyes."
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.PublicTalosPressureCount") > 0
-        text = text + " You have honored Talos in the open, where the Concordat forbids it."
-    endIf
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.PatronCivicFavorCount") > 0
-        text = text + " Your patron has taken note of the civic good you have done in their name."
-    endIf
-    if Manager.PDV_ImperialAncestorSubstrate
-        text = text + " Civic practice: " + GetImperialCivicTierName() + "."
-    endIf
-
-    if Manager.PDV_ConcordatStandingTrack && Manager.PDV_ConcordatStandingTrack.HasExtremeResetGate()
-        text = text + " You have drifted far enough on the Talos question that a deliberate change of course could now bring you back."
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1 || (Manager.PDV_CurseStateService && Manager.PDV_CurseStateService.GetCurseState() == 2)
-        text = text + " Curse posture: the civic faith is halted while the undeath holds."
-    elseIf Manager.PDV_CurseStateService && Manager.PDV_CurseStateService.GetCurseState() == 1
-        text = text + " Curse posture: the civic faith runs strained while the beast is in you."
-    elseIf StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHistory") == 1
-        text = text + " Curse posture: the civic faith is whole again, but the community religion remembers the absence."
-    endIf
-
-    return text
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetImperialConcordatLabel()
-    if Manager.PDV_ConcordatStandingTrack
-        return FormatImperialConcordatLabel(Manager.PDV_ConcordatStandingTrack.GetStateLabel())
-    endIf
-
-    return "Uncommitted"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function FormatImperialConcordatLabel(String label)
