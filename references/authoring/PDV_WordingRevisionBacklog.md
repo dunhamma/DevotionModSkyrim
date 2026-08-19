@@ -42,3 +42,32 @@ in-source:
 - `SurfaceDaedricLapse` (pact lapse) -- [PDV__ManagerQuest.psc:5402](../../live-source/Scripts/Source/PDV__ManagerQuest.psc:5402)
 - Generic curse toast title/message -- [PDV__ManagerQuest.psc:21172](../../live-source/Scripts/Source/PDV__ManagerQuest.psc:21172)
 - Generic curse Book of Days entry -- [PDV__ManagerQuest.psc:21652](../../live-source/Scripts/Source/PDV__ManagerQuest.psc:21652)
+
+
+---
+
+## MCM Status page -- redundant restatement (owner-flagged 2026-08-19)
+
+Observed live on a Nord fresh save (broad Nine Divines). The Status/summary page restates the
+same worship fact several times:
+
+| Row | Value (Nord example) |
+|---|---|
+| summary | `BROAD WORSHIP \| UNPROVEN` |
+| path | `PILGRIM'S PATH` |
+| mode | `BROAD NINE DIVINES` |
+| Patron | `BROAD WORSHIP` |
+| Standing | `UNPROVEN` |
+| Favor | `NORD BROAD NINE DIVINES` |
+
+- `summary` is literally `Patron` + `Standing` concatenated -- pure duplication of the two rows
+  directly beneath it.
+- `Patron` / `mode` / `path` / `Favor` all encode "broad Nine Divines" four different ways;
+  "BROAD" appears 4x and "NINE DIVINES" 3x on one screen.
+
+**Direction (defer to the MCM by-module rebuild / player-copy pass, NOT now):** collapse to a
+single headline plus only the rows that add information. Candidate shape -- one `Devotion`
+headline line ("Broad Nine Divines - Unproven"), then `Path`, `Favor`, `Curse`, `Neglect`;
+drop the standalone `summary`, `Patron`, `mode`, `Standing` rows once their content is folded
+in. Confirm no other surface reads those individual rows before removing them.
+- **Status:** OPEN -- deferred to MCM rebuild.
