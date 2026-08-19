@@ -92,6 +92,18 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetKyneFavorSummary()
     elseIf detailKey == "medallion-entries"
         return GetNordMedallionEntriesJson()
+    elseIf detailKey == "broad-lane-name"
+        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
+            return "Faith of the Holds"
+        endIf
+        return "Old Ways"
+    elseIf detailKey == "broad-lane-symbol"
+        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
+            return "akatosh"
+        endIf
+        return "kyne"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetNordMedallionEntriesJson())
     endIf
 
     return ""
@@ -110,6 +122,11 @@ Int Function GetOriginDetailValue(String detailKey)
         return PDV_DevotionRules.BoolToInt(IsKyneNeglectActive())
     elseIf detailKey == "kyne-commitment-ready"
         return PDV_DevotionRules.BoolToInt(IsKyneCommitmentSignalReady())
+    elseIf detailKey == "broad-lane-service-count"
+        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
+            return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_NORD_NINE) as Int
+        endIf
+        return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_NORD_OLD) as Int
     endIf
 
     return 0

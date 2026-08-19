@@ -97,6 +97,8 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetKhajiitMedallionEntriesJson()
     elseIf detailKey == "survey"
         return GetKhajiitSurveyText()
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetKhajiitMedallionEntriesJson())
     endIf
 
     return ""

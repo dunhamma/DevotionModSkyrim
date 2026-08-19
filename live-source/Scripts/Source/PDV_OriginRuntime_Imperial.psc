@@ -669,6 +669,12 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetImperialCivicTierName()
     elseIf detailKey == "curse-posture"
         return GetImperialCursePostureLabel()
+    elseIf detailKey == "broad-lane-name"
+        return "The Divines' Regard"
+    elseIf detailKey == "broad-lane-symbol"
+        return "akatosh"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetImperialMedallionEntriesJson())
     endIf
 
     return ""
@@ -690,6 +696,8 @@ Int Function GetOriginDetailValue(String detailKey)
             return 1
         endIf
         return 0
+    elseIf detailKey == "broad-lane-service-count"
+        return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_IMPERIAL) as Int
     endIf
 
     return 0

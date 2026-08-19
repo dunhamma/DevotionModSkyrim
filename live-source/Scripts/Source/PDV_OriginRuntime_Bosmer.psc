@@ -1557,6 +1557,12 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetBosmerNativeMedallionEntriesJson()
     elseIf detailKey == "focus-medallion-entries"
         return GetBosmerFocusMedallionEntriesJson()
+    elseIf detailKey == "broad-lane-name"
+        return "Y'ffre's Broad Faith"
+    elseIf detailKey == "broad-lane-symbol"
+        return "yffre"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetBosmerNativeMedallionEntriesJson()) + "," + MedallionSection("substrate_focus", "Path focus", GetBosmerFocusMedallionEntriesJson())
     endIf
 
     return ""
@@ -1583,6 +1589,8 @@ Int Function GetOriginDetailValue(String detailKey)
         return BosmerFlagToInt(HasBosmerTerminalRenunciation())
     elseIf detailKey == "path-neglected"
         return BosmerFlagToInt(IsBosmerPathNeglected())
+    elseIf detailKey == "broad-lane-service-count"
+        return GetBosmerFavorSignalCount()
     endIf
 
     return 0

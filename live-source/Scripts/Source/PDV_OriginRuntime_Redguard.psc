@@ -1087,6 +1087,12 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetRedguardSummary()
     elseIf detailKey == "medallion-entries"
         return GetRedguardMedallionEntriesJson()
+    elseIf detailKey == "broad-lane-name"
+        return "Ancestors' Regard"
+    elseIf detailKey == "broad-lane-symbol"
+        return "tu-whacca"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetRedguardMedallionEntriesJson())
     endIf
 
     return ""
@@ -1105,6 +1111,8 @@ Int Function GetOriginDetailValue(String detailKey)
             return 1
         endIf
         return 0
+    elseIf detailKey == "broad-lane-service-count"
+        return StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount")
     endIf
 
     return 0

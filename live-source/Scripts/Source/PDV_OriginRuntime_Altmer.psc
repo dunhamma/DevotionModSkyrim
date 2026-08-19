@@ -1845,6 +1845,12 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetAltmerCursePublicLabel()
     elseIf detailKey == "medallion-entries"
         return GetAltmerMedallionEntriesJson()
+    elseIf detailKey == "broad-lane-name"
+        return "Orthodox Faith"
+    elseIf detailKey == "broad-lane-symbol"
+        return "auri-el"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetAltmerMedallionEntriesJson())
     endIf
 
     return ""
@@ -1871,6 +1877,8 @@ Int Function GetOriginDetailValue(String detailKey)
         return AltmerFlagToInt(IsSyrabaneSignalEligible())
     elseIf detailKey == "practice-line-json-valid"
         return AltmerFlagToInt(IsAltmerPracticeLineJsonValid())
+    elseIf detailKey == "broad-lane-service-count"
+        return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
     endIf
 
     return 0

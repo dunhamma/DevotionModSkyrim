@@ -1037,6 +1037,12 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetOrcLifeModeWeightKey(GetActiveOrcRewardMode())
     elseIf detailKey == "life-mode-substrate-token"
         return GetOrcLifeModeSubstrateToken(GetActiveOrcRewardMode())
+    elseIf detailKey == "broad-lane-name"
+        return "Malacath's Code"
+    elseIf detailKey == "broad-lane-symbol"
+        return "malacath"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetOrcMedallionEntriesJson())
     endIf
 
     return ""
@@ -1047,6 +1053,8 @@ Int Function GetOriginDetailValue(String detailKey)
         return GetActiveOrcRewardMode()
     elseIf detailKey == "four-holds-visits"
         return GetOrcFourHoldsVisitCount()
+    elseIf detailKey == "broad-lane-service-count"
+        return StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount")
     endIf
 
     return 0

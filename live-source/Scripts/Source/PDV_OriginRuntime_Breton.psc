@@ -1311,6 +1311,12 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetBretonMedallionEntriesJson()
     elseIf detailKey == "patron-survey-sentence"
         return GetBretonPatronSurveySentence(GetBretonTraditionValue())
+    elseIf detailKey == "broad-lane-name"
+        return "Breton Tradition"
+    elseIf detailKey == "broad-lane-symbol"
+        return "journal"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetBretonMedallionEntriesJson())
     endIf
 
     return ""
@@ -1342,6 +1348,8 @@ Int Function GetOriginDetailValue(String detailKey)
             return 1
         endIf
         return 0
+    elseIf detailKey == "broad-lane-service-count"
+        return GetBretonPracticeCount(GetBretonTraditionValue())
     endIf
 
     return 0

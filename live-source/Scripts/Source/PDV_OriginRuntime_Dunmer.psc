@@ -91,6 +91,12 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetDunmerAncestorSummary()
     elseIf detailKey == "medallion-entries"
         return GetDunmerMedallionEntriesJson()
+    elseIf detailKey == "broad-lane-name"
+        return "Reclamation Communion"
+    elseIf detailKey == "broad-lane-symbol"
+        return "ancestor"
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetDunmerMedallionEntriesJson())
     endIf
 
     return ""
@@ -105,6 +111,8 @@ Int Function GetOriginDetailValue(String detailKey)
         return GetDunmerTwilightWindow(Utility.GetCurrentGameTime())
     elseIf detailKey == "at-declared-home"
         return PDV_DevotionRules.BoolToInt(IsPlayerAtDunmerDeclaredHome(Game.GetPlayer()))
+    elseIf detailKey == "broad-lane-service-count"
+        return StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount")
     endIf
 
     return 0

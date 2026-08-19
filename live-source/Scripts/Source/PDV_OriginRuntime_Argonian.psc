@@ -71,6 +71,8 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetArgonianMedallionEntriesJson()
     elseIf detailKey == "survey"
         return GetArgonianSurveyText()
+    elseIf detailKey == "medallion-sections"
+        return MedallionSection("native", "Native worship", GetArgonianMedallionEntriesJson())
     endIf
 
     return ""
