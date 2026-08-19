@@ -193,3 +193,77 @@ is not in the Quiet list, classifies "Noted", and does call `SendPrismaEventToas
 retry that proves the path. Also note `TryApplyContextualFavor` skips the toast entirely when
 `Manager.IsP2BookNoticeReason(reason)`, so don't drive the retry through a book-notice reason.
 Status: wiring reads correct **on source inspection**; runtime remains UNPROVEN.
+
+---
+
+## UPDATE -- 2026-08-19 session 4: WORKPLAN AGREED, LANE A COMPLETE
+
+Full workplan (lanes, waves, decisions) is in the session plan; decisions D1-D10 are summarised
+below because they change how the remaining modules get built.
+
+### Decisions locked (owner-approved)
+- **D1 `PDV_OriginRuntimeBase` owns the gain provider**, NOT `PDV_Origin`. `PDV_Origin.psc` is a
+  519-line one-shot bootstrap quest (detect race, write the origin global, seed 3 ledgers) -- the
+  seam spec's Section 3 targets it literally and is wrong. Two of the four multipliers
+  (`GetOrcLifeModeGainMultiplier`, `GetImperialCurseGainMultiplier`) are hard race gates that
+  already call into `OriginRuntime`, so adapters delete the gate entirely. Because
+  `PDV_GainModifierProvider extends Quest`, the base stays IS-A Quest and can still host. Only one
+  adapter is instantiated per playthrough, so `Providers[]` holds one ORIGIN entry either way.
+  **Correct the seam spec before building from it**: wrong provider script, missing decay site, and
+  line citations (:15601, :13256) that cannot resolve against a 12,135-line manager.
+- **D2 Decay routes through `Providers[]` too.** THREE consumer sites exist, the spec covers two:
+  award (`RunGainPipeline`, PDV_DevotionLedger.psc:3253), dawn (`ProcessDawn` :2027-2033) and
+  **decay (:2287)**. Add a decay phase so one scalar has one source.
+- **D3 Split the stigma hybrid**: Breton Hidden Art branch -> Breton adapter (carry
+  `IsBretonHiddenArtDaedricOfferDeity` with it); Hircine branch stays in DAEDRIC.
+  **Dunmer needs NO work** -- Good Daedra worship is exempted structurally, not by branch: Azura /
+  Boethiah / Mephala exist as both `PDV_DaedricPath_*` (stigma-bearing) and `PDV_Deity_*`
+  (Reclamation patron), and the cast in `ApplyQuestReactionStigma` (:1805) means a Reclamation never
+  reaches the stigma path. Khajiit/Azurah is clean the same way. Breton is the ONLY leak.
+- **D4** MCM: debug pages only (State/Daedric/Pacing), after the adapter split. **D5** gate resolver
+  across all blind gates. **D6** DAEDRIC starts now (the seam needs it); PRISMA/RECOGNITION follow
+  the ORIGIN interface. **D7** ORIGIN: wire light first, consolidate the 557 properties after.
+  **D8** PRISMA gets a presentation hook designed BEFORE extraction -- it carries 27 race tests
+  across 115 fns including 8 full ten-race switches (DAEDRIC has 1, RECOGNITION 4); PRISMA is the
+  real race-leak cost centre. **D9** FAVOR: a new favor REPLACES the active one (~5 lines, open).
+  **D10** supervision: mechanical work unattended, design/ESP work supervised.
+
+### LANE A COMPLETE (commit afe23e9b)
+`familySourceText()` added to `tools/lib/pdv_symbol_home.mjs`: raw manager text first and verbatim,
+then each extracted module with qualifiers stripped. Strictly additive, and it skips modules not yet
+extracted, so it stays correct through DAEDRIC/PRISMA/RECOGNITION with no per-move patching.
+Adopted across 24 audit gates plus the shared `tools/lib/pdv_matrix_vocab.mjs`.
+
+Verdicts by exit code, never grepped:
+- `pdv_substrate_pacing_audit`: exit 1 / 28 FAILs -> **exit 0 / 0** (reference case)
+- 41-tool pinned suite: **24 red / 100 FAILs -> 12 red / 18 FAILs**
+- self-tests green throughout (substrate 13, broad-pantheon 20, felt-trace 10, pacing-sim 5, dislike 5)
+
+**`pdv_signal_floor_audit.mjs` was blind AND generative** -- it had been regenerating
+`PDV_SignalFloorLedger.csv` with 35 fabricated UNDER-FLOOR rows (HEAD has 0). With the resolver it
+regenerates byte-identical to HEAD. Any conclusion drawn from that ledger while it was blind is void.
+
+A0 (RegionMap reconciliation) turned out NOT to be a prerequisite: the family list needs only
+`targetScript` names, which are all correct. RegionMap function-list staleness (stale line numbers,
+2 entries for deleted fns, the `GetCurseGainMultiplier` mis-tag) remains Lane D debt.
+
+### Real findings surfaced by the repaired gates -- NOT fixed, for a human
+- `LIKES_DISLIKES_VERSION` pinned at 20 in two gates; `PDV_DevotionLedger.psc:59` ships **23**.
+- `AwardPietyFromLikesDislikes` signature drifted from what the dislike gate pins.
+- `PDV_Bless_Breton_Tradition_T1` and `PDV_Bless_Redguard_AncestorSpine_T1` appear in no selector.
+- Khajiit focus-lane quiet-emergence cue (`SurfaceTransition("emergence", focusDeity...)`) is absent.
+- azura (4) and Syrabane (5) rows in `PDV_DeityLikesDislikes.csv` carry no disfavor domain.
+- `RegisterQuestReactionMatrixFile` no longer exists; a coverage gate still pins it.
+- `PDV_FeltEffectRegistry.json` regenerates with a large diff vs HEAD -- worth its own look.
+
+### Operational note
+**This environment's bash heredocs silently eat one backslash level.** Regex literals written
+through a heredoc arrive corrupted and the failure is silent. Build backslashes with
+`String.fromCharCode(92)` or use a dedicated edit tool, and always read the line back.
+
+Never commit the regenerated reports (felt registry, felt trace, pacing sim, signal floor, quest
+cross-gen) -- running the gates rewrites them; revert before staging.
+
+### Next
+Wave 1 remainder: B1 base virtual interface design (supervised -- gates B2), DAEDRIC extraction,
+D-2/D-3 debt. The 2.0 rebuild artifact was refreshed this session (same URL).
