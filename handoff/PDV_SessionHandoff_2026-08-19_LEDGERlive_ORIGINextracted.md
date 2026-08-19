@@ -267,3 +267,63 @@ cross-gen) -- running the gates rewrites them; revert before staging.
 ### Next
 Wave 1 remainder: B1 base virtual interface design (supervised -- gates B2), DAEDRIC extraction,
 D-2/D-3 debt. The 2.0 rebuild artifact was refreshed this session (same URL).
+
+---
+
+## UPDATE -- 2026-08-19 session 5: WAVE 1 COMPLETE
+
+| Item | Commit | State |
+|---|---|---|
+| Lane A -- gate resolver across the audit suite | `afe23e9b` | done |
+| B1 -- ORIGIN adapter interface ADR | `311796d2` | **done, AWAITING OWNER REVIEW** |
+| Lane D -- release manifest reconciliation | `60f8633f` | done |
+| Lane D -- FAVOR supersede (D9) | `c9a5e7df` | done |
+| Lane C -- DAEDRIC extraction | `3d77709b` | done, module INERT |
+
+### B1 -- the interface is designed but NOT yet owner-reviewed
+`references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md`. Measured, not estimated:
+**341 distinct `OriginRuntime` verbs / 707 call sites; 288 verbs / 478 calls are race-specific.**
+That kills Option B (it would need ~288 virtual stubs). Option A lands as **18 virtuals**.
+
+The collapse is justified by data: the neglect predicate exists on all ten races under ten
+different names; so does the primary state label. `GetSurveyText` on 9, `ApplyCurseHandlers` on 10.
+The 91 `Handle*` verbs deliberately do NOT align by name -> one keyed `HandleContextualSignal`,
+which alone removes 94 named calls from `PDV_EventBus`.
+
+**Key de-risking:** each adapter override DELEGATES to the existing named function, so all ~664
+moved bodies still reconstruct against `origin_golden.json`. Parity survives the split; behavior
+review narrows to the dispatch tables plus remapped call sites.
+
+**Honest cost recorded in the ADR:** `GetPlayerOriginRaceIndex` stays at 101 calls and external
+race-index branching is NOT removed by this pass. Do not read the ADR as "switchboards gone".
+
+Proposes a durable gate: no `OriginRuntime.<RaceName>` call may survive outside the adapters.
+
+### DAEDRIC (`3d77709b`)
+47 fns moved; **manager 444 -> 397 EndFunction blocks, exactly 47 removed** -- the arithmetic
+closes, so nothing was lost or duplicated. Parity 1643/1644 byte-for-byte. The single deviation is
+necessary, not sloppy: `_dawnHadActivity = True` -> `Manager.SetDawnHadActivity(True)`, verified a
+one-line pass-through (Papyrus cannot reach another script's private vars). Compile 0/0 across 4
+scripts, substrate gate exit 0, ASCII clean. **Module INERT until supervised ESP wiring.**
+
+Two consequences to carry:
+- Per D3 `GetDaedricStigmaGainMultiplier` moved WHOLE; its Breton branch waits for the Breton adapter.
+- LEDGER's `RunGainPipeline` now reaches `Manager.DaedricRuntime.GetDaedricStigmaGainMultiplier`.
+  The interim reach-back debt MOVED rather than went away; fold it into the `Providers[]` work.
+
+### PROCESS FAILURE -- read this before the next fan-out
+Lanes C and D ran concurrently **in the same worktree**, against the plan's own instruction to use
+worktree isolation. Lane C's cleanup reverted Lane D's FAVOR edit; `git status` showed the file
+modified, then it was silently clean again with the original suppression intact. It was caught only
+because the diff was checked rather than the agent's report believed.
+
+**Rules going in:** one worktree per concurrent lane that mutates source; commit each lane's work
+as soon as it verifies (a commit survives a stray `git checkout --`); and verify every agent claim
+against the tree before reporting it.
+
+### NEXT -- Wave 2
+1. **Owner: review the B1 ADR** before B2 builds 10 adapters on it. This is the gate.
+2. B2 adapter fan-out: 5 agents by tranche pair (t1 Altmer/Bosmer, t2 Khajiit/Argonian,
+   t3 Breton/Redguard, t4 Nord/Dunmer, t5 Orc/Imperial), **each in its own worktree**.
+3. Supervised: DAEDRIC ESP wiring + GATE 0.5 (needs a fresh save).
+4. Artifact refresh checkpoint 1 (already done this session; refresh again after DAEDRIC wiring).
