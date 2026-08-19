@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
-  "expectedEntryCount": 236,
-  "scriptPairCount": 101,
+  "expectedEntryCount": 241,
+  "scriptPairCount": 102,
   "releaseMetadata": [
     "CHANGELOG.txt",
     "README.txt"
@@ -37,6 +37,9 @@
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_RaceMap.json",
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_RaceMap_README.txt",
     "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_TemporaryRaceMap.json",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_Core_FreeformRiften02.json",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_Core_FreeformRiften03.json",
+    "SKSE/Plugins/StorageUtilData/PlayerDevotion/QuestStageAdapters/PDV_QSA_Core_Staada.json",
     "Scripts/PDV_ActionRouter.pex",
     "Scripts/PDV_AltmerPracticeFocus.pex",
     "Scripts/PDV_ArgonianHistSapToken.pex",
@@ -93,6 +96,7 @@
     "Scripts/PDV_Deity_Yffre.pex",
     "Scripts/PDV_Deity_Zen.pex",
     "Scripts/PDV_Deity_Zenithar.pex",
+    "Scripts/PDV_DevotionLedger.pex",
     "Scripts/PDV_DiegeticDeps.pex",
     "Scripts/PDV_DiegeticDirector.pex",
     "Scripts/PDV_DunmerAncestralUrn.pex",
@@ -199,6 +203,7 @@
     "PDV_Deity_Yffre",
     "PDV_Deity_Zen",
     "PDV_Deity_Zenithar",
+    "PDV_DevotionLedger",
     "PDV_DiegeticDeps",
     "PDV_DiegeticDirector",
     "PDV_DunmerAncestralUrn",
