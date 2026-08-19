@@ -1,7 +1,7 @@
 Scriptname PDV_OriginRuntime_Imperial extends PDV_OriginRuntimeBase
 
 ; ORIGIN adapter -- Imperial lane (tranche t5). Per
-; references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md: the base declares 19
+; references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md: the base declares 21
 ; virtuals with inert defaults; this adapter overrides only what the Imperial
 ; lane implements and delegates each override to the existing named Imperial
 ; function, whose body is copied here VERBATIM so the split stays provable
@@ -612,16 +612,21 @@ EndFunction
 ; verbatim lane function above -- the hand-reviewable dispatch layer the ADR
 ; calls out as the one part parity cannot cover.
 ;
-; NOT overridden here, deliberately: ApplyInitialChoice (the Imperial lane has
-; no initial-choice entry point), ApplyCurseHandlers (the frozen no-arg
-; signature cannot carry ApplyImperialCurseHandlers' oldState+newState+reason),
-; GetFormalCommitmentOfferMessage (the lane function returns a Message and takes
-; a PDV_DeityBase; the frozen virtual returns String and takes nothing),
-; HandleLocationChange and ShowOriginNotification (no Imperial lane function).
-; See the manifest.
+; NOT overridden here, deliberately, because the Imperial lane has no matching
+; function to delegate to (checked by name against PDV_OriginRuntimeBase, not
+; assumed): ApplyInitialChoice -- the Imperial race is absent from
+; PDV__ManagerQuest.ApplyStartupChoice and there is no ApplyImperialInitialChoice;
+; EnsureRuntimeWiring -- no Imperial init entry point; HandleLocationChange -- no
+; HandleImperialLocationChange; ShowOriginNotification / ShowOriginMessage -- no
+; ShowImperial* notifier (the lane surfaces through Manager.SendPrismaToast and
+; Manager.SurfaceP2BookReadNotice directly). See the manifest.
 ; ============================================================================
 
 ; -- Lifecycle --
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyImperialCurseHandlers(oldState, newState, reason)
+EndFunction
+
 Function EvaluateAtDawn()
     RunDawnRefreshImperialAncestor()
 EndFunction
@@ -691,32 +696,45 @@ Int Function GetOriginDetailValue(String detailKey)
 EndFunction
 
 ; -- Signals --
-; The frozen signature carries no `String reason`, so the dispatch substitutes
-; the signal id. That is a real (small) delta in stored reason / trace text and
-; is called out in the manifest for the ADR's hand behavior review.
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+; `reason` is threaded through UNCHANGED. HandleImperialCivicService parses its
+; reason for the civic-family token (GetImperialCivicFamilyFromSource) and
+; returns early when none is present, so substituting the signalId here would
+; not merely change stored text -- it would make every civic-service signal a
+; no-op. The signalId selects the handler and nothing else.
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "sleep"
         Actor sleepActor = contextForm as Actor
         if !sleepActor
             sleepActor = Game.GetPlayer()
         endIf
-        HandleImperialSleepEvents(sleepActor, signalId)
+        HandleImperialSleepEvents(sleepActor, reason)
         return True
     elseIf signalId == "civic-service"
-        HandleImperialCivicService(signalId)
+        HandleImperialCivicService(reason)
         return True
     elseIf signalId == "patron-civic-favor"
-        HandleImperialPatronCivicFavor(signalId)
+        HandleImperialPatronCivicFavor(reason)
         return True
     elseIf signalId == "talos-pressure-private"
-        HandleImperialTalosPressure(True, signalId)
+        HandleImperialTalosPressure(True, reason)
         return True
     elseIf signalId == "talos-pressure-public"
-        HandleImperialTalosPressure(False, signalId)
+        HandleImperialTalosPressure(False, reason)
         return True
     endIf
 
     return False
+EndFunction
+
+; -- Value-returning sibling (21st virtual) --
+; One real case in the Imperial lane: PDV_EventBus.RouteConcordatPressure reads
+; the return of GetImperialConcordatPressureForAction("side_with_stormcloaks")
+; and uses it as the adjustment magnitude, so it cannot ride HandleContextualSignal.
+; Per the ADR's "signal ids drop the race prefix" rule, the concordat action key
+; IS the query id. The lane function already returns 0 for an unknown key, which
+; is exactly the base's inert default, so an unrecognised id stays inert.
+Int Function HandleContextualQuery(String signalId, String reason = "", Form contextForm = None)
+    return GetImperialConcordatPressureForAction(signalId)
 EndFunction
 
 ; -- Upkeep --
@@ -731,6 +749,10 @@ EndFunction
 ; -- Patron and offers --
 Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
     return IsImperialOfferEligibleDeity(deity)
+EndFunction
+
+Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    return GetImperialFormalCommitmentOfferMessage(deity)
 EndFunction
 
 ; -- Gain provider (ADR D1) --
