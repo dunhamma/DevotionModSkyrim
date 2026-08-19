@@ -2322,8 +2322,12 @@ Function BuildStatusPage()
         return
     endIf
 
+    ; Column budget: the SkyUI list buffer dies past ~54 rows in one column
+    ; (index ~108), so cap the roster render and summarize the tail.
+    Int maxRosterRows = 48
+    Int rosterRowsShown = 0
     Int i = 0
-    while i < deityCount
+    while i < deityCount && rosterRowsShown < maxRosterRows
         PDV_DeityBase deity = PDV_Manager.LedgerRuntime.GetDeityAtListIndex(i)
         if deity
             String rowValue = TierToLabel(PDV_Manager.LedgerRuntime.GetTier(deity)) + " | " + FormatFloat(PDV_Manager.LedgerRuntime.GetPiety(deity)) + " (+" + FormatFloat(PDV_Manager.LedgerRuntime.GetPietyToday(deity)) + ")"
@@ -2331,9 +2335,13 @@ Function BuildStatusPage()
                 rowValue = rowValue + " | active"
             endIf
             AddTextOption(deity.DeityName, rowValue, OPTION_FLAG_DISABLED)
+            rosterRowsShown += 1
         endIf
         i += 1
     endWhile
+    if i < deityCount
+        AddTextOption("... and " + (deityCount - i) + " more", "Book of Days has the full roster", OPTION_FLAG_DISABLED)
+    endIf
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
@@ -2457,7 +2465,9 @@ Function BuildDaedricPage()
     endIf
     SetCursorFillMode(TOP_TO_BOTTOM)
 
-    ; --- Left column: Daedric display proof + Hircine + Curse ---
+    ; Column budget: the SkyUI list buffer dies past ~54 rows in one column
+    ; (index ~108), so keep each column comfortably under that.
+    ; --- Left column: Daedric display proof + Hircine + Curse + neglect/decay ---
     SetCursorPosition(0)
     AddHeaderOption("Daedric display proof", OPTION_FLAG_NONE)
     _oidDaedricSelectedPath = AddTextOption("Selected Prince", GetSelectedDaedricPathLabel(), OPTION_FLAG_NONE)
@@ -2488,7 +2498,19 @@ Function BuildDaedricPage()
     _oidForceCurseWerewolf = AddTextOption("Curse werewolf", "Backend force", OPTION_FLAG_NONE)
     _oidForceCurseVampire = AddTextOption("Curse vampire", "Backend force", OPTION_FLAG_NONE)
 
-    ; --- Right column: race signals + neglect/decay + commitment ---
+    AddEmptyOption()
+    AddHeaderOption("Neglect & decay", OPTION_FLAG_NONE)
+    _oidForceSelectedPatron = AddTextOption("Force selected patron", "Focused", OPTION_FLAG_NONE)
+    _oidPrimeNeglectEligible = AddTextOption("Prime neglect eligible", "Active + piety 0", OPTION_FLAG_NONE)
+    _oidNeglectRunPass = AddTextOption("Run neglect pass", "Targeted", OPTION_FLAG_NONE)
+    _oidPrimeRaceLaneNeglect = AddTextOption("Prime race-lane neglect", "Backdate source", OPTION_FLAG_NONE)
+    _oidDecayPrimeGrace = AddTextOption("Prime decay grace", "Proof", OPTION_FLAG_NONE)
+    _oidDecayPrimeEligible = AddTextOption("Prime decay eligible", "Proof", OPTION_FLAG_NONE)
+    _oidDecayRunPass = AddTextOption("Run decay pass", "Targeted", OPTION_FLAG_NONE)
+    _oidDecayRunProofDays = AddTextOption("Run decay proof days", "Compressed", OPTION_FLAG_NONE)
+    _oidShowDecaySummary = AddTextOption("Show decay summary", "Selected deity", OPTION_FLAG_NONE)
+
+    ; --- Right column: race signals + commitment + consent ---
     SetCursorPosition(1)
     AddHeaderOption("Race signals", OPTION_FLAG_NONE)
     _oidConcordatDefiance = AddTextOption("Concordat defiance", "EventBus route", OPTION_FLAG_NONE)
@@ -2516,18 +2538,6 @@ Function BuildDaedricPage()
     _oidKhajiitLegendMade = AddTextOption("Khajiit legend-made heist", "Emergent lane", OPTION_FLAG_NONE)
     _oidMephalaWebWoven = AddTextOption("Mephala web woven", "Milestone lane", OPTION_FLAG_NONE)
     _oidBoethiahHonorableDuel = AddTextOption("Boethiah honorable duel", "Brawl win", OPTION_FLAG_NONE)
-
-    AddEmptyOption()
-    AddHeaderOption("Neglect & decay", OPTION_FLAG_NONE)
-    _oidForceSelectedPatron = AddTextOption("Force selected patron", "Focused", OPTION_FLAG_NONE)
-    _oidPrimeNeglectEligible = AddTextOption("Prime neglect eligible", "Active + piety 0", OPTION_FLAG_NONE)
-    _oidNeglectRunPass = AddTextOption("Run neglect pass", "Targeted", OPTION_FLAG_NONE)
-    _oidPrimeRaceLaneNeglect = AddTextOption("Prime race-lane neglect", "Backdate source", OPTION_FLAG_NONE)
-    _oidDecayPrimeGrace = AddTextOption("Prime decay grace", "Proof", OPTION_FLAG_NONE)
-    _oidDecayPrimeEligible = AddTextOption("Prime decay eligible", "Proof", OPTION_FLAG_NONE)
-    _oidDecayRunPass = AddTextOption("Run decay pass", "Targeted", OPTION_FLAG_NONE)
-    _oidDecayRunProofDays = AddTextOption("Run decay proof days", "Compressed", OPTION_FLAG_NONE)
-    _oidShowDecaySummary = AddTextOption("Show decay summary", "Selected deity", OPTION_FLAG_NONE)
 
     AddEmptyOption()
     AddHeaderOption("Commitment offers", OPTION_FLAG_NONE)
@@ -3676,25 +3686,6 @@ Function RunPatternAction(String promptText, Int actionId)
             Debug.Notification("PDV: curse proof race set to " + GetCurseProofOriginLabel() + ".")
         else
             Debug.Notification("PDV: curse proof race was not changed.")
-        endIf
-    elseIf actionId == 38
-        manager.DebugRunNeglectPass()
-    elseIf actionId == 39
-        PDV_DeityBase selectedDeity = GetSelectedDeity()
-        if selectedDeity
-            manager.DebugPrimeDecayGraceByIndex(selectedDeity.DeityIndex)
-        endIf
-    elseIf actionId == 40
-        PDV_DeityBase selectedDeity = GetSelectedDeity()
-        if selectedDeity
-            manager.DebugPrimeDecayEligibleByIndex(selectedDeity.DeityIndex)
-        endIf
-    elseIf actionId == 41
-        manager.DebugRunDecayPass()
-    elseIf actionId == 42
-        PDV_DeityBase selectedDeity = GetSelectedDeity()
-        if selectedDeity
-            manager.DebugRunDecayProofDaysByIndex(selectedDeity.DeityIndex)
         endIf
     elseIf actionId == 43
         manager.DebugSetKhajiitFocus(manager.KHAJIIT_FOCUS_BAANDAR)
