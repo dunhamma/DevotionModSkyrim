@@ -1,0 +1,387 @@
+{
+  "tranche": "t4",
+  "generated": "2026-08-19",
+  "adr": "references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md",
+  "splitPlan": "references/authoring/PDV_2_0_ORIGIN_AdapterSplit_Plan.md",
+  "source": "live-source/Scripts/Source/PDV_OriginRuntimeBase.psc",
+  "sourceRange": "the contiguous tranche-4 block, base lines 7775-9376 (85 functions; nothing in this lane lives outside it)",
+  "baseModified": false,
+  "duplicationNote": "The 85 lane bodies still exist on PDV_OriginRuntimeBase. Each adapter copy is a same-signature override, which compiles. The central pass removes the base originals using this manifest.",
+  "verification": {
+    "verbatim": "all 85 copied bodies compare byte-identical to the base originals (declaration line through EndFunction)",
+    "asciiGuard": "node tools/pdv_ascii_guard.mjs -- OK, 2 files, all ASCII-clean",
+    "compile": "PDV_COMPILE_SOURCE_ROOT=<worktree>/live-source/Scripts/Source PDV_COMPILE_OUTPUT_ROOT=<scratch> node tools/pdv_compile.mjs --script PDV_OriginRuntime_Nord --script PDV_OriginRuntime_Dunmer --skip-verify -- exit 0, both [PASS], 0 error(s) 0 warning(s)"
+  },
+
+  "races": {
+    "Nord": {
+      "script": "live-source/Scripts/Source/PDV_OriginRuntime_Nord.psc",
+      "scriptname": "PDV_OriginRuntime_Nord extends PDV_OriginRuntimeBase",
+      "functionsCopiedCount": 47,
+      "functionsCopied": [
+        "EnsureNordRuntimeWiring",
+        "EnsureNordOrkeyRewardRuntimeWiring",
+        "HandleNordSleepEvents",
+        "HandleNordTsunAdversitySurvived",
+        "HandleNordLocationChange",
+        "HandleNordAncestorSpine",
+        "RecordNordAncestorSpine",
+        "RecordNordAncestralRest",
+        "RecordNordHearthReturn",
+        "RunDawnRefreshNordAncestor",
+        "MaybeShowNordKyneChampionEntry",
+        "ProcessQueuedNordKyneChampionEntry",
+        "IsKyneNeglectActive",
+        "SyncKyneNeglectSpell",
+        "SyncNordPatronNeglectSpells",
+        "SyncNordRewards",
+        "SyncNordAncestorSubstrate",
+        "SyncNordRewardFamily",
+        "GetNordPantheonBaselineState",
+        "EvaluateKyneCommitmentOffer",
+        "GetNordFormalCommitmentOfferMessage",
+        "IsKyneCommitmentSignalReady",
+        "IsNordOfferEligibleDeity",
+        "ApplyNordCurseHandlers",
+        "ShouldSuppressNordCurseModal",
+        "ShowNordMessage",
+        "ShowNordNotification",
+        "ApplyNordInitialChoice",
+        "GetNordRouteFamilyFromSource",
+        "GetNordFavorLaneForRouteFamily",
+        "GetNordFavorFamilyForRouteFamily",
+        "AwardNordRouteFamilySignal",
+        "RouteNordFamily",
+        "HandleNordOldWaysState",
+        "HandleNordKyneTalosContext",
+        "HandleNordHircineArkayEdge",
+        "UsesNordOldWaysDeityNames",
+        "GetNordMedallionEntriesJson",
+        "IsNordVampireSuppressed",
+        "HasNordVampireScar",
+        "GetNordSurveyBaseText",
+        "GetNordContextSurveyText",
+        "GetNordAncestorLayerLabel",
+        "GetNordDevotionModeLabel",
+        "GetNordScarLabel",
+        "GetNordAncestorSummary",
+        "GetKyneFavorSummary"
+      ],
+      "scriptVarsMoved": [
+        {
+          "declaration": "Message _pendingNordKyneChampionMsg = None",
+          "referencedOnlyBy": ["MaybeShowNordKyneChampionEntry", "ProcessQueuedNordKyneChampionEntry"]
+        },
+        {
+          "declaration": "String _pendingNordKyneChampionFallback = \"\"",
+          "referencedOnlyBy": ["MaybeShowNordKyneChampionEntry", "ProcessQueuedNordKyneChampionEntry"]
+        },
+        {
+          "declaration": "Int _pendingNordKyneChampionDelayTicks = 0",
+          "referencedOnlyBy": ["MaybeShowNordKyneChampionEntry", "ProcessQueuedNordKyneChampionEntry"]
+        }
+      ],
+      "scriptVarsFlaggedShared": [],
+      "baseFunctionsStillCalled": [
+        "GetPlayerOriginRaceIndex",
+        "GetInteriorSleepCellId",
+        "TryDeclareRestCell",
+        "IsPlayerAtDeclaredRestCell",
+        "IsFocusedPantheonBoonSuspended"
+      ],
+      "virtualsOverridden": {
+        "EnsureRuntimeWiring": "EnsureNordRuntimeWiring()",
+        "EvaluateAtDawn": "RunDawnRefreshNordAncestor()",
+        "GetOriginStateLabel": "GetNordDevotionModeLabel()",
+        "GetOriginStateValue": "GetNordPantheonBaselineState()",
+        "GetOriginSummary": "GetNordAncestorSummary()",
+        "GetSurveyFragment": "GetNordSurveyBaseText()",
+        "IsRaceLaneNeglected": "IsNordVampireSuppressed()",
+        "GetOriginDetailLabel": "keyed table, 7 keys",
+        "GetOriginDetailValue": "keyed table, 6 keys",
+        "HandleContextualSignal": "keyed table, 11 signal ids",
+        "HandleLocationChange": "HandleNordLocationChange(Game.GetPlayer().GetCurrentLocation())",
+        "SyncRaceRewards": "SyncNordRewards(Game.GetPlayer())",
+        "SyncNeglectSpells": "SyncKyneNeglectSpell(IsKyneNeglectActive() && Manager.GetActiveDeity() == Manager.PDV_Kyne) + SyncNordPatronNeglectSpells()",
+        "IsOfferEligibleDeity": "IsNordOfferEligibleDeity(deity)",
+        "ShowOriginNotification": "keyed table, 1 key"
+      },
+      "virtualsNotOverridden": {
+        "ApplyInitialChoice": "signature gap -- see interfaceGaps.applyInitialChoice",
+        "ApplyCurseHandlers": "signature gap -- see interfaceGaps.applyCurseHandlers",
+        "GetFormalCommitmentOfferMessage": "signature gap -- see interfaceGaps.formalCommitmentOfferMessage",
+        "GetProviderGainMultiplier": "Nord has no gain multiplier; the ADR assigns those to _Orc and _Imperial"
+      },
+      "signalMap": {
+        "tsun-adversity-survived": "HandleNordTsunAdversitySurvived(signalId)",
+        "old-ways-state": "HandleNordOldWaysState(signalId)",
+        "kyne-talos-context": "HandleNordKyneTalosContext(signalId)",
+        "hircine-arkay-edge": "HandleNordHircineArkayEdge(signalId)",
+        "ancestor-spine": "HandleNordAncestorSpine(signalId)",
+        "ancestor-spine-pulse": "RecordNordAncestorSpine(signalId, magnitude)",
+        "ancestral-rest": "RecordNordAncestralRest(signalId, magnitude)",
+        "hearth-return": "RecordNordHearthReturn(signalId, magnitude)",
+        "sleep-events": "HandleNordSleepEvents(contextForm as Actor, signalId)",
+        "kyne-champion-entry": "MaybeShowNordKyneChampionEntry(contextForm as PDV_DeityBase, magnitude as Int)",
+        "kyne-champion-entry-tick": "ProcessQueuedNordKyneChampionEntry()"
+      },
+      "detailLabelKeys": {
+        "devotion-mode": "GetNordDevotionModeLabel()",
+        "ancestor-layer": "GetNordAncestorLayerLabel()",
+        "context-survey": "GetNordContextSurveyText()",
+        "scar": "GetNordScarLabel()",
+        "ancestor-summary": "GetNordAncestorSummary()",
+        "kyne-favor-summary": "GetKyneFavorSummary()",
+        "medallion-entries": "GetNordMedallionEntriesJson()"
+      },
+      "detailValueKeys": {
+        "pantheon-baseline": "GetNordPantheonBaselineState()",
+        "vampire-suppressed": "BoolToInt(IsNordVampireSuppressed())",
+        "vampire-scar": "BoolToInt(HasNordVampireScar())",
+        "old-ways-names": "BoolToInt(UsesNordOldWaysDeityNames())",
+        "kyne-neglect-active": "BoolToInt(IsKyneNeglectActive())",
+        "kyne-commitment-ready": "BoolToInt(IsKyneCommitmentSignalReady())"
+      },
+      "notificationKeys": {
+        "kyne-champion-ambient-storm": "ShowNordNotification(Manager.PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, \"The wind is blowing your way.\")"
+      },
+      "notReachableThroughAVirtual": [
+        "EvaluateKyneCommitmentOffer",
+        "IsKyneCommitmentSignalReady",
+        "GetNordPantheonBaselineState (also on GetOriginStateValue / detail key)",
+        "UsesNordOldWaysDeityNames (also on a detail key)",
+        "ShowNordMessage",
+        "GetNordRouteFamilyFromSource",
+        "GetNordFavorLaneForRouteFamily",
+        "GetNordFavorFamilyForRouteFamily",
+        "AwardNordRouteFamilySignal",
+        "RouteNordFamily",
+        "SyncNordAncestorSubstrate",
+        "SyncNordRewardFamily",
+        "EnsureNordOrkeyRewardRuntimeWiring",
+        "ShouldSuppressNordCurseModal"
+      ]
+    },
+
+    "Dunmer": {
+      "script": "live-source/Scripts/Source/PDV_OriginRuntime_Dunmer.psc",
+      "scriptname": "PDV_OriginRuntime_Dunmer extends PDV_OriginRuntimeBase",
+      "functionsCopiedCount": 38,
+      "functionsCopied": [
+        "HandleDunmerPortableShrinePrayer",
+        "HandleDunmerPlayerHomeBonus",
+        "DisarmDunmerAncestorWatch",
+        "HandleDunmerSleepEvents",
+        "SetDunmerHome",
+        "IsPlayerAtDunmerDeclaredHome",
+        "SyncDunmerRewards",
+        "SyncDunmerRewardFamily",
+        "IsDunmerAncestorNeglected",
+        "SyncDunmerNeglectSpell",
+        "HandleDunmerClumsyCrime",
+        "GetDunmerFormalCommitmentOfferMessage",
+        "IsDunmerOfferEligibleDeity",
+        "ApplyDunmerCurseHandlers",
+        "GetDunmerCurseLayerWeight",
+        "HandleDunmerReclamationFocus",
+        "HandleDunmerHonorableVictory",
+        "RecordDunmerCombatVictoryEvidence",
+        "RecordDunmerStoryVictoryEvidence",
+        "TryResolveDunmerHonorableVictory",
+        "HandleDunmerDeviationPrice",
+        "SurfaceDunmerDeviationPriceNotice",
+        "TryAwardDunmerTwilightWindowSignal",
+        "HandleDunmerOutdoorGoodDaedraShrine",
+        "GetDunmerTwilightWindow",
+        "GetDunmerTwilightWindowLabel",
+        "AwardActiveDunmerReclamationMemorySignal",
+        "AwardDunmerAncestorSpinePulse",
+        "AwardDunmerReclamationFocusSignal",
+        "AwardDunmerDeviationPriceSignal",
+        "GetBookOfDaysDunmerAncestorLabel",
+        "GetDunmerMedallionEntriesJson",
+        "EnsureDunmerAncestralUrn",
+        "GetDunmerSurveyText",
+        "GetDunmerAncestorLayerLabel",
+        "GetDunmerCursePostureLabel",
+        "GetDunmerReclamationFocusLabel",
+        "GetDunmerAncestorSummary"
+      ],
+      "scriptVarsMoved": [
+        {
+          "declaration": "Bool _dunmerHomePrayerContext = False",
+          "referencedOnlyBy": ["HandleDunmerPortableShrinePrayer", "HandleDunmerPlayerHomeBonus"]
+        }
+      ],
+      "scriptVarsFlaggedShared": [],
+      "baseFunctionsStillCalled": ["GetPlayerOriginRaceIndex"],
+      "virtualsOverridden": {
+        "EnsureRuntimeWiring": "EnsureDunmerAncestralUrn()",
+        "GetOriginStateLabel": "GetDunmerAncestorLayerLabel()",
+        "GetOriginStateValue": "Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier() (derived -- see interfaceGaps.dunmerStateValue)",
+        "GetOriginSummary": "GetDunmerAncestorSummary()",
+        "GetSurveyFragment": "GetDunmerSurveyText()",
+        "IsRaceLaneNeglected": "IsDunmerAncestorNeglected()",
+        "GetOriginDetailLabel": "keyed table, 7 keys",
+        "GetOriginDetailValue": "keyed table, 4 keys",
+        "HandleContextualSignal": "keyed table, 13 signal ids",
+        "SyncRaceRewards": "SyncDunmerRewards(Game.GetPlayer())",
+        "SyncNeglectSpells": "SyncDunmerNeglectSpell(IsDunmerAncestorNeglected())",
+        "IsOfferEligibleDeity": "IsDunmerOfferEligibleDeity(deity)",
+        "ShowOriginNotification": "keyed table, 1 key"
+      },
+      "virtualsNotOverridden": {
+        "ApplyInitialChoice": "the Dunmer lane has no startup-choice verb; PDV__ManagerQuest.ApplyStartupChoice does not dispatch ORIGIN_DUNMER",
+        "ApplyCurseHandlers": "signature gap -- see interfaceGaps.applyCurseHandlers",
+        "EvaluateAtDawn": "the Dunmer lane has no dawn verb",
+        "HandleLocationChange": "the Dunmer lane has no location-change verb",
+        "GetFormalCommitmentOfferMessage": "signature gap -- see interfaceGaps.formalCommitmentOfferMessage",
+        "GetProviderGainMultiplier": "Dunmer has no gain multiplier; the ADR assigns those to _Orc and _Imperial"
+      },
+      "signalMap": {
+        "portable-shrine-prayer": "HandleDunmerPortableShrinePrayer(signalId)",
+        "player-home-bonus": "HandleDunmerPlayerHomeBonus(signalId)",
+        "reclamation-focus": "HandleDunmerReclamationFocus(magnitude as Int, signalId)",
+        "honorable-victory": "HandleDunmerHonorableVictory(contextForm)",
+        "combat-victory-evidence": "RecordDunmerCombatVictoryEvidence(contextForm)",
+        "story-victory-evidence": "RecordDunmerStoryVictoryEvidence(contextForm, magnitude as Int)",
+        "deviation-price": "HandleDunmerDeviationPrice(signalId)",
+        "outdoor-good-daedra-shrine": "HandleDunmerOutdoorGoodDaedraShrine(signalId)",
+        "clumsy-crime": "HandleDunmerClumsyCrime(signalId)",
+        "twilight-window-rite": "TryAwardDunmerTwilightWindowSignal(signalId); always returns True (handled), the Try's own Bool is the award result and is dropped",
+        "sleep-events": "HandleDunmerSleepEvents(contextForm as Actor, signalId)",
+        "reclamation-memory": "AwardActiveDunmerReclamationMemorySignal()",
+        "disarm-ancestor-watch": "DisarmDunmerAncestorWatch()"
+      },
+      "detailLabelKeys": {
+        "ancestor-layer": "GetDunmerAncestorLayerLabel()",
+        "book-of-days-ancestor": "GetBookOfDaysDunmerAncestorLabel()",
+        "curse-posture": "GetDunmerCursePostureLabel()",
+        "reclamation-focus": "GetDunmerReclamationFocusLabel(StorageUtil PDV.Dunmer.ReclamationFocus, default -1)",
+        "twilight-window": "GetDunmerTwilightWindowLabel(GetDunmerTwilightWindow(Utility.GetCurrentGameTime()))",
+        "ancestor-summary": "GetDunmerAncestorSummary()",
+        "medallion-entries": "GetDunmerMedallionEntriesJson()"
+      },
+      "detailValueKeys": {
+        "reclamation-focus": "StorageUtil PDV.Dunmer.ReclamationFocus (default -1)",
+        "curse-posture": "StorageUtil PDV.Curse.Dunmer.Posture",
+        "twilight-window": "GetDunmerTwilightWindow(Utility.GetCurrentGameTime())",
+        "at-declared-home": "BoolToInt(IsPlayerAtDunmerDeclaredHome(Game.GetPlayer()))"
+      },
+      "notificationKeys": {
+        "deviation-price-notice": "SurfaceDunmerDeviationPriceNotice()"
+      },
+      "notReachableThroughAVirtual": [
+        "SetDunmerHome",
+        "TryResolveDunmerHonorableVictory",
+        "GetDunmerCurseLayerWeight",
+        "AwardDunmerAncestorSpinePulse",
+        "AwardDunmerReclamationFocusSignal",
+        "AwardDunmerDeviationPriceSignal",
+        "SyncDunmerRewardFamily",
+        "GetDunmerFormalCommitmentOfferMessage"
+      ]
+    }
+  },
+
+  "interfaceGaps": [
+    {
+      "id": "applyCurseHandlers",
+      "virtual": "Function ApplyCurseHandlers()",
+      "laneSignatures": [
+        "ApplyNordCurseHandlers(Int oldState, Int newState, String reason)",
+        "ApplyDunmerCurseHandlers(Int oldState, Int newState, String reason)"
+      ],
+      "problem": "The frozen virtual carries no transition pair and no reason. PDV_DevotionLedger.ApplyCurseRaceHandlers (:4246, :4260) supplies all three. For Nord the reason drives ShouldSuppressNordCurseModal, so an invented reason would fire modals that MCM force-transitions deliberately suppress.",
+      "decision": "NOT overridden in either adapter. Every race lane has the same 3-arg shape, so this needs an ADR amendment (add Int oldState, Int newState, String reason to the virtual), not a per-adapter workaround."
+    },
+    {
+      "id": "applyInitialChoice",
+      "virtual": "Function ApplyInitialChoice()",
+      "laneSignatures": ["ApplyNordInitialChoice(Int baselineValue, String reason)"],
+      "problem": "PDV__ManagerQuest.ApplyStartupChoice (:7552) supplies the startup option value and a reason; neither is recoverable from live state at call time, and a wrong baselineValue silently writes the wrong Nord pantheon baseline.",
+      "decision": "NOT overridden. Same shape on Bosmer/Breton/Redguard/Orc, so this also wants the ADR amendment (Int optionValue, String reason)."
+    },
+    {
+      "id": "formalCommitmentOfferMessage",
+      "virtual": "String Function GetFormalCommitmentOfferMessage()",
+      "laneSignatures": [
+        "Message GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)",
+        "Message GetDunmerFormalCommitmentOfferMessage(PDV_DeityBase deity)"
+      ],
+      "problem": "Return type and arity both differ: the lane functions pick a Message RECORD per deity, and there is no String rendering of a Message. PDV_DevotionLedger.GetFormalCommitmentOfferMessage (:3902-3916) returns the record straight to the caller.",
+      "decision": "NOT overridden. The virtual should be `Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)`."
+    },
+    {
+      "id": "reasonChannel",
+      "virtual": "Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)",
+      "problem": "Nearly every Handle*/Record* lane verb takes a `String reason` that lands in traces and in StorageUtil last-reason keys (e.g. PDV.Dunmer.LastDeviationReason). The virtual has no String channel besides signalId.",
+      "decision": "Both adapters pass signalId through AS the reason. Behavior is preserved in shape (a stable non-empty reason) but the callers' richer strings -- EventBus's \"eventbus_\" + eventType + \"_\" + sourceId, the MCM's \"mcm_debug_*\" -- are lost unless the caller sends them as the signalId. Adding `String reason = \"\"` to the virtual would close this without breaking the wrong-origin-inert contract."
+    },
+    {
+      "id": "detailKeyParamName",
+      "problem": "The base declares GetOriginDetailLabel(String key) / GetOriginDetailValue(String key). `Key` is a Skyrim form type, so any adapter that actually READS the parameter fails to compile with `key is not a variable`. The base only compiles because its stubs never touch it.",
+      "decision": "Both adapters name the parameter `detailKey`. Papyrus matches overrides on parameter TYPES, not names, and this compiles 0/0. Recommend renaming the base's parameter to match so the two files read the same."
+    },
+    {
+      "id": "dunmerStateValue",
+      "problem": "GetOriginStateValue for Dunmer has no existing lane verb: the ancestor layer is only ever rendered as a label.",
+      "decision": "The override reads Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier() -- the same source GetDunmerAncestorLayerLabel reads -- guarded on the substrate being present. This is the only place in either adapter where the dispatch layer touches state directly instead of delegating."
+    },
+    {
+      "id": "nordLocationChangeArg",
+      "problem": "HandleLocationChange() takes no arguments; HandleNordLocationChange(Location newLocation) does. PDV_ActionRouter (:319) passes akNewLocation from OnLocationChange.",
+      "decision": "The override passes Game.GetPlayer().GetCurrentLocation(). Inside OnLocationChange the player's current location is akNewLocation, so this is faithful -- but it is a derivation, not a pass-through, and belongs in the dispatch-layer behavior review."
+    },
+    {
+      "id": "nordNeglectPredicate",
+      "problem": "The ADR lists a neglect predicate for all ten races and names Nord's as 'the vampire-suppression variant'. Nord genuinely has no lapse-shaped predicate: SyncKyneNeglectSpell(Bool) and SyncNordPatronNeglectSpells() are gated by booleans the LEDGER computes.",
+      "decision": "IsRaceLaneNeglected() -> IsNordVampireSuppressed(). It is the only Nord-lane, race-gated predicate whose True state suppresses the lane, which is the structural role the other nine fill. IsKyneNeglectActive() was rejected: it is a thin wrapper over the GENERIC LedgerRuntime.IsNeglectFlagActive(deity) flag, which exists for every deity and is not race-lane state. Consumers that want 'has the Nord lane gone quiet' must call the base's IsBroadLaneLapsed(), not this virtual."
+    }
+  ],
+
+  "callSiteDivergence": [
+    {
+      "virtual": "SyncNeglectSpells (Nord)",
+      "detail": "PDV_DevotionLedger calls SyncKyneNeglectSpell with THREE different booleans: nordBroadLapsed (:2156), a hard False (:2171), and IsNeglectFlagActive(PDV_Kyne) && GetActiveDeity() == PDV_Kyne (:2192). The no-arg override implements only the third (steady-state patron branch). The broad-worship and no-patron branches must keep a caller-supplied path, or the virtual needs a Bool argument.",
+      "risk": "If the remap pass blindly replaces all three call sites with SyncNeglectSpells(), the Nord broad-lane lapse spell stops being applied and the no-patron branch stops force-clearing it."
+    },
+    {
+      "virtual": "HandleContextualSignal (both)",
+      "detail": "Signal ids are unique WITHIN a race only, per the ADR. 'sleep-events' and 'reclamation-focus' exist on both adapters with different targets; that is expected, since exactly one adapter is instantiated per playthrough."
+    }
+  ],
+
+  "crossLaneCalls": {
+    "found": "none",
+    "detail": "No Nord lane function calls a Dunmer lane function or vice versa, and neither lane calls another race's lane. Every out-of-lane call from these 85 bodies lands on tranche-6 base infrastructure: GetPlayerOriginRaceIndex, GetInteriorSleepCellId, TryDeclareRestCell, IsPlayerAtDeclaredRestCell, IsFocusedPantheonBoonSuspended. All five stay on the base, so the adapters inherit them."
+  },
+
+  "baseToLaneCallsThatBreakOnRemoval": [
+    {
+      "baseLines": "11068, 11076 (HandlePlayerSleepStop)",
+      "calls": ["HandleDunmerSleepEvents(playerRef, reason)", "HandleNordSleepEvents(playerRef, reason)"],
+      "route": "HandleContextualSignal(\"sleep-events\", playerRef) -- the signal id exists on both adapters for exactly this reason; the caller's reason string is lost, see interfaceGaps.reasonChannel"
+    },
+    {
+      "baseLines": "11679, 11727, 11751 (broad-lane tier / display / next-threshold)",
+      "calls": ["GetNordPantheonBaselineState()"],
+      "route": "GetOriginStateValue(), or GetOriginDetailValue(\"pantheon-baseline\")"
+    },
+    {
+      "baseLines": "11987, 11997 (GetMedallionSectionsJson)",
+      "calls": ["GetNordMedallionEntriesJson()", "GetDunmerMedallionEntriesJson()"],
+      "route": "GetOriginDetailLabel(\"medallion-entries\")"
+    },
+    {
+      "baseLines": "11109, 11114 (HandleSubstrateActionEvent)",
+      "calls": ["GetNordAncestorLayerLabel()"],
+      "route": "GetOriginDetailLabel(\"ancestor-layer\")"
+    },
+    {
+      "baseLines": "12046 (GetPlayerCursePublicLabel)",
+      "calls": ["HasNordVampireScar()"],
+      "route": "GetOriginDetailValue(\"vampire-scar\")"
+    }
+  ]
+}
