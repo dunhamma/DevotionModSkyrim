@@ -18,9 +18,16 @@ Function EnsureRuntimeWiring()
     EnsureArgonianHistSapToken()
 EndFunction
 
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyArgonianCurseHandlers(oldState, newState, reason)
+EndFunction
+
 Function EvaluateAtDawn()
     RunDawnRefreshArgonianHist()
 EndFunction
+
+; ApplyInitialChoice is NOT overridden: the Argonian lane has no initial-choice
+; handler (cultural practice is derived from the Hist substrate tier).
 
 ; -- State --
 
@@ -84,22 +91,22 @@ EndFunction
 
 ; -- Signals --
 ;
-; The frozen signature carries no String payload, so each handler that takes a
-; "reason" receives the signalId in its place. See the adapter manifest: the
-; dynamic reason strings the EventBus passes today ("eventbus_" + eventType) are
-; NOT representable here and need a base-side "String reason" parameter.
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+; The caller-composed "reason" ("eventbus_" + eventType, an MCM debug tag, a
+; curated source key) is threaded through UNCHANGED to every handler that takes
+; one. It is not the signalId and must never be substituted for it: reasons are
+; player-visible in the Ledger and some lane bodies branch on the exact string.
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "hist-maintenance"
-        HandleArgonianHistMaintenance(signalId)
+        HandleArgonianHistMaintenance(reason)
         return True
     elseIf signalId == "people-support"
-        HandleArgonianPeopleSupport(signalId)
+        HandleArgonianPeopleSupport(reason)
         return True
     elseIf signalId == "void"
-        HandleArgonianVoidSignal(signalId)
+        HandleArgonianVoidSignal(reason)
         return True
     elseIf signalId == "bed-of-choice-return"
-        HandleArgonianBedOfChoiceReturn(signalId)
+        HandleArgonianBedOfChoiceReturn(reason)
         return True
     elseIf signalId == "sap-vision"
         HandleArgonianSapVision()
@@ -126,19 +133,19 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
         TryArgonianSithisNearDeathBurst(contextForm as Actor)
         return True
     elseIf signalId == "posture-dream"
-        TryArgonianPostureDream(signalId)
+        TryArgonianPostureDream(reason)
         return True
     elseIf signalId == "sleep-events"
-        HandleArgonianSleepEvents(contextForm as Actor, signalId)
+        HandleArgonianSleepEvents(contextForm as Actor, reason)
         return True
     elseIf signalId == "hist-posture-refresh"
-        RefreshArgonianHistPosture(signalId)
+        RefreshArgonianHistPosture(reason)
         return True
     elseIf signalId == "domination-pressure-refresh"
-        RefreshArgonianDominationPressure(signalId)
+        RefreshArgonianDominationPressure(reason)
         return True
     elseIf signalId == "domination-pressure-path"
-        RefreshArgonianDominationPressureForPath(contextForm as PDV_DaedricPathBase, signalId)
+        RefreshArgonianDominationPressureForPath(contextForm as PDV_DaedricPathBase, reason)
         return True
     elseIf signalId == "adaptation-clear"
         ClearArgonianAdaptation(contextForm as Actor)
@@ -147,18 +154,30 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
         SyncArgonianAdaptation(contextForm as Actor, IsArgonianOrigin())
         return True
     elseIf signalId == "hist-abandonment-minus"
-        EmitHistAbandonmentMinus(signalId)
+        EmitHistAbandonmentMinus(reason)
         return True
     elseIf signalId == "hist-corruption-minus"
-        EmitHistCorruptionMinus(signalId)
+        EmitHistCorruptionMinus(reason)
         return True
     elseIf signalId == "hist-void-overreach-minus"
-        EmitHistVoidOverreachMinus(signalId)
+        EmitHistVoidOverreachMinus(reason)
         return True
     endIf
 
     return False
 EndFunction
+
+; The every-change location hook. PDV_ActionRouter.HandleStoryChangeLocation calls
+; this on EVERY change (before its one-shot discovery gate) so the Eldergleam
+; interior catch can arm and disarm; akNewLocation is passed through rather than
+; re-sampled from GetCurrentLocation(). The sacred-water DISCOVERY handler stays on
+; the signal path, because its caller only reaches it past the seen-once gate.
+Function HandleLocationChange(Form newLocation = None)
+    UpdateArgonianSanctuaryActive(newLocation as Location)
+EndFunction
+
+; HandleContextualQuery is NOT overridden: no Argonian lane entry point returns a
+; value its caller consumes.
 
 ; -- Upkeep --
 
@@ -169,6 +188,20 @@ EndFunction
 Function SyncNeglectSpells()
     SyncArgonianNeglectSpell(IsArgonianHistNeglected())
 EndFunction
+
+; -- Presentation --
+
+Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
+    ShowArgonianMessage(messageRecord, fallbackText, suppressModal)
+EndFunction
+
+; ShowOriginNotification is NOT overridden: ShowArgonianMessage is the lane's only
+; notifier and it is curse-transition gated (it consumes the one-shot race curse
+; surface). Routing a generic notification through it would suppress a curse
+; message, so the base no-op is left in place rather than inventing a mapping.
+
+; GetFormalCommitmentOfferMessage is NOT overridden: the Argonian lane has no
+; per-deity formal-commitment Message record.
 
 ; ---------------------------------------------------------------------------
 ; LANE FUNCTIONS -- moved verbatim from PDV_OriginRuntimeBase. Bodies are

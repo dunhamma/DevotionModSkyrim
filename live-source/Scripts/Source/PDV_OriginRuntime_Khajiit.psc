@@ -30,10 +30,17 @@ Function EnsureRuntimeWiring()
     EnsureKhajiitObserveMoonsPower()
 EndFunction
 
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyKhajiitCurseHandlers(oldState, newState, reason)
+EndFunction
+
 Function EvaluateAtDawn()
     EvaluateKhajiitFocusedEmphasis()
     RefreshKhajiitLunarPosture("dawn")
 EndFunction
+
+; ApplyInitialChoice is NOT overridden: the Khajiit lane has no initial-choice
+; handler (focused emphasis is derived from accrued weights, never chosen).
 
 ; -- State --
 
@@ -130,82 +137,85 @@ EndFunction
 
 ; -- Signals --
 ;
-; The frozen signature carries no String payload, so each handler that takes a
-; "reason" receives the signalId in its place. See the adapter manifest: the
-; dynamic reason strings the EventBus passes today ("eventbus_" + eventType) are
-; NOT representable here and need a base-side "String reason" parameter.
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+; The caller-composed "reason" ("eventbus_" + eventType, an MCM debug tag, a
+; curated source key) is threaded through UNCHANGED to every handler that takes
+; one. It is not the signalId and must never be substituted for it: reasons are
+; player-visible in the Ledger and some lane bodies branch on the exact string.
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "moon-observance"
-        HandleKhajiitMoonObservance(magnitude as Int, signalId)
+        HandleKhajiitMoonObservance(magnitude as Int, reason)
         return True
     elseIf signalId == "moon-observation-process"
         ProcessPendingKhajiitMoonObservation(magnitude as Int)
         return True
     elseIf signalId == "lunar-substrate"
-        HandleKhajiitLunarSubstrate(signalId)
+        HandleKhajiitLunarSubstrate(reason)
         return True
     elseIf signalId == "road-home"
-        HandleKhajiitRoadHome(signalId)
+        HandleKhajiitRoadHome(reason)
         return True
     elseIf signalId == "road-home-anchor"
-        HandleKhajiitRoadHomeAnchor(magnitude as Int, signalId)
+        HandleKhajiitRoadHomeAnchor(magnitude as Int, reason)
         return True
     elseIf signalId == "baandar-road-trick"
-        HandleKhajiitBaanDarRoadTrick(signalId)
+        HandleKhajiitBaanDarRoadTrick(reason)
         return True
     elseIf signalId == "baandar-reversal"
-        HandleKhajiitBaanDarReversal(signalId)
+        HandleKhajiitBaanDarReversal(reason)
         return True
     elseIf signalId == "baandar-betrayal"
-        HandleKhajiitBaanDarBetrayal(signalId)
+        HandleKhajiitBaanDarBetrayal(reason)
         return True
     elseIf signalId == "rajhin-elegant-theft"
-        HandleKhajiitRajhinElegantTheft(signalId)
+        HandleKhajiitRajhinElegantTheft(reason)
         return True
     elseIf signalId == "rajhin-legend-made"
-        HandleKhajiitRajhinLegendMade(signalId)
+        HandleKhajiitRajhinLegendMade(reason)
         return True
     elseIf signalId == "rajhin-botched-theft"
-        HandleKhajiitRajhinBotchedTheft(signalId)
+        HandleKhajiitRajhinBotchedTheft(reason)
         return True
     elseIf signalId == "alkosh-dragon-order"
-        HandleKhajiitAlkoshDragonOrder(signalId)
+        HandleKhajiitAlkoshDragonOrder(reason)
         return True
     elseIf signalId == "alkosh-named-dragon"
-        HandleKhajiitAlkoshNamedDragon(signalId)
+        HandleKhajiitAlkoshNamedDragon(reason)
         return True
     elseIf signalId == "alkosh-generic-dragon"
-        HandleKhajiitAlkoshGenericDragon(signalId)
+        HandleKhajiitAlkoshGenericDragon(reason)
         return True
     elseIf signalId == "alkosh-chaos-aid"
-        HandleKhajiitAlkoshChaosAid(signalId)
+        HandleKhajiitAlkoshChaosAid(reason)
         return True
     elseIf signalId == "alkosh-word-drip"
         ProcessKhajiitAlkoshWordDrip()
         return True
     elseIf signalId == "azurah-desecration"
-        HandleKhajiitAzurahDesecration(signalId)
+        HandleKhajiitAzurahDesecration(reason)
+        return True
+    elseIf signalId == "azurah-portent"
+        TryUseKhajiitAzurahPortent(contextForm as Actor)
         return True
     elseIf signalId == "khenarthi-caravan-harm"
-        HandleKhajiitKhenarthiCaravanHarm(signalId)
+        HandleKhajiitKhenarthiCaravanHarm(reason)
         return True
     elseIf signalId == "khenarthi-caravan-aid"
-        HandleKhajiitKhenarthiCaravanAid(signalId)
+        HandleKhajiitKhenarthiCaravanAid(reason)
         return True
     elseIf signalId == "focused-source"
-        HandleKhajiitFocusedSource(signalId)
+        HandleKhajiitFocusedSource(reason)
         return True
     elseIf signalId == "focused-source-for-focus"
-        HandleKhajiitFocusedSourceForFocus(magnitude as Int, signalId)
+        HandleKhajiitFocusedSourceForFocus(magnitude as Int, reason)
         return True
     elseIf signalId == "focus-emphasis-evaluate"
         EvaluateKhajiitFocusedEmphasis()
         return True
     elseIf signalId == "lunar-posture-refresh"
-        RefreshKhajiitLunarPosture(signalId)
+        RefreshKhajiitLunarPosture(reason)
         return True
     elseIf signalId == "shadow-evidence"
-        RecordKhajiitShadowEvidence(signalId)
+        RecordKhajiitShadowEvidence(reason)
         return True
     elseIf signalId == "runtime-state-sync"
         SyncKhajiitRuntimeState()
@@ -227,6 +237,34 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
     return False
 EndFunction
 
+; Value-returning siblings. These lane entry points hand a payload back to their
+; caller, so they cannot ride HandleContextualSignal (whose Bool only means
+; handled / not-handled). Actor extends Form, so the player rides contextForm and
+; is cast back here.
+;
+; "moon-observation-begin" is load-bearing: BeginKhajiitMoonObservation returns
+; the GENERATION TOKEN that PDV_ObserveMoonsEffect holds across its two-second
+; wait and passes back to the "moon-observation-process" signal, which rejects any
+; token that is not the current generation. Dropping the return would break stale-
+; completion rejection for the whole delayed-observation protocol.
+Int Function HandleContextualQuery(String signalId, String reason = "", Form contextForm = None)
+    if signalId == "moon-observation-begin"
+        return BeginKhajiitMoonObservation(contextForm as Actor)
+    elseIf signalId == "baandar-rescue-eligible"
+        ; PDV_KhajiitBaanDarRescueEffect consumes this predicate, so it needs the
+        ; value channel too. 1 / 0 rather than Bool, per the frozen Int return.
+        if CanExecuteKhajiitBaanDarRescue(contextForm as Actor)
+            return 1
+        endIf
+        return 0
+    endIf
+
+    return 0
+EndFunction
+
+; HandleLocationChange is NOT overridden: the Khajiit lane has no location verb
+; of any kind, so the inert base default is the honest answer.
+
 ; -- Upkeep --
 
 Function SyncRaceRewards()
@@ -236,6 +274,20 @@ EndFunction
 Function SyncNeglectSpells()
     SyncKhajiitNeglectSpell(IsKhajiitLunarNeglected())
 EndFunction
+
+; -- Presentation --
+
+Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
+    ShowKhajiitMessage(messageRecord, fallbackText, suppressModal)
+EndFunction
+
+; ShowOriginNotification is NOT overridden: ShowKhajiitMessage is the lane's only
+; notifier and it is curse-transition gated (it consumes the one-shot race curse
+; surface). Routing a generic notification through it would suppress a curse
+; message, so the base no-op is left in place rather than inventing a mapping.
+
+; GetFormalCommitmentOfferMessage is NOT overridden: the Khajiit lane has no
+; per-deity formal-commitment Message record.
 
 ; ---------------------------------------------------------------------------
 ; LANE FUNCTIONS -- moved verbatim from PDV_OriginRuntimeBase. Bodies are
