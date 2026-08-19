@@ -9,6 +9,36 @@ Scriptname PDV_DevotionLedger extends Quest
 
 PDV__ManagerQuest Property Manager Auto
 
+; The gain-modifier providers, assembled at runtime by the manager (see
+; Manager.RefreshGainProviders). NOT an ESP fill: all ten origin adapter quests are
+; start-game-enabled and running, but only ONE is bound to the player's race, so a static
+; array would apply e.g. the Orc factor to a Nord. Empty/None is safe -- gains simply run
+; unmultiplied by module factors.
+PDV_GainModifierProvider[] _gainProviders
+
+Function SetGainProviders(PDV_GainModifierProvider[] providers)
+    _gainProviders = providers
+EndFunction
+
+; Product of every provider's factor for this phase. One scalar, one source -- award, dawn
+; and decay all read it, so they cannot drift apart.
+Float Function GetGainProviderProduct(PDV_DeityBase deity, Int phase)
+    if !_gainProviders
+        return 1.0
+    endIf
+
+    Float product = 1.0
+    Int i = 0
+    while i < _gainProviders.Length
+        if _gainProviders[i]
+            product = product * _gainProviders[i].GetProviderGainMultiplier(deity, phase)
+        endIf
+        i += 1
+    endWhile
+
+    return product
+EndFunction
+
 ; --- moved properties (CK-filled later; AutoReadOnly consts move verbatim) ---
 GlobalVariable Property PDV_GLO_ActivePiety Auto
 GlobalVariable Property PDV_GLO_ActiveTier Auto
@@ -2026,8 +2056,7 @@ Function RunDawnConsolidateScratch()
             endIf
             Float clampedToday = PDV_DevotionRules.ClampValue(scaledToday, -dailyCap, dailyCap)
             if clampedToday > 0.0
-                clampedToday = clampedToday * Manager.GetOrcLifeModeGainMultiplier(deity)
-                clampedToday = clampedToday * Manager.GetImperialCurseGainMultiplier(deity)
+                clampedToday = clampedToday * GetGainProviderProduct(deity, Manager.PHASE_AT_DAWN)
                 ; Record the gods fed today so the dawn digest can name them.
                 Manager.RecordBookOfDaysFedName(Manager.GetPublicDeityDisplayName(deity))
             endIf
@@ -2284,7 +2313,7 @@ Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
     if PDV_ModePresetRef
         decayScalar = PDV_ModePresetRef.DecayScalar()
     endIf
-    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * Manager.GetCurseGainMultiplier(deity) * Manager.DaedricRuntime.GetDaedricStigmaGainMultiplier(deity) * decayScalar)
+    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * GetGainProviderProduct(deity, Manager.PHASE_DECAY) * decayScalar)
     Float floorValue = GetDecayFloorForDeity(deity, currentPiety)
     if newPiety < floorValue
         newPiety = floorValue
@@ -3258,8 +3287,7 @@ Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance, Bo
         else
             appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplierWithoutStance()
         endIf
-        appliedAmount = appliedAmount * Manager.GetCurseGainMultiplier(deity)
-        appliedAmount = appliedAmount * Manager.DaedricRuntime.GetDaedricStigmaGainMultiplier(deity)
+        appliedAmount = appliedAmount * GetGainProviderProduct(deity, Manager.PHASE_PER_EVENT)
         appliedAmount = appliedAmount * GetSurvivalContextGainMultiplier(deity)
         if PDV_ModePresetRef
             appliedAmount = appliedAmount * PDV_ModePresetRef.GainMultiplier()

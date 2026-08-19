@@ -1,4 +1,4 @@
-Scriptname PDV_OriginRuntimeBase extends Quest
+Scriptname PDV_OriginRuntimeBase extends PDV_GainModifierProvider
 
 ; Origin runtime, extracted from PDV__ManagerQuest for the 2.0 rebuild (ORIGIN
 ; module, tranche 1: Altmer + Bosmer origin lanes). Behavior parity: bodies are
@@ -12024,8 +12024,14 @@ EndFunction
 Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
 EndFunction
 
-; -- Gain provider (ADR D1). Becomes the PDV_GainModifierProvider override when
-;    the seam lands; 1.0 is the identity factor, so it is inert until then. --
+; -- Gain provider. The curse factor is NOT race-gated (it reads curse state and a deity
+;    check), so the base owns it for every race. A race adapter that adds its own factor
+;    MUST compose with Parent so this one is not lost. Applies on award and on decay --
+;    the same scalar, sourced once. --
 Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)
+    if phase == Manager.PHASE_PER_EVENT || phase == Manager.PHASE_DECAY
+        return Manager.GetCurseGainMultiplier(deity)
+    endIf
+
     return 1.0
 EndFunction

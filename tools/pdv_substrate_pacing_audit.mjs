@@ -296,7 +296,7 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
     && /HandlePlayerSleepStop\s*\([^\r\n]*hadSleepStartContext[^\r\n]*sleepStartedOutside/i.test(sleepRoute), "source.khajiit-sleep-context-route", "the player alias must capture exterior state at sleep start and carry it through the event bus");
   add(/hadSleepStartContext/i.test(sleepManager)
     && /sleepStartedOutside/i.test(sleepManager)
-    && /HandleKhajiitRoadHome\s*\(/i.test(sleepManager)
+    && /HandleKhajiitRoadHome\s*\(|HandleContextualSignal\s*\(\s*"outdoor-rest"/i.test(sleepManager)
     && !/GetParentCell|IsInterior/i.test(sleepManager), "source.khajiit-sleep-start-authority", "Khajiit road-home classification must use captured sleep-start context rather than re-sampling the wake cell");
   add(/PDV\.Khajiit\.RoadHome\.PresentationDay/i.test(roadHome)
     && /ReadZeroReservedDevotionalDayStamp/i.test(roadHome)
@@ -387,8 +387,8 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
     && /StampHistMaintenance\s*\(\s*"sleeping_tree_sap"\s*\)/i.test(sapVision), "source.argonian-hist-contact-clock", "sacred water and Sleeping Tree Sap must both refresh the shared Hist-maintenance clock without adding the routine +5 relation pulse");
 
   const substrateProgressCalls = managerSource.split(/\r?\n/).filter((line) => /SendPrismaSubstrateProgress\s*\(/i.test(line) && !/Function\s+SendPrismaSubstrateProgress/i.test(line));
-  add(substrateProgressCalls.length >= 19 && substrateProgressCalls.every((line) => /(?:[A-Za-z0-9_]+\.)?GetMetric\(\)\s*-\s*metricBefore|metricAfter\s*-\s*metricBefore|grantedMetric/i.test(line))
-    && /Float\s+grantedMetric\s*=\s*PDV_KhajiitLunarSubstrate\.GetMetric\(\)\s*-\s*metricBefore/i.test(roadHome), "source.actual-substrate-delta", "every substrate progress producer must report the actual post-award metric delta, including a same-day zero, rather than its requested multiplier");
+  add(substrateProgressCalls.length >= 19 && substrateProgressCalls.every((line) => /(?:[A-Za-z0-9_]+\.)?GetMetric\(\)\s*-\s*[A-Za-z0-9_]*metricBefore|metricAfter\s*-\s*metricBefore|grantedMetric/i.test(line))
+    && /Float\s+grantedMetric\s*=\s*PDV_KhajiitLunarSubstrate\.GetMetric\(\)\s*-\s*[A-Za-z0-9_]*metricBefore/i.test(roadHome), "source.actual-substrate-delta", "every substrate progress producer must report the actual post-award metric delta, including a same-day zero, rather than its requested multiplier");
 
   const pacingTrigger = bodyFor(managerSource, "DebugTriggerSubstratePacingSource");
   const genuineHandlers = [

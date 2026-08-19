@@ -592,6 +592,12 @@ Int Property BOSMER_PATH_OLD_CONTRACT = 0 AutoReadOnly
 Int Property BOSMER_PATH_LIVING_STORY = 1 AutoReadOnly
 Int Property BOSMER_PATH_EXCHANGE = 2 AutoReadOnly
 Int Property BOSMER_PATH_BANDIT_ROAD = 3 AutoReadOnly
+; Gain-provider phases (PDV_GainModifierProvider contract). Declared here because it is the
+; one script every provider and the ledger can already reach.
+Int Property PHASE_PER_EVENT = 0 AutoReadOnly
+Int Property PHASE_AT_DAWN = 1 AutoReadOnly
+Int Property PHASE_DECAY = 2 AutoReadOnly
+
 Int Property ORIGIN_NORD = 0 AutoReadOnly
 Int Property ORIGIN_IMPERIAL = 1 AutoReadOnly
 Int Property ORIGIN_BRETON = 2 AutoReadOnly
@@ -860,6 +866,20 @@ Int Function GetPlayerOriginRaceIndex()
     return -1
 EndFunction
 
+; Hand LEDGER the providers that are actually live. Assembled here rather than filled in the
+; ESP because all ten origin adapter quests run, but only the bound one may contribute -- a
+; static array would apply another race's factor.
+Function RefreshGainProviders()
+    if !LedgerRuntime
+        return
+    endIf
+
+    PDV_GainModifierProvider[] providers = new PDV_GainModifierProvider[2]
+    providers[0] = OriginRuntime as PDV_GainModifierProvider
+    providers[1] = DaedricRuntime as PDV_GainModifierProvider
+    LedgerRuntime.SetGainProviders(providers)
+EndFunction
+
 Bool Function ResolveOriginRuntime()
     if !PDV_FLST_OriginAdapters || !PDV_GLO_OriginRace
         return False
@@ -902,6 +922,7 @@ Function OnOriginRuntimeBound()
     if !OriginRuntime
         return
     endIf
+    RefreshGainProviders()
     OriginRuntime.EnsureRuntimeWiring()
     OriginRuntime.EnsureBosmerRuntimeWiring()
     OriginRuntime.EnsureNordRuntimeWiring()

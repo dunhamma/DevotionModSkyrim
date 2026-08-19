@@ -1,4 +1,4 @@
-Scriptname PDV_DaedricRuntime extends Quest
+Scriptname PDV_DaedricRuntime extends PDV_GainModifierProvider
 
 ; Daedric runtime, extracted from PDV__ManagerQuest for the 2.0 rebuild (DAEDRIC
 ; module). Behavior parity: bodies are the manager originals; the only edit inside a
@@ -10,6 +10,15 @@ Scriptname PDV_DaedricRuntime extends Quest
 ; INERT until the host QUST exists, Manager is filled, and CK wiring lands.
 
 PDV__ManagerQuest Property Manager Auto
+
+; -- Gain provider. DAEDRIC owns the stigma factor, which scales awards AND decay.
+Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)
+    if phase == Manager.PHASE_PER_EVENT || phase == Manager.PHASE_DECAY
+        return GetDaedricStigmaGainMultiplier(deity)
+    endIf
+
+    return 1.0
+EndFunction
 
 ; --- Daedric-owned script variables (moved verbatim; referenced only by moved bodies) ---
 PDV_DaedricPathBase _kidNamiraPath = None

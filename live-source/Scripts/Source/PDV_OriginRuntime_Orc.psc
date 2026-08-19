@@ -1156,9 +1156,12 @@ EndFunction
 ; manager function becomes redundant once this override is race-selected, but it
 ; is deliberately left in place for now.
 Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)
-    ; phase 1 == AT_DAWN. Delegates for now; the function moves here with the seam.
-    if phase == 1
-        return Manager.GetOrcLifeModeGainMultiplier(deity)
+    ; Composes with Parent: the base owns the cross-race curse factor and dropping it here
+    ; would silently lose it for this race.
+    Float factor = Parent.GetProviderGainMultiplier(deity, phase)
+    if phase == Manager.PHASE_AT_DAWN
+        factor = factor * Manager.GetOrcLifeModeGainMultiplier(deity)
     endIf
-    return 1.0
+
+    return factor
 EndFunction

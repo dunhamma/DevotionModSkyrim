@@ -128,7 +128,32 @@ export function familySourceText(repoRoot, sourceDir) {
   const key = root + "|" + dir;
   if (_familyTextCache.has(key)) return _familyTextCache.get(key);
   const parts = [];
+  // A module may be SPLIT into sibling scripts the region map does not name -- ORIGIN is one
+  // base plus ten PDV_OriginRuntime_<Race> adapters. Those carry real moved bodies, so a family
+  // that stops at the region map's targetScript is blind to them and gates silently under-count.
+  // The split scripts share the module's STEM, not its full name: the base is
+  // PDV_OriginRuntimeBase but the adapters are PDV_OriginRuntime_<Race>, so a trailing "Base"
+  // has to come off before matching.
+  const siblingsOf = (script) => {
+    const stems = [script, script.replace(/Base$/, "")];
+    try {
+      const files = fs.readdirSync(dir).filter((f) => f.endsWith(".psc"));
+      const out = [];
+      for (const stem of stems) {
+        for (const f of files) {
+          const name = f.slice(0, -4);
+          if (name !== script && name.startsWith(stem + "_") && !out.includes(name)) out.push(name);
+        }
+      }
+      return out;
+    } catch { return []; }
+  };
+  const scripts = [];
   for (const script of decompositionFamily(root)) {
+    scripts.push(script);
+    for (const sib of siblingsOf(script)) if (!scripts.includes(sib)) scripts.push(sib);
+  }
+  for (const script of scripts) {
     const file = path.join(dir, script + ".psc");
     if (!fs.existsSync(file)) continue;
     const text = fs.readFileSync(file, "utf8");
