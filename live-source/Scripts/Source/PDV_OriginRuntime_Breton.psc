@@ -1307,7 +1307,7 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetBretonCursePostureLabel()
     elseIf detailKey == "ancestor-summary"
         return GetBretonAncestorSummary()
-    elseIf detailKey == "medallion-json"
+    elseIf detailKey == "medallion-entries"
         return GetBretonMedallionEntriesJson()
     elseIf detailKey == "patron-survey-sentence"
         return GetBretonPatronSurveySentence(GetBretonTraditionValue())

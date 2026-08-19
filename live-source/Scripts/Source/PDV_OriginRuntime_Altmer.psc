@@ -1749,6 +1749,10 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "sleep-events"
         HandleAltmerSleepEvents(Game.GetPlayer(), reason)
         return True
+    elseIf signalId == "kill_thalmor_agent"
+        ; base HandleThalmorUnprovokedKill branched on race; now the live adapter answers.
+        HandleAltmerAlignmentSignal(signalId, contextForm, reason)
+        return True
     endIf
 
     return False

@@ -721,6 +721,16 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "talos-pressure-public"
         HandleImperialTalosPressure(False, reason)
         return True
+    elseIf signalId == "concordat-pressure"
+        ; base HandleTalosBetrayal / HandleTalosShrineDefiance adjusted Concordat standing
+        ; directly; the adjustment rides the Float magnitude slot.
+        ApplyConcordatPressure(magnitude as Int, reason)
+        return True
+    elseIf signalId == "hidden_talos_shrine" || signalId == "kill_thalmor_justiciar_unprovoked"
+        ; The action key IS the signal id: the base names the act, the adapter owns what
+        ; Imperials do about it.
+        ApplyImperialConcordatAction(signalId, reason)
+        return True
     endIf
 
     return False

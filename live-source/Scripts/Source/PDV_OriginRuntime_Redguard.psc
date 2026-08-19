@@ -1085,7 +1085,7 @@ String Function GetOriginDetailLabel(String detailKey)
         return GetRedguardSurveySectText()
     elseIf detailKey == "summary"
         return GetRedguardSummary()
-    elseIf detailKey == "medallion-json"
+    elseIf detailKey == "medallion-entries"
         return GetRedguardMedallionEntriesJson()
     endIf
 

@@ -1095,6 +1095,10 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "four-holds-visit"
         HandleOrcFourHoldsVisit(magnitude as Int, reason)
         return True
+    elseIf signalId == "code-holds"
+        ; base HandlePlayerBelowHealthGate used to call TryOrcCodeHolds directly.
+        TryOrcCodeHolds(contextForm as Actor)
+        return True
     endIf
 
     return False
