@@ -36,6 +36,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -49,7 +50,7 @@ const AUTH = "references/authoring";
 const CONTRACT = path.join(ROOT, AUTH, "PDV_1_0_EndStateContract.json");
 const CSV_DEITY = path.join(ROOT, AUTH, "PDV_DeityLikesDislikes.csv");
 const CSV_PRINCE = path.join(ROOT, AUTH, "PDV_DeityLikesDislikes_Princes_V2.csv");
-const MANAGER = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 const OUT_BASE = path.join(ROOT, AUTH, "PDV_PacingSimLedger");
 const RACES = ["Altmer", "Argonian", "Bosmer", "Breton", "Dunmer", "Imperial", "Khajiit", "Nord", "Orc", "Redguard"];
 const UNCAPPED_TYPICAL_USES = 2;
@@ -187,7 +188,10 @@ function main() {
 
   const deityRows = parseCsvRows(fs.readFileSync(CSV_DEITY, "utf8"));
   const princeRows = parseCsvRows(fs.readFileSync(CSV_PRINCE, "utf8"));
-  const managerSource = fs.readFileSync(MANAGER, "utf8");
+  // Whole decomposition family, not just the manager: the clamp constant and the dawn
+  // daily-cap path move into extracted modules, and a manager-only read would report
+  // them missing while they are present and correct one file over.
+  const managerSource = familySourceText(ROOT, SOURCE_DIR);
 
   // Race -> worship-target deity names from the race reward specs.
   const raceDeities = {};

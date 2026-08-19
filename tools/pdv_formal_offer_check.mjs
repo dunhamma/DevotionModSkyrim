@@ -12,6 +12,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { familySourceText, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
@@ -121,14 +122,22 @@ function main(argv) {
     verifySpecShape(spec, specPath, pass, fail);
   }
 
+  const sourceDir = path.resolve(args.sourceDir || path.dirname(sourcePath) || DEFAULT_SOURCE_DIR);
+
   if (!fs.existsSync(sourcePath)) {
     fail("Formal offer source", "Live PDV__ManagerQuest.psc is missing.", sourcePath);
   } else {
-    const sourceText = readText(sourcePath);
+    // Searched, never hashed or rewritten. The 2.0 rebuild moves manager bodies
+    // into deep modules, so reading only PDV__ManagerQuest.psc would report the
+    // formal-offer flow missing when it merely relocated -- and would let the
+    // negated "must not contain" needles pass vacuously. familySourceText() is
+    // strictly additive: manager text first and verbatim, then each extracted
+    // module with qualifiers stripped; unextracted trees are unaffected.
+    const sourceText = familySourceText(PROJECT_ROOT, sourceDir).replace(/\r\n/g, "\n");
     verifySourceContract(sourceText, sourcePath, pass, fail);
   }
 
-  verifyCurseCommitmentBoundaries(path.resolve(args.sourceDir || DEFAULT_SOURCE_DIR), pass, fail, warn);
+  verifyCurseCommitmentBoundaries(sourceDir, pass, fail, warn);
 
   if (!args.sourceOnly && spec) {
     verifyEspReadback(specPath, espPath, pass, fail, warn);
@@ -342,8 +351,16 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "Function DispatchDiegeticCue(String eventClass, String surfaceKey, String direction, PDV_DeityBase deity, String toneOverride = \"\")"
   ];
 
+  // A call that stayed in the manager but whose callee moved gains a forward-ref
+  // hop (BuildX(...) -> LedgerRuntime.BuildX(...)). That is a relocation, not a
+  // contract change, so the positive needles below are matched against the raw
+  // text OR a qualifier-stripped view. The forbidden/exclusion needles further
+  // down deliberately keep using the raw text only.
+  const qualifierFreeText = stripQualifiers(sourceText);
+  const containsSnippet = (snippet) => sourceText.includes(snippet) || qualifierFreeText.includes(snippet);
+
   for (const snippet of requiredSourceSnippets) {
-    if (sourceText.includes(snippet)) {
+    if (containsSnippet(snippet)) {
       pass("Formal offer source flow", `Manager contains: ${snippet}`, sourcePath);
     } else {
       fail("Formal offer source flow", `Manager is missing: ${snippet}`, sourcePath);
@@ -413,7 +430,7 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "SurfaceTransition(\"reorientation\", GetRedguardSectLabel(), \"shift\", -1, \"turning\")"
   ];
   for (const snippet of quietEmergenceSnippets) {
-    if (sourceText.includes(snippet)) {
+    if (containsSnippet(snippet)) {
       pass("Quiet-emergence source cue", `Manager contains: ${snippet}`, sourcePath);
     } else {
       fail("Quiet-emergence source cue", `Manager is missing: ${snippet}`, sourcePath);

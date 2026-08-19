@@ -105,3 +105,36 @@ export function definitionFile(name, repoRoot, sourceDir) {
   }
   return { script: target, file: null };
 }
+
+// Concatenated source text of the manager's decomposition family, for gates that
+// read manager source and then search it for a function body or a call needle.
+//
+// The problem this solves: as functions move out of PDV__ManagerQuest.psc into
+// deep modules, a gate that reads ONLY the manager goes blind. The body is simply
+// absent, so every positive needle fails and every negated needle passes
+// vacuously -- the gate reports a wall of red (or, worse, a quiet green) about
+// code that is present and correct, just somewhere else.
+//
+// STRICTLY ADDITIVE, same posture as callTokenPattern(): the raw manager text is
+// emitted FIRST and verbatim, so any needle that matched before this helper
+// existed still matches at the same offset semantics. Module text is appended
+// with qualifiers stripped, because a moved body calls Manager.X() where it used
+// to call X(). Family scripts not yet extracted are skipped, so the same call is
+// correct before AND after each future extraction -- no per-move hand-patching.
+const _familyTextCache = new Map();
+export function familySourceText(repoRoot, sourceDir) {
+  const root = path.resolve(repoRoot);
+  const dir = path.resolve(sourceDir);
+  const key = root + "|" + dir;
+  if (_familyTextCache.has(key)) return _familyTextCache.get(key);
+  const parts = [];
+  for (const script of decompositionFamily(root)) {
+    const file = path.join(dir, script + ".psc");
+    if (!fs.existsSync(file)) continue;
+    const text = fs.readFileSync(file, "utf8");
+    parts.push(script === MANAGER_SCRIPT ? text : stripQualifiers(text));
+  }
+  const out = parts.join("\n");
+  _familyTextCache.set(key, out);
+  return out;
+}

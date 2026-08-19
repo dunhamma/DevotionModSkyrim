@@ -31,6 +31,7 @@
 import fs from "node:fs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_ledger_coverage_audit" });
@@ -223,23 +224,26 @@ function hasDaedricStoredPietyDriverHook() {
          /"PDV\.Driver\.Days"/.test(text);
 }
 
+// NOTE: the file-by-file scan in main() is deliberately NOT family-collapsed -- it already
+// reads every .psc in SOURCE_DIR and its whole output is per-file/per-line attribution.
+// Only these two single-function body probes were manager-pinned, and both go blind the
+// moment their function is extracted (AwardCuratedSignalScaled now lives in
+// PDV_DevotionLedger.psc), which is why they read the decomposition family instead.
 function hasReasonBearingScaledCuratedAward() {
-  const path = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
-  if (!fs.existsSync(path)) return false;
-  const text = fs.readFileSync(path, "utf8");
+  const text = familySourceText(ROOT, SOURCE_DIR);
   const body = functionBody(text, "AwardCuratedSignalScaled");
   if (!body) return false;
   return /AwardPiety\s*\(\s*deity\s*,\s*scaledDelta\s*,/.test(body);
 }
 
 function hasUncappedDashboardMovedGodList() {
-  const path = `${SOURCE_DIR}/PDV__ManagerQuest.psc`;
-  if (!fs.existsSync(path)) return false;
-  const text = fs.readFileSync(path, "utf8");
+  const text = familySourceText(ROOT, SOURCE_DIR);
   const body = functionBody(text, "GetDashboardJson");
   if (!body) return false;
   return /PDV_FLST_AllDeities/.test(body) &&
-         /piety\s*>\s*0\.0\s*\|\|\s*pietyToday\s*!=\s*0\.0\s*\|\|\s*IsNeglectFlagActive/.test(body) &&
+         // Qualifier-agnostic on the call, same posture as callTokenPattern(): the predicate
+         // is unchanged, but IsNeglectFlagActive gained a `LedgerRuntime.` hop when it moved.
+         /piety\s*>\s*0\.0\s*\|\|\s*pietyToday\s*!=\s*0\.0\s*\|\|\s*(?:[A-Za-z_]\w*\.)*IsNeglectFlagActive/.test(body) &&
          !/shown\s*<\s*\d+/.test(body);
 }
 

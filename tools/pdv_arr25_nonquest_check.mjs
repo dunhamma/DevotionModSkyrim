@@ -4,6 +4,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const at = (...parts) => path.join(ROOT, ...parts);
 const read = (...parts) => fs.readFileSync(at(...parts), "utf8");
@@ -11,7 +13,9 @@ const failures = [];
 const passes = [];
 const check = (name, ok, detail) => (ok ? passes : failures).push(`${name}: ${detail}`);
 
-const manager = read("live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+// Resolver-aware: search the manager's decomposition family, not the manager alone,
+// so a needle tracks a function that has moved into an extracted module.
+const manager = familySourceText(ROOT, at("live-source", "Scripts", "Source"));
 const hiddenStart = manager.indexOf("Function HandleBretonSleepEvents");
 const hiddenEnd = manager.indexOf("EndFunction", hiddenStart);
 const hidden = hiddenStart >= 0 && hiddenEnd > hiddenStart ? manager.slice(hiddenStart, hiddenEnd) : "";

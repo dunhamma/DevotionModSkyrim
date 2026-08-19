@@ -5,6 +5,7 @@ import path from "node:path";
 import process from "node:process";
 
 import { devotionSource } from "./lib/pdv_paths.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 const ROOT = process.cwd();
 const LIVE_SOURCE = devotionSource();
@@ -72,7 +73,7 @@ function pass(check, detail) {
 
 const p2Manifest = readJson(p2ManifestPath);
 const rewardManifest = readJson(rewardManifestPath);
-const managerSource = readLiveSource("PDV__ManagerQuest.psc");
+const managerSource = familySourceText(ROOT, LIVE_SOURCE);
 const playerEventsSource = readLiveSource("PDV_PlayerEvents.psc");
 const eventBusSource = readLiveSource("PDV_EventBus.psc");
 

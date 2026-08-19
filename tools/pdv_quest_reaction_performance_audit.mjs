@@ -13,6 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 const KNOWN_FLAGS = new Set(["--json", "--self-test"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, {
@@ -115,7 +116,7 @@ function evaluateDirectFanout(manager, ledger) {
   return findings;
 }
 
-function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists, contract, release, fanout }) {
+function evaluate({ runtime, manager, managerOwn, eventBus, playerEvents, mcm, workerExists, contract, release, fanout }) {
   const findings = [];
   const sources = [runtime, manager, eventBus, playerEvents, mcm].join("\n");
   const processBody = bodyFor(runtime, "ProcessQuestReactionQueueSlice");
@@ -171,7 +172,7 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
     /QUEST_REACTION_DUPLICATE_WINDOW_DAYS\s*=\s*0\.02\b/i.test(runtime),
     "runtime.bounds", "Queue ceiling, slice budget, tick, and duplicate window retain parity values.");
   finding(findings, count(runtime, /RegisterForSingleUpdate\s*\(/gi) === 1 &&
-    !workerExists && !bodyFor(manager, "ProcessQuestReactionQueueSlice"),
+    !workerExists && !bodyFor(managerOwn, "ProcessQuestReactionQueueSlice"),
     "runtime.single-scheduler", "Only the runtime owns initial and continuation re-arms; the old worker is absent.");
   const onUpdateClear = onUpdate.indexOf("StorageUtil.SetIntValue(None, QUEUE_UPDATE_ARMED_KEY, 0)");
   const onUpdateProcess = onUpdate.indexOf("ProcessQuestReactionQueueSlice()");
@@ -313,8 +314,8 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
     !/SendPrismaToastWithSource\([^\r\n]*,\s*sourceModName(?:\s*,|\s*\))/g.test(flushQueuedSurface) &&
     !/AppendBookOfDaysEntry\([^\r\n]*,\s*sourceModName(?:\s*,|\s*\))/g.test(flushQueuedSurface),
     "manager.public-source-sanitized", "Quest Reaction toast and Book surfaces hide Bethesda master filenames while retaining optional integration attribution.");
-  finding(findings, retiredManager.every((name) => !bodyFor(manager, name)) &&
-    !manager.includes("PDV.V3.QR.") && !manager.includes("PDV_QuestReactionWorker"),
+  finding(findings, retiredManager.every((name) => !bodyFor(managerOwn, name)) &&
+    !managerOwn.includes("PDV.V3.QR.") && !managerOwn.includes("PDV_QuestReactionWorker"),
     "manager.ownership-retired", "Manager no longer owns catalog, queue, V3 storage, scheduler, or the old worker.");
   finding(findings, eventBusQuest.includes("PDV_QuestReactionRuntimeService.SubmitQuestStage") &&
     !eventBusQuest.includes("PDV_Manager.ApplyQuestReaction"),
@@ -348,7 +349,12 @@ function evaluate({ runtime, manager, eventBus, playerEvents, mcm, workerExists,
 function loadLiveInputs() {
   return {
     runtime: fs.readFileSync(paths.runtime, "utf8"),
-    manager: fs.readFileSync(paths.manager, "utf8"),
+    // Search text spans the manager's whole decomposition family so needles
+    // track functions extracted into the 2.0 deep modules. `managerOwn` stays
+    // the raw manager file, because the ownership-retired assertions are
+    // deliberately scoped to what the MANAGER still contains.
+    manager: familySourceText(ROOT, SOURCE_ROOT),
+    managerOwn: fs.readFileSync(paths.manager, "utf8"),
     eventBus: fs.readFileSync(paths.eventBus, "utf8"),
     playerEvents: fs.readFileSync(paths.playerEvents, "utf8"),
     mcm: fs.readFileSync(paths.mcm, "utf8"),
@@ -362,9 +368,9 @@ function loadLiveInputs() {
 function selfTest() {
   const base = loadLiveInputs();
   const mutations = [
-    ["legacy manager queue owner", { manager: base.manager + "\nFunction QueueQuestReactionJob()\nEndFunction\n" }, "manager.ownership-retired"],
+    ["legacy manager queue owner", { managerOwn: base.managerOwn + "\nFunction QueueQuestReactionJob()\nEndFunction\n" }, "manager.ownership-retired"],
     ["legacy V1 key", { runtime: base.runtime + '\nString legacy = "PDV.QR.Queue.JobIds"\n' }, "runtime.v3-namespace"],
-    ["second scheduler", { manager: base.manager + "\nFunction ProcessQuestReactionQueueSlice()\n  RegisterForSingleUpdate(0.1)\nEndFunction\n" }, "runtime.single-scheduler"],
+    ["second scheduler", { managerOwn: base.managerOwn + "\nFunction ProcessQuestReactionQueueSlice()\n  RegisterForSingleUpdate(0.1)\nEndFunction\n" }, "runtime.single-scheduler"],
     ["missing armed update guard", { runtime: base.runtime.replace("StorageUtil.GetIntValue(None, QUEUE_UPDATE_ARMED_KEY) != 1", "True") }, "runtime.single-armed-update-chain"],
     ["quest reaction inside broad scope", { playerEvents: base.playerEvents.replace("RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)", "RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)\n    RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)") }, "playerevents.scope-closes-before-qr"],
     ["synchronous catalog materialization", { runtime: base.runtime.replace('StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)', 'StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)\n    PDV_Manager.ShouldQueueQuestReactionCell("Akatosh", "+", "native", "major")') }, "runtime.lightweight-admission"],
@@ -376,7 +382,7 @@ function selfTest() {
     ["Book bypasses sanitized quest source", { manager: base.manager.replace("False, surfaceSourceModName)", "False, sourceModName)") }, "manager.public-source-sanitized"],
     ["missing interface member", { runtime: base.runtime.replace("String Function GetCompatibilityDetail()", "String Function MissingCompatibilityDetail()") }, "runtime.interface"],
     ["EventBus manager ingress", { eventBus: base.eventBus.replace("PDV_QuestReactionRuntimeService.SubmitQuestStage", "PDV_Manager.ApplyQuestReaction") }, "eventbus.direct-ingress"],
-    ["Manager V3 storage", { manager: base.manager + '\nString bad = "PDV.V3.QR.Queue.JobIds"\n' }, "manager.ownership-retired"],
+    ["Manager V3 storage", { managerOwn: base.managerOwn + '\nString bad = "PDV.V3.QR.Queue.JobIds"\n' }, "manager.ownership-retired"],
     ["legacy V1 discovery", { runtime: base.runtime + '\nString Property QUEST_REACTION_CHANNEL_FOLDER = "Channels" AutoReadOnly\n' }, "runtime.v1-discovery-retired"],
     ["unsorted extensions", { runtime: base.runtime.replace("SortCatalogNames(JsonUtil.JsonInFolder(QUEST_REACTION_EXTENSION_FOLDER))", "JsonUtil.JsonInFolder(QUEST_REACTION_EXTENSION_FOLDER)") }, "runtime.catalog-owner"],
     ["missing semantic path", { runtime: base.runtime.replace('return QueueResolvedReactionJob(catalogFile, "semantic." + semanticKey + ".", semanticKey, sourceForm, semanticKey, StorageUtil.GetStringValue(None, "PDV.V3.QR.SemanticSourceName." + semanticKey))', "return False") }, "runtime.semantic-ingress"],

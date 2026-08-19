@@ -15,6 +15,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 const KNOWN_FLAGS = new Set(["--check", "--faucets", "--json", "--likes", "--log", "--manual-ledger", "--matrix", "--runtime-json", "--scenarios", "--strict-runtime", "--write-ledger"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_signal_floor_smoke_gate" });
@@ -320,7 +321,12 @@ function checkScenario(scenario, matrixRows, likesRows, runtime, sourceText, pap
 }
 
 function readSources() {
-  return Object.fromEntries(Object.entries(files).map(([key, file]) => [key, fs.readFileSync(file, "utf8")]));
+  const out = Object.fromEntries(Object.entries(files).map(([key, file]) => [key, fs.readFileSync(file, "utf8")]));
+  // Manager needles search the manager's whole decomposition family, so a
+  // function extracted into a 2.0 deep module is still found. Additive: the
+  // manager text is emitted first and verbatim.
+  out.manager = familySourceText(ROOT, SOURCE);
+  return out;
 }
 
 function findRuntimeQuestKey(runtime, editorId, stage, questReadbackRows) {

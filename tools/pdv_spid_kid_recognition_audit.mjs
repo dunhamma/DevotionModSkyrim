@@ -3,7 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const SOURCE_ROOT = path.join(root, "live-source", "Scripts", "Source");
 const read = (...parts) => fs.readFileSync(path.join(root, ...parts), "utf8");
 const exists = (...parts) => fs.existsSync(path.join(root, ...parts));
 const failures = [];
@@ -67,7 +70,7 @@ for (const kidPath of kidPaths) {
   }
 }
 
-const manager = read("live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const manager = familySourceText(root, SOURCE_ROOT);
 const playerEvents = read("live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 const mcm = read("live-source", "Scripts", "Source", "PDV_MCM.psc");
 for (const token of [
@@ -166,7 +169,7 @@ requireTrue(
     recognitionPayload.includes('StorageUtil.GetStringValue(None, "PDV.Recognition.Owner")') &&
     recognitionAdvisory.includes("if !recognitionEnabled") &&
     recognitionAdvisory.includes('elseIf ownerName != ""') &&
-    recognitionAdvisory.includes("band >= TIER_DEVOTED"),
+    /band >= (?:[A-Za-z_]\w*\.)*TIER_DEVOTED/.test(recognitionAdvisory),
   "focused-panel recognition state distinguishes disabled, external-owner, and below-Faithful states",
 );
 requireTrue(

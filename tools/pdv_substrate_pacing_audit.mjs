@@ -14,6 +14,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -362,7 +363,7 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   const dunmerHome = bodyFor(managerSource, "HandleDunmerPlayerHomeBonus");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(nearWater) && /WriteZeroReservedDevotionalDayStamp/i.test(nearWater) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(nearWater), "source.day-zero.argonian-water", "Argonian water credit must use the zero-reserved +2 devotional-day stamp");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(moonRite) && /WriteZeroReservedDevotionalDayStamp/i.test(moonRite) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(moonRite), "source.day-zero.khajiit-moon-piety", "Khajiit moon piety must use the zero-reserved +2 devotional-day stamp");
-  add(/observationToken\s*=\s*PDV_Manager\.BeginKhajiitMoonObservation\s*\(\s*(?:akTarget|playerActor)\s*\)/i.test(observeMoonsSource)
+  add(/observationToken\s*=\s*(?:[A-Za-z_]\w*\.)*BeginKhajiitMoonObservation\s*\(\s*(?:akTarget|playerActor)\s*\)/i.test(observeMoonsSource)
     && /observationToken\s*>\s*0[\s\S]*Utility\.Wait\s*\(\s*2\.0\s*\)[\s\S]*ProcessPendingKhajiitMoonObservation\s*\(\s*observationToken\s*\)/i.test(observeMoonsSource)
     && /_khajiitMoonObservationGeneration\s*\+=\s*1/i.test(moonBegin)
     && /observationToken\s*!=\s*_khajiitMoonObservationGeneration/i.test(moonComplete)
@@ -488,7 +489,9 @@ function main() {
   const result = evaluate({
     contract,
     baseSource: fs.existsSync(BASE_PATH) ? read(BASE_PATH) : "",
-    managerSource: fs.existsSync(MANAGER_PATH) ? read(MANAGER_PATH) : "",
+    // Resolver-aware: read the whole decomposition family, not just the manager.
+    // Strictly additive -- manager text still leads, verbatim.
+    managerSource: familySourceText(ROOT, SOURCE_ROOT),
     concreteSources,
     playerEventsSource: fs.existsSync(PLAYER_EVENTS_PATH) ? read(PLAYER_EVENTS_PATH) : "",
     eventBusSource: fs.existsSync(EVENT_BUS_PATH) ? read(EVENT_BUS_PATH) : "",

@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -15,6 +16,7 @@ assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_broad_pant
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTRACT_PATH = path.join(ROOT, "references", "authoring", "PDV_BroadPantheonContracts.json");
+const SOURCE_ROOT = path.join(ROOT, "live-source", "Scripts", "Source");
 const MANAGER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
 const MCM_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const PLAYER_EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
@@ -73,7 +75,10 @@ export function aggregateLogicalEvent(deltas) {
 export function hasDetachedActionShape(body) {
   const eventReasonAssignment = body.search(/String\s+eventReason\s*=\s*GetEventReason\s*\(\s*eventType\s*\)/i);
   const substrateCall = body.search(/HandleSubstrateActionEvent\s*\(\s*eventType\s*,\s*eventReason\s*\)/i);
-  return /detachedBroadEvent\s*=\s*!PDV_Manager\.ShouldSurfaceLikesDislikesEvent\s*\(\s*eventType\s*\)/i.test(body)
+  // Qualifier-agnostic: the extraction added a hop (PDV_Manager.X -> PDV_Manager.LedgerRuntime.X).
+  // The assertion is unchanged -- the flag is still the negation of one ShouldSurfaceLikesDislikesEvent
+  // call on eventType; only the owning-script path in front of it is no longer pinned.
+  return /detachedBroadEvent\s*=\s*!(?:[A-Za-z_]\w*\.)*ShouldSurfaceLikesDislikesEvent\s*\(\s*eventType\s*\)/i.test(body)
     && /GetActiveBroadPantheonPoolId\s*\(\s*\)/i.test(body)
     && eventReasonAssignment >= 0
     && substrateCall > eventReasonAssignment
@@ -245,22 +250,27 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
     && /targetDay\s*=\s*GetDevotionalDay\(\)\s*-\s*1/i.test(catchupBeforeAct)
     && /ProcessBroadPantheonThroughDay\s*\(\s*poolId\s*,\s*targetDay/i.test(catchupBeforeAct), "source.returning-act-decay-order", "a returning positive or negative act must settle already-owed inactivity through yesterday before opening today's scratch");
   const questCapBody = bodyFor(managerSource, "MarkQuestReactionFaucet");
-  add(/pdvCurrentDawnDay\s*=\s*GetDevotionalDay\(\)/i.test(managerSource), "source.scheduler-day-zero", "auto-dawn scheduler must use the canonical negative-floor devotional day");
+  add(/pdvCurrentDawnDay\s*=\s*(?:[A-Za-z_]\w*\.)*GetDevotionalDay\(\)/i.test(managerSource), "source.scheduler-day-zero", "auto-dawn scheduler must use the canonical negative-floor devotional day");
   add(/GetDevotionalDay\(\)\s*\+\s*2/i.test(questCapBody), "source.quest-cap-day-zero", "quest reaction daily cap must reserve zero with day+2 encoding");
   add(/ShouldSyncLegacyPatronBoons/i.test(deityBaseSource) && /RACE_NORD|RACE_IMPERIAL/i.test(deityBaseSource) && /return\s+False/i.test(deityBaseSource), "source.legacy-focused-t1-suppressed", "Nord and Imperial deity records must not transiently grant legacy focused T1");
   const pacingCatchup = bodyFor(managerSource, "DebugRunBroadPantheonCatchupForPacing");
   add(!/(?:Adjust|Set)IntValue\s*\([^\r\n]*PDV\.Imperial\.CivicServiceCount/i.test(managerSource), "source.frozen-imperial-counter", "production code must never write PDV.Imperial.CivicServiceCount; the legacy civic counter stays frozen");
   add(!/(?:Adjust|Set)IntValue\s*\([^\r\n]*PDV\.Nord\.OldWaysContextCount/i.test(managerSource), "source.frozen-oldways-counter", "production code must never write PDV.Nord.OldWaysContextCount; the legacy Old Ways counter stays frozen");
   const legacyBroadSeed = bodyFor(managerSource, "DebugSeedBroadLane");
-  add(/SetBroadPantheonStanding\s*\(\s*BROAD_PANTHEON_IMPERIAL\s*,\s*BROAD_PANTHEON_FAITHFUL_THRESHOLD/i.test(legacyBroadSeed), "source.debug-imperial-pool-seed", "the legacy MCM broad-lane seed must write ImperialDivines standing 50, not a frozen counter");
+  add(/SetBroadPantheonStanding\s*\(\s*(?:[A-Za-z_]\w*\.)*BROAD_PANTHEON_IMPERIAL\s*,\s*(?:[A-Za-z_]\w*\.)*BROAD_PANTHEON_FAITHFUL_THRESHOLD/i.test(legacyBroadSeed), "source.debug-imperial-pool-seed", "the legacy MCM broad-lane seed must write ImperialDivines standing 50, not a frozen counter");
   const awardPiety = bodyFor(managerSource, "AwardPietyInternal");
-  add(/queuedQuestReaction\s*=\s*_qrQueueTransactionActive/i.test(awardPiety)
+  // AwardPietyInternal moved out of the manager, so the two manager-private counters it
+  // used to touch directly are now reached through their accessor pairs. Each needle below
+  // accepts EITHER the direct field spelling or exactly the equivalent accessor spelling of
+  // the SAME operation -- the read, the increment, the <=0 wrap guard, and the unique label
+  // are all still required; nothing is relaxed to a bare name.
+  add(/queuedQuestReaction\s*=\s*(?:_qrQueueTransactionActive|(?:[A-Za-z_]\w*\.)*GetQrQueueTransactionActive\s*\(\s*\))/i.test(awardPiety)
     && /ownsBroadEvent\s*=\s*trackBroadPantheon\s*&&\s*!queuedQuestReaction\s*&&\s*_broadPantheonEventDepth\s*==\s*0/i.test(awardPiety)
-    && /_broadPantheonSelfEventSequence\s*\+=\s*1/i.test(awardPiety)
-    && /if\s+_broadPantheonSelfEventSequence\s*<=\s*0/i.test(awardPiety)
+    && /(?:_broadPantheonSelfEventSequence\s*\+=\s*1|(?:[A-Za-z_]\w*\.)*SetBroadPantheonSelfEventSequence\s*\(\s*(?:[A-Za-z_]\w*\.)*GetBroadPantheonSelfEventSequence\s*\(\s*\)\s*\+\s*\(?\s*1)/i.test(awardPiety)
+    && /if\s+(?:_broadPantheonSelfEventSequence|(?:[A-Za-z_]\w*\.)*GetBroadPantheonSelfEventSequence\s*\(\s*\))\s*<=\s*0/i.test(awardPiety)
     && /String\s+eventLabel\s*=\s*reason/i.test(awardPiety)
     && /eventLabel\s*=\s*"piety"/i.test(awardPiety)
-    && /BeginBroadPantheonEvent\s*\(\s*eventLabel\s*\+\s*"_auto_"\s*\+\s*_broadPantheonSelfEventSequence/i.test(awardPiety), "source.unique-self-owned-events", "every unscoped piety award must create a unique manager-owned broad event identity");
+    && /BeginBroadPantheonEvent\s*\(\s*eventLabel\s*\+\s*"_auto_"\s*\+\s*(?:_broadPantheonSelfEventSequence|(?:[A-Za-z_]\w*\.)*GetBroadPantheonSelfEventSequence\s*\(\s*\))/i.test(awardPiety), "source.unique-self-owned-events", "every unscoped piety award must create a unique manager-owned broad event identity");
   add(/IsRecentBroadPantheonEventDuplicate/i.test(applyResult) && /RememberBroadPantheonEvent/i.test(applyResult) && /StringListCount\s*\([^\r\n]*>=\s*8/i.test(managerSource), "source.recent-event-ring", "logical-event dedupe must retain a bounded recent-ID ring so immediate A/B/A fan-out cannot multiply the pool delta");
   const resetPool = bodyFor(managerSource, "ResetBroadPantheonPool");
   add(/StringListClear\s*\(\s*None\s*,\s*GetBroadPantheonRecentEventIdsKey\s*\(\s*poolId\s*\)/i.test(resetPool)
@@ -346,7 +356,10 @@ function main() {
     process.exitCode = 2;
     return;
   }
-  const managerSource = fs.existsSync(MANAGER_PATH) ? fs.readFileSync(MANAGER_PATH, "utf8") : "";
+  // Resolver-aware: the manager's decomposition family, not the manager alone. Once a
+  // broad-pantheon routine moves into an extracted module a manager-only read is blind --
+  // positive needles fail and negated needles pass vacuously. Strictly additive.
+  const managerSource = fs.existsSync(MANAGER_PATH) ? familySourceText(ROOT, SOURCE_ROOT) : "";
   const playerEventsSource = fs.existsSync(PLAYER_EVENTS_PATH) ? fs.readFileSync(PLAYER_EVENTS_PATH, "utf8") : "";
   const eventBusSource = fs.existsSync(EVENT_BUS_PATH) ? fs.readFileSync(EVENT_BUS_PATH, "utf8") : "";
   const questReactionRuntimeSource = fs.existsSync(QUEST_REACTION_RUNTIME_PATH) ? fs.readFileSync(QUEST_REACTION_RUNTIME_PATH, "utf8") : "";

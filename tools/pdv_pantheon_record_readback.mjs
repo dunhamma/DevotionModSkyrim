@@ -4,6 +4,7 @@ import path from "node:path";
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -12,7 +13,7 @@ const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_pantheon_record_readback" });
 
 const ROOT = process.cwd();
-const MANAGER_SOURCE = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 const json = process.argv.includes("--json");
 const findings = [];
 const pass = (check, detail) => findings.push({ status: "PASS", check, detail });
@@ -68,7 +69,9 @@ function functionBlock(source, functionName) {
 }
 
 async function main() {
-  const source = fs.readFileSync(MANAGER_SOURCE, "utf8");
+  // Search the whole decomposition family, not just the manager: functions extracted
+  // into deep modules would otherwise read as absent and every needle below would fail.
+  const source = familySourceText(ROOT, SOURCE_DIR);
   const inventoryResult = await callHousecarl("housecarl_cross_plugin_query", {
     plugins: ["Devotion.esp"], type: "SPEL", editorid_contains: "PDV_Bless_", fields: ["EditorID"], limit: 500, max_chars: 120_000,
   });
