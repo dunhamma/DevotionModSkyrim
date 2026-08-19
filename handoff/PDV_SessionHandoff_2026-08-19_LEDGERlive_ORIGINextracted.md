@@ -538,3 +538,48 @@ reference (manager 225, ledger 123, EventBus 96, ActionRouter 17, six smaller fi
 today via override dispatch. Migrating them to the virtuals is what finally allows deleting the 608
 lane originals from the base and collapsing its ~225 race comparisons. Until then the base stays
 12k lines and inert-but-bloated.
+
+---
+
+## UPDATE -- 2026-08-19 session 9: ORIGIN LIVE AND RUNTIME-CONFIRMED
+
+Owner confirmed in game: the startup popup no longer fires before race selection, and the
+adapter binds to the actual character's race.
+
+### Two bugs, one root cause -- both mine, both fixed
+1. **`fbea836e` -- binding fired at quest start, before the race existed.** `PDV_GLO_OriginRace`
+   defaults to **-1** (verified in the ESP, 02C5C6) and is written only by
+   `PDV_Origin.InitializeOrigin()`, which MainQuest defers to a player load/sleep ingress;
+   `ShouldDeferProvisionalNordCapture` additionally discards the FIRST Nord reading because
+   RaceMenu reports Nord before the player commits. `ResolveOriginRuntime()` ran once at OnInit,
+   saw -1, bound nothing, and never retried. Now change-driven: `_boundOriginRace` is compared
+   against the captured race on the tick and rebinds on any change, so it follows the capture,
+   the provisional-Nord correction, and the debug switch. The six per-race `Ensure*` verbs moved
+   out of OnInit (where they ran against None) into `OnOriginRuntimeBound()`.
+2. **`a9c268c1` -- the None trap, and the reason everything read as Nord.**
+   `EnsureUnifiedStartupChoice` gates correctly on `originRace < 0`, but a Papyrus call on a None
+   reference **does not halt -- it logs and returns the type default**, and `0 == ORIGIN_NORD`.
+   So the guard saw Nord instead of unknown. `GetPlayerOriginRaceIndex` reads a GLOBAL and never
+   belonged behind the adapter (ORB's body was literally
+   `Manager.PDV_GLO_OriginRace.GetValueInt()`); it now lives on the manager, ORB delegates, and
+   all 101 external sites were repointed off the adapter hop.
+
+**Both are now in agent memory** as `papyrus-none-call-returns-default`, because a sentinel
+"not-ready" guard behind an optional reference is unsafe in Papyrus generally, not just here.
+
+### Deployment trap found
+`pdv_compile.mjs --all` compiled **102 of 114** sources and still exited 0 -- it works from a
+fixed script list, so `PDV_OriginRuntimeBase`, `PDV_DaedricRuntime` and all ten adapters were
+silently skipped. Deploying on that green run would have shipped host quests pointing at scripts
+with no `.pex`. Compile the new modules explicitly and **verify every `.psc` has a `.pex`** after
+any deploy. Recorded as `pdv-compile-all-skips-new-modules`.
+
+### Module state: 6 of 8 wired
+RULES, QUESTREACTION, FAVOR, LEDGER, **ORIGIN (10 adapters)**, **DAEDRIC** are wired and live on
+V3Dev. PRISMA and RECOGNITION remain.
+
+### Gate scope -- be honest about what this proved
+Confirmed: startup gating and correct race binding. **Not yet exercised** are the deeper runbook
+checks in `PDV_2_0_ORIGIN_Gate05_RuntimeTest.md` -- A3 race behaviour, A4 the Khajiit moon-token
+query path, A5 sleep routing, B1/B2 the Imperial concordat query -- and 8 of the 10 adapters have
+had no runtime at all. Same shape, so low risk, not zero.
