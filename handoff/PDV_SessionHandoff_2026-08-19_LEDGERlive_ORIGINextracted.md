@@ -390,3 +390,75 @@ Adapters never touched the base, so the five branches merge without conflict.
 4. Delete the lane originals from `PDV_OriginRuntimeBase`, verifying with the same
    function-count arithmetic that proved DAEDRIC (manager 444 -> 397 = exactly 47).
 5. Then B4 provider seam, B5 ORIGIN wiring, and GATE 0.5 for ORIGIN + DAEDRIC together.
+
+---
+
+## UPDATE -- 2026-08-19 session 7: B3 mostly done; ONE ARCHITECTURAL ISSUE blocks ORIGIN wiring
+
+### Done and committed
+- **All 10 adapters reconciled** to the corrected 21-virtual interface (`80192e4f`). Every adapter
+  now declares `HandleContextualSignal(String signalId, String reason = "", Form contextForm = None,
+  Float magnitude = 0.0)`, matching the base exactly -- Papyrus matches overrides by parameter
+  TYPES, so before this only three of four arguments lined up and the override would have silently
+  stopped being one.
+- **Threading the real reason fixed TWO live bugs**, not just provenance:
+  `HandleAltmerDawnSteadiness` branches on the exact reason string (wrong branch taken), and
+  `HandleImperialCivicService` parses its reason through `GetImperialCivicFamilyFromSource` and
+  returns early without a family token -- the signalId substitution made **every civic-service
+  signal a silent no-op**.
+- **`HandleContextualQuery` found 3 consumers, one more than predicted**: Khajiit moon token,
+  Altmer practice focus, and the Imperial concordat-pressure Int that
+  `PDV_EventBus.RouteConcordatPressure` consumes as its magnitude. Khajiit also routed
+  `CanExecuteKhajiitBaanDarRescue`, whose Bool IS consumed.
+- **Nord's `IsRaceLaneNeglected` override removed** per the three-pool ruling.
+- **Birth-race selection wired**: `Manager.ResolveOriginRuntime()` binds `OriginRuntime` from a new
+  `PDV_FLST_OriginAdapters` FormList in `ORIGIN_*` index order, called at `OnInit` and again when
+  the curse-proof debug path rewrites the race. It also collapses six race-specific `Ensure*` calls
+  in `OnInit` into one virtual.
+- **4 new base->lane dispatch routes** added (Orc code-holds, Imperial concordat-pressure + the two
+  concordat action keys, Altmer kill_thalmor_agent) and the medallion detail id normalised
+  (`medallion-json` -> `medallion-entries` on Breton and Redguard, which had drifted from the other
+  eight).
+- **Full project compile: 102 PASS / 0 FAIL**, 0 errors in every script.
+
+### Re-route map, derived from source (not from the five manifests, which each invented a schema)
+685 base blocks; 608 lane fns in adapters; **79 survivors**; **13 survivors still call lane code**,
+covering 46 calls. Of those calls, **38 are already reachable by an existing signal/detail id**;
+8 needed new ones, of which 4 are now added.
+
+### THE ISSUE -- some race-named functions CANNOT move, and the ADR did not anticipate it
+`GetBroadLaneDisplayName(Int origin)` and `GetBroadLaneSymbol(Int origin)` take an **origin
+parameter** and switch on it. They answer "what is the broad-lane name for race X" for an
+ARBITRARY race -- the medallion roster renders all ten -- not for the player's race.
+
+**Polymorphism cannot serve that.** Exactly one adapter is instantiated, so the live adapter can
+only ever answer about the player's own origin. A lookup over other races has no adapter to
+dispatch to.
+
+So a class of race-named functions must stay base-resident:
+1. **Arbitrary-origin lookups** -- the two above, plus `GetNordPantheonBaselineState` which they
+   call (it reads a global track, not adapter state).
+2. **Signature-incompatible helpers** the interface cannot carry:
+   `AppendAltmerHeritageVoice(Float, String) -> String` and
+   `BridgeKhajiitMatrixFocus(String, String)`.
+
+This does NOT break the design -- adapters inherit base functions, so nothing is lost, and the
+ADR's durable gate (no `OriginRuntime.<RaceName>` call outside the adapters) still holds. But the
+ADR's claim that the 288 race-specific verbs all collapse into virtuals is **too strong**, and the
+removal set has to be computed with these exclusions rather than "delete all 608".
+
+### NOT DONE -- and deliberately not started
+- The 13 base re-routes (4 of the 6 needed new ids exist; the exclusion list above changes 3 sites).
+- Deleting the lane originals from `PDV_OriginRuntimeBase` (~600 of 608, minus the exclusions).
+- **ORIGIN ESP wiring is NOT started.** The instruction was to wire it "if no issues"; this is an
+  issue. Wiring now would also violate `PDV_2_0_ORIGIN_AdapterSplit_Plan.md` s7 -- ORIGIN must not
+  be wired while the base still carries the monolith.
+
+### Next session
+1. Owner decides the exclusion policy (recommendation: keep the 5 identified functions base-resident,
+   documented, and amend the ADR's "all 288 collapse" claim).
+2. Apply the 13 re-routes.
+3. Delete the lane originals, verifying with the DAEDRIC-style arithmetic (base blocks before/after
+   must fall by exactly the number deleted).
+4. Full compile, then ORIGIN ESP wiring: 10 adapter host QUSTs + the `PDV_FLST_OriginAdapters`
+   fill in `ORIGIN_*` index order + the manager backref.
