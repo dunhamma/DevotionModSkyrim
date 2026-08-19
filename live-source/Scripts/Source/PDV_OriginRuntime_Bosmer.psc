@@ -1398,6 +1398,10 @@ EndFunction
 ; delegates to a lane verb above. Hand-review target per the ADR.
 ; ===========================================================================
 
+Function ApplyInitialChoice(Int choiceValue, String reason)
+    ApplyBosmerInitialChoice(choiceValue, reason)
+EndFunction
+
 Function EnsureRuntimeWiring()
     EnsureBosmerRuntimeWiring()
 EndFunction
@@ -1437,45 +1441,48 @@ Function SyncNeglectSpells()
     SyncBosmerNeglectSpell(IsBosmerPathNeglected())
 EndFunction
 
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+; The caller composes `reason` (it is player-visible in the Ledger and several lane verbs
+; branch on it), so it is threaded through UNCHANGED. Passing signalId into a reason slot
+; would collapse every caller's context into one literal.
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "living-story"
-        HandleBosmerLivingStorySignal(signalId)
+        HandleBosmerLivingStorySignal(reason)
         return True
     elseIf signalId == "exchange"
-        HandleBosmerExchangeSignal(signalId)
+        HandleBosmerExchangeSignal(reason)
         return True
     elseIf signalId == "bandit-road"
-        HandleBosmerBanditRoadSignal(signalId)
+        HandleBosmerBanditRoadSignal(reason)
         return True
     elseIf signalId == "pact-positive"
-        HandleBosmerPactPositiveSignal(signalId)
+        HandleBosmerPactPositiveSignal(reason)
         return True
     elseIf signalId == "old-contract-proper-hunt"
-        HandleBosmerOldContractProperHunt(signalId)
+        HandleBosmerOldContractProperHunt(reason)
         return True
     elseIf signalId == "old-contract-forest-kept"
-        HandleBosmerOldContractForestKept(signalId)
+        HandleBosmerOldContractForestKept(reason)
         return True
     elseIf signalId == "living-story-community-kept"
-        HandleBosmerLivingStoryCommunityKept(signalId)
+        HandleBosmerLivingStoryCommunityKept(reason)
         return True
     elseIf signalId == "living-story-nature-site"
-        HandleBosmerLivingStoryNatureSite(signalId)
+        HandleBosmerLivingStoryNatureSite(reason)
         return True
     elseIf signalId == "exchange-debt-settled"
-        HandleBosmerExchangeDebtSettled(signalId)
+        HandleBosmerExchangeDebtSettled(reason)
         return True
     elseIf signalId == "exchange-proportionate-vengeance"
-        HandleBosmerExchangeProportionateVengeance(signalId)
+        HandleBosmerExchangeProportionateVengeance(reason)
         return True
     elseIf signalId == "bandit-road-road-life"
-        HandleBosmerBanditRoadRoadLife(signalId)
+        HandleBosmerBanditRoadRoadLife(reason)
         return True
     elseIf signalId == "bandit-road-reversal"
-        HandleBosmerBanditRoadReversal(signalId)
+        HandleBosmerBanditRoadReversal(reason)
         return True
     elseIf signalId == "green-pact-violation"
-        HandleGreenPactViolation(signalId)
+        HandleGreenPactViolation(reason)
         return True
     elseIf signalId == "eldergleam-interior"
         TryBosmerEldergleamInterior()
@@ -1508,7 +1515,7 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
         RemoveBosmerNamingSpells(Game.GetPlayer())
         return True
     elseIf signalId == "path-dream"
-        TryBosmerPathDream(signalId)
+        TryBosmerPathDream(reason)
         return True
     elseIf signalId == "scales-at-rest"
         TryBosmerScalesAtRest(Game.GetPlayer())
@@ -1517,14 +1524,22 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
         TryBosmerBaanDarGap(Game.GetPlayer())
         return True
     elseIf signalId == "confirm-pending-transition"
-        ConfirmBosmerPendingTransition(signalId)
+        ConfirmBosmerPendingTransition(reason)
         return True
     elseIf signalId == "sleep-events"
-        HandleBosmerSleepEvents(Game.GetPlayer(), signalId)
+        HandleBosmerSleepEvents(Game.GetPlayer(), reason)
         return True
     endIf
 
     return False
+EndFunction
+
+; The caller's akNewLocation rides through as a Form and is cast back to Location here.
+; Deliberately NOT re-sampled via Game.GetPlayer().GetCurrentLocation(): the player can
+; have moved on by the time the handler runs, and the lane keys per-location storage off
+; exactly the location the event named.
+Function HandleLocationChange(Form newLocation = None)
+    HandleBosmerLocationChange(newLocation as Location)
 EndFunction
 
 String Function GetOriginDetailLabel(String detailKey)

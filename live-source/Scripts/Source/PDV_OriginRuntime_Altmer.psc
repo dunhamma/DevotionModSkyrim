@@ -1619,6 +1619,10 @@ Function EnsureRuntimeWiring()
     EnsureAltmerPracticeFocus()
 EndFunction
 
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyAltmerCurseHandlers(oldState, newState, reason)
+EndFunction
+
 Function EvaluateAtDawn()
     EvaluateAltmerCrisisAtDawn()
 EndFunction
@@ -1658,42 +1662,65 @@ Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
     return IsAltmerOfferEligibleDeity(deity)
 EndFunction
 
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    return GetAltmerFormalCommitmentOfferMessage(deity)
+EndFunction
+
+Function ShowOriginNotification(Message messageRecord, String fallbackText)
+    ShowAltmerNotification(messageRecord, fallbackText)
+EndFunction
+
+; ShowAltmerMessage declares suppressModal with no default; the virtual carries `= False`,
+; so the default is supplied here and the value passed on explicitly.
+Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
+    ShowAltmerMessage(messageRecord, fallbackText, suppressModal)
+EndFunction
+
+; The caller composes `reason` and it is threaded through UNCHANGED, never substituted
+; with signalId. HandleAltmerDawnSteadiness branches on the EXACT reason string (the
+; curated Auri-El / Magnus book ids), and HandleAltmerLorkhanPressure /
+; HandleAltmerCrisisSource key their per-source rejection ledger off it, so a fixed
+; literal here would silently take the wrong branch and collapse every source into one key.
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "dawn-steadiness"
-        HandleAltmerDawnSteadiness(signalId)
+        HandleAltmerDawnSteadiness(reason)
         return True
     elseIf signalId == "orthodox-costly-enforcement"
-        HandleAltmerOrthodoxCostlyEnforcement(signalId)
+        HandleAltmerOrthodoxCostlyEnforcement(reason)
         return True
     elseIf signalId == "trinimac-orthodoxy"
-        HandleAltmerTrinimacOrthodoxy(signalId)
+        HandleAltmerTrinimacOrthodoxy(reason)
         return True
     elseIf signalId == "trinimac-civilization-defense"
-        HandleAltmerTrinimacCivilizationDefense(signalId)
+        HandleAltmerTrinimacCivilizationDefense(reason)
         return True
     elseIf signalId == "syrabane-cure-ward"
-        HandleAltmerSyrabaneCureWard(signalId)
+        HandleAltmerSyrabaneCureWard(reason)
         return True
     elseIf signalId == "syrabane-protective-ward"
-        HandleAltmerSyrabaneProtectiveWard(signalId)
+        HandleAltmerSyrabaneProtectiveWard(reason)
         return True
     elseIf signalId == "syrabane-anti-mage-survival"
-        HandleAltmerSyrabaneAntiMageSurvival(signalId)
+        HandleAltmerSyrabaneAntiMageSurvival(reason)
         return True
     elseIf signalId == "syrabane-containment"
-        HandleAltmerSyrabaneContainment(signalId)
+        HandleAltmerSyrabaneContainment(reason)
         return True
     elseIf signalId == "practice-focus"
-        HandleAltmerPracticeFocus(signalId)
+        ; The Int return is the idle KIND the calian token plays; the sole live caller
+        ; (PDV_EventBus.RouteAltmerPracticeFocus) consumes it, so the CANONICAL route for
+        ; this id is HandleContextualQuery below. This Bool arm is kept only so a
+        ; fire-and-forget caller is not silently dropped -- it discards the value.
+        HandleAltmerPracticeFocus(reason)
         return True
     elseIf signalId == "lorkhan-pressure"
-        HandleAltmerLorkhanPressure(magnitude as Int, signalId)
+        HandleAltmerLorkhanPressure(magnitude as Int, reason)
         return True
     elseIf signalId == "crisis-source"
-        HandleAltmerCrisisSource(magnitude as Int, signalId)
+        HandleAltmerCrisisSource(magnitude as Int, reason)
         return True
     elseIf signalId == "ancestor-spine-pulse"
-        AwardAltmerAncestorSpinePulse(magnitude, signalId)
+        AwardAltmerAncestorSpinePulse(magnitude, reason)
         return True
     elseIf signalId == "heritage-memory"
         AwardActiveAltmerHeritageMemorySignal()
@@ -1717,14 +1744,25 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
         RemoveAltmerDisciplineSpells(Game.GetPlayer())
         return True
     elseIf signalId == "disciplines-rite"
-        TryAltmerDisciplinesRite(Game.GetPlayer(), signalId)
+        TryAltmerDisciplinesRite(Game.GetPlayer(), reason)
         return True
     elseIf signalId == "sleep-events"
-        HandleAltmerSleepEvents(Game.GetPlayer(), signalId)
+        HandleAltmerSleepEvents(Game.GetPlayer(), reason)
         return True
     endIf
 
     return False
+EndFunction
+
+; Value-returning sibling. Altmer's one case is the practice-focus idle kind, whose Int
+; PDV_EventBus.RouteAltmerPracticeFocus:703 returns onward to the calian token. 0 is the
+; inert default and is also the lane's own "pray" answer, so a wrong-origin call is safe.
+Int Function HandleContextualQuery(String signalId, String reason = "", Form contextForm = None)
+    if signalId == "practice-focus"
+        return HandleAltmerPracticeFocus(reason)
+    endIf
+
+    return 0
 EndFunction
 
 String Function GetOriginDetailLabel(String detailKey)
