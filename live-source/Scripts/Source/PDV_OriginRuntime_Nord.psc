@@ -337,7 +337,7 @@ Function HandleNordSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Function HandleNordTsunAdversitySurvived(String reason)
-    if !Manager.PDV_Tsun || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Tsun)
+    if !Manager.PDV_Tsun || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Tsun)
         return
     endIf
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.NordTsunAdversity")

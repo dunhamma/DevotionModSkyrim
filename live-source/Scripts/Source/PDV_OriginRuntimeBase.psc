@@ -4795,7 +4795,7 @@ Bool Function IsArgonianMolagBalDominationPressureActive()
         return False
     endIf
 
-    PDV_DeityBase deity = Manager.GetQuestReactionDeity("Molag Bal")
+    PDV_DeityBase deity = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionDeity("Molag Bal")
     PDV_DaedricPathBase molagPath = deity as PDV_DaedricPathBase
     if !molagPath
         return False
@@ -5710,7 +5710,7 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
 EndFunction
 
 Function HandleLekiHonorableDuel(String reason)
-    if !Manager.PDV_Leki || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Leki)
+    if !Manager.PDV_Leki || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Leki)
         return
     endIf
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.LekiHonorableDuel")
@@ -5973,7 +5973,7 @@ Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
 EndFunction
 
 Function HandleRedguardVampireReentryComplete(String reason)
-    if !Manager.PDV_Tuwhacca || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Tuwhacca)
+    if !Manager.PDV_Tuwhacca || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Tuwhacca)
         return
     endIf
     Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Tuwhacca, Manager.PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY, None, 1.0)
@@ -7310,8 +7310,8 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    if Manager.GetQrQueueTransactionActive()
-        Manager.SetQrQueueNeedsBretonRewardSync(True)
+    if Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive()
+        Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         Manager.RequestPanelRefresh()
@@ -7347,8 +7347,8 @@ Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, 
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    if Manager.GetQrQueueTransactionActive()
-        Manager.SetQrQueueNeedsBretonRewardSync(True)
+    if Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive()
+        Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         Manager.RequestPanelRefresh()
@@ -8060,7 +8060,7 @@ Bool Function IsPlayerAtDunmerDeclaredHome(Actor playerRef)
 EndFunction
 
 Function HandleNordTsunAdversitySurvived(String reason)
-    if !Manager.PDV_Tsun || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Tsun)
+    if !Manager.PDV_Tsun || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Tsun)
         return
     endIf
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.NordTsunAdversity")
@@ -11183,7 +11183,7 @@ Function HandleStateTransitionConfirmationRite(String reason)
 EndFunction
 
 Function HandleTalosWorshipperRescued(String reason)
-    if !Manager.PDV_Talos || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Talos)
+    if !Manager.PDV_Talos || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Talos)
         return
     endIf
     if StorageUtil.GetIntValue(None, "PDV.Signal.TalosWorshipperRescue.Done") == 1
@@ -11205,7 +11205,7 @@ Function HandlePaarthurnaxKill(Form sourceForm, String reason)
 
     StorageUtil.SetIntValue(None, killKey, 1)
     StorageUtil.SetStringValue(None, "PDV.Paarthurnax.KillReason", reason)
-    Manager.ResetQuestReactionSurface()
+    Manager.PDV_QuestReactionRuntimeService.ResetQuestReactionSurface()
     ApplyPaarthurnaxKillReaction("Shor", "S", sourceForm)
     ApplyPaarthurnaxKillReaction("Tsun", "S", sourceForm)
     ApplyPaarthurnaxKillReaction("Kyne", "S", sourceForm)
@@ -11228,7 +11228,7 @@ Function HandlePaarthurnaxKill(Form sourceForm, String reason)
     ApplyPaarthurnaxKillReaction("Hircine", "S", sourceForm, "+")
     ApplyPaarthurnaxKillReaction("Molag Bal", "m", sourceForm, "+")
     ApplyPaarthurnaxKillReaction("Mehrunes Dagon", "m", sourceForm, "+")
-    Manager.FlushQuestReactionSurface()
+    Manager.PDV_QuestReactionRuntimeService.FlushQuestReactionSurface()
     Manager.Trace(2, "Paarthurnax kill fork routed (" + reason + ")")
 EndFunction
 
@@ -11250,7 +11250,7 @@ Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
 
     StorageUtil.SetIntValue(None, spareKey, 1)
     StorageUtil.SetStringValue(None, "PDV.Paarthurnax.SpareReason", reason)
-    Manager.ResetQuestReactionSurface()
+    Manager.PDV_QuestReactionRuntimeService.ResetQuestReactionSurface()
     ApplyPaarthurnaxSpareReaction("Stuhn", "C", sourceForm)
     ApplyPaarthurnaxSpareReaction("Stendarr", "C", sourceForm)
     ApplyPaarthurnaxSpareReaction("Mara", "S", sourceForm)
@@ -11265,7 +11265,7 @@ Function HandlePaarthurnaxSpare(Form sourceForm, String reason)
     ApplyPaarthurnaxSpareReaction("Kynareth", "m", sourceForm)
     ApplyPaarthurnaxSpareReaction("Boethiah", "m", sourceForm, "-")
     ApplyPaarthurnaxSpareReaction("Molag Bal", "m", sourceForm, "-")
-    Manager.FlushQuestReactionSurface()
+    Manager.PDV_QuestReactionRuntimeService.FlushQuestReactionSurface()
     Manager.Trace(2, "Paarthurnax spare fork routed (" + reason + ")")
 EndFunction
 
@@ -11324,18 +11324,18 @@ Function ApplyUndeadCryptClearReactions(Location clearedLocation, Float repeatMu
         return
     endIf
 
-    Manager.ResetQuestReactionSurface()
+    Manager.PDV_QuestReactionRuntimeService.ResetQuestReactionSurface()
     ApplyUndeadCryptClearReaction("Arkay", "C", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Meridia", "C", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Stendarr", "S", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Tu'whacca", "S", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Azura", "m", clearedLocation, repeatMultiplier)
     ApplyUndeadCryptClearReaction("Y'ffre", "m", clearedLocation, repeatMultiplier)
-    Manager.FlushQuestReactionSurface()
+    Manager.PDV_QuestReactionRuntimeService.FlushQuestReactionSurface()
 EndFunction
 
 Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Location clearedLocation, Float repeatMultiplier)
-    PDV_DeityBase deity = Manager.GetQuestReactionDeity(deityName)
+    PDV_DeityBase deity = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionDeity(deityName)
     if !deity
         if Manager.GetDebugLevel() >= 1
             Debug.Trace("[PDV] UndeadCryptClear skipped unknown deity: " + deityName)
@@ -11343,17 +11343,17 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
         return
     endIf
 
-    Float amount = Manager.GetQuestReactionBaseValue("small", intensity) * repeatMultiplier
+    Float amount = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionBaseValue("small", intensity) * repeatMultiplier
     if amount == 0.0
         return
     endIf
 
     String sourceTag = "undead_crypt_clear"
-    String stance = Manager.GetQuestReactionStance(deityName, deity)
+    String stance = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(deityName, deity)
     if stance == "CURSE"
         StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastCurse", deityName + "." + sourceTag)
-        if Manager.GetQrQueueTransactionActive()
-            Manager.SetQrQueueNeedsCurseRefresh(True)
+        if Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive()
+            Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsCurseRefresh(True)
         else
             Manager.LedgerRuntime.HandleCurseStateRefresh("quest_reaction_" + deityName)
         endIf
@@ -11364,15 +11364,15 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
     endIf
 
     if stance == "TABOO" || stance == "HOSTILE"
-        Manager.ApplyQuestReactionStigma(deity, amount, sourceTag)
+        Manager.PDV_QuestReactionRuntimeService.ApplyQuestReactionStigma(deity, amount, sourceTag)
         if !(deity as PDV_DaedricPathBase)
-            Manager.AccumulateQuestReactionSurface(deity, amount * -1.0, "small")
+            Manager.PDV_QuestReactionRuntimeService.AccumulateQuestReactionSurface(deity, amount * -1.0, "small")
         endIf
         return
     endIf
 
     if stance == "FOREIGN" || stance == "TOLERATED"
-        if !Manager.IsQuestReactionDeityReachable(deity)
+        if !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(deity)
             if Manager.GetDebugLevel() >= 2
                 Debug.Trace("[PDV] UndeadCryptClear skipped unreachable foreign deity: " + deityName)
             endIf
@@ -11380,13 +11380,13 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
         endIf
     endIf
 
-    Float stanceMultiplier = Manager.GetQuestReactionStanceMultiplier(stance)
+    Float stanceMultiplier = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStanceMultiplier(stance)
 
     Float appliedReactionAmount = amount * stanceMultiplier
     Manager.SetSuppressAwardFavorToast(True)
-    Manager.ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
+    Manager.PDV_QuestReactionRuntimeService.ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
     Manager.SetSuppressAwardFavorToast(False)
-    Manager.AccumulateQuestReactionSurface(deity, appliedReactionAmount, "small")
+    Manager.PDV_QuestReactionRuntimeService.AccumulateQuestReactionSurface(deity, appliedReactionAmount, "small")
 
     Manager.OriginRuntime.HandleContextualSignal("crypt-clear-focus", deityName)
 EndFunction

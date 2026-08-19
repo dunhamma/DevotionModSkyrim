@@ -202,7 +202,7 @@ function evaluate({ runtime, manager, managerOwn, eventBus, playerEvents, mcm, w
     queueResolved.includes('StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)') &&
     queueResolved.includes('StorageUtil.SetIntValue(None, prefix + "BuildIndex", 0)') &&
     queueResolved.includes("admissionMs=") &&
-    !queueResolved.includes("PDV_Manager.ShouldQueueQuestReactionCell") &&
+    !queueResolved.includes("ShouldQueueQuestReactionCell") &&
     !queueResolved.includes("StringUtil.Split") &&
     !/\bwhile\b/i.test(queueResolved),
     "runtime.lightweight-admission", "Ingress persists only a resumable job header and returns without scanning or filtering catalog cells.");
@@ -221,7 +221,7 @@ function evaluate({ runtime, manager, managerOwn, eventBus, playerEvents, mcm, w
     processBody.includes("CellIndex") && processBody.includes("FinalizeQueuedQuestReaction") &&
     processBody.includes("RemoveHeadJob"),
     "runtime.bounded-finalization", "The persisted head advances under the two-item budget and finalizes once before removal.");
-  const applyCell = processBody.indexOf("PDV_Manager.ApplyQueuedQuestReactionCell(");
+  const applyCell = processBody.indexOf("ApplyQueuedQuestReactionCell(");
   const advanceCell = processBody.indexOf("cellIndex += 1", applyCell);
   const checkpointCell = processBody.indexOf('StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)', advanceCell);
   const advanceBudget = processBody.indexOf("processed += 1", checkpointCell);
@@ -289,7 +289,7 @@ function evaluate({ runtime, manager, managerOwn, eventBus, playerEvents, mcm, w
     indexCatalogSource.includes("Int semanticCount = JsonUtil.StringListCount") &&
     indexCatalogSource.includes("Int stageAdapterCount = JsonUtil.StringListCount") &&
     processBody.includes('String reactionKey = StorageUtil.GetStringValue(None, prefix + "ReactionKey")') &&
-    processBody.includes("PDV_Manager.FinalizeQueuedQuestReaction(sourceModName, reactionKey)"),
+    processBody.includes("FinalizeQueuedQuestReaction(sourceModName, reactionKey)"),
     "runtime.qr-local-caching", "Catalog loops cache list counts and completion reuses terminal job fields without changing queue bounds.");
   finding(findings, !/QUEST_REACTION_CHANNEL|QUEST_REACTION_STAGE_ADAPTER|ChannelFiles|SourceCatalog|ResolveQuestReactionCell(?:File|Prefix)|questWatchFormIdsCsv/.test(runtime),
     "runtime.v1-discovery-retired", "No V1 channels, stage-adapter files, source catalog, or local-key fallback discovery remains.");
@@ -373,10 +373,10 @@ function selfTest() {
     ["second scheduler", { managerOwn: base.managerOwn + "\nFunction ProcessQuestReactionQueueSlice()\n  RegisterForSingleUpdate(0.1)\nEndFunction\n" }, "runtime.single-scheduler"],
     ["missing armed update guard", { runtime: base.runtime.replace("StorageUtil.GetIntValue(None, QUEUE_UPDATE_ARMED_KEY) != 1", "True") }, "runtime.single-armed-update-chain"],
     ["quest reaction inside broad scope", { playerEvents: base.playerEvents.replace("RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)", "RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)\n    RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)") }, "playerevents.scope-closes-before-qr"],
-    ["synchronous catalog materialization", { runtime: base.runtime.replace('StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)', 'StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)\n    PDV_Manager.ShouldQueueQuestReactionCell("Akatosh", "+", "native", "major")') }, "runtime.lightweight-admission"],
+    ["synchronous catalog materialization", { runtime: base.runtime.replace('StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)', 'StorageUtil.SetIntValue(None, prefix + "BuildComplete", 0)\n    ShouldQueueQuestReactionCell("Akatosh", "+", "native", "major")') }, "runtime.lightweight-admission"],
     ["uncheckpointed build cursor", { runtime: base.runtime.replace('StorageUtil.SetIntValue(None, prefix + "BuildIndex", buildIndex)', '; cursor checkpoint removed') }, "runtime.bounded-materialization"],
     ["load ignores saved active slice", { runtime: base.runtime.replace("savedSliceOwnsResume = fromLoad && _sliceActive", "savedSliceOwnsResume = False") }, "runtime.single-armed-update-chain"],
-    ["cell checkpoint after slice", { runtime: base.runtime.replace('        StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)\n        processed += 1', '        processed += 1\n    endWhile\n    StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)').replace('    endWhile\n    PDV_Manager.EndQueuedQuestReactionSlice()', '    PDV_Manager.EndQueuedQuestReactionSlice()') }, "runtime.cell-progress-checkpoint"],
+    ["cell checkpoint after slice", { runtime: base.runtime.replace('        StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)\n        processed += 1', '        processed += 1\n    endWhile\n    StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)').replace('    endWhile\n    EndQueuedQuestReactionSlice()', '    EndQueuedQuestReactionSlice()') }, "runtime.cell-progress-checkpoint"],
     ["surface deity duplication", { manager: base.manager.replace("Bool alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)", "Bool alreadyListed = False") }, "manager.unique-final-surface"],
     ["raw core source reaches quest surfaces", { manager: base.manager.replace("String surfaceSourceModName = NormalizePublicDeityDisplayText(sourceModName)", "String surfaceSourceModName = sourceModName") }, "manager.public-source-sanitized"],
     ["Book bypasses sanitized quest source", { manager: base.manager.replace("False, surfaceSourceModName)", "False, sourceModName)") }, "manager.public-source-sanitized"],

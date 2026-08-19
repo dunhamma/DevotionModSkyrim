@@ -162,7 +162,7 @@ Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
 EndFunction
 
 Function HandleLekiHonorableDuel(String reason)
-    if !Manager.PDV_Leki || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Leki)
+    if !Manager.PDV_Leki || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Leki)
         return
     endIf
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.LekiHonorableDuel")
@@ -425,7 +425,7 @@ Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
 EndFunction
 
 Function HandleRedguardVampireReentryComplete(String reason)
-    if !Manager.PDV_Tuwhacca || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Tuwhacca)
+    if !Manager.PDV_Tuwhacca || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Tuwhacca)
         return
     endIf
     Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Tuwhacca, Manager.PDV_Tuwhacca.SIGNAL_VAMPIRE_REENTRY, None, 1.0)

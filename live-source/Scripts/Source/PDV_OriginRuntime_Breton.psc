@@ -873,8 +873,8 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    if Manager.GetQrQueueTransactionActive()
-        Manager.SetQrQueueNeedsBretonRewardSync(True)
+    if Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive()
+        Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         Manager.RequestPanelRefresh()
@@ -910,8 +910,8 @@ Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, 
     endIf
 
     StorageUtil.SetFloatValue(None, "PDV.Breton.LastTraditionSignalTime", Utility.GetCurrentGameTime())
-    if Manager.GetQrQueueTransactionActive()
-        Manager.SetQrQueueNeedsBretonRewardSync(True)
+    if Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive()
+        Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
         Manager.RequestPanelRefresh()

@@ -97,7 +97,7 @@ EndFunction
 ; feeding in one day yields diminishing restoration (anti-farm). Magnitudes
 ; PROVISIONAL -- tune in-game (memory: requiem-proof-heal-flat-restore-not-rate).
 Function TryNamiraFeedHeal()
-    PDV_DeityBase namira = Manager.GetQuestReactionDeity("Namira")
+    PDV_DeityBase namira = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionDeity("Namira")
     if !namira
         return
     endIf
@@ -443,7 +443,7 @@ EndFunction
 ; Mephala/Boethiah serve BOTH the Dunmer Reclamations and the Khajiit roster, so
 ; these two gate on quest-reaction reachability, not a single origin.
 Function HandleMephalaWebWoven(String reason)
-    if !Manager.PDV_Mephala || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Mephala)
+    if !Manager.PDV_Mephala || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Mephala)
         return
     endIf
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.MephalaWebWoven")
@@ -457,7 +457,7 @@ Function HandleMephalaWebWoven(String reason)
 EndFunction
 
 Function HandleBoethiahHonorableDuel(String reason)
-    if !Manager.PDV_Boethiah || !Manager.IsQuestReactionDeityReachable(Manager.PDV_Boethiah)
+    if !Manager.PDV_Boethiah || !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(Manager.PDV_Boethiah)
         return
     endIf
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.BoethiahHonorableDuel")

@@ -902,7 +902,7 @@ Bool Function IsArgonianMolagBalDominationPressureActive()
         return False
     endIf
 
-    PDV_DeityBase deity = Manager.GetQuestReactionDeity("Molag Bal")
+    PDV_DeityBase deity = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionDeity("Molag Bal")
     PDV_DaedricPathBase molagPath = deity as PDV_DaedricPathBase
     if !molagPath
         return False

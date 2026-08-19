@@ -259,7 +259,7 @@ Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form cont
 EndFunction
 
 Function ApplyDeityReaction(String deityName, String valence, String intensity, String magnitude, String sourceTag, Bool isFaucet, Form sourceForm)
-    PDV_DeityBase deity = Manager.GetQuestReactionDeity(deityName)
+    PDV_DeityBase deity = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionDeity(deityName)
     if !deity
         if Manager.GetDebugLevel() >= 1
             Debug.Trace("[PDV] QuestReaction skipped unknown deity: " + deityName)
@@ -267,7 +267,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         return
     endIf
 
-    Float amount = Manager.GetQuestReactionBaseValue(magnitude, intensity)
+    Float amount = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionBaseValue(magnitude, intensity)
     if amount == 0.0
         return
     endIf
@@ -276,22 +276,22 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         amount = amount * -1.0
     endIf
 
-    if isFaucet && !Manager.MarkQuestReactionFaucet(deityName, sourceTag, sourceForm)
+    if isFaucet && !Manager.PDV_QuestReactionRuntimeService.MarkQuestReactionFaucet(deityName, sourceTag, sourceForm)
         if Manager.GetDebugLevel() >= 2
             Debug.Trace("[PDV] QuestReaction faucet repeat blocked: " + deityName + " " + sourceTag)
         endIf
         return
     endIf
 
-    String stance = Manager.GetQuestReactionStance(deityName, deity)
+    String stance = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(deityName, deity)
     if stance == "CURSE"
         StorageUtil.SetStringValue(None, "PDV.QuestReaction.LastCurse", deityName + "." + sourceTag)
-        if Manager.GetQrQueueTransactionActive()
-            Manager.SetQrQueueNeedsCurseRefresh(True)
+        if Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive()
+            Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsCurseRefresh(True)
         else
             HandleCurseStateRefresh("quest_reaction_" + deityName)
         endIf
-        if Manager.GetDebugLevel() >= 3 || (!Manager.GetQrQueueTransactionActive() && Manager.GetDebugLevel() >= 1)
+        if Manager.GetDebugLevel() >= 3 || (!Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive() && Manager.GetDebugLevel() >= 1)
             Debug.Trace("[PDV] QuestReaction curse routed: " + deityName + " " + sourceTag)
         endIf
         return
@@ -302,7 +302,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         ; remains in the origin roster, even when it is outside the Nord's
         ; selected baseline. Positive values become stigma; background favor
         ; from ordinary native/foreign cells never crosses that lane.
-        if !Manager.IsQuestReactionDeityReachable(deity) && !Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex())
+        if !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(deity) && !Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex())
             if Manager.GetDebugLevel() >= 3
                 Debug.Trace("[PDV] QuestReaction skipped unreachable taboo/hostile deity: " + deityName + " " + sourceTag)
             endIf
@@ -310,19 +310,19 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
         endIf
 
         if amount > 0.0
-            Manager.ApplyQuestReactionStigma(deity, amount, sourceTag)
+            Manager.PDV_QuestReactionRuntimeService.ApplyQuestReactionStigma(deity, amount, sourceTag)
             Manager.OriginRuntime.HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
             ; A taboo deity reaction is a real negative piety award (paths take
             ; stigma instead, which is not piety) -- fold it into the quest-fire
             ; surface as displeasure so the loss is not invisible.
             if !isFaucet && magnitude != "meta" && !(deity as PDV_DaedricPathBase)
-                Manager.AccumulateQuestReactionSurface(deity, amount * -1.0, magnitude)
+                Manager.PDV_QuestReactionRuntimeService.AccumulateQuestReactionSurface(deity, amount * -1.0, magnitude)
             endIf
         else
-            Manager.ApplyQuestReactionPiety(deity, amount, "taboo_" + sourceTag)
+            Manager.PDV_QuestReactionRuntimeService.ApplyQuestReactionPiety(deity, amount, "taboo_" + sourceTag)
             Manager.OriginRuntime.HandleBretonQuestTagPracticeSignal(sourceTag, False, "taboo_" + sourceTag)
             if !isFaucet && magnitude != "meta"
-                Manager.AccumulateQuestReactionSurface(deity, amount, magnitude)
+                Manager.PDV_QuestReactionRuntimeService.AccumulateQuestReactionSurface(deity, amount, magnitude)
             endIf
         endIf
         return
@@ -339,7 +339,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     ; Roster deities with a TOLERATED/FOREIGN stance (visible-but-foreign) keep
     ; their reduced-rate award below.
     if stance == "FOREIGN" || stance == "TOLERATED"
-        if !Manager.IsQuestReactionDeityReachable(deity)
+        if !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(deity)
             if Manager.GetDebugLevel() >= 3
                 Debug.Trace("[PDV] QuestReaction skipped unreachable foreign deity: " + deityName + " " + sourceTag)
             endIf
@@ -353,14 +353,14 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     ; Keep the final guard beside the award so old snapshots and direct callers
     ; cannot reintroduce an out-of-lane positive reaction after ingress compacts
     ; it away.
-    if !Manager.IsQuestReactionDeityReachable(deity)
+    if !Manager.PDV_QuestReactionRuntimeService.IsQuestReactionDeityReachable(deity)
         if Manager.GetDebugLevel() >= 3
             Debug.Trace("[PDV] QuestReaction skipped inactive lane deity: " + deityName + " " + sourceTag)
         endIf
         return
     endIf
 
-    Float multiplier = Manager.GetQuestReactionStanceMultiplier(stance)
+    Float multiplier = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStanceMultiplier(stance)
 
     Float appliedReactionAmount = amount * multiplier
     ; Milestone surfacing (below) owns the top-left toast for a landed base-cell
@@ -368,7 +368,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     ; award to avoid a double toast. The panel driver ring is still fed inside
     ; AwardPiety regardless.
     Manager.SetSuppressAwardFavorToast(True)
-    Manager.ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
+    Manager.PDV_QuestReactionRuntimeService.ApplyQuestReactionPiety(deity, appliedReactionAmount, deityName + "." + sourceTag)
     Manager.SetSuppressAwardFavorToast(False)
     Manager.OriginRuntime.HandleBretonQuestTagPracticeSignal(sourceTag, appliedReactionAmount > 0.0, deityName + "." + sourceTag)
 
@@ -385,7 +385,7 @@ Function ApplyDeityReaction(String deityName, String valence, String intensity, 
     ; The reachability gate above already dropped off-roster gods, so only gods the
     ; player actually follows reach this surface.
     if !isFaucet && magnitude != "meta"
-        Manager.AccumulateQuestReactionSurface(deity, appliedReactionAmount, magnitude)
+        Manager.PDV_QuestReactionRuntimeService.AccumulateQuestReactionSurface(deity, appliedReactionAmount, magnitude)
     endIf
 
     ; Bridge: a positive quest reaction for a Khajiit-focus deity also tilts which
@@ -492,21 +492,21 @@ Function FlushLikesDislikesSurface(Int eventType)
     if _ldSurfNegCount == 0
         String posMsg = _ldSurfBestPosName + " marks the act."
         if _ldSurfPosCount == 2
-            posMsg = Manager.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " mark the act."
+            posMsg = Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " mark the act."
         elseIf _ldSurfPosCount > 2
             posMsg = _ldSurfBestPosName + " and " + (_ldSurfPosCount - 1) + " others mark the act."
         endIf
         Manager.SendPrismaToast(_ldSurfBestPosSymbol, "good", "A deed noticed", posMsg)
-        Manager.AppendBookOfDaysEntry(Manager.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act.", nowDay, "favor.act", _ldSurfBestPosSymbol, False, 1, "A deed noticed")
+        Manager.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act.", nowDay, "favor.act", _ldSurfBestPosSymbol, False, 1, "A deed noticed")
     elseIf _ldSurfPosCount == 0
         String negMsg = _ldSurfBestNegName + " takes offense at the act."
         if _ldSurfNegCount == 2
-            negMsg = Manager.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " take offense at the act."
+            negMsg = Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " take offense at the act."
         elseIf _ldSurfNegCount > 2
             negMsg = _ldSurfBestNegName + " and " + (_ldSurfNegCount - 1) + " others take offense at the act."
         endIf
         Manager.SendPrismaToast(_ldSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
-        Manager.AppendBookOfDaysEntry(Manager.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense at the act.", nowDay, "favor.loss", _ldSurfBestNegSymbol, False, 1, "A deed ill-received")
+        Manager.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense at the act.", nowDay, "favor.loss", _ldSurfBestNegSymbol, False, 1, "A deed ill-received")
     else
         Bool positiveLeads = _ldSurfBestPosAmount >= (_ldSurfBestNegAmount * -1.0)
         String mixedTone = "good"
@@ -518,7 +518,7 @@ Function FlushLikesDislikesSurface(Int eventType)
             mixedBodTone = "favor.loss"
         endIf
         Manager.SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _ldSurfBestPosName + " marks the act; " + _ldSurfBestNegName + " takes offense.")
-        Manager.AppendBookOfDaysEntry(Manager.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act; " + Manager.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, 1, "A deed weighed")
+        Manager.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act; " + Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, 1, "A deed weighed")
     endIf
 
     Manager.Trace(1, "Likes/dislikes surface flushed: event " + eventType + ", positive " + _ldSurfPosCount + ", negative " + _ldSurfNegCount)
@@ -577,7 +577,7 @@ Bool Function IsGrandfatheredOffRosterPatron(PDV_DeityBase deity)
     if GetPatronState() != PATRON_STATE_ACTIVE || deity != Manager.GetActiveDeity() || Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex())
         return False
     endIf
-    String stance = Manager.GetQuestReactionStance(Manager.GetPublicDeityDisplayName(deity), deity)
+    String stance = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(Manager.GetPublicDeityDisplayName(deity), deity)
     return stance == "FOREIGN" || stance == "TOLERATED"
 EndFunction
 
@@ -941,7 +941,7 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
 
     Float shrineAmount = 2.0
     if grandfatheredPatron
-        shrineAmount = shrineAmount * Manager.GetQuestReactionStanceMultiplier(Manager.GetQuestReactionStance(Manager.GetPublicDeityDisplayName(deity), deity))
+        shrineAmount = shrineAmount * Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStanceMultiplier(Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(Manager.GetPublicDeityDisplayName(deity), deity))
     endIf
     AwardPietyInternal(deity, shrineAmount, True, "shrine_prayer_" + sourceId, !grandfatheredPatron)
     if Manager.GetDebugLevel() >= 2
@@ -2777,7 +2777,7 @@ Function WriteZeroReservedDevotionalDayStamp(String keyName)
 EndFunction
 
 Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = "", Bool applyStanceMultiplier = True, Bool trackBroadPantheon = True)
-    Bool queuedQuestReaction = Manager.GetQrQueueTransactionActive()
+    Bool queuedQuestReaction = Manager.PDV_QuestReactionRuntimeService.GetQrQueueTransactionActive()
     Bool ownsBroadEvent = trackBroadPantheon && !queuedQuestReaction && _broadPantheonEventDepth == 0
     if ownsBroadEvent
         Manager.SetBroadPantheonSelfEventSequence(Manager.GetBroadPantheonSelfEventSequence() + (1))
@@ -2806,7 +2806,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
     Int stance = deity.GetStanceForPlayer()
     Float appliedAmount = RunGainPipeline(deity, amount, stance, applyStanceMultiplier)
     if queuedQuestReaction
-        Manager.AccumulateQueuedQuestReactionBroadDelta(deity, appliedAmount)
+        Manager.PDV_QuestReactionRuntimeService.AccumulateQueuedQuestReactionBroadDelta(deity, appliedAmount)
     elseIf trackBroadPantheon
         AccumulateBroadPantheonDelta(deity, appliedAmount)
     endIf
@@ -3399,7 +3399,7 @@ Function TryCCSaintsRecognition()
     endIf
 
     if _pdvCCSaintsRestoringOrder.GetStageDone(200)
-        PDV_DaedricPath_Sheo sheoPath = Manager.GetQuestReactionDeity("Sheogorath") as PDV_DaedricPath_Sheo
+        PDV_DaedricPath_Sheo sheoPath = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionDeity("Sheogorath") as PDV_DaedricPath_Sheo
         if sheoPath
             sheoPath.RecordControlledSignal("cc_saints_restoring_order")
             StorageUtil.SetIntValue(None, "PDV.CC.SaintsRecognized", 1)

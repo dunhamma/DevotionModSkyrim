@@ -672,27 +672,27 @@ Bool Function ProcessQuestReactionMetaBuildUnit(String jobId, String prefix, Str
 
     Int metaIndex = StorageUtil.GetIntValue(None, prefix + "MetaBuildIndex")
     if metaIndex == 0
-        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Z'en", "+", "zen", "meta")
+        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.gold") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Z'en") != 1 && ShouldQueueQuestReactionCell("Z'en", "+", "zen", "meta")
             AppendBuiltQuestReactionCell(prefix, "Z'en", "+", "zen", "meta", "meta_zen_wage", True)
         endIf
     elseIf metaIndex == 1
-        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Julianos", "+", "julianos", "meta")
+        if JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Julianos") != 1 && ShouldQueueQuestReactionCell("Julianos", "+", "julianos", "meta")
             AppendBuiltQuestReactionCell(prefix, "Julianos", "+", "julianos", "meta", "meta_julianos_wisdom", True)
         endIf
     elseIf metaIndex == 2
-        if (JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid") == 1 || StorageUtil.GetIntValue(None, prefix + "MetaTwilight") == 1) && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Azura", "+", "azura", "meta")
+        if (JsonUtil.GetIntValue(matrixFile, cellPrefix + "class.mageAid") == 1 || StorageUtil.GetIntValue(None, prefix + "MetaTwilight") == 1) && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Azura") != 1 && ShouldQueueQuestReactionCell("Azura", "+", "azura", "meta")
             AppendBuiltQuestReactionCell(prefix, "Azura", "+", "azura", "meta", "meta_azura_threshold", True)
         endIf
     elseIf metaIndex == 3
         if JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Nocturnal") != 1
-            if StorageUtil.GetIntValue(None, prefix + "MetaNocturnalTheft") == 1 && PDV_Manager.ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalTheft", "meta")
+            if StorageUtil.GetIntValue(None, prefix + "MetaNocturnalTheft") == 1 && ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalTheft", "meta")
                 AppendBuiltQuestReactionCell(prefix, "Nocturnal", "+", "nocturnalTheft", "meta", "meta_nocturnal_herway", True)
-            elseIf StorageUtil.GetIntValue(None, prefix + "MetaNight") == 1 && PDV_Manager.ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalNight", "meta")
+            elseIf StorageUtil.GetIntValue(None, prefix + "MetaNight") == 1 && ShouldQueueQuestReactionCell("Nocturnal", "+", "nocturnalNight", "meta")
                 AppendBuiltQuestReactionCell(prefix, "Nocturnal", "+", "nocturnalNight", "meta", "meta_nocturnal_dark", True)
             endIf
         endIf
     elseIf metaIndex == 4
-        if StorageUtil.GetIntValue(None, prefix + "MetaOutdoors") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Khenarthi", "+", "khenarthi", "meta")
+        if StorageUtil.GetIntValue(None, prefix + "MetaOutdoors") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Khenarthi") != 1 && ShouldQueueQuestReactionCell("Khenarthi", "+", "khenarthi", "meta")
             AppendBuiltQuestReactionCell(prefix, "Khenarthi", "+", "khenarthi", "meta", "meta_khenarthi_road", True)
         endIf
     elseIf metaIndex == 5
@@ -701,11 +701,11 @@ Bool Function ProcessQuestReactionMetaBuildUnit(String jobId, String prefix, Str
             StorageUtil.SetIntValue(None, prefix + "MetaWheelEligible", 1)
         endIf
     elseIf metaIndex == 6
-        if StorageUtil.GetIntValue(None, prefix + "MetaWheelEligible") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Akatosh", "+", "wheel", "meta")
+        if StorageUtil.GetIntValue(None, prefix + "MetaWheelEligible") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Akatosh") != 1 && ShouldQueueQuestReactionCell("Akatosh", "+", "wheel", "meta")
             AppendBuiltQuestReactionCell(prefix, "Akatosh", "+", "wheel", "meta", "meta_akatosh_wheel", True)
         endIf
     elseIf metaIndex == 7
-        if StorageUtil.GetIntValue(None, prefix + "MetaWheelEligible") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes") != 1 && PDV_Manager.ShouldQueueQuestReactionCell("Xarxes", "+", "wheel", "meta")
+        if StorageUtil.GetIntValue(None, prefix + "MetaWheelEligible") == 1 && JsonUtil.GetIntValue(matrixFile, cellPrefix + "metaSkip.Xarxes") != 1 && ShouldQueueQuestReactionCell("Xarxes", "+", "wheel", "meta")
             AppendBuiltQuestReactionCell(prefix, "Xarxes", "+", "wheel", "meta", "meta_xarxes_record", True)
         endIf
     endIf
@@ -740,7 +740,7 @@ Bool Function ProcessQuestReactionBuildUnit(String jobId, String prefix)
             String intensity = JsonUtil.StringListGet(matrixFile, cellPrefix + "intensities", buildIndex)
             String magnitude = JsonUtil.StringListGet(matrixFile, cellPrefix + "magnitudes", buildIndex)
             String sourceTag = JsonUtil.StringListGet(matrixFile, cellPrefix + "tags", buildIndex)
-            if PDV_Manager.ShouldQueueQuestReactionCell(deityName, valence, intensity, magnitude)
+            if ShouldQueueQuestReactionCell(deityName, valence, intensity, magnitude)
                 AppendBuiltQuestReactionCell(prefix, deityName, valence, intensity, magnitude, sourceTag)
             endIf
             buildIndex += 1
@@ -840,21 +840,21 @@ Bool Function ProcessQuestReactionQueueSlice()
 
     if StorageUtil.GetIntValue(None, prefix + "Started") != 1
         StorageUtil.SetIntValue(None, prefix + "Started", 1)
-        PDV_Manager.PrepareQueuedQuestReactionTransaction()
+        PrepareQueuedQuestReactionTransaction()
         TraceQuestReactionQueue("START started " + jobId + " key=" + StorageUtil.GetStringValue(None, prefix + "ReactionKey") + " cells=" + cellCount + " sourceCells=" + StorageUtil.GetIntValue(None, prefix + "SourceCellCount") + " skipped=" + StorageUtil.GetIntValue(None, prefix + "SkippedCellCount") + " meta=" + StorageUtil.GetIntValue(None, prefix + "MetaRunnableCount"))
     endIf
 
     Form sourceForm = StorageUtil.FormListGet(None, QUEUE_FORMS_KEY, 0)
-    PDV_Manager.BeginQueuedQuestReactionSlice()
+    BeginQueuedQuestReactionSlice()
     while processed < QUEST_REACTION_QUEUE_CELLS_PER_TICK && cellIndex < cellCount
-        PDV_Manager.ApplyQueuedQuestReactionCell(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex], tags[cellIndex], sourceForm)
+        ApplyQueuedQuestReactionCell(deities[cellIndex], valences[cellIndex], intensities[cellIndex], magnitudes[cellIndex], tags[cellIndex], sourceForm)
         cellIndex += 1
         ; Keep the persisted cursor adjacent to the landed cell. A save may
         ; suspend this stack, so checkpoint each delivery rather than the slice.
         StorageUtil.SetIntValue(None, prefix + "CellIndex", cellIndex)
         processed += 1
     endWhile
-    PDV_Manager.EndQueuedQuestReactionSlice()
+    EndQueuedQuestReactionSlice()
     if cellIndex < cellCount
         return True
     endIf
@@ -867,7 +867,7 @@ Bool Function ProcessQuestReactionQueueSlice()
     Int sourceCellCount = StorageUtil.GetIntValue(None, prefix + "SourceCellCount")
     Int skippedCellCount = StorageUtil.GetIntValue(None, prefix + "SkippedCellCount")
     Int metaRunnableCount = StorageUtil.GetIntValue(None, prefix + "MetaRunnableCount")
-    PDV_Manager.FinalizeQueuedQuestReaction(sourceModName, reactionKey)
+    FinalizeQueuedQuestReaction(sourceModName, reactionKey)
     Float elapsed = Utility.GetCurrentRealTime() - StorageUtil.GetFloatValue(None, prefix + "EnqueuedRealTime")
     StorageUtil.SetStringValue(None, "PDV.V3.QR.LastKey", reactionKey)
     StorageUtil.SetIntValue(None, "PDV.V3.QR.LastCellCount", cellCount)
@@ -923,4 +923,606 @@ Function TraceQuestReactionQueue(String text)
     if PDV_Manager && PDV_Manager.GetDebugLevel() >= 1
         Debug.Trace("[PDV][QR_QUEUE] " + text)
     endIf
+EndFunction
+
+; ============================================================================
+; QUEST-REACTION SUBSYSTEM -- moved verbatim from PDV__ManagerQuest (Phase B).
+; Queue machinery + reaction-resolution primitives + surfaces + the 4 queue-state
+; accessors, one cohesive module owning its own state. Manager-owned functions/refs
+; qualify through PDV_Manager; consumers reach these via
+; Manager.PDV_QuestReactionRuntimeService.X (ESP property consolidation is a later phase).
+; ============================================================================
+
+; -- QR-owned queue/surface state (moved from PDV__ManagerQuest) --
+String _qrSurfPosNamesCsv = ""
+String _qrSurfNegNamesCsv = ""
+Int _qrSurfPosCount = 0
+Int _qrSurfNegCount = 0
+Float _qrSurfBestPosAmount = 0.0
+Float _qrSurfBestNegAmount = 0.0
+String _qrSurfBestPosName = ""
+String _qrSurfBestNegName = ""
+String _qrSurfBestPosSymbol = ""
+String _qrSurfBestNegSymbol = ""
+Bool _qrSurfMilestone = False
+Bool _qrQueueTransactionActive = False
+Bool _qrQueueNeedsCurseRefresh = False
+Bool _qrQueueNeedsBretonRewardSync = False
+String _qrQueueSurfPosNamesCsv = ""
+String _qrQueueSurfNegNamesCsv = ""
+Int _qrQueueSurfPosCount = 0
+Int _qrQueueSurfNegCount = 0
+Float _qrQueueSurfBestPosAmount = 0.0
+Float _qrQueueSurfBestNegAmount = 0.0
+String _qrQueueSurfBestPosName = ""
+String _qrQueueSurfBestNegName = ""
+String _qrQueueSurfBestPosSymbol = ""
+String _qrQueueSurfBestNegSymbol = ""
+Bool _qrQueueSurfMilestone = False
+String _qrQueueBroadPool = ""
+Float _qrQueueBroadBestPositive = 0.0
+Float _qrQueueBroadWorstNegative = 0.0
+
+; V3 Quest Reaction callback seam. The runtime owns catalogs, persistence,
+; scheduling, and job lifecycle; Manager owns scoring and final presentation.
+Bool Function ShouldQueueQuestReactionCell(String deityName, String valence, String intensity, String magnitude)
+    return !IsQueuedQuestReactionCellCheapSkip(deityName, valence, intensity, magnitude)
+EndFunction
+
+Function PrepareQueuedQuestReactionTransaction()
+    ResetQueuedQuestReactionSurface()
+    _qrQueueNeedsCurseRefresh = False
+    _qrQueueNeedsBretonRewardSync = False
+    _qrQueueBroadPool = PDV_Manager.LedgerRuntime.GetActiveBroadPantheonPoolId()
+    _qrQueueBroadBestPositive = 0.0
+    _qrQueueBroadWorstNegative = 0.0
+EndFunction
+
+Function BeginQueuedQuestReactionSlice()
+    _qrQueueTransactionActive = True
+EndFunction
+
+Function ApplyQueuedQuestReactionCell(String deityName, String valence, String intensity, String magnitude, String sourceTag, Form sourceForm)
+    PDV_Manager.LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, False, sourceForm)
+EndFunction
+
+Function EndQueuedQuestReactionSlice()
+    _qrQueueTransactionActive = False
+EndFunction
+
+Function FinalizeQueuedQuestReaction(String sourceModName, String reactionKey)
+    _qrQueueTransactionActive = False
+    FlushQueuedQuestReactionSurface(sourceModName, reactionKey)
+    CommitQueuedQuestReactionBroad(reactionKey)
+    if _qrQueueNeedsCurseRefresh
+        PDV_Manager.LedgerRuntime.HandleCurseStateRefresh("quest_reaction_queue")
+    endIf
+    if _qrQueueNeedsBretonRewardSync
+        PDV_Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
+    endIf
+    PDV_Manager.RequestPanelRefresh()
+EndFunction
+
+Function ApplyQuestReactionFaucet(String faucetKey, Form sourceForm)
+    if faucetKey == "" || !JsonUtil.JsonExists(PDV_Manager.QUEST_REACTION_MATRIX_FILE)
+        return
+    endIf
+
+    String deityName = JsonUtil.GetStringValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".deity")
+    if deityName == ""
+        return
+    endIf
+
+    String valence = JsonUtil.GetStringValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".valence")
+    String intensity = JsonUtil.GetStringValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".intensity")
+    String magnitude = JsonUtil.GetStringValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".magnitude")
+    String sourceTag = JsonUtil.GetStringValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "faucet." + faucetKey + ".tag")
+    PDV_Manager.LedgerRuntime.ApplyDeityReaction(deityName, valence, intensity, magnitude, sourceTag, True, sourceForm)
+
+    ; Namira lifesteal: feeding on the dead restores the Namira-pathed faithful. The
+    ; old boon's HealRateMult (rate on Requiem's ~0 base) was swallowed; the sustain
+    ; is now this event-driven, Requiem-proof heal-on-feed. Tier-gated + daily decay.
+    if faucetKey == "Namira.cannibalism"
+        PDV_Manager.DaedricRuntime.TryNamiraFeedHeal()
+    endIf
+EndFunction
+
+Bool Function IsQueuedQuestReactionCellCheapSkip(String deityName, String valence, String intensity, String magnitude)
+    PDV_DeityBase deity = GetQuestReactionDeity(deityName)
+    if !deity
+        return True
+    endIf
+
+    Float amount = GetQuestReactionBaseValue(magnitude, intensity)
+    if amount == 0.0
+        return True
+    endIf
+    if valence == "-"
+        amount = amount * -1.0
+    endIf
+
+    String stance = GetQuestReactionStance(deityName, deity)
+    if stance == "CURSE"
+        return False
+    endIf
+
+    ; A named taboo/hostile cell is deliberate displeasure, not background
+    ; favor: positive values become stigma and negative values become piety loss.
+    ; Keep either form for a deity the player's origin roster can still show even
+    ; when a Nord chose the other baseline. Every other cell must be reachable
+    ; on the current lane before it enters the persisted worker snapshot.
+    if (stance == "TABOO" || stance == "HOSTILE") && PDV_Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, PDV_Manager.GetPlayerOriginRaceIndex())
+        return False
+    endIf
+
+    return !IsQuestReactionDeityReachable(deity)
+EndFunction
+
+Function ResetQuestReactionSurface()
+    _qrSurfPosNamesCsv = ""
+    _qrSurfNegNamesCsv = ""
+    _qrSurfPosCount = 0
+    _qrSurfNegCount = 0
+    _qrSurfBestPosAmount = 0.0
+    _qrSurfBestNegAmount = 0.0
+    _qrSurfBestPosName = ""
+    _qrSurfBestNegName = ""
+    _qrSurfBestPosSymbol = ""
+    _qrSurfBestNegSymbol = ""
+    _qrSurfMilestone = False
+EndFunction
+
+Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
+    ; A Daedric Prince stays out of Book-of-Days reaction surfaces (and their paired
+    ; toast) until it reaches Seeker (25 piety); a still-uncommitted Prince below that
+    ; only ever surfaces through the one pre-pact "taken notice" beat. Piety is still
+    ; awarded upstream -- this gates DISPLAY only. Off-roster Aedric gods are already
+    ; dropped by the reachability gate, so this leaves race-aligned gods untouched.
+    PDV_DaedricPathBase daedricSurfacePath = deity as PDV_DaedricPathBase
+    if daedricSurfacePath && daedricSurfacePath.GetStoredTier() < PDV_Manager.LedgerRuntime.TIER_SEEKER
+        return
+    endIf
+    if _qrQueueTransactionActive
+        AccumulateQueuedQuestReactionSurface(deity, amount, magnitude)
+        return
+    endIf
+    if !deity || amount == 0.0
+        return
+    endIf
+    String deityName = PDV_Manager.GetPublicDeityDisplayName(deity)
+    if magnitude == "milestone"
+        _qrSurfMilestone = True
+    endIf
+    if amount > 0.0
+        if _qrSurfPosNamesCsv != ""
+            _qrSurfPosNamesCsv = _qrSurfPosNamesCsv + "|"
+        endIf
+        _qrSurfPosNamesCsv = _qrSurfPosNamesCsv + deityName
+        _qrSurfPosCount += 1
+        if amount > _qrSurfBestPosAmount
+            _qrSurfBestPosAmount = amount
+            _qrSurfBestPosName = deityName
+            _qrSurfBestPosSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+        endIf
+    else
+        if _qrSurfNegNamesCsv != ""
+            _qrSurfNegNamesCsv = _qrSurfNegNamesCsv + "|"
+        endIf
+        _qrSurfNegNamesCsv = _qrSurfNegNamesCsv + deityName
+        _qrSurfNegCount += 1
+        if amount < _qrSurfBestNegAmount
+            _qrSurfBestNegAmount = amount
+            _qrSurfBestNegName = deityName
+            _qrSurfBestNegSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+        endIf
+    endIf
+EndFunction
+
+; "Kyne", "Kyne and Mara", "Kyne, Mara and Dibella" from a pipe-joined name list.
+String Function JoinQuestSurfaceNames(String namesCsv)
+    String[] names = StringUtil.Split(namesCsv, "|")
+    Int count = names.Length
+    if count <= 0
+        return ""
+    elseIf count == 1
+        return names[0]
+    endIf
+    String joined = names[0]
+    Int i = 1
+    while i < count
+        if i == count - 1
+            joined = joined + " and " + names[i]
+        else
+            joined = joined + ", " + names[i]
+        endIf
+        i += 1
+    endWhile
+    return joined
+EndFunction
+
+Function FlushQuestReactionSurface()
+    if _qrQueueTransactionActive
+        FlushQueuedQuestReactionSurface()
+        return
+    endIf
+    if _qrSurfPosCount == 0 && _qrSurfNegCount == 0
+        return
+    endIf
+
+    Int nowDay = Utility.GetCurrentGameTime() as Int
+    Int bodMagnitude = 1
+    if _qrSurfMilestone
+        bodMagnitude = 2
+    endIf
+
+    if _qrSurfNegCount == 0
+        String posMsg = _qrSurfBestPosName + " marks your deed."
+        if _qrSurfPosCount == 2
+            posMsg = _qrSurfBestPosName + " and 1 other mark your deed."
+        elseIf _qrSurfPosCount > 2
+            posMsg = _qrSurfBestPosName + " and " + (_qrSurfPosCount - 1) + " others mark your deed."
+        endIf
+        PDV_Manager.SendPrismaToast(_qrSurfBestPosSymbol, "good", "A deed marked", posMsg)
+        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrSurfBestPosSymbol, False, bodMagnitude, "A deed marked")
+    elseIf _qrSurfPosCount == 0
+        String negMsg = _qrSurfBestNegName + " takes offense at your deed."
+        if _qrSurfNegCount == 2
+            negMsg = _qrSurfBestNegName + " and 1 other take offense at your deed."
+        elseIf _qrSurfNegCount > 2
+            negMsg = _qrSurfBestNegName + " and " + (_qrSurfNegCount - 1) + " others take offense at your deed."
+        endIf
+        PDV_Manager.SendPrismaToast(_qrSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
+        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received")
+    else
+        ; Mixed: lead with the stronger side for tone and symbol.
+        Bool positiveLeads = _qrSurfBestPosAmount >= (_qrSurfBestNegAmount * -1.0)
+        String mixedTone = "good"
+        String mixedSymbol = _qrSurfBestPosSymbol
+        String mixedBodTone = "favor.act"
+        if !positiveLeads
+            mixedTone = "warning"
+            mixedSymbol = _qrSurfBestNegSymbol
+            mixedBodTone = "favor.loss"
+        endIf
+        PDV_Manager.SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _qrSurfBestPosName + " marks your deed; " + _qrSurfBestNegName + " takes offense.")
+        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed")
+    endIf
+
+    ResetQuestReactionSurface()
+EndFunction
+
+Function ResetQueuedQuestReactionSurface()
+    _qrQueueSurfPosNamesCsv = ""
+    _qrQueueSurfNegNamesCsv = ""
+    _qrQueueSurfPosCount = 0
+    _qrQueueSurfNegCount = 0
+    _qrQueueSurfBestPosAmount = 0.0
+    _qrQueueSurfBestNegAmount = 0.0
+    _qrQueueSurfBestPosName = ""
+    _qrQueueSurfBestNegName = ""
+    _qrQueueSurfBestPosSymbol = ""
+    _qrQueueSurfBestNegSymbol = ""
+    _qrQueueSurfMilestone = False
+EndFunction
+
+Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount, String magnitude)
+    if !deity || amount == 0.0
+        return
+    endIf
+    String deityName = PDV_Manager.GetPublicDeityDisplayName(deity)
+    if magnitude == "milestone"
+        _qrQueueSurfMilestone = True
+    endIf
+    Bool alreadyListed = QueuedQuestReactionSurfaceHasName(deityName)
+    if amount > 0.0
+        if !alreadyListed
+            if _qrQueueSurfPosNamesCsv != ""
+                _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + "|"
+            endIf
+            _qrQueueSurfPosNamesCsv = _qrQueueSurfPosNamesCsv + deityName
+            _qrQueueSurfPosCount += 1
+        endIf
+        if amount > _qrQueueSurfBestPosAmount
+            _qrQueueSurfBestPosAmount = amount
+            _qrQueueSurfBestPosName = deityName
+            _qrQueueSurfBestPosSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+        endIf
+    else
+        if !alreadyListed
+            if _qrQueueSurfNegNamesCsv != ""
+                _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + "|"
+            endIf
+            _qrQueueSurfNegNamesCsv = _qrQueueSurfNegNamesCsv + deityName
+            _qrQueueSurfNegCount += 1
+        endIf
+        if amount < _qrQueueSurfBestNegAmount
+            _qrQueueSurfBestNegAmount = amount
+            _qrQueueSurfBestNegName = deityName
+            _qrQueueSurfBestNegSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+        endIf
+    endIf
+EndFunction
+
+Bool Function QueuedQuestReactionSurfaceHasName(String deityName)
+    if deityName == ""
+        return False
+    endIf
+    String token = "|" + deityName + "|"
+    return StringUtil.Find("|" + _qrQueueSurfPosNamesCsv + "|", token) >= 0 || StringUtil.Find("|" + _qrQueueSurfNegNamesCsv + "|", token) >= 0
+EndFunction
+
+Function FlushQueuedQuestReactionSurface(String sourceModName = "", String reactionKey = "")
+    if _qrQueueSurfPosCount == 0 && _qrQueueSurfNegCount == 0
+        return
+    endIf
+    String surfaceSourceModName = PDV_Manager.NormalizePublicDeityDisplayText(sourceModName)
+    if surfaceSourceModName == "Skyrim.esm" || surfaceSourceModName == "Update.esm" || surfaceSourceModName == "Dawnguard.esm" || surfaceSourceModName == "HearthFires.esm" || surfaceSourceModName == "Dragonborn.esm"
+        surfaceSourceModName = ""
+    endIf
+    Int nowDay = Utility.GetCurrentGameTime() as Int
+    Int bodMagnitude = 1
+    if _qrQueueSurfMilestone
+        bodMagnitude = 2
+    endIf
+    Bool toastSent = False
+    if _qrQueueSurfNegCount == 0
+        String posMsg = _qrQueueSurfBestPosName + " marks your deed."
+        if _qrQueueSurfPosCount == 2
+            posMsg = _qrQueueSurfBestPosName + " and 1 other mark your deed."
+        elseIf _qrQueueSurfPosCount > 2
+            posMsg = _qrQueueSurfBestPosName + " and " + (_qrQueueSurfPosCount - 1) + " others mark your deed."
+        endIf
+        toastSent = PDV_Manager.SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, surfaceSourceModName, True, reactionKey)
+        TraceQuestReactionToastResult(reactionKey, toastSent)
+        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, surfaceSourceModName)
+    elseIf _qrQueueSurfPosCount == 0
+        String negMsg = _qrQueueSurfBestNegName + " takes offense at your deed."
+        if _qrQueueSurfNegCount == 2
+            negMsg = _qrQueueSurfBestNegName + " and 1 other take offense at your deed."
+        elseIf _qrQueueSurfNegCount > 2
+            negMsg = _qrQueueSurfBestNegName + " and " + (_qrQueueSurfNegCount - 1) + " others take offense at your deed."
+        endIf
+        toastSent = PDV_Manager.SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, surfaceSourceModName, True, reactionKey)
+        TraceQuestReactionToastResult(reactionKey, toastSent)
+        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, surfaceSourceModName)
+    else
+        Bool positiveLeads = _qrQueueSurfBestPosAmount >= (_qrQueueSurfBestNegAmount * -1.0)
+        String mixedTone = "good"
+        String mixedSymbol = _qrQueueSurfBestPosSymbol
+        String mixedBodTone = "favor.act"
+        if !positiveLeads
+            mixedTone = "warning"
+            mixedSymbol = _qrQueueSurfBestNegSymbol
+            mixedBodTone = "favor.loss"
+        endIf
+        toastSent = PDV_Manager.SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", surfaceSourceModName, True, reactionKey)
+        TraceQuestReactionToastResult(reactionKey, toastSent)
+        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, surfaceSourceModName)
+    endIf
+    ResetQueuedQuestReactionSurface()
+EndFunction
+
+Function TraceQuestReactionToastResult(String reactionKey, Bool toastSent)
+    if PDV_Manager.GetDebugLevel() >= 2
+        Debug.Trace("[PDV][PDV_TOAST_TRACE] questReaction correlation=" + reactionKey + " submitted=" + toastSent)
+    endIf
+EndFunction
+
+PDV_DeityBase Function GetQuestReactionDeity(String deityName)
+    ; Per-cell quest-reaction hot path. Resolution was an O(deities) FormList
+    ; scan (plus a Daedric-path scan on a name miss) run once per cell -- twice
+    ; for a runnable cell (cheap-skip check then ApplyDeityReaction). The
+    ; name->deity mapping is static for the session, so cache the resolved form
+    ; in a StorageUtil map keyed by name. Only non-None results are cached, so a
+    ; name whose owning form is not loaded yet keeps re-scanning until it hits.
+    if deityName == ""
+        return None
+    endIf
+
+    Form cachedForm = StorageUtil.GetFormValue(None, "PDV.Manager.QuestReaction.DeityCache." + deityName)
+    PDV_DeityBase cachedDeity = cachedForm as PDV_DeityBase
+    if cachedDeity
+        return cachedDeity
+    endIf
+
+    PDV_DeityBase deity = PDV_Manager.LedgerRuntime.GetDeityByName(deityName)
+    if !deity && PDV_Manager.PDV_FLST_DaedricPaths_All
+        Int i = 0
+        Int count = PDV_Manager.PDV_FLST_DaedricPaths_All.GetSize()
+        while i < count && !deity
+            PDV_DeityBase path = PDV_Manager.PDV_FLST_DaedricPaths_All.GetAt(i) as PDV_DeityBase
+            if path && IsQuestReactionNameMatch(path.DeityName, deityName)
+                deity = path
+            endIf
+            i += 1
+        endWhile
+    endIf
+
+    if deity
+        StorageUtil.SetFormValue(None, "PDV.Manager.QuestReaction.DeityCache." + deityName, deity)
+    endIf
+    return deity
+EndFunction
+
+Bool Function IsQuestReactionNameMatch(String recordName, String requestedName)
+    if recordName == requestedName
+        return True
+    endIf
+    if requestedName == "Hermaeus Mora" && recordName == "Mora"
+        return True
+    endIf
+    if requestedName == "Clavicus Vile" && recordName == "Vile"
+        return True
+    endIf
+    if requestedName == "Mehrunes Dagon" && recordName == "Dagon"
+        return True
+    endIf
+    if requestedName == "Molag Bal" && recordName == "Molag"
+        return True
+    endIf
+    if requestedName == "Sheogorath" && recordName == "Sheo"
+        return True
+    endIf
+    return False
+EndFunction
+
+String Function GetQuestReactionStance(String deityName, PDV_DeityBase deity)
+    String raceLabel = PDV_Manager.OriginRuntime.GetOriginRaceLabel(PDV_Manager.GetPlayerOriginRaceIndex())
+    String stance = JsonUtil.GetStringValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "stance." + raceLabel + "." + deityName)
+    if stance != ""
+        return stance
+    endIf
+
+    Int stanceValue = deity.GetStanceForPlayer()
+    if stanceValue == deity.STANCE_NATIVE
+        return "NATIVE"
+    elseIf stanceValue == deity.STANCE_TABOO
+        return "TABOO"
+    elseIf stanceValue == deity.STANCE_HOSTILE
+        return "HOSTILE"
+    endIf
+
+    return "FOREIGN"
+EndFunction
+
+Float Function GetQuestReactionBaseValue(String magnitude, String intensity)
+    return JsonUtil.GetFloatValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "value." + magnitude + "." + intensity, 0.0)
+EndFunction
+
+Float Function GetQuestReactionStanceMultiplier(String stance)
+    if stance == "FOREIGN"
+        return JsonUtil.GetFloatValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "stanceMult.FOREIGN", 0.4)
+    elseIf stance == "TOLERATED"
+        return JsonUtil.GetFloatValue(PDV_Manager.QUEST_REACTION_MATRIX_FILE, "stanceMult.TOLERATED", 0.4)
+    endIf
+    return 1.0
+EndFunction
+
+; A quest-reaction target is "reachable" when automatic piety can land on a
+; player-facing, currently eligible lane. Daedric paths always qualify
+; (pre-pact paths render as "watching"; pacts as patron), and an active
+; off-roster patron restored from an older save remains reachable. Nords are
+; deliberately narrower than their dashboard's union roster: the selected Old
+; Ways or Nine Divines baseline decides which native god can receive an
+; automatic quest reaction. DeityBase state tracks still own their documented
+; reduced-gain/tier-cap behavior and are not duplicated as a binary gate here.
+Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
+    if deity as PDV_DaedricPathBase
+        return True
+    endIf
+    if PDV_Manager.LedgerRuntime.IsGrandfatheredOffRosterPatron(deity)
+        return True
+    endIf
+
+    Int originRace = PDV_Manager.GetPlayerOriginRaceIndex()
+    if originRace == PDV_Manager.ORIGIN_NORD
+        return PDV_Manager.OriginRuntime.IsNordOfferEligibleDeity(deity)
+    endIf
+
+    return PDV_Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, originRace)
+EndFunction
+
+Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reason)
+    Form deityForm = PDV_Manager.GetDeityFormOrNone(deity)
+    if !deityForm || amount == 0.0
+        return
+    endIf
+
+    ; The caller already applied the matrix stance multiplier. Preserve track,
+    ; eligibility, curse, survival, and mode modifiers without double-scaling
+    ; FOREIGN/TOLERATED through the record stance again.
+    PDV_Manager.LedgerRuntime.AwardPietyInternal(deity, amount, True, reason, False)
+    StorageUtil.SetStringValue(deityForm, "PDV.QuestReaction.LastReason", reason)
+    if !_qrQueueTransactionActive
+        PDV_Manager.RequestPanelRefresh()
+    endIf
+
+    if PDV_Manager.GetDebugLevel() >= 3 || (!_qrQueueTransactionActive && PDV_Manager.GetDebugLevel() >= 1)
+        Debug.Trace("[PDV] QuestReaction piety: " + deity.DeityName + " " + amount + " (" + reason + ")")
+    endIf
+EndFunction
+
+Function ApplyQuestReactionStigma(PDV_DeityBase deity, Float amount, String reason)
+    PDV_DaedricPathBase path = deity as PDV_DaedricPathBase
+    if path
+        path.AddStigma(amount, "quest_reaction_" + reason)
+    else
+        ApplyQuestReactionPiety(deity, amount * -1.0, "taboo_" + reason)
+    endIf
+EndFunction
+
+Bool Function MarkQuestReactionFaucet(String deityName, String sourceTag, Form sourceForm)
+    String capKey = "PDV.QuestReaction.Faucet." + deityName + "." + sourceTag
+    if sourceTag == "forbidden_knowledge" && sourceForm
+        String everKey = capKey + "." + sourceForm.GetFormID() + ".Seen"
+        if StorageUtil.GetIntValue(None, everKey) == 1
+            return False
+        endIf
+        StorageUtil.SetIntValue(None, everKey, 1)
+        return True
+    endIf
+
+    Int currentDayStamp = PDV_Manager.LedgerRuntime.GetDevotionalDay() + 2
+    String dayKey = capKey + ".Day"
+    if StorageUtil.GetIntValue(None, dayKey) == currentDayStamp
+        return False
+    endIf
+
+    StorageUtil.SetIntValue(None, dayKey, currentDayStamp)
+    return True
+EndFunction
+
+Function AccumulateQueuedQuestReactionBroadDelta(PDV_DeityBase deity, Float appliedDelta)
+    if _qrQueueBroadPool == "" || !deity || !PDV_Manager.LedgerRuntime.IsDeityEligibleForBroadPantheon(deity, _qrQueueBroadPool)
+        return
+    endIf
+    if appliedDelta > 0.0 && appliedDelta > _qrQueueBroadBestPositive
+        _qrQueueBroadBestPositive = appliedDelta
+    elseIf appliedDelta < 0.0 && appliedDelta < _qrQueueBroadWorstNegative
+        _qrQueueBroadWorstNegative = appliedDelta
+    endIf
+EndFunction
+
+Function CommitQueuedQuestReactionBroad(String reactionKey)
+    Float chosenDelta = 0.0
+    if _qrQueueBroadBestPositive > 0.0
+        chosenDelta = _qrQueueBroadBestPositive
+    elseIf _qrQueueBroadWorstNegative < 0.0
+        chosenDelta = _qrQueueBroadWorstNegative
+    endIf
+    if _qrQueueBroadPool != "" && chosenDelta != 0.0
+        Float nowTime = Utility.GetCurrentGameTime()
+        if !PDV_Manager.LedgerRuntime.IsRecentBroadPantheonEventDuplicate(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
+            PDV_Manager.LedgerRuntime.CatchUpBroadPantheonDecayBeforeCurrentDay(_qrQueueBroadPool)
+            if PDV_Manager.LedgerRuntime.GetBroadPantheonScratch(_qrQueueBroadPool) == 0.0
+                PDV_Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp(PDV_Manager.LedgerRuntime.GetBroadPantheonScratchDayKey(_qrQueueBroadPool))
+            endIf
+            StorageUtil.AdjustFloatValue(None, PDV_Manager.LedgerRuntime.GetBroadPantheonScratchKey(_qrQueueBroadPool), chosenDelta)
+            StorageUtil.SetStringValue(None, PDV_Manager.LedgerRuntime.GetBroadPantheonLastEventKey(_qrQueueBroadPool), "quest_" + reactionKey)
+            StorageUtil.SetFloatValue(None, PDV_Manager.LedgerRuntime.GetBroadPantheonLastEventTimeKey(_qrQueueBroadPool), nowTime)
+            PDV_Manager.LedgerRuntime.RememberBroadPantheonEvent(_qrQueueBroadPool, "quest_" + reactionKey, nowTime)
+            if chosenDelta > 0.0
+                PDV_Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp(PDV_Manager.LedgerRuntime.GetBroadPantheonLastGainDayKey(_qrQueueBroadPool))
+            endIf
+        endIf
+    endIf
+    _qrQueueBroadPool = ""
+    _qrQueueBroadBestPositive = 0.0
+    _qrQueueBroadWorstNegative = 0.0
+EndFunction
+
+Bool Function GetQrQueueTransactionActive()
+    return _qrQueueTransactionActive
+EndFunction
+
+Function SetQrQueueNeedsCurseRefresh(Bool value)
+    _qrQueueNeedsCurseRefresh = value
+EndFunction
+
+Bool Function GetQrQueueNeedsBretonRewardSync()
+    return _qrQueueNeedsBretonRewardSync
+EndFunction
+
+Function SetQrQueueNeedsBretonRewardSync(Bool value)
+    _qrQueueNeedsBretonRewardSync = value
 EndFunction

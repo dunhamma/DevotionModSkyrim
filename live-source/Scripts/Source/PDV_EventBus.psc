@@ -146,7 +146,7 @@ Function RouteQuestReactionFaucet(String faucetKey, Form sourceForm)
         return
     endIf
 
-    PDV_Manager.ApplyQuestReactionFaucet(faucetKey, sourceForm)
+    PDV_Manager.PDV_QuestReactionRuntimeService.ApplyQuestReactionFaucet(faucetKey, sourceForm)
     Trace(2, "RouteQuestReactionFaucet complete: " + faucetKey)
 EndFunction
 
