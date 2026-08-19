@@ -484,3 +484,57 @@ replacement mapping are in `references/authoring/PDV_2_0_ORIGIN_SwitchboardRever
 Owner's standing instruction from this exchange, now in agent memory: **always verify a claim
 BEFORE making a recommendation that rests on it.** A signature says what a function CAN take,
 never what callers DO pass.
+
+---
+
+## UPDATE -- 2026-08-19 session 8: ORIGIN WIRED AND DEPLOYED -- READY TO TEST
+
+### The finding that unblocked wiring
+Removal was NOT a prerequisite. `PDV_DevotionLedger.psc:1087` calls `deity.OnTierChange(...)` on a
+**`PDV_DeityBase`-typed** parameter and 15 child scripts override it -- live, shipped proof that
+Papyrus dispatches to a child override through a base-typed reference. So the base keeping its 608
+lane declarations does not block anything: external `OriginRuntime.X()` calls are base-typed and
+land on the live adapter's override.
+
+Shadowed script vars resolve the same way: all 608 lane fns have exactly one adapter override, so
+for the live race every call uses adapter state consistently. Another race's fns still fall through
+to the base copy -- which is exactly today's behaviour.
+
+### ESP wiring -- DONE and verified
+- **10 adapter host QUSTs**, all start-game-enabled, each carrying its `PDV_OriginRuntime_<Race>`
+  script + `Manager -> 00C325`. FormIDs landed in `ORIGIN_*` order: **071794 Nord (0), 071795
+  Imperial (1), 071796 Breton (2), 071797 Altmer (3), 071798 Bosmer (4), 071799 Dunmer (5),
+  07179A Khajiit (6), 07179B Argonian (7), 07179C Orc (8), 07179D Redguard (9)**.
+- **`PDV_FLST_OriginAdapters` = 07179E**, readback-verified in exact index order. This order is
+  LOAD-BEARING -- `Manager.ResolveOriginRuntime()` indexes it directly by race.
+- Manager property filled: VMAD properties **511 -> 512**, new `[511] = PDV_FLST_OriginAdapters`.
+- `OriginRuntime` itself is deliberately left UNFILLED. `ResolveOriginRuntime()` is its sole filler,
+  so a resolution failure is a loud None error rather than a silent wrong-race binding.
+- **SEQ regenerated 45 -> 55** quests (220 bytes), deployed over `Devotion-V3Dev/SEQ/Devotion.seq`.
+- `check_errors`: 0 dangling / 0 missing masters / 0 unscannable. Masters `Skyrim.esm,
+  Dawnguard.esm, HearthFires.esm, Dragonborn.esm` -- game master first, order correct.
+- ESP grew monotonically 658098 -> 659816 -> 659851, and the EARLIEST record (071793 DAEDRIC) was
+  re-read after the last write and is intact -- no silent revert.
+- Backups: `Devotion.esp.pre-origin-backup`, `SEQ/Devotion.seq.pre-origin-backup`.
+
+### Deployed to V3Dev
+All 114 PDV sources synced and compiled; **every source now has a .pex**. DAEDRIC's bind failure is
+gone.
+
+**Toolchain gap worth fixing:** `pdv_compile.mjs --all` compiled only 102 of 114 -- it works from a
+known script list, so `PDV_OriginRuntimeBase`, `PDV_DaedricRuntime` and all 10 adapters were
+silently skipped. They were compiled explicitly with `--script`. **A new module will not be built
+by `--all` until that list learns about it**, and the failure is silent (exit 0, "102 PASS").
+
+### READY TO TEST -- GATE 0.5 runtime for ORIGIN + DAEDRIC, on a NEW GAME
+Host quests need a fresh save. Highest-value coverage is one thick adapter and one thin one:
+**Khajiit** (88 lane fns, 29 signal ids, the moon-observation token path) and **Imperial**
+(34 fns, the concordat pressure query). Watch for: no None-`OriginRuntime` errors, the right
+adapter binding for the birth race, and race behaviour firing as before.
+
+### NOT done -- the follow-on, and it is clarity not correctness
+**477 external call sites across 11 files** still name lane functions through the base-typed
+reference (manager 225, ledger 123, EventBus 96, ActionRouter 17, six smaller files 16). They work
+today via override dispatch. Migrating them to the virtuals is what finally allows deleting the 608
+lane originals from the base and collapsing its ~225 race comparisons. Until then the base stays
+12k lines and inert-but-bloated.
