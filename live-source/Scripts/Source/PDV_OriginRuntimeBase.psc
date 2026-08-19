@@ -190,63 +190,6 @@ Int Function GetBosmerPathEvidenceDays()
     return Manager.PDV_BosmerPathTrack.GetRecentEvidenceDayCount(currentPath, 7)
 EndFunction
 
-Bool Function TryAltmerDisciplinesRite(Actor playerRef, String reason)
-    if !playerRef || !Manager.PDV_MESG_AltmerDisciplines || !IsAltmerOrigin()
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.Alt.Disc.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    ; GetDevotionalDay can be -1 before the first 06:00 boundary. Reserve zero
-    ; exactly as the shared substrate stamp does so a first-day decline sticks.
-    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
-    Int lastDeclineStamp = StorageUtil.GetIntValue(None, "PDV.Alt.Disc.LastDeclineDay")
-    if lastDeclineStamp > 0 && (todayStamp - lastDeclineStamp) < 3
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = Manager.PDV_MESG_AltmerDisciplines.Show()
-    ; B4 / fix-plan 3. Show() returns -1 when another menu or message is already up
-    ; (routine right after sleep in a heavy list). That is "not shown", never a choice:
-    ; no decline stamp, no state change, and the caller is told the menu did NOT appear
-    ; so the ancestral dream is not suppressed for a rite that never ran. The rite
-    ; retries at its next natural trigger.
-    if pressed < 0
-        Manager.Trace(2, "Altmer Disciplines rite not shown (menu busy); no decline stamped.")
-        return false
-    endIf
-    if pressed > 3
-        StorageUtil.SetIntValue(None, "PDV.Alt.Disc.LastDeclineDay", todayStamp)
-        return true                 ; "Not yet" -- short prompt cooldown only
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.Alt.Disc.LastDeclineDay", 0)
-    ApplyAltmerDiscipline(playerRef, pressed)
-    return true
-EndFunction
-
-Function ApplyAltmerDiscipline(Actor playerRef, Int index)
-    RemoveAltmerDisciplineSpells(playerRef)
-    Spell chosen = GetAltmerDisciplineSpell(index)
-    if !chosen
-        return
-    endIf
-
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.Alt.Disc.Active", index + 1)
-    StorageUtil.SetFloatValue(None, "PDV.Alt.Disc.LastRiteTime", Utility.GetCurrentGameTime())
-    ; Surface in both Prisma spaces: a small Auri-El pulse (Ledger driver; the 7-day
-    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    Manager.LedgerRuntime.AwardPiety(Manager.PDV_AuriEl, 0.5, "Set a Discipline of Return")
-    Manager.AppendBookOfDaysEntry("You set a discipline of the Return. The road back is walked daily.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False)
-    Manager.SendPrismaToast("auriel", "good", "Discipline of Return", "It holds while you hold to the path.")
-    Manager.Trace(2, "Altmer Discipline of Return applied: " + index)
-EndFunction
-
 Function RemoveAltmerDisciplineSpells(Actor playerRef)
     Int i = 0
     while i < 4
@@ -309,175 +252,6 @@ Bool Function IsAltmerDisciplineCoherent()
     return false
 EndFunction
 
-Function HandleAltmerSleepEvents(Actor playerRef, String reason)
-    if !playerRef || !IsAltmerOrigin() || IsAltmerFavorSuppressedByCurse()
-        return
-    endIf
-
-    if TryAltmerDisciplinesRite(playerRef, reason)
-        return                          ; Disciplines menu shown; suppress the dream this wake
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.AltmerAncestralDream")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    AwardAltmerAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
-    ; P4 (2026-08-03): graded rather than patron-only. This was `_activeDeity == PDV_Magnus`, which
-    ; meant a follower who had not formally committed to Magnus got NOTHING from the sleep lane --
-    ; and since 1802 is finite at 24 lifetime awards and 1804 is patron-only too, that left them
-    ; with no curated income at all. A Seeker-or-better non-patron now gets half. The patron lane
-    ; stays strictly better, so this widens access without flattening the commitment choice.
-    if Manager.PDV_Magnus
-        if Manager.GetActiveDeity() == Manager.PDV_Magnus
-            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier)
-        elseIf Manager.LedgerRuntime.GetTier(Manager.PDV_Magnus) >= Manager.LedgerRuntime.TIER_SEEKER
-            AwardAltmerDawnSignal("magnus_sleep_dream_" + reason, multiplier * 0.5)
-        endIf
-    endIf
-    ; P2 (2026-08-04): the hardcoded Book of Days line that used to sit here is gone.
-    ; AwardAltmerAncestorSpinePulse now writes it via GetAltmerHeritageSourceLine, gated on the day
-    ; credit actually landing. Keeping it here too would double-log the sleep feed and would report
-    ; a dream on days the credit was already spent.
-EndFunction
-
-Function HandleBosmerSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
-        return
-    endIf
-
-    Int sleepCellId = 0
-    Cell sleepCell = playerRef.GetParentCell()
-    if sleepCell
-        sleepCellId = sleepCell.GetFormID()
-    endIf
-
-    Bool menuShown = TryBosmerHearthSleep(playerRef, sleepCellId, reason)
-    if !menuShown
-        menuShown = TryBosmerNaming(playerRef, sleepCellId, reason)
-    endIf
-    if !menuShown
-        TryBosmerPathDream(reason)
-    endIf
-EndFunction
-
-Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reason)
-    if sleepCellId == 0 || !playerRef
-        return false
-    endIf
-
-    ; fix-plan 4.2: the hearth decline cadence is a devotional-day cadence like every
-    ; other sleep rite, not a raw-midnight one -- a midnight crossed mid-sleep must not
-    ; shorten the 3-day re-prompt window. ReadZeroReserved migrates the legacy +1 stamp.
-    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
-    Int declaredId = StorageUtil.GetIntValue(None, "PDV.BosHearth.DeclaredCell")
-    if declaredId == 0
-        if !Manager.PDV_MESG_BosmerMarkHearth
-            return false
-        endIf
-        Int declinedDay = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
-        if declinedDay > 0 && (todayStamp - declinedDay) < 3
-            return false
-        endIf
-
-        Utility.Wait(0.5)
-        Int pressed = Manager.PDV_MESG_BosmerMarkHearth.Show()
-        ; B4 / fix-plan 3. -1 is "not shown" -- no decline stamp, retry next sleep.
-        if pressed < 0
-            Manager.Trace(2, "Bosmer hearth menu not shown (menu busy); no decline stamped.")
-            return false
-        endIf
-        if pressed == 0
-            StorageUtil.SetIntValue(None, "PDV.BosHearth.DeclaredCell", sleepCellId)
-            StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount"))
-            Manager.SendPrismaToast("yffre", "good", "Hearth declared", "This is where your stories come home now.")
-        else
-            Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
-        endIf
-        return true
-    endIf
-
-    if sleepCellId != declaredId
-        return false
-    endIf
-    if GetBosmerPathState() != Manager.BOSMER_PATH_LIVING_STORY
-        return false
-    endIf
-
-    ; Return sleep in the declared hearth: reward only when the player has been
-    ; out gathering story (3+ new locations since last stay). Anti-farm is the
-    ; discovery delta, not sleep count.
-    Int discoveryNow = StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount")
-    Int discoveryAtLastStay = StorageUtil.GetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay")
-    if (discoveryNow - discoveryAtLastStay) >= 3
-        StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", discoveryNow)
-        if Manager.PDV_SPEL_BosmerTaleCarried
-            Manager.PDV_SPEL_BosmerTaleCarried.Cast(playerRef, playerRef)
-            Manager.SendPrismaToast("yffre", "good", "Tale carried", "You told the tale, and the telling settled.")
-            HandleBosmerLivingStoryCommunityKept(reason + "_tale_carried")
-        endIf
-    endIf
-    return false
-EndFunction
-
-Bool Function TryBosmerNaming(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MESG_BosmerNaming || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
-        return false
-    endIf
-
-    Bool atSite = false
-    Int declaredHearth = StorageUtil.GetIntValue(None, "PDV.BosHearth.DeclaredCell")
-    if sleepCellId != 0 && declaredHearth != 0 && sleepCellId == declaredHearth
-        atSite = true
-    elseIf Manager.PDV_FLST_BosmerGreenSongs && playerRef.GetCurrentLocation() && Manager.PDV_FLST_BosmerGreenSongs.HasForm(playerRef.GetCurrentLocation())
-        atSite = true
-    endIf
-    if !atSite
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.BosNaming.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = Manager.PDV_MESG_BosmerNaming.Show()
-    if pressed < 0 || pressed > 3
-        return true                 ; "Not yet" -- cooldown not spent
-    endIf
-
-    ApplyBosmerNaming(playerRef, pressed)
-    return true
-EndFunction
-
-Function ApplyBosmerNaming(Actor playerRef, Int index)
-    RemoveBosmerNamingSpells(playerRef)
-    Spell chosen = GetBosmerNamingSpell(index)
-    if !chosen
-        return
-    endIf
-
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.BosNaming.Active", index + 1)
-    StorageUtil.SetIntValue(None, "PDV.BosNaming.PathAtRite", GetBosmerPathState())
-    StorageUtil.SetFloatValue(None, "PDV.BosNaming.LastRiteTime", Utility.GetCurrentGameTime())
-    Manager.SendPrismaToast("yffre", "good", "Naming", "You tell yourself anew. The shape settles into you.")
-    Manager.Trace(2, "Bosmer Naming told-self applied: " + index)
-EndFunction
-
-Function RemoveBosmerNamingSpells(Actor playerRef)
-    Int i = 0
-    while i < 4
-        Spell told = GetBosmerNamingSpell(i)
-        if told && playerRef.HasSpell(told)
-            playerRef.RemoveSpell(told)
-        endIf
-        i += 1
-    endWhile
-EndFunction
-
 Spell Function GetBosmerNamingSpell(Int index)
     if index == 0
         return Manager.PDV_SPEL_BosmerNaming_Hunter
@@ -527,43 +301,6 @@ Bool Function IsBosmerNamingCoherent(Int pathAtRite)
         return false                ; Apostate band
     endIf
     return true
-EndFunction
-
-Function TryBosmerPathDream(String reason)
-    ; fix-plan 4.2: sleep-triggered cadence -- devotional day, not raw midnight.
-    Int today = Manager.LedgerRuntime.GetDevotionalDay() + 2
-    Int lastDreamDay = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
-    if lastDreamDay > 0 && (today - lastDreamDay) < 2
-        return
-    endIf
-
-    Int dreamChance = 10
-    if StorageUtil.GetIntValue(None, "PDV.BosDream.Armed") == 1
-        dreamChance = 60
-    endIf
-
-    if Utility.RandomInt(1, 100) > dreamChance
-        return
-    endIf
-
-    Manager.SendPrismaToast("yffre", "neutral", "Green dream", GetBosmerDreamText(GetBosmerPathState()))
-    StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 0)
-    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
-    Manager.Trace(2, "Bosmer path dream fired (" + reason + ")")
-EndFunction
-
-String Function GetBosmerDreamText(Int pathState)
-    if pathState == Manager.BOSMER_PATH_OLD_CONTRACT
-        if GetBosmerGreenPactCompliance() < 20
-            return "You dream of green going grey, and a voice that has stopped expecting you to answer."
-        endIf
-        return "You dream the old green, ordered and exact, and you know your place in it."
-    elseIf pathState == Manager.BOSMER_PATH_EXCHANGE
-        return "You dream of a ledger no one keeps but you, and every line balancing at last."
-    elseIf pathState == Manager.BOSMER_PATH_BANDIT_ROAD
-        return "You dream of a fire on the road, and faces that owe you nothing and share anyway."
-    endIf
-    return "You dream the Story still telling itself, and you are a line in it that has not ended."
 EndFunction
 
 Function HandleBosmerLocationChange(Location loc)
@@ -783,29 +520,6 @@ Function TryBosmerScalesAtRest(Actor playerRef)
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay")
     Manager.SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
     Manager.Trace(2, "Bosmer Scales at Rest fired.")
-EndFunction
-
-Function TryBosmerBaanDarGap(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER || !Manager.PDV_SPEL_BosmerBaanDarGap
-        return
-    endIf
-    if GetBosmerPathState() != Manager.BOSMER_PATH_BANDIT_ROAD
-        return
-    endIf
-    if !playerRef.IsInCombat()
-        return
-    endIf
-
-    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay") == (Manager.LedgerRuntime.GetDevotionalDay() + 2)
-        return
-    endIf
-
-    Manager.PDV_SPEL_BosmerBaanDarGap.Cast(playerRef, playerRef)
-    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay")
-    HandleBosmerBanditRoadReversal("baandar_gap_low_health")
-    Manager.SendPrismaToast("baandar", "good", "Baan Dar opens the gap", "Run.")
-    Manager.Trace(2, "Bosmer Baan Dar Opens the Gap fired.")
 EndFunction
 
 Function ArmBosmerDreamOnPathChange()
@@ -2351,28 +2065,6 @@ String Function GetBookOfDaysAltmerCrisisLabel()
     return "None"
 EndFunction
 
-String Function GetAltmerMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("magnus", "Magnus", "god", "magnus", Manager.PDV_Magnus, "Light, magic, and origin memory.")
-    entries = entries + "," + Manager.PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
-    entries = entries + "," + Manager.RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", Manager.PDV_AuriEl, "The founding light and ancestral ascent.")
-    entries = entries + "," + Manager.RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", Manager.PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
-    entries = entries + "," + Manager.RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", Manager.PDV_Xarxes, "Lineage, record, and ordered memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("trinimac", "Trinimac", "god", "trinimac", Manager.PDV_Trinimac, "Warrior order and unbroken nobility.")
-    return entries
-EndFunction
-
-String Function GetBosmerNativeMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", Manager.PDV_Yffre, "The Green, story, and the Old Contract.")
-    entries = entries + "," + Manager.RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", Manager.PDV_AuriEl, "Elven ancestry and high memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", Manager.PDV_Xarxes, "Record, lineage, and written memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", Manager.PDV_BaanDar, "Trickster road, masks, and survival.")
-    return entries
-EndFunction
-
-String Function GetBosmerFocusMedallionEntriesJson()
-    return Manager.RosterMedallionEntry("zen", "Z'en", "god", "zen", Manager.LedgerRuntime.PDV_Zen, "Debt, toil, exchange, and obligation.")
-EndFunction
-
 Bool Function HasBosmerSetupCompleted()
     return StorageUtil.GetIntValue(None, "PDV.Bosmer.SetupComplete") == 1
 EndFunction
@@ -2677,80 +2369,6 @@ Message Function GetBosmerSuggestionMessage(Int targetState)
     return None
 EndFunction
 
-Function ConfirmBosmerPendingTransition(String reason)
-    if !Manager.PDV_BosmerPathTrack || !Manager.PDV_BosmerPathTrack.IsTransitionPending()
-        return
-    endIf
-
-    Int pendingState = Manager.PDV_BosmerPathTrack.GetPendingState()
-    if !CanConfirmBosmerPathState(pendingState)
-        Manager.PDV_BosmerPathTrack.CancelPendingTransition("rite_invalid")
-        Manager.SendPrismaToast(GetBosmerPathSymbol(pendingState), "warning", "The rite fails", "The new path has not yet been proven.")
-        return
-    endIf
-
-    Int currentState = Manager.PDV_BosmerPathTrack.GetCurrentState()
-    if currentState == Manager.BOSMER_PATH_OLD_CONTRACT && pendingState != Manager.BOSMER_PATH_OLD_CONTRACT
-        ExitBosmerOldContract(True, reason)
-    endIf
-
-    Manager.PDV_BosmerPathTrack.ConfirmPendingTransition(reason)
-    if pendingState == Manager.BOSMER_PATH_OLD_CONTRACT
-        EnterBosmerOldContract(False, reason)
-    else
-        SetBosmerPactBound(False, reason)
-        ApplyBosmerPathPatron(pendingState, reason)
-        if pendingState == Manager.BOSMER_PATH_LIVING_STORY && Manager.PDV_Yffre
-            Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Yffre, Manager.PDV_Yffre.SIGNAL_LIVING_STORY, None)
-        elseIf pendingState == Manager.BOSMER_PATH_EXCHANGE && Manager.LedgerRuntime.PDV_Zen
-            Manager.LedgerRuntime.AwardCuratedSignal(Manager.LedgerRuntime.PDV_Zen, Manager.LedgerRuntime.PDV_Zen.SIGNAL_CONFIRMATION, None)
-        elseIf pendingState == Manager.BOSMER_PATH_BANDIT_ROAD && Manager.PDV_BaanDar
-            Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_BaanDar, Manager.PDV_BaanDar.SIGNAL_CONFIRMATION, None)
-        endIf
-    endIf
-
-    Manager.SendPrismaShiftToast(GetBosmerPathLabel(), "", Manager.GetPrismaSymbolForDeity(Manager.GetActiveDeity()))
-    Manager.AppendBookOfDaysEntry("Y'ffre's song settles within you. Your road through the Green is the " + GetBosmerPathLabel() + ".", Utility.GetCurrentGameTime() as Int, "reorientation", Manager.GetPrismaSymbolForDeity(Manager.GetActiveDeity()), False, 3)
-    Manager.RequestPanelRefresh()
-EndFunction
-
-Bool Function CanConfirmBosmerPathState(Int targetState)
-    if !Manager.PDV_BosmerPathTrack
-        return False
-    endIf
-
-    if targetState == Manager.BOSMER_PATH_LIVING_STORY
-        return Manager.PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 1, 7)
-    elseIf targetState == Manager.BOSMER_PATH_EXCHANGE
-        return Manager.PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 2, 7)
-    elseIf targetState == Manager.BOSMER_PATH_BANDIT_ROAD
-        return Manager.PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 2, 7)
-    elseIf targetState == Manager.BOSMER_PATH_OLD_CONTRACT
-        if HasBosmerTerminalRenunciation()
-            return False
-        endIf
-        return Manager.PDV_BosmerPathTrack.HasRecentEvidenceDays(targetState, 3, 7)
-    endIf
-
-    return False
-EndFunction
-
-String Function GetAltmerCursePublicLabel()
-    if IsAltmerWerewolfHalted()
-        return "Werewolf halt"
-    endIf
-
-    if IsAltmerVampireExiled()
-        return "Exiled from dawn"
-    endIf
-
-    if HasAltmerVampireExileScar()
-        return "Dawn-exile scar"
-    endIf
-
-    return ""
-EndFunction
-
 String Function GetAltmerCurseSummary()
     if IsAltmerWerewolfHalted()
         return "werewolf_halt"
@@ -2796,14 +2414,6 @@ String Function GetAltmerSurveyText()
     endIf
 
     return text
-EndFunction
-
-String Function GetAltmerHeritageLayerLabel()
-    if !Manager.PDV_AltmerAncestorSubstrate
-        return "quiet"
-    endIf
-
-    return Manager.PDV_AltmerAncestorSubstrate.GetHeritagePostureLabel()
 EndFunction
 
 String Function GetAltmerHeritageTierName()
@@ -3316,10 +2926,6 @@ Function ProcessKhajiitAlkoshWordDrip()
     Manager.LedgerRuntime.RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
 EndFunction
 
-Float Function GetKhajiitLunarAlignmentMultiplier(PDV_DeityBase deity)
-    return 1.0
-EndFunction
-
 String Function GetArgonianCulturalNextThresholdText(Float metric)
     if metric < 1.0
         return "Root Memory at 1"
@@ -3344,103 +2950,6 @@ String Function GetArgonianCulturalPracticeLabel()
         return "Root Memory"
     endIf
     return "Practice quiet"
-EndFunction
-
-Function HandleArgonianSleepEvents(Actor playerRef, String reason)
-    if !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-
-    ; Identity = the CELL you sleep in (reliable at sleep-stop), not the bed
-    ; furniture ref (GetFurnitureReference is None at OnSleepStart). Your home
-    ; room becomes your place of rest.
-    Int sleepCellId = 0
-    Cell sleepCell = playerRef.GetParentCell()
-    if sleepCell
-        sleepCellId = sleepCell.GetFormID()
-    endIf
-
-    Bool menuShown = TryArgonianBedOfChoiceSleep(playerRef, sleepCellId, reason)
-    if !menuShown
-        menuShown = TryArgonianAdaptationRite(playerRef, sleepCellId, reason)
-    endIf
-    if !menuShown
-        TryArgonianPostureDream(reason)
-    endIf
-EndFunction
-
-Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, String reason)
-    if sleepCellId == 0 || !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
-        return false
-    endIf
-
-    ; Every bed cadence uses the shared 06:00 devotional day, encoded with
-    ; +2 so day zero cannot be mistaken for an unset legacy value.
-    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
-    Int declaredId = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclaredFormID")
-    if declaredId != 0 && sleepCellId == declaredId
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", 0)
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
-        HandleArgonianBedOfChoiceReturn("declared_" + reason)
-        if Manager.PDV_SPEL_ArgonianRootedRest && StorageUtil.GetIntValue(Manager.PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount") >= 12
-            Int rootedRestStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
-            if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay") != rootedRestStamp
-                Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay")
-                Manager.PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
-                Manager.SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
-                Manager.Trace(1, "[PDV][ARGONIAN_ROOTED_REST] granted day=" + Manager.LedgerRuntime.GetDevotionalDay())
-            else
-                Manager.Trace(2, "Argonian Rooted Rest suppressed: already granted this devotional day")
-            endIf
-        endIf
-        return false
-    endIf
-
-    if !Manager.PDV_MESG_ArgonianMarkBed
-        return false
-    endIf
-
-    Int declinedDay = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclineDay")
-    if declinedDay > 0 && (todayStamp - declinedDay) < 3
-        return false
-    endIf
-
-    Int candidateId = StorageUtil.GetIntValue(None, "PDV.ArgBed.CandidateFormID")
-    Int candidateDay = StorageUtil.GetIntValue(None, "PDV.ArgBed.CandidateDay")
-    Int candidateCount = StorageUtil.GetIntValue(None, "PDV.ArgBed.CandidateCount")
-    if candidateId != sleepCellId
-        candidateCount = 1
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", sleepCellId)
-    elseIf candidateDay != todayStamp
-        candidateCount += 1
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", candidateCount)
-    StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", todayStamp)
-
-    if candidateCount < 3
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = Manager.PDV_MESG_ArgonianMarkBed.Show()
-    ; B4 / fix-plan 3. -1 is "another menu was already up", not a decline. Stamping the
-    ; 3-day suppression AND wiping the 3-sleep candidacy counters on a menu the player
-    ; never saw threw away three nights of progress silently.
-    if pressed < 0
-        Manager.Trace(2, "Argonian bed-of-choice menu not shown (menu busy); candidacy kept.")
-        return false
-    endIf
-    if pressed == 0
-        SetArgonianHome(playerRef, sleepCellId, todayStamp, reason)
-        Manager.SendPrismaToast("hist", "good", "Place of rest", "The Hist remembers it now.")
-    else
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", todayStamp)
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateCount", 0)
-        StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateDay", 0)
-    endIf
-    return true
 EndFunction
 
 Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int devotionalDayStamp, String reason)
@@ -3468,88 +2977,6 @@ Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int devotionalDayStam
         StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", today + Utility.RandomInt(10, 14) + 1)
     endIf
     Manager.Trace(2, "Argonian home declared: " + reason)
-EndFunction
-
-Function ClearArgonianAdaptation(Actor playerRef)
-    if playerRef
-        RemoveArgonianAdaptationSpells(playerRef)
-    endIf
-    StorageUtil.SetIntValue(None, "PDV.Adapt.Active", 0)
-    StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", 0)
-EndFunction
-
-Bool Function TryArgonianAdaptationRite(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MESG_ArgonianAdaptRite || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN
-        return false
-    endIf
-
-    if Manager.PDV_ArgonianHistSubstrate.GetMetric() < Manager.ARGONIAN_REWARD_SIGNATURE_THRESHOLD
-        return false
-    endIf
-
-    Bool rooted = false
-    Int declaredId = StorageUtil.GetIntValue(None, "PDV.ArgBed.DeclaredFormID")
-    if sleepCellId != 0 && declaredId != 0 && sleepCellId == declaredId
-        rooted = true
-    elseIf Manager.PDV_FLST_ArgonianSacredWaters && playerRef.GetCurrentLocation() && Manager.PDV_FLST_ArgonianSacredWaters.HasForm(playerRef.GetCurrentLocation())
-        rooted = true
-    endIf
-    if !rooted
-        return false
-    endIf
-
-    ; One-time, permanent choice: the rite is only offered while no adaptation is
-    ; active. Once taken it is kept for good -- no swap, no re-rite.
-    if StorageUtil.GetIntValue(None, "PDV.Adapt.Active") != 0
-        return false
-    endIf
-
-    ; Grow into the home over time: wait out the randomized 10-14 day clock rolled
-    ; on the first qualifying sleep at this home. DueDay is stored as targetDay + 1
-    ; so 0 unambiguously means "never armed" (StorageUtil ints default to 0).
-    Int dueDay = StorageUtil.GetIntValue(None, "PDV.Adapt.DueDay")
-    Int todayDay = Utility.GetCurrentGameTime() as Int
-    if dueDay <= 0
-        StorageUtil.SetIntValue(None, "PDV.Adapt.DueDay", todayDay + Utility.RandomInt(10, 14) + 1)
-        return false
-    endIf
-    if todayDay < (dueDay - 1)
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = Manager.PDV_MESG_ArgonianAdaptRite.Show()
-    if pressed < 0 || pressed > 3
-        return true
-    endIf
-
-    ApplyArgonianAdaptation(playerRef, pressed)
-    return true
-EndFunction
-
-Function ApplyArgonianAdaptation(Actor playerRef, Int adaptationIndex)
-    RemoveArgonianAdaptationSpells(playerRef)
-    Spell chosenAdaptation = GetArgonianAdaptationSpell(adaptationIndex)
-    if !chosenAdaptation
-        return
-    endIf
-
-    playerRef.AddSpell(chosenAdaptation, False)
-    StorageUtil.SetIntValue(None, "PDV.Adapt.Active", adaptationIndex + 1)
-    Manager.SendPrismaShiftToast("The Hist has reshaped you.", "", "hist")
-    Manager.AppendBookOfDaysEntry("You took the Hist's adaptation into your body. The change is permanent -- the root has answered, and you are remade in its image.", Utility.GetCurrentGameTime() as Int, "reorientation", "hist", True, 3)
-    Manager.Trace(2, "Argonian adaptation applied: " + adaptationIndex)
-EndFunction
-
-Function RemoveArgonianAdaptationSpells(Actor playerRef)
-    Int adaptationIndex = 0
-    while adaptationIndex < 4
-        Spell adaptationSpell = GetArgonianAdaptationSpell(adaptationIndex)
-        if adaptationSpell && playerRef.HasSpell(adaptationSpell)
-            playerRef.RemoveSpell(adaptationSpell)
-        endIf
-        adaptationIndex += 1
-    endWhile
 EndFunction
 
 Spell Function GetArgonianAdaptationSpell(Int adaptationIndex)
@@ -3771,66 +3198,6 @@ Function HandleArgonianShadowscaleKill(Actor playerRef)
     SendPrismaSubstrateToast("ArgonianHist", "shadowscale", "The shadow closes over you. The Void hides its own.", "void", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Shadowscale.LastInvisDay")
     Manager.Trace(2, "Shadowscale veil fired on sneak kill.")
-EndFunction
-
-Function TryArgonianPostureDream(String reason)
-    ; fix-plan 4.2: the dream cadence is sleep-triggered, so a raw-midnight day boundary
-    ; crossed mid-sleep was exactly the case that let it fire two nights running.
-    Int today = Manager.LedgerRuntime.GetDevotionalDay() + 2
-    Int lastDreamDay = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
-    if lastDreamDay > 0 && (today - lastDreamDay) < 2
-        return
-    endIf
-
-    Int posture = Manager.PDV_ArgonianHistSubstrate.GetHistPosture()
-    Int dreamChance = 8
-    if StorageUtil.GetIntValue(None, "PDV.ArgDream.Armed") == 1
-        dreamChance = 60
-    elseIf posture != Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_NORMAL
-        dreamChance = 12
-    endIf
-
-    if Utility.RandomInt(1, 100) > dreamChance
-        return
-    endIf
-
-    String dreamText = Manager.PDV_ArgonianHistSubstrate.GetDreamTextForPosture(posture)
-    SendPrismaSubstrateToast("ArgonianHist", "dream", dreamText, "hist", Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel())
-    StorageUtil.SetIntValue(None, "PDV.ArgDream.Armed", 0)
-    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.ArgDream.LastDay")
-    Manager.Trace(2, "Argonian posture dream fired (" + Manager.PDV_ArgonianHistSubstrate.GetHistPostureLabel() + ", " + reason + ")")
-EndFunction
-
-Function TryArgonianSithisNearDeathBurst(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_SPEL_ArgonianSithisNearDeathBurst
-        return
-    endIf
-    if !playerRef.IsInCombat() || !Manager.PDV_ArgonianHistSubstrate
-        return
-    endIf
-    if !Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        return
-    endIf
-
-    Float voidRelation = Manager.PDV_ArgonianHistSubstrate.GetVoidRelation()
-    Float peopleRelation = Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation()
-    if GetArgonianActiveFocus(peopleRelation, voidRelation, True) != Manager.ARGONIAN_FOCUS_VOID || voidRelation < Manager.ARGONIAN_REWARD_T3_THRESHOLD
-        return
-    endIf
-
-    ; fix-plan 4.2: once-per-day gate moved onto the 06:00 devotional day.
-    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay") == (Manager.LedgerRuntime.GetDevotionalDay() + 2)
-        return
-    endIf
-
-    Manager.PDV_SPEL_ArgonianSithisNearDeathBurst.Cast(playerRef, playerRef)
-    ; Requiem parity (2026-07-13): the cast StaminaRateMult burst is muted under
-    ; Requiem, so pair it with a felt flat stamina restore (TryOrcCodeHolds
-    ; pattern) - the Void lends an instant surge you can actually spend.
-    playerRef.RestoreActorValue("Stamina", 100.0)
-    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.SithisNearDeathLastDay")
-    HandleArgonianVoidSignal("near_death_burst")
-    Manager.Trace(2, "Argonian Sithis near-death burst fired.")
 EndFunction
 
 Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)
@@ -4228,11 +3595,6 @@ Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)
     Manager.Trace(2, "Retired Khajiit road anchor ignored: " + anchorId + " (" + reason + ")")
 EndFunction
 
-Float Function ConsumeKhajiitLunarMetricBudget(Float requestedMetric)
-    ; Compatibility-only. PDV_SubstrateBase owns the one daily +4 budget.
-    return 0.0
-EndFunction
-
 Function HandleKhajiitBaanDarRoadTrick(String reason)
     if !IsKhajiitOrigin()
         return
@@ -4546,22 +3908,6 @@ Function RefreshKhajiitLunarPosture(String reason)
 
     Manager.SendPrismaShiftToast(GetKhajiitLunarPostureDisplayLabelAt(newPosture), GetKhajiitLunarPostureReadout(newPosture), "lunar")
     Manager.RequestPanelRefresh()
-EndFunction
-
-String Function GetKhajiitLunarPostureLabel()
-    return GetKhajiitLunarPostureLabelAt(GetKhajiitLunarPosture())
-EndFunction
-
-String Function GetKhajiitLunarPostureLabelAt(Int posture)
-    if posture == Manager.KHAJIIT_LUNAR_POSTURE_STRAINED
-        return "Strained"
-    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
-        return "Corrupted"
-    elseIf posture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
-        return "ShadowDrift"
-    endIf
-
-    return "Normal"
 EndFunction
 
 String Function GetKhajiitLunarPostureDisplayLabelAt(Int posture)
@@ -4947,10 +4293,6 @@ Int Function GetKhajiitFocusedEmphasis()
     return StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusedEmphasis")
 EndFunction
 
-PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)
-    return GetKhajiitEmphasisDeity(focusValue)
-EndFunction
-
 Float Function GetKhajiitFocusWeight(Int focusValue)
     return StorageUtil.GetFloatValue(None, GetKhajiitFocusWeightKey(focusValue))
 EndFunction
@@ -5294,25 +4636,6 @@ Bool Function IsArgonianOrigin()
     return GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
 EndFunction
 
-String Function GetKhajiitMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("azura", "Azurah", "prince", "azura", Manager.PDV_Azura, "Dusk, dawn, moon-shadow, and fate.")
-    entries = entries + "," + Manager.RosterMedallionEntry("boethiah", "Boethra", "prince", "boethiah", Manager.PDV_Boethiah, "Trial, edge, and hard lessons.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mephala", "Mafala", "prince", "mephala", Manager.PDV_Mephala, "Hidden paths, webs, and clan memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", Manager.PDV_BaanDar, "The bandit god, wit, and road survival.")
-    entries = entries + "," + Manager.RosterMedallionEntry("rajhin", "Rajhin", "god", "rajhin", Manager.PDV_Rajhin, "The clever thief and impossible escape.")
-    entries = entries + "," + Manager.RosterMedallionEntry("alkosh", "Alkosh", "god", "alkosh", Manager.PDV_Alkosh, "Dragon order and time in Khajiit memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("khenarthi", "Khenarthi", "god", "khenarthi", Manager.PDV_Khenarthi, "Wind, sky-road, and breath.")
-    entries = entries + "," + Manager.PendingMedallionEntry("riddle-thar", "Riddle'Thar", "god", "riddle-thar", "Balance, ja-Kha'jay, and right conduct.")
-    entries = entries + "," + Manager.PendingMedallionEntry("jone-jode", "Jone and Jode", "god", "lunar", "The moons, the lattice, and the road home.")
-    return entries
-EndFunction
-
-String Function GetArgonianMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("hist", "The Hist", "substrate", "hist", Manager.PDV_Hist, "Root, memory, people, and sap.")
-    entries = entries + "," + Manager.RosterMedallionEntry("sithis", "Sithis", "god", "sithis", Manager.PDV_Sithis, "Void, change, and dangerous silence.")
-    return entries
-EndFunction
-
 Function EnsureArgonianHistSapToken()
     ; V1: grant the self-replenishing Hist Sap POTION (PDV_ALCH_ArgonianHistSap) rather than the old read
     ; BOOK. Drinking it routes Hist maintenance (see PDV_PotionArgonianHistSapEffect) and re-adds itself, so
@@ -5439,26 +4762,6 @@ String Function GetArgonianSurveyText()
     return text
 EndFunction
 
-String Function GetArgonianHistLayerText()
-    if !Manager.PDV_ArgonianHistSubstrate
-        return "Hist, People, and Void are not yet readable."
-    endIf
-
-    String text = "Hist memory is " + GetArgonianLayerStrengthLabel(Manager.PDV_ArgonianHistSubstrate.GetHistRelation())
-    text = text + "; People support is " + GetArgonianLayerStrengthLabel(Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation())
-    text = text + "; Void awareness is " + GetArgonianVoidStrengthLabel(Manager.PDV_ArgonianHistSubstrate.GetVoidRelation())
-    Int bedCount = StorageUtil.GetIntValue(Manager.PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.BedOfChoiceSleepCount")
-    if bedCount > 0
-        text = text + ". Your chosen bed has begun to matter."
-    endIf
-    if Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        text = text + ". Sithis is active, but the Hist remains first."
-    else
-        text = text + ". Sithis is only an awareness at the edge."
-    endIf
-    return text
-EndFunction
-
 String Function GetArgonianLayerStrengthLabel(Float value)
     if value >= 70.0
         return "held"
@@ -5545,84 +4848,6 @@ EndFunction
 ; Set* accessors.
 ; ============================================================================
 
-Function HandleRedguardSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD || !Manager.PDV_RedguardSectTrack
-        return
-    endIf
-
-    Int sleepCellId = GetInteriorSleepCellId(playerRef)
-    if sleepCellId == 0
-        return
-    endIf
-
-    String declaredKey = "PDV.Redguard.AncestralRest.DeclaredFormID"
-    if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if TryDeclareRestCell("PDV.Redguard.AncestralRest", sleepCellId)
-            ShowRedguardNotification(None, "This resting place remembers the old line.")
-            Manager.Trace(2, "Redguard ancestral-rest cell declared: " + reason)
-        endIf
-        return
-    endIf
-
-    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
-        return
-    endIf
-
-    if TryRedguardRemembering(playerRef, sleepCellId, reason)
-        return                          ; Remembering menu shown; suppress the rest-notice this wake
-    endIf
-
-    if !Manager.ConsumeOncePerDaySignal("PDV.Signal.RedguardAncestralRest")
-        return
-    endIf
-
-    RecordRedguardAncestralRest(1.0, "sleep_ancestor_rest_" + reason)
-EndFunction
-
-Bool Function TryRedguardRemembering(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MSG_RedguardRemembering || GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.RedRemember.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = Manager.PDV_MSG_RedguardRemembering.Show()
-    if pressed < 0 || pressed > 3
-        return true                 ; "Not yet" -- cooldown not spent
-    endIf
-
-    ApplyRedguardRemembering(playerRef, pressed)
-    return true
-EndFunction
-
-Function ApplyRedguardRemembering(Actor playerRef, Int index)
-    RemoveRedguardRememberSpells(playerRef)
-    Spell chosen = GetRedguardRememberSpell(index)
-    if !chosen
-        return
-    endIf
-
-    Int sectNow = 0
-    if Manager.PDV_RedguardSectTrack
-        sectNow = Manager.PDV_RedguardSectTrack.GetCurrentState()
-    endIf
-
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.RedRemember.Active", index + 1)
-    StorageUtil.SetIntValue(None, "PDV.RedRemember.SectAtRite", sectNow)
-    StorageUtil.SetFloatValue(None, "PDV.RedRemember.LastRiteTime", Utility.GetCurrentGameTime())
-    ; Surface in both Prisma spaces: a small Tu'whacca pulse (Ledger driver; the 7-day
-    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    Manager.LedgerRuntime.AwardPiety(Manager.PDV_Tuwhacca, 0.5, "Took up the Remembering of Names")
-    Manager.AppendBookOfDaysEntry("You remembered a name of the old line. The dead are kept in the telling.", Utility.GetCurrentGameTime() as Int, "substrate.act", "tu-whacca", False)
-    Manager.SendPrismaToast("tuwhacca", "good", "Remembering of Names", "The observance settles into you.")
-    Manager.Trace(2, "Redguard Remembering observance applied: " + index)
-EndFunction
-
 Function RemoveRedguardRememberSpells(Actor playerRef)
     Int i = 0
     while i < 4
@@ -5683,30 +4908,6 @@ Bool Function IsRedguardRememberingCoherent(Int sectAtRite)
         return false
     endIf
     return true
-EndFunction
-
-Function HandleBretonSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.BretonAncestralDream")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    AwardBretonAncestorSpinePulse(multiplier, "sleep_dream_" + reason)
-    if GetBretonTraditionValue() != Manager.BRETON_TRADITION_HIDDEN_ART
-        return
-    endIf
-    if Manager.LedgerRuntime.PDV_Julianos
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.LedgerRuntime.PDV_Julianos, Manager.LedgerRuntime.PDV_Julianos.SIGNAL_PATRON_CIVIC_FAVOR, None, multiplier)
-    endIf
-    if Manager.LedgerRuntime.PDV_Mara
-        Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.LedgerRuntime.PDV_Mara, Manager.LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
-    endIf
-    AwardBretonPracticePulse(Manager.BRETON_TRADITION_HIDDEN_ART, Manager.BRETON_PRACTICE_RENEWABLE_POINTS, "event_314", "sleep_in_bed_" + reason)
-    Manager.SurfaceP2AmbientProgressNotice("Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
 EndFunction
 
 Function HandleLekiHonorableDuel(String reason)
@@ -5952,11 +5153,6 @@ Function HandleRedguardAncestorSpine(String reason)
     RecordRedguardAncestorSpinePulse(multiplier, reason)
     Manager.SurfaceP2BookReadNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
     Manager.Trace(2, "Redguard ancestor spine routed with multiplier " + multiplier)
-EndFunction
-
-Function RecordRedguardAncestralRest(Float multiplier, String reason)
-    RecordRedguardAncestorSpinePulse(multiplier, reason)
-    Manager.Trace(2, "Redguard ancestral rest routed with multiplier " + multiplier)
 EndFunction
 
 Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
@@ -6562,16 +5758,6 @@ Bool Function IsBretonResonantPatronChampion(Int traditionValue)
     return IsDeityResonantWithBretonTradition(traditionValue, Manager.GetActiveDeity())
 EndFunction
 
-Bool Function IsBretonNonResonantPatronChampion(Int traditionValue)
-    if Manager.LedgerRuntime.GetPatronState() != Manager.LedgerRuntime.PATRON_STATE_ACTIVE || !Manager.GetActiveDeity()
-        return False
-    endIf
-    if Manager.LedgerRuntime.GetTier(Manager.GetActiveDeity()) < Manager.LedgerRuntime.TIER_CHAMPION
-        return False
-    endIf
-    return !IsDeityResonantWithBretonTradition(traditionValue, Manager.GetActiveDeity())
-EndFunction
-
 Bool Function IsDeityResonantWithBretonTradition(Int traditionValue, PDV_DeityBase deity)
     if !deity
         return False
@@ -6674,19 +5860,6 @@ Bool Function IsBretonGreenWayForkEligible()
     endIf
 
     return GetBretonDruidicForkValue() == Manager.BRETON_DRUIDIC_FORK_DRUIDIC
-EndFunction
-
-String Function GetBretonDruidicForkLabel()
-    Int forkValue = GetBretonDruidicForkValue()
-    if forkValue == Manager.BRETON_DRUIDIC_FORK_DRUIDIC
-        return "Druidic"
-    elseIf forkValue == Manager.BRETON_DRUIDIC_FORK_WEREWOLF
-        return "Werewolf"
-    elseIf forkValue == Manager.BRETON_DRUIDIC_FORK_BETRAYED
-        return "Betrayed"
-    endIf
-
-    return "None"
 EndFunction
 
 Bool Function IsBretonTraditionNeglected()
@@ -7470,33 +6643,6 @@ Function HandleBretonGreenWayStanding(String reason)
     Manager.Trace(2, "Breton Green Way standing routed: " + reason)
 EndFunction
 
-String Function GetBretonMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "Sky, travel, and druidic memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("talos", "Talos", "god", "talos", Manager.PDV_Talos, "Civic defiance and Septim inheritance.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Household, mercy, and love.")
-    entries = entries + "," + Manager.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, order, and covenant.")
-    entries = entries + "," + Manager.RosterMedallionEntry("arkay", "Arkay", "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Death, burial, and clean endings.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, protection, and oath.")
-    entries = entries + "," + Manager.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Learning, law, and formal craft.")
-    entries = entries + "," + Manager.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Beauty, courtliness, and grace.")
-    entries = entries + "," + Manager.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Trade, craft, and honest work.")
-    entries = entries + "," + Manager.RosterMedallionEntry("magnus", "Magnus", "god", "magnus", Manager.PDV_Magnus, "Magic, light, and hidden inheritance.")
-    entries = entries + "," + Manager.PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Pilgrimage, endurance, and Elven memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", Manager.PDV_Yffre, "Green memory, story, and law.")
-    return entries
-EndFunction
-
-String Function GetRedguardMedallionEntriesJson()
-    String entries = Manager.PendingMedallionEntry("satakal", "Satakal", "god", "satakal", "Worldskin, cycle, and cosmic turning.")
-    entries = entries + "," + Manager.PendingMedallionEntry("ruptga", "Ruptga", "god", "ruptga", "Tall Papa, ancestry, and guidance.")
-    entries = entries + "," + Manager.RosterMedallionEntry("tuwhacca", "Tu'whacca", "god", "tu-whacca", Manager.PDV_Tuwhacca, "Death, passage, and the proper road.")
-    entries = entries + "," + Manager.PendingMedallionEntry("tava", "Tava", "god", "tava", "Wind, sailors, and safe passage.")
-    entries = entries + "," + Manager.RosterMedallionEntry("leki", "Leki", "god", "leki", Manager.PDV_Leki, "Sword-skill, discipline, and grace.")
-    entries = entries + "," + Manager.PendingMedallionEntry("onsi", "Onsi", "god", "onsi", "The blade, craft, and warrior making.")
-    entries = entries + "," + Manager.RosterMedallionEntry("hoon-ding", "HoonDing", "god", "hoon-ding", Manager.PDV_HoonDing, "Make-way spirit and impossible survival.")
-    return entries
-EndFunction
-
 String Function GetRedguardSurveyText()
     if !Manager.PDV_RedguardSectTrack
         return "The Far Shores are named, but your Redguard sect is not yet readable here."
@@ -7673,68 +6819,6 @@ String Function GetBretonPatronSurveySentence(Int traditionValue)
     return " " + deityName + " is your patron focus; your tradition advances through practiced deeds."
 EndFunction
 
-String Function GetBretonKnightlyVowLabel()
-    Int integrityValue = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
-    if integrityValue >= 70
-        return "intact"
-    elseIf integrityValue >= 30
-        return "strained"
-    endIf
-
-    return "broken"
-EndFunction
-
-String Function GetBretonWitchcraftExposureLabel()
-    Int exposureValue = StorageUtil.GetIntValue(None, "PDV.Breton.WitchcraftExposure", 0)
-    if exposureValue >= 100
-        return "notorious"
-    elseIf exposureValue >= 50
-        return "known"
-    elseIf exposureValue >= 25
-        return "suspected"
-    endIf
-
-    return "hidden"
-EndFunction
-
-String Function GetBretonDruidicStandingLabel()
-    Int standingValue = StorageUtil.GetIntValue(None, "PDV.Breton.DruidicStanding", 50)
-    if standingValue >= 70
-        return "acknowledged"
-    elseIf standingValue < 30
-        return "fraying"
-    endIf
-
-    return "open"
-EndFunction
-
-String Function GetBretonAncestorLayerLabel()
-    if !Manager.PDV_BretonAncestorSubstrate
-        return "retired"
-    endIf
-
-    return "retired"
-EndFunction
-
-String Function GetBretonCursePostureLabel()
-    Int curseValue = StorageUtil.GetIntValue(None, "PDV.Curse.Breton.RestorationState")
-    if curseValue == 2
-        return "a ruptured tradition"
-    elseIf curseValue == 1
-        return "restoration needed"
-    endIf
-
-    return ""
-EndFunction
-
-String Function GetBretonAncestorSummary()
-    if !Manager.PDV_BretonAncestorSubstrate
-        return "retired"
-    endIf
-
-    return "retired"
-EndFunction
-
 String Function GetRedguardSummary()
     if !Manager.PDV_RedguardSectTrack
         return "missing"
@@ -7824,36 +6908,6 @@ Function EnsureNordOrkeyRewardRuntimeWiring()
     if repaired
         Manager.Trace(1, "Nord Orkey reward runtime wiring repaired.")
     endIf
-EndFunction
-
-Function HandleNordSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || !Manager.PDV_NordAncestorSubstrate
-        return
-    endIf
-
-    Int sleepCellId = GetInteriorSleepCellId(playerRef)
-    if sleepCellId == 0
-        return
-    endIf
-
-    String declaredKey = "PDV.Nord.HearthRest.DeclaredFormID"
-    if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if TryDeclareRestCell("PDV.Nord.HearthRest", sleepCellId)
-            ShowNordNotification(None, "This hearth becomes a remembered place of rest.")
-            Manager.Trace(2, "Nord hearth-rest cell declared: " + reason)
-        endIf
-        return
-    endIf
-
-    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
-        return
-    endIf
-
-    if !Manager.ConsumeOncePerDaySignal("PDV.Signal.NordAncestralRest")
-        return
-    endIf
-
-    RecordNordAncestralRest("sleep_rest_" + reason, 1.0)
 EndFunction
 
 Function HandleDunmerPortableShrinePrayer(String reason)
@@ -7947,103 +7001,6 @@ Function DisarmDunmerAncestorWatch()
     endIf
 EndFunction
 
-Function HandleDunmerSleepEvents(Actor playerRef, String reason)
-    if !Manager.PDV_DunmerAncestorSubstrate || !playerRef
-        return
-    endIf
-    Cell sleepCell = playerRef.GetParentCell()
-    if !sleepCell || !sleepCell.IsInterior()
-        return
-    endIf
-
-    Int sleepCellId = sleepCell.GetFormID()
-    ; fix-plan 4.2: the ancestor-home cadence now runs on the shared 06:00 devotional
-    ; day with the same zero-reserved +2 encoding the Argonian bed rite uses, so a
-    ; midnight crossed mid-sleep can no longer shorten the decline window or split one
-    ; night's sleep across two "days". ReadZeroReserved migrates the legacy +1 stamps.
-    Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
-    Int declaredId = StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID")
-    if StorageUtil.GetIntValue(None, "PDV.DunHome.DeclaredFormID") != 0
-        if sleepCellId == declaredId && StorageUtil.GetIntValue(None, "PDV.Dunmer.DeviationPriceCount") > 0
-            HandleDunmerDeviationPrice("sleep_deviation_" + reason)
-        endIf
-        if sleepCellId == declaredId
-            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
-            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
-            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
-            return
-        endIf
-    endIf
-
-    if !Manager.PDV_MESG_DunmerMarkHome
-        if declaredId == 0
-            SetDunmerHome(sleepCellId, todayStamp, reason)
-        endIf
-        return
-    endIf
-
-    Int declinedDay = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
-    if declinedDay > 0 && (todayStamp - declinedDay) < 3
-        return
-    endIf
-
-    Bool shouldPrompt = declaredId == 0
-    if declaredId != 0
-        Int candidateId = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateFormID")
-        Int candidateCount = StorageUtil.GetIntValue(None, "PDV.DunHome.CandidateCount")
-        Int candidateDay = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
-        ; B13 / fix-plan 4.6. CandidateDay was written four times and read zero times, so
-        ; the re-declare counter climbed on EVERY sleep -- sleep three times in one night
-        ; and the "mark a new home" prompt fired instantly. Gate the increment on the day
-        ; actually changing, exactly as TryArgonianBedOfChoiceSleep does.
-        if candidateId != sleepCellId
-            candidateCount = 1
-            StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", sleepCellId)
-        elseIf candidateDay != todayStamp
-            candidateCount += 1
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", candidateCount)
-        Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.DunHome.CandidateDay")
-        shouldPrompt = candidateCount >= 3
-    endIf
-
-    if !shouldPrompt
-        return
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = Manager.PDV_MESG_DunmerMarkHome.Show()
-    ; B4 / fix-plan 3. -1 is "another menu was already up", not a decline: no 3-day
-    ; suppression stamp and no wipe of the three-sleep candidacy the player earned.
-    if pressed < 0
-        Manager.Trace(2, "Dunmer ancestor-home menu not shown (menu busy); candidacy kept.")
-        return
-    endIf
-    if pressed == 0
-        SetDunmerHome(sleepCellId, todayStamp, reason)
-    else
-        Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.DunHome.DeclineDay")
-        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
-        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
-        StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
-    endIf
-EndFunction
-
-Function SetDunmerHome(Int sleepCellId, Int devotionalDayStamp, String reason)
-    if sleepCellId == 0
-        return
-    endIf
-
-    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredFormID", sleepCellId)
-    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclaredDay", devotionalDayStamp)
-    StorageUtil.SetIntValue(None, "PDV.DunHome.DeclineDay", 0)
-    StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
-    StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
-    StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
-    Manager.SendPrismaToast("ancestor", "good", "Ancestor-space", "The ancestors will know this place.")
-    Manager.Trace(2, "Dunmer ancestor-home declared: " + reason)
-EndFunction
-
 Bool Function IsPlayerAtDunmerDeclaredHome(Actor playerRef)
     if !playerRef
         return false
@@ -8089,16 +7046,6 @@ Function HandleNordLocationChange(Location newLocation)
     RecordNordHearthReturn("location_hearth_return", 1.0)
 EndFunction
 
-Function HandleNordAncestorSpine(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
-        Manager.Trace(2, "Nord ancestor spine ignored for non-Nord origin.")
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.NordAncestorSpine")
-    RecordNordAncestorSpine(reason, multiplier)
-EndFunction
-
 Function RecordNordAncestorSpine(String reason, Float multiplier)
     if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
         return
@@ -8118,28 +7065,6 @@ Function RecordNordAncestorSpine(String reason, Float multiplier)
     StorageUtil.SetStringValue(None, "PDV.Nord.LastAncestorSpineReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Nord.LastAncestorSpineTime", Utility.GetCurrentGameTime())
     Manager.Trace(2, "Nord ancestor spine routed with multiplier " + multiplier)
-EndFunction
-
-Function RecordNordAncestralRest(String reason, Float multiplier)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD || multiplier <= 0.0
-        return
-    endIf
-
-    Int tierBefore = 0
-    if Manager.PDV_NordAncestorSubstrate
-        Float metricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
-        tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-        Manager.PDV_NordAncestorSubstrate.RecordAncestralRestScaled(multiplier, reason)
-        Int tierAfter = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line rested near.", "journal", GetNordAncestorLayerLabel())
-    endIf
-
-    StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Nord.AncestralRestCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Nord.LastAncestralRestReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Nord.LastAncestralRestTime", Utility.GetCurrentGameTime())
-    ShowNordNotification(None, "You wake with the old line nearer.")
-    Manager.Trace(2, "Nord ancestral rest routed with multiplier " + multiplier)
 EndFunction
 
 Function RecordNordHearthReturn(String reason, Float multiplier)
@@ -8230,10 +7155,6 @@ Function ProcessQueuedNordKyneChampionEntry()
     ShowNordMessage(pendingRecord, pendingFallback, False)
     StorageUtil.SetIntValue(None, "PDV.Nord.ChampionEntryShown.Kyne", 1)
     Manager.Trace(1, "Nord/Kyne champion recognition presented.")
-EndFunction
-
-Bool Function IsKyneNeglectActive()
-    return Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Kyne)
 EndFunction
 
 Function SyncKyneNeglectSpell(Bool shouldBeActive)
@@ -8336,27 +7257,6 @@ Function SyncDunmerNeglectSpell(Bool shouldBeActive)
     endIf
 EndFunction
 
-Function HandleDunmerClumsyCrime(String reason)
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER || !Manager.PDV_Mephala
-        return
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1) != 2
-        return
-    endIf
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.MephalaSecretBetrayed")
-    if multiplier <= 0.0
-        return
-    endIf
-
-    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Mephala, Manager.PDV_Mephala.SIGNAL_SECRET_BETRAYED, None, multiplier)
-    StorageUtil.AdjustIntValue(None, "PDV.Dunmer.SecretBetrayedCount", 1)
-    StorageUtil.SetStringValue(None, "PDV.Dunmer.LastSecretBetrayedReason", reason)
-    StorageUtil.SetFloatValue(None, "PDV.Dunmer.LastSecretBetrayedTime", Utility.GetCurrentGameTime())
-    Manager.Trace(2, "Mephala secret-betrayed routed: " + reason + " multiplier=" + multiplier)
-EndFunction
-
 Function SyncNordRewards(Actor playerRef)
     if !playerRef
         return
@@ -8431,10 +7331,6 @@ Int Function GetNordPantheonBaselineState()
     endIf
 
     return stateValue
-EndFunction
-
-Function EvaluateKyneCommitmentOffer()
-    Manager.LedgerRuntime.EvaluateFormalCommitmentOffer()
 EndFunction
 
 Message Function GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)
@@ -9107,34 +8003,6 @@ Bool Function UsesNordOldWaysDeityNames()
     return GetNordPantheonBaselineState() == Manager.NORD_BASELINE_OLD_WAYS
 EndFunction
 
-String Function GetNordMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("kyne", "Kyne", "god", "kyne", Manager.PDV_Kyne, "Sky, storm, hunt, and warrior-spirit.")
-    entries = entries + "," + Manager.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "The Nine Divines sky road.")
-    entries = entries + "," + Manager.RosterMedallionEntry("talos", "Talos", "god", "talos", Manager.PDV_Talos, "Open defiance and human apotheosis.")
-    entries = entries + "," + Manager.RosterMedallionEntry("shor", "Shor", "god", "shor", Manager.PDV_Shor, "The old king and afterlife road.")
-    entries = entries + "," + Manager.RosterMedallionEntry("tsun", "Tsun", "god", "tsun", Manager.PDV_Tsun, "Trial, honor, and the threshold.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stuhn", "Stuhn", "god", "stuhn", Manager.PDV_Stuhn, "Mercy in war and fair ransom.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Love, hearth, and compassion.")
-    entries = entries + "," + Manager.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, order, and dragon authority.")
-    String arkayRosterName = "Arkay"
-    if UsesNordOldWaysDeityNames()
-        arkayRosterName = "Orkey"
-    endIf
-    entries = entries + "," + Manager.RosterMedallionEntry("arkay", arkayRosterName, "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Death, burial, and proper passage.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, justice, and protection.")
-    entries = entries + "," + Manager.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Law, learning, and craft of mind.")
-    entries = entries + "," + Manager.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Beauty, art, and embodied grace.")
-    entries = entries + "," + Manager.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Work, trade, and honest craft.")
-    return entries
-EndFunction
-
-String Function GetDunmerMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("azura", "Azura", "prince", "azura", Manager.PDV_Azura, "Dawn, dusk, prophecy, and fate.")
-    entries = entries + "," + Manager.RosterMedallionEntry("boethiah", "Boethiah", "prince", "boethiah", Manager.PDV_Boethiah, "Trial, overthrow, and hard becoming.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mephala", "Mephala", "prince", "mephala", Manager.PDV_Mephala, "Web, secrecy, clan, and hidden duty.")
-    return entries
-EndFunction
-
 Function EnsureDunmerAncestralUrn()
     ; V1: grant the usable MISC urn (PDV_MISC_DunmerAncestralUrn); clicking it in the inventory
     ; fires OnEquipped and routes the ancestor prayer. The retired model-less BOOK token crashed
@@ -9172,10 +8040,6 @@ Bool Function IsNordVampireSuppressed()
     endIf
 
     return StorageUtil.GetIntValue(None, "PDV.Nord.VampireActive") == 1
-EndFunction
-
-Bool Function HasNordVampireScar()
-    return GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD && StorageUtil.GetIntValue(None, "PDV.Nord.VampireScar") == 1
 EndFunction
 
 String Function GetNordSurveyBaseText()
@@ -9305,19 +8169,6 @@ String Function GetDunmerAncestorLayerLabel()
     return "quiet"
 EndFunction
 
-String Function GetDunmerCursePostureLabel()
-    Int postureValue = StorageUtil.GetIntValue(None, "PDV.Curse.Dunmer.Posture")
-    if postureValue == 1
-        return "strained, the beast pulls at the ancestors"
-    elseIf postureValue == 2
-        return "silent, the ancestors cannot reach you"
-    elseIf postureValue == 3
-        return "restored, but scarred"
-    endIf
-
-    return ""
-EndFunction
-
 String Function GetDunmerReclamationFocusLabel(Int focusValue)
     if focusValue == 0
         return "Azura"
@@ -9346,20 +8197,6 @@ String Function GetDunmerAncestorSummary()
     return Manager.PDV_DunmerAncestorSubstrate.GetPilotSummary()
 EndFunction
 
-String Function GetNordAncestorSummary()
-    if !Manager.PDV_NordAncestorSubstrate
-        return "missing"
-    endIf
-
-    return Manager.PDV_NordAncestorSubstrate.GetPilotSummary()
-EndFunction
-
-String Function GetKyneFavorSummary()
-    Int maskValue = StorageUtil.GetIntValue(None, "PDV.KyneFavor.ConditionMask")
-    Int activeCount = StorageUtil.GetIntValue(None, "PDV.KyneFavor.ActiveCount")
-    return "mask=" + maskValue + ";conds=" + PDV_DevotionRules.CountSetBits(maskValue) + ";active=" + activeCount + ";generic=" + Manager.FavorRuntime.GetContextualFavorSummary()
-EndFunction
-
 ; ============================================================================
 ; ORIGIN tranche 5: Orc (Malacath conduct/life-mode/stronghold/blood-kin/
 ; four-holds/legion/oath/self-made-community + curse handlers + trial-of-iron)
@@ -9372,98 +8209,6 @@ EndFunction
 ; fns GetOrcLifeModeGainMultiplier / GetImperialCurseGainMultiplier now live in their race
 ; adapters (Phase A3, D1); no moved body here calls them.
 ; ============================================================================
-
-Function HandleOrcSleepEvents(Actor playerRef, String reason)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC || !Manager.PDV_OrcLifeModeTrack
-        return
-    endIf
-
-    Int sleepCellId = GetInteriorSleepCellId(playerRef)
-    if sleepCellId == 0
-        return
-    endIf
-
-    String declaredKey = "PDV.Orc.HearthRest.DeclaredFormID"
-    if StorageUtil.GetIntValue(None, declaredKey) == 0
-        if TryDeclareRestCell("PDV.Orc.HearthRest", sleepCellId)
-            MaybeShowOrcHearthHeldNotice("sleep_rest_declare_" + reason)
-            Manager.Trace(2, "Orc hearth-rest cell declared: " + reason)
-        endIf
-        return
-    endIf
-
-    if !IsPlayerAtDeclaredRestCell(playerRef, declaredKey)
-        return
-    endIf
-
-    if TryOrcTrialOfIron(playerRef, sleepCellId, reason)
-        return                          ; Trial menu shown; suppress the rest-notice this wake
-    endIf
-
-    if !Manager.ConsumeOncePerDaySignal("PDV.Signal.OrcAncestralRest")
-        return
-    endIf
-
-    Int modeValue = GetActiveOrcRewardMode()
-    RecordOrcLifeModeSignal(modeValue, 1.0, "sleep_hearth_rest_" + reason)
-    MaybeShowOrcHearthHeldNotice("sleep_hearth_rest_" + reason)
-    Manager.Trace(2, "Orc ancestral rest routed: " + reason)
-EndFunction
-
-Bool Function TryOrcTrialOfIron(Actor playerRef, Int sleepCellId, String reason)
-    if !playerRef || !Manager.PDV_MESG_Orc_TrialOfIron || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
-        return false
-    endIf
-
-    Float lastRite = StorageUtil.GetFloatValue(None, "PDV.OrcTrial.LastRiteTime")
-    if lastRite > 0.0 && (Utility.GetCurrentGameTime() - lastRite) < 7.0
-        return false
-    endIf
-
-    Utility.Wait(0.5)
-    Int pressed = Manager.PDV_MESG_Orc_TrialOfIron.Show()
-    if pressed < 0 || pressed > 3
-        return true                 ; "Not yet" -- cooldown not spent
-    endIf
-
-    ApplyOrcTrialOfIron(playerRef, pressed)
-    return true
-EndFunction
-
-Function ApplyOrcTrialOfIron(Actor playerRef, Int index)
-    RemoveOrcTrialSpells(playerRef)
-    Spell chosen = GetOrcTrialSpell(index)
-    if !chosen
-        return
-    endIf
-
-    Int modeNow = 0
-    if Manager.PDV_OrcLifeModeTrack
-        modeNow = Manager.PDV_OrcLifeModeTrack.GetCurrentState()
-    endIf
-
-    playerRef.AddSpell(chosen, False)
-    StorageUtil.SetIntValue(None, "PDV.OrcTrial.Active", index + 1)
-    StorageUtil.SetIntValue(None, "PDV.OrcTrial.ModeAtRite", modeNow)
-    StorageUtil.SetFloatValue(None, "PDV.OrcTrial.LastRiteTime", Utility.GetCurrentGameTime())
-    ; Surface in both Prisma spaces: a small Malacath pulse (Ledger driver; the 7-day
-    ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
-    Manager.LedgerRuntime.AwardPiety(Manager.PDV_Malacath, 0.5, "Took up the Trial of Iron")
-    Manager.AppendBookOfDaysEntry("You took up a discipline in the Trial of Iron. The Code is held in iron.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-    Manager.SendPrismaToast("malacath", "good", "Trial of Iron", "You take up a discipline of the Code. The Trial of Iron holds you to it.")
-    Manager.Trace(2, "Orc Trial of Iron discipline applied: " + index)
-EndFunction
-
-Function RemoveOrcTrialSpells(Actor playerRef)
-    Int i = 0
-    while i < 4
-        Spell disc = GetOrcTrialSpell(i)
-        if disc && playerRef.HasSpell(disc)
-            playerRef.RemoveSpell(disc)
-        endIf
-        i += 1
-    endWhile
-EndFunction
 
 Spell Function GetOrcTrialSpell(Int index)
     if index == 0
@@ -9519,61 +8264,6 @@ EndFunction
 Function HandleImperialSleepEvents(Actor playerRef, String reason)
     ; Retained for save/script compatibility. Imperial sleep is not a civic or
     ; pantheon signal under the pacing contract.
-EndFunction
-
-Function TryOrcCodeHolds(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
-        return
-    endIf
-    if !playerRef.IsInCombat() || (!Manager.PDV_SPEL_OrcCodeHolds && !Manager.PDV_SPEL_OrcCodeHolds_Devoted)
-        return
-    endIf
-
-    Int malacathTier = Manager.LedgerRuntime.TIER_NONE
-    if Manager.PDV_Malacath
-        malacathTier = Manager.LedgerRuntime.GetTier(Manager.PDV_Malacath)
-    endIf
-    if malacathTier < Manager.LedgerRuntime.TIER_SEEKER
-        return
-    endIf
-
-    ; B12 / fix-plan 4.5. The rescue latched once per COMBAT SESSION while both siblings
-    ; -- the Bosmer Baan Dar gap and the Argonian Sithis burst, the two other below-health
-    ; payloads fanned from the same HandlePlayerBelowHealthGate -- are once per DAY. An
-    ; uncapped 40-60 HP (+30 stamina) clutch save every fight is a different power budget
-    ; from what the design says it is. Same LastDay guard, same devotional-day encoding.
-    if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay") == (Manager.LedgerRuntime.GetDevotionalDay() + 2)
-        Manager.Trace(2, "Orc Code Holds suppressed: already spent this devotional day.")
-        return
-    endIf
-
-    ; The Code Holds is a near-death clutch save. It fires mid-fight the instant
-    ; health drops past the below-health gate (Baan Dar Opens the Gap model), not on
-    ; combat exit -- so it can actually save the player. Its old
-    ; HealRate spell is not cast because Requiem swallows rate-mult healing on a
-    ; near-zero base; the actual health save is a flat RestoreActorValue. Requiem-proof.
-    if malacathTier >= Manager.LedgerRuntime.TIER_DEVOTED && Manager.PDV_SPEL_OrcCodeHolds_Devoted
-        playerRef.RestoreActorValue("Stamina", 30.0)
-        playerRef.RestoreActorValue("Health", 60.0)
-    elseIf Manager.PDV_SPEL_OrcCodeHolds
-        playerRef.RestoreActorValue("Health", 40.0)
-    endIf
-    Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Orc.CodeHoldsLastDay")
-
-    ; B12's second half asked for a Cast() of PDV_SPEL_OrcCodeHolds* "so the rescue has
-    ; feedback". Checked against the records: 071534 and 071536 are both Type=Ability,
-    ; CastType=ConstantEffect, TargetType=Self. A constant-effect ability is applied with
-    ; AddSpell, never cast -- Spell.Cast() on one is an engine no-op, and the author's
-    ; comment above says the HealRate payload is deliberately dead under Requiem anyway.
-    ; So the feedback is delivered the way both siblings deliver theirs: a toast.
-    Manager.SendPrismaToast("malacath", "good", "The Code holds", "The Code holds, and so do you.")
-
-    Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCodeHolds")
-    if multiplier > 0.0
-        Manager.LedgerRuntime.AwardPiety(Manager.PDV_Malacath, 0.5 * multiplier)
-    endIf
-    StorageUtil.AdjustIntValue(None, "PDV.Orc.CodeHolds.Count", 1)
-    Manager.Trace(2, "Orc Code Holds fired.")
 EndFunction
 
 Function HandleOrcStoryCraftForge(Location craftLocation)
@@ -10340,16 +9030,6 @@ Function ApplyConcordatPressure(Int adjustment, String reason)
     Manager.Trace(2, "Concordat pressure " + adjustment + " -> " + Manager.PDV_ConcordatStandingTrack.GetValue())
 EndFunction
 
-Function ApplyImperialConcordatAction(String actionKey, String reason)
-    Int adjustment = GetImperialConcordatPressureForAction(actionKey)
-    if adjustment == 0
-        Manager.Trace(1, "ApplyImperialConcordatAction skipped: unknown action " + actionKey)
-        return
-    endIf
-
-    ApplyConcordatPressure(adjustment, reason)
-EndFunction
-
 Int Function GetImperialConcordatPressureForAction(String actionKey)
     if actionKey == "hidden_talos_shrine"
         return -15
@@ -10724,22 +9404,6 @@ Function HandleImperialPatronCivicFavor(String reason)
     Manager.Trace(2, "Imperial patron civic favor routed: " + reason)
 EndFunction
 
-String Function GetImperialMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "Road, wind, and natural order.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Love, family, and mercy.")
-    entries = entries + "," + Manager.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, covenant, and empire.")
-    entries = entries + "," + Manager.RosterMedallionEntry("arkay", "Arkay", "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Life, death, and lawful burial.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, protection, and civic virtue.")
-    entries = entries + "," + Manager.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Law, learning, and reason.")
-    entries = entries + "," + Manager.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Art, beauty, and human grace.")
-    entries = entries + "," + Manager.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Work, trade, and prosperity.")
-    return entries
-EndFunction
-
-String Function GetOrcMedallionEntriesJson()
-    return Manager.RosterMedallionEntry("malacath", "Malacath", "prince", "malacath", Manager.PDV_Malacath, "Oath, code, exile, and vengeance.")
-EndFunction
-
 String Function GetOrcSurveyText()
     if !Manager.PDV_OrcLifeModeTrack
         return "Malacath watches, but the shape of your life has not settled yet. Carry the code a while, then survey again."
@@ -10840,14 +9504,6 @@ String Function BuildImperialConcordatSurveySentence(String concordatLabel)
     return "Under the Concordat, you are " + concordatLabel + "."
 EndFunction
 
-String Function GetImperialCivicLayerLabel()
-    if !Manager.PDV_ImperialAncestorSubstrate
-        return "quiet"
-    endIf
-
-    return Manager.PDV_ImperialAncestorSubstrate.GetCivicPostureLabel()
-EndFunction
-
 String Function GetImperialCivicTierName()
     if !Manager.PDV_ImperialAncestorSubstrate
         return "Civic practice quiet"
@@ -10861,20 +9517,6 @@ String Function GetImperialCivicTierName()
         return "Civic Steadiness"
     endIf
     return "Civic practice quiet"
-EndFunction
-
-String Function GetImperialCursePostureLabel()
-    if StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
-        return "civic faith halted"
-    elseIf Manager.PDV_CurseStateService && Manager.PDV_CurseStateService.GetCurseState() == 2
-        return "civic faith halted"
-    elseIf Manager.PDV_CurseStateService && Manager.PDV_CurseStateService.GetCurseState() == 1
-        return "civic faith strained"
-    elseIf StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHistory") == 1
-        return "civic faith scarred"
-    endIf
-
-    return ""
 EndFunction
 
 String Function GetConcordatSummary()
