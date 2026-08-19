@@ -1028,18 +1028,31 @@ EndFunction
 ; ===========================================================================
 ; SECTION 2 -- adapter dispatch. New code; every body above is untouched.
 ;
-; NOTE (interface gap, reported with this tranche): the frozen
-; HandleContextualSignal signature carries no String reason slot, but every
-; Redguard Handle* body that takes one is called today with a dynamically
-; composed reason ("eventbus_" + eventType). Until the ADR adds
-; String reason = "", this layer synthesizes "signal_" + signalId. That is a
-; provenance-string change only -- no dedupe key or gate reads it -- but it is a
-; real diff and must not be mistaken for a verbatim move.
+; The corrected interface (ADR "Corrections after the pilot", 2026-08-19) carries
+; the caller-composed String reason through HandleContextualSignal, so the earlier
+; synthesized "signal_" + signalId placeholder is gone: every Redguard Handle* body
+; now receives the caller's own reason verbatim ("eventbus_" + eventType,
+; "eventbus_p2_redguard_spine_" + sourceId, and so on). Reasons are player-visible
+; in the Ledger, so this is the provenance-preserving form.
 ;
-; The two Location-carrying verbs ride contextForm (Location extends Form), so
-; HandleLocationChange() -- which is zero-arg on the base and therefore cannot
-; carry akNewLocation / akOldLocation -- is deliberately NOT overridden.
+; Location routing. HandleLocationChange(Form newLocation) now carries the caller's
+; akNewLocation, so the NEW-location verb TrackRedguardAshAbahUndeadSiteVisit rides
+; it. The other two location call sites cannot: PDV_ActionRouter passes akOldLocation
+; to HandleRedguardAshAbahUndeadSiteClear on a location change, and the kill path
+; (RouteKill) passes the kill's own akLocation to BOTH verbs -- neither is a location
+; change. Those keep their signal ids on contextForm so no call site loses its
+; argument.
 ; ===========================================================================
+
+; -- Lifecycle --
+
+Function ApplyInitialChoice(Int choiceValue, String reason)
+    ApplyRedguardInitialChoice(choiceValue, reason)
+EndFunction
+
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyRedguardCurseHandlers(oldState, newState, reason)
+EndFunction
 
 ; -- State --
 
@@ -1099,9 +1112,7 @@ EndFunction
 
 ; -- Signals --
 
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
-    String reason = "signal_" + signalId
-
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "crown-tomb-respect"
         HandleRedguardCrownTombRespect(reason)
         return True
@@ -1143,6 +1154,11 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
     return False
 EndFunction
 
+; The location-change entry point proper: the caller's akNewLocation, not a re-sample.
+Function HandleLocationChange(Form newLocation = None)
+    TrackRedguardAshAbahUndeadSiteVisit(newLocation as Location)
+EndFunction
+
 ; -- Upkeep --
 
 Function SyncRaceRewards()
@@ -1158,3 +1174,28 @@ EndFunction
 Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
     return IsRedguardOfferEligibleDeity(deity)
 EndFunction
+
+Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    return GetRedguardFormalCommitmentOfferMessage(deity)
+EndFunction
+
+; -- Presentation --
+
+Function ShowOriginNotification(Message messageRecord, String fallbackText)
+    ShowRedguardNotification(messageRecord, fallbackText)
+EndFunction
+
+Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
+    ShowRedguardMessage(messageRecord, fallbackText, suppressModal)
+EndFunction
+
+; -- Not overridden, and why --
+;
+; HandleContextualQuery: no Redguard lane entry point is a value-returning sibling of
+; a signal. The Bool-returning lane functions (TryRedguardRemembering,
+; IsRedguardAshAbahBurden, IsRedguardRememberingCoherent) are internal helpers with no
+; caller outside ORIGIN, so there is nothing to route through the value channel.
+;
+; EvaluateAtDawn: the Redguard lane has no dawn body of its own; SyncRedguardRemembering
+; is driven from PDV_DevotionLedger's dawn pass through the named call and is a
+; central-removal-pass item, not a dawn override.
