@@ -1,0 +1,352 @@
+{
+  "document": "PDV 2.0 ORIGIN adapter split -- tranche 3 manifest (Breton + Redguard)",
+  "status": "LIVING",
+  "authored": "2026-08-19",
+  "branch": "claude/v3-adapters-t3",
+  "contract": "references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md",
+  "sourceOfTruth": {
+    "base": "live-source/Scripts/Source/PDV_OriginRuntimeBase.psc",
+    "tranche3BlockLines": "5536-7763 (comment header at 5536; first fn 5548, last EndFunction 7763)",
+    "note": "Lane functions were COPIED, not moved. The originals still stand in the base; a central pass removes them using the copiedFunctions lists below. Bodies in the adapters are byte-identical to the base originals (verified by re-parse + string compare, 0 mismatches)."
+  },
+  "compile": {
+    "command": "PDV_COMPILE_SOURCE_ROOT=<wt>/live-source/Scripts/Source PDV_COMPILE_OUTPUT_ROOT=<scratch> node tools/pdv_compile.mjs --script PDV_OriginRuntime_Breton --script PDV_OriginRuntime_Redguard --skip-verify",
+    "result": "PASS both, 0 error(s) 0 warning(s), process exit code 0",
+    "asciiGuard": "node tools/pdv_ascii_guard.mjs -- both files ASCII-clean, exit 0"
+  },
+  "scriptVariables": {
+    "moved": [],
+    "flaggedShared": [],
+    "finding": "The tranche-3 lane bodies reference ZERO bare script variables. Every shared manager var they touch already routes through a Manager accessor (GetActiveDeity, GetSuppressCurseTransitionOutputs, GetRaceCurseSurfaceShown, GetQrQueueTransactionActive, GetQrQueueNeedsBretonRewardSync, SetRaceCurseSurfaceShown, SetQrQueueNeedsBretonRewardSync), per the tranche-3 header comment in the base. No declaration had to move and no new base accessor pair is needed for t3."
+  },
+  "baseResidentHelpersCalledByT3": {
+    "note": "These live on the base (tranche-6 shared infra) and are reached as inherited bare calls from both adapters. They must NOT move out of the base.",
+    "functions": [
+      "GetInteriorSleepCellId",
+      "GetPlayerOriginRaceIndex",
+      "IsPlayerAtDeclaredRestCell",
+      "SendPrismaSubstrateToast",
+      "TryDeclareRestCell"
+    ]
+  },
+  "crossLaneCalls": {
+    "bretonCallingRedguard": [],
+    "redguardCallingBreton": [],
+    "note": "Verified none. The two lanes are fully separable."
+  },
+  "interfaceGaps": {
+    "note": "Findings against the FROZEN 19-verb surface. Nothing here was forced; each item is either unimplementable at the frozen signature or implemented with a documented, behaviour-visible compromise.",
+    "handleContextualSignalHasNoReasonSlot": {
+      "severity": "behaviour-visible",
+      "detail": "Bool HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0) has no String payload. Every t3 Handle* body takes a String reason, and live callers compose it dynamically (PDV_EventBus: \"eventbus_\" + eventType + \"_\" + sourceId; PDV_DevotionLedger: \"taboo_\" + sourceTag). The dispatch layer synthesizes reason = \"signal_\" + signalId. Reasons are provenance only (StorageUtil PDV.Breton.LastKnightlyVowReason, PDV.Redguard.LastSectReason, ledger entry text) -- the dedupe/anti-farm keys are separate literals -- but this IS a diff and must not be read as a verbatim move.",
+      "recommendedFix": "Add String reason = \"\" to HandleContextualSignal on the base."
+    },
+    "zeroArgLifecycleVerbs": {
+      "severity": "blocking for those verbs",
+      "detail": "ApplyInitialChoice() and ApplyCurseHandlers() are declared zero-arg on the base, but every race implementation and every live call site carries arguments: ApplyBretonInitialChoice(Int traditionValue, String reason) / ApplyRedguardInitialChoice(Int sectValue, String reason) called from PDV__ManagerQuest.psc:7546-7548; ApplyBretonCurseHandlers(Int oldState, Int newState, String reason) / ApplyRedguardCurseHandlers(Int, Int, String) called from PDV_DevotionLedger.psc:4244,4256. NOT overridden in either adapter.",
+      "recommendedFix": "ApplyInitialChoice(Int optionValue, String reason) and ApplyCurseHandlers(Int oldState, Int newState, String reason) on the base."
+    },
+    "formalCommitmentOfferMessageTypeMismatch": {
+      "severity": "blocking for that verb",
+      "detail": "Base declares String GetFormalCommitmentOfferMessage() (zero-arg). Both race equivalents are Message GetXFormalCommitmentOfferMessage(PDV_DeityBase deity), and PDV_DevotionLedger.psc:3920-3922 returns the Message record. A String return cannot carry a Message form. NOT overridden in either adapter.",
+      "recommendedFix": "Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity) on the base."
+    },
+    "handleLocationChangeIsZeroArg": {
+      "severity": "resolved in-adapter, but note the shape",
+      "detail": "HandleLocationChange() carries no Location, yet PDV_ActionRouter.psc:321,323 needs akNewLocation AND akOldLocation. Redguard instead routes both through HandleContextualSignal using contextForm (Location extends Form), so no behaviour is lost and HandleLocationChange is deliberately left un-overridden. If the base later gains HandleLocationChange(Location akNew, Location akOld), fold the two signal ids into it.",
+      "recommendedFix": "Optional: HandleLocationChange(Location akNewLocation, Location akOldLocation)."
+    },
+    "showOriginNotificationNotWired": {
+      "severity": "low",
+      "detail": "ShowOriginNotification(String messageKey) is not overridden. Breton has no notification verb; Redguard has ShowRedguardNotification(Message messageRecord, String fallbackText) and ShowRedguardMessage(Message, String, Bool), both internal-only (no cross-boundary caller). A messageKey -> Message table would be invented surface, so it was not built."
+    },
+    "keyedDetailAccessorParamNameCollision": {
+      "severity": "compile-blocking, already fixed",
+      "detail": "The base declares GetOriginDetailLabel(String key) / GetOriginDetailValue(String key). `Key` is a vanilla Papyrus script type (Key extends MiscObject), so any override that actually READS the parameter fails to compile with \"key is not a variable\". The base's inert defaults never read it, which is why the base compiles. Both adapters rename the parameter to detailKey (Papyrus matches override signatures by type, not by parameter name). Every other adapter will hit this."
+    },
+    "detailAccessorsAreCurrentStateOnly": {
+      "severity": "low",
+      "detail": "GetOriginDetailLabel/Value carry no numeric argument, so Breton's \"tradition-tier\" / \"practice-tier\" / \"practice-count\" keys resolve against GetBretonTraditionValue() (the CURRENT tradition). PDV__ManagerQuest.psc:8037,8061,9979 already call exactly that way, but :4545,:4554 pass an arbitrary traditionValue and cannot be remapped to the keyed accessor."
+    }
+  },
+  "races": {
+    "Breton": {
+      "script": "live-source/Scripts/Source/PDV_OriginRuntime_Breton.psc",
+      "scriptName": "PDV_OriginRuntime_Breton extends PDV_OriginRuntimeBase",
+      "lane": "Traditions (Knight's Road / Hidden Art / Green Way), practice tier + count, druidic fork, witchcraft exposure, ancestor spine, champion boon",
+      "copiedFunctionCount": 68,
+      "copiedFunctions": [
+        "HandleBretonSleepEvents",
+        "SyncBretonRewards",
+        "SyncBretonAncestorSubstrate",
+        "SyncBretonTraditionRewardFamily",
+        "IsBretonPracticeTierReplacedByChampion",
+        "GetBretonChampionSource",
+        "SyncBretonChampionBoon",
+        "SyncBretonChampionBoonExclusive",
+        "GetBretonPatronChampionBoon",
+        "GetBretonChampionBoonDisplayName",
+        "MaybeShowBretonChampionBoonPresentation",
+        "MaybeShowBretonTraditionRewardPresentation",
+        "GetBretonTraditionRewardDisplayLabel",
+        "GetBretonTraditionTier",
+        "GetBretonPracticeTier",
+        "GetBretonPracticeCount",
+        "SetBretonPracticeCount",
+        "IsBretonResonantPatronChampion",
+        "IsBretonNonResonantPatronChampion",
+        "IsDeityResonantWithBretonTradition",
+        "GetBretonTraditionPresentationDeity",
+        "GetBretonTraditionValue",
+        "GetBretonTraditionDeity",
+        "GetBretonDruidicForkValue",
+        "SetBretonDruidicFork",
+        "SurfaceBretonDruidicForkChange",
+        "EnsureBretonDruidicForkInitialized",
+        "IsBretonGreenWayForkEligible",
+        "GetBretonDruidicForkLabel",
+        "IsBretonTraditionNeglected",
+        "SyncBretonNeglectSpell",
+        "SyncBretonKnightlyVowCreedLossSpells",
+        "SyncBretonWitchcraftExposureRuptureSpell",
+        "SyncBretonCreedLossSpell",
+        "SyncBretonDruidicForkBetrayalSpell",
+        "GetBretonFormalCommitmentOfferMessage",
+        "IsBretonOfferEligibleDeity",
+        "ShouldSuppressBretonFocusedChampionTierSurface",
+        "ApplyBretonCurseHandlers",
+        "ApplyBretonInitialChoice",
+        "HandleBretonTraditionChoice",
+        "DecayBretonWitchcraftExposureAtDawn",
+        "DecayBretonDruidicStandingAtDawn",
+        "ShouldBretonDruidicStandingFray",
+        "AwardBretonAncestorSpinePulse",
+        "RunDawnRefreshBretonAncestor",
+        "HandleBretonActionPracticeSignal",
+        "HandleBretonQuestTagPracticeSignal",
+        "ConsumeBretonPracticePointBudget",
+        "AwardBretonPracticePulse",
+        "DamageBretonPracticePressure",
+        "MaybeRecordBretonCrossTraditionPressure",
+        "HandleBretonKnightlyVow",
+        "HandleBretonHiddenArtExposure",
+        "GetBretonHiddenArtNoticeTitle",
+        "GetBretonHiddenArtNoticeText",
+        "HandleBretonGreenWayStanding",
+        "GetBretonMedallionEntriesJson",
+        "GetBretonSurveyText",
+        "GetBretonTraditionLabel",
+        "GetBretonBookOfDaysPathStatusLabel",
+        "GetBretonPatronSurveySentence",
+        "GetBretonKnightlyVowLabel",
+        "GetBretonWitchcraftExposureLabel",
+        "GetBretonDruidicStandingLabel",
+        "GetBretonAncestorLayerLabel",
+        "GetBretonCursePostureLabel",
+        "GetBretonAncestorSummary"
+      ],
+      "movedScriptVariables": [],
+      "sharedScriptVariablesFlagged": [],
+      "virtualsOverridden": [
+        "GetOriginStateLabel -> GetBretonTraditionLabel()",
+        "GetOriginStateValue -> GetBretonTraditionValue()",
+        "GetOriginSummary -> GetBretonAncestorSummary()",
+        "GetSurveyFragment -> GetBretonSurveyText()",
+        "IsRaceLaneNeglected -> IsBretonTraditionNeglected()",
+        "GetOriginDetailLabel(detailKey) -> keyed table",
+        "GetOriginDetailValue(detailKey) -> keyed table",
+        "HandleContextualSignal -> signal table",
+        "SyncRaceRewards -> SyncBretonRewards(Game.GetPlayer())",
+        "SyncNeglectSpells -> SyncBretonNeglectSpell(IsBretonTraditionNeglected())",
+        "EvaluateAtDawn -> RunDawnRefreshBretonAncestor(); DecayBretonWitchcraftExposureAtDawn(); DecayBretonDruidicStandingAtDawn()",
+        "IsOfferEligibleDeity(deity) -> IsBretonOfferEligibleDeity(deity)"
+      ],
+      "virtualsNotOverridden": [
+        "ApplyInitialChoice",
+        "EnsureRuntimeWiring",
+        "ApplyCurseHandlers",
+        "HandleLocationChange",
+        "GetFormalCommitmentOfferMessage",
+        "ShowOriginNotification",
+        "GetProviderGainMultiplier"
+      ],
+      "signalIdMap": {
+        "knightly-vow": "HandleBretonKnightlyVow(reason)",
+        "hidden-art-exposure": "HandleBretonHiddenArtExposure(reason)",
+        "green-way-standing": "HandleBretonGreenWayStanding(reason)",
+        "action-practice": "HandleBretonActionPracticeSignal(magnitude as Int, reason)",
+        "tradition-choice": "HandleBretonTraditionChoice(magnitude as Int, reason)",
+        "druidic-fork": "SetBretonDruidicFork(magnitude as Int, reason)",
+        "ancestor-spine-pulse": "AwardBretonAncestorSpinePulse(magnitude, reason)",
+        "sleep": "HandleBretonSleepEvents(contextForm as Actor, reason)"
+      },
+      "detailLabelKeys": [
+        "tradition",
+        "bod-path-status",
+        "knightly-vow",
+        "witchcraft-exposure",
+        "druidic-standing",
+        "druidic-fork",
+        "ancestor-layer",
+        "curse-posture",
+        "ancestor-summary",
+        "medallion-json",
+        "patron-survey-sentence"
+      ],
+      "detailValueKeys": [
+        "tradition",
+        "tradition-tier",
+        "practice-tier",
+        "practice-count",
+        "druidic-fork",
+        "green-way-fork-eligible",
+        "tradition-neglected",
+        "resonant-patron-champion"
+      ],
+      "crossBoundaryVerbsWithNoHomeInTheFrozen19": [
+        "ApplyBretonInitialChoice (ApplyInitialChoice is zero-arg)",
+        "ApplyBretonCurseHandlers (ApplyCurseHandlers is zero-arg)",
+        "GetBretonFormalCommitmentOfferMessage (String vs Message return, and needs deity)",
+        "HandleBretonQuestTagPracticeSignal (needs String sourceTag + Bool; no String payload on HandleContextualSignal)",
+        "AwardBretonPracticePulse (Bool return, Int/Int/String/String args; PDV__ManagerQuest.psc)",
+        "SetBretonPracticeCount (a write verb; the 19 have no keyed setter)",
+        "ShouldSuppressBretonFocusedChampionTierSurface (Bool, deity + Int tier; PDV_DevotionLedger.psc)"
+      ],
+      "pendingArrival": {
+        "note": "TODO comment is in the adapter header. NOT moved by this tranche, by instruction.",
+        "functions": [
+          "GetDaedricStigmaGainMultiplier (its Breton-gated branch only)",
+          "IsBretonHiddenArtDaedricOfferDeity"
+        ],
+        "currentHome": "live-source/Scripts/Source/PDV_DaedricRuntime.psc",
+        "consequence": "IsBretonOfferEligibleDeity still calls Manager.DaedricRuntime.IsBretonHiddenArtDaedricOfferDeity(deity); that becomes a bare local call once the move lands."
+      }
+    },
+    "Redguard": {
+      "script": "live-source/Scripts/Source/PDV_OriginRuntime_Redguard.psc",
+      "scriptName": "PDV_OriginRuntime_Redguard extends PDV_OriginRuntimeBase",
+      "lane": "Sect (Crown / Forebear / Ash'abah), ancestor spine, Far Shores token, remembering rite, undead-site death duty, HoonDing / Leki / Tuwhacca worship",
+      "copiedFunctionCount": 59,
+      "copiedFunctions": [
+        "HandleRedguardSleepEvents",
+        "TryRedguardRemembering",
+        "ApplyRedguardRemembering",
+        "RemoveRedguardRememberSpells",
+        "GetRedguardRememberSpell",
+        "SyncRedguardRemembering",
+        "IsRedguardRememberingCoherent",
+        "HandleLekiHonorableDuel",
+        "HandleRedguardCrownTombRespect",
+        "HandleRedguardForebearRoadPassage",
+        "HandleRedguardAshAbahDeathDuty",
+        "HandleRedguardAshAbahMajorBurden",
+        "TrackRedguardAshAbahUndeadSiteVisit",
+        "HandleRedguardAshAbahUndeadSiteClear",
+        "IsRedguardNamedNecromancerBurden",
+        "ApplyRedguardAshAbahDutyRewards",
+        "TryRedguardTuwhaccaDeathRiteHeal",
+        "MarkRedguardAshAbahStigma",
+        "GetAshAbahStigmaLabel",
+        "HandleRedguardFarShoresToken",
+        "HandleRedguardAncestorSpine",
+        "RecordRedguardAncestralRest",
+        "RecordRedguardAncestorSpinePulse",
+        "HandleRedguardVampireReentryComplete",
+        "RecordRedguardSectSignal",
+        "IsRedguardAshAbahBurden",
+        "AwardRedguardCrownSignal",
+        "AwardRedguardForebearSignal",
+        "HandleHoonDingBreakthroughKill",
+        "AwardRedguardAshAbahSignal",
+        "AwardRedguardFarShoresSignal",
+        "AwardRedguardAncestorSpinePietyPulse",
+        "EnsureRedguardSectInitialized",
+        "IsRedguardOrigin",
+        "GetRedguardSectWeightKey",
+        "GetRedguardSectLabel",
+        "ShowRedguardSectEntry",
+        "GetRedguardSectEntryShownKey",
+        "MaybeShowRedguardChampionEntry",
+        "GetRedguardChampionEntryShownKey",
+        "SyncRedguardRewards",
+        "SyncRedguardSpineBoon",
+        "GetActiveRedguardSpineSect",
+        "SyncRedguardRewardFamily",
+        "IsRedguardAncestorDistanceNeglected",
+        "SyncRedguardNeglectSpell",
+        "EmitRedguardDeathDutyAbandonmentMinus",
+        "GetRedguardFormalCommitmentOfferMessage",
+        "IsRedguardOfferEligibleDeity",
+        "ApplyRedguardCurseHandlers",
+        "ShouldSuppressRedguardCurseModal",
+        "ShowRedguardNotification",
+        "ShowRedguardMessage",
+        "ApplyRedguardInitialChoice",
+        "GetRedguardMedallionEntriesJson",
+        "GetRedguardSurveyText",
+        "GetRedguardSurveySectText",
+        "GetRedguardSummary",
+        "ReconcileRedguardSpineRewardAfterLoad"
+      ],
+      "movedScriptVariables": [],
+      "sharedScriptVariablesFlagged": [],
+      "virtualsOverridden": [
+        "GetOriginStateLabel -> GetRedguardSectLabel()",
+        "GetOriginStateValue -> GetActiveRedguardSpineSect()",
+        "GetOriginSummary -> GetRedguardSummary()",
+        "GetSurveyFragment -> GetRedguardSurveyText()",
+        "IsRaceLaneNeglected -> IsRedguardAncestorDistanceNeglected()",
+        "GetOriginDetailLabel(detailKey) -> keyed table",
+        "GetOriginDetailValue(detailKey) -> keyed table",
+        "HandleContextualSignal -> signal table",
+        "SyncRaceRewards -> SyncRedguardRewards(Game.GetPlayer())",
+        "SyncNeglectSpells -> SyncRedguardNeglectSpell(IsRedguardAncestorDistanceNeglected())",
+        "IsOfferEligibleDeity(deity) -> IsRedguardOfferEligibleDeity(deity)"
+      ],
+      "virtualsNotOverridden": [
+        "ApplyInitialChoice",
+        "EnsureRuntimeWiring",
+        "ApplyCurseHandlers",
+        "EvaluateAtDawn",
+        "HandleLocationChange",
+        "GetFormalCommitmentOfferMessage",
+        "ShowOriginNotification",
+        "GetProviderGainMultiplier"
+      ],
+      "signalIdMap": {
+        "crown-tomb-respect": "HandleRedguardCrownTombRespect(reason)",
+        "forebear-road-passage": "HandleRedguardForebearRoadPassage(reason)",
+        "ashabah-death-duty": "HandleRedguardAshAbahDeathDuty(reason)",
+        "far-shores-token": "HandleRedguardFarShoresToken(reason)",
+        "ancestor-spine": "HandleRedguardAncestorSpine(reason)",
+        "leki-honorable-duel": "HandleLekiHonorableDuel(reason)",
+        "vampire-reentry-complete": "HandleRedguardVampireReentryComplete(reason)",
+        "hoonding-breakthrough-kill": "HandleHoonDingBreakthroughKill(contextForm, magnitude as Int)",
+        "ashabah-major-burden": "HandleRedguardAshAbahMajorBurden(contextForm, magnitude as Int)",
+        "ashabah-undead-site-visit": "TrackRedguardAshAbahUndeadSiteVisit(contextForm as Location)",
+        "ashabah-undead-site-clear": "HandleRedguardAshAbahUndeadSiteClear(contextForm as Location)",
+        "sleep": "HandleRedguardSleepEvents(contextForm as Actor, reason)"
+      },
+      "detailLabelKeys": [
+        "sect",
+        "ashabah-stigma",
+        "survey-sect",
+        "summary",
+        "medallion-json"
+      ],
+      "detailValueKeys": [
+        "sect",
+        "is-origin",
+        "ancestor-distance-neglected"
+      ],
+      "crossBoundaryVerbsWithNoHomeInTheFrozen19": [
+        "ApplyRedguardInitialChoice (ApplyInitialChoice is zero-arg)",
+        "ApplyRedguardCurseHandlers (ApplyCurseHandlers is zero-arg)",
+        "GetRedguardFormalCommitmentOfferMessage (String vs Message return, and needs deity)",
+        "SyncRedguardRemembering (Actor arg; SyncRaceRewards is already taken by SyncRedguardRewards)",
+        "RemoveRedguardRememberSpells (Actor arg; no verb)",
+        "ReconcileRedguardSpineRewardAfterLoad (post-load reconcile; no lifecycle verb in the 19)"
+      ]
+    }
+  }
+}
