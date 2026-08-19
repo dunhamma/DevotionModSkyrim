@@ -1242,14 +1242,29 @@ EndFunction
 ; ===========================================================================
 ; SECTION 2 -- adapter dispatch. New code; every body above is untouched.
 ;
-; NOTE (interface gap, reported with this tranche): the frozen
-; HandleContextualSignal signature carries no String reason slot, but every
-; Breton Handle* body takes one and the live callers compose it dynamically
-; ("eventbus_" + eventType + "_" + sourceId). Until the ADR adds
-; String reason = "", this layer synthesizes "signal_" + signalId. That is a
-; provenance-string change only -- no dedupe key or gate reads it -- but it is a
-; real diff and must not be mistaken for a verbatim move.
+; The corrected interface (ADR "Corrections after the pilot", 2026-08-19) carries
+; the caller-composed String reason through HandleContextualSignal, so the earlier
+; synthesized "signal_" + signalId placeholder is gone: every Breton Handle* body
+; now receives the caller's own reason verbatim
+; ("eventbus_" + eventType + "_" + sourceId, "taboo_" + sourceTag, and so on).
+; Reasons are player-visible in the Ledger, so this is the provenance-preserving
+; form and the dispatch is now a straight pass-through.
+;
+; Breton has no location handler and no lane-local notifier, so HandleLocationChange,
+; ShowOriginNotification and ShowOriginMessage are deliberately left on the base
+; defaults. HandleContextualQuery has no Breton case either -- see the note above
+; that virtual's absence at the end of this section.
 ; ===========================================================================
+
+; -- Lifecycle --
+
+Function ApplyInitialChoice(Int choiceValue, String reason)
+    ApplyBretonInitialChoice(choiceValue, reason)
+EndFunction
+
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyBretonCurseHandlers(oldState, newState, reason)
+EndFunction
 
 ; -- State --
 
@@ -1334,9 +1349,7 @@ EndFunction
 
 ; -- Signals --
 
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
-    String reason = "signal_" + signalId
-
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "knightly-vow"
         HandleBretonKnightlyVow(reason)
         return True
@@ -1387,3 +1400,19 @@ EndFunction
 Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
     return IsBretonOfferEligibleDeity(deity)
 EndFunction
+
+Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    return GetBretonFormalCommitmentOfferMessage(deity)
+EndFunction
+
+; -- Not overridden, and why --
+;
+; HandleContextualQuery: no Breton lane entry point is a value-returning sibling of
+; a signal. The one Breton function whose Bool return a caller consumes is
+; AwardBretonPracticePulse (PDV__ManagerQuest MCM debug button), and it needs an Int
+; point count plus a source key -- payload slots HandleContextualQuery does not carry
+; -- so it is not a query case. It stays a named call for the central removal pass.
+;
+; HandleLocationChange / ShowOriginNotification / ShowOriginMessage: the Breton lane
+; has no location handler and no lane-local notifier; its presentation runs through
+; the MaybeShowBreton* helpers and the Manager. Base defaults are the honest answer.
