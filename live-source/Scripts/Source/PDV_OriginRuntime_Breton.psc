@@ -1371,7 +1371,8 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "ancestor-spine-pulse"
         AwardBretonAncestorSpinePulse(magnitude, reason)
         return True
-    elseIf signalId == "sleep"
+    elseIf signalId == "sleep" || signalId == "sleep-stop"
+        ; "sleep-stop" is the base HandlePlayerSleepStop dispatch; "sleep" is the older id.
         HandleBretonSleepEvents(contextForm as Actor, reason)
         return True
     endIf

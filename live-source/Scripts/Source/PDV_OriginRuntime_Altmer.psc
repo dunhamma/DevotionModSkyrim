@@ -1753,6 +1753,63 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
         ; base HandleThalmorUnprovokedKill branched on race; now the live adapter answers.
         HandleAltmerAlignmentSignal(signalId, contextForm, reason)
         return True
+    elseIf signalId == "sleep-stop"
+        ; base HandlePlayerSleepStop dispatched this by origin index.
+        HandleAltmerSleepEvents(contextForm as Actor, reason)
+        return True
+    elseIf signalId == "substrate-action"
+        ; base HandleSubstrateActionEvent, Altmer arm. eventType rides the Float slot.
+        ;
+        ; P2 (2026-08-04) widened the spine's feed set, and answers the question P5 deferred:
+        ; YES, ordered study feeds the ancestral spine, as ordered craft already did.
+        ;
+        ; This adds NO income. TryAwardSubstrateDayCredit caps the substrate at ONE +4.0 credit per
+        ; devotional day whatever the source, so extra feeds change only WHICH act can claim the
+        ; day -- which is the whole point. A player is never stuck waiting on one specific chore.
+        ;
+        ; NOTE: these arms deliberately keep their OWN metricBefore / RecordHeritageStandingScaled /
+        ; SendPrismaSubstrateProgress rather than routing through AwardAltmerAncestorSpinePulse.
+        ; Consolidating them reads cleaner but drops the manager's substrate-progress producer count
+        ; below the floor asserted by tools/pdv_substrate_pacing_audit.mjs
+        ; (`source.actual-substrate-delta`, >= 19 producers, each reporting the real post-award
+        ; delta). Do NOT merge these two arms into one shared path.
+        Int eventType = magnitude as Int
+        if Manager.PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
+            if eventType == 330 || eventType == 331
+                String craftToken = "smithing_"
+                if eventType == 331
+                    craftToken = "enchantment_"
+                endIf
+                Float metricBefore = Manager.PDV_AltmerAncestorSubstrate.GetMetric()
+                Int tierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+                Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, craftToken + reason)
+                Float grantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
+                Manager.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+                AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
+
+                ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
+                ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
+                if eventType == 331 && Manager.PDV_Magnus && Manager.ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
+                    Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Magnus, Manager.PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
+                    Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Magnus, "The design holds", "marks an enchantment made as the art demands.")
+                endIf
+                return True
+            elseIf eventType == 340 || eventType == 341 || eventType == 342
+                Float studyMetricBefore = Manager.PDV_AltmerAncestorSubstrate.GetMetric()
+                Int studyTierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
+                Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "study_" + reason)
+                Float studyGrantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - studyMetricBefore
+                Manager.SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+                AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
+
+                ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT
+                ; dawn to decide whether the ledger noticed yesterday. Independent of the spine credit
+                ; above -- the stamp records that study HAPPENED, whether or not it claimed the day.
+                StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", Manager.LedgerRuntime.GetDevotionalDay() + 2)
+                return True
+            endIf
+        endIf
+        return False
     endIf
 
     return False

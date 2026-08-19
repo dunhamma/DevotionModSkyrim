@@ -179,18 +179,38 @@ curse label, which wins over the Nord scar, which loses to "None". Preserve that
 
 ---
 
-## What is deliberately NOT dissolved
+## CORRECTION (2026-08-19) -- there are NO exclusions
 
-Three functions keep their race shape on the base, on merit rather than as exceptions:
+An earlier draft of this document claimed three functions could not be dissolved because
+`GetBroadLaneDisplayName(Int origin)` and `GetBroadLaneSymbol(Int origin)` "answer about races
+the player is not". **That was inferred from the function SIGNATURE and never checked against a
+call site. It is false.**
 
-- **`GetBroadLaneDisplayName(Int origin)`** (base:11715) and **`GetBroadLaneSymbol(Int origin)`**
-  (base:11739) switch on an origin PARAMETER, answering about races the player is not -- the
-  medallion roster renders all ten. Exactly one adapter is instantiated, so there is nothing
-  to dispatch to. These are lookup tables, not switchboards.
-- **`GetNordPantheonBaselineState()`** (base:8426) is not race behaviour at all: it reads
-  `Manager.PDV_NordPantheonBaselineTrack.GetCurrentState()` with a StorageUtil debug fallback.
-  A manager track read carrying a race name.
+Every caller derives the argument from the player's own race:
+- `PDV_DevotionLedger.psc:2665` -- `Int originRace = Manager.OriginRuntime.GetPlayerOriginRaceIndex()`
+- `PDV__ManagerQuest.psc:2153`, `PDV_OriginRuntimeBase.psc:11584` -- same shape
+- no call site anywhere passes a literal or an `ORIGIN_*` constant
 
-The durable gate must therefore test for branches on `GetPlayerOriginRaceIndex()` /
-`Is<Race>Origin()` -- who the PLAYER is -- and not merely for the presence of `ORIGIN_*`
-comparisons, or it will flag these three forever.
+The `Int origin` parameter is **vestigial**. The same is true of
+`GetBroadLaneServiceCount(Int origin)` and `GetMedallionSectionsJson(Int originRace)`.
+
+So all four dissolve like everything else, by dropping the vestigial parameter and letting the
+live adapter answer for itself:
+
+| Function | Replaced by |
+|---|---|
+| `GetBroadLaneDisplayName` | `GetOriginDetailLabel("broad-lane-name")` |
+| `GetBroadLaneSymbol` | `GetOriginDetailLabel("broad-lane-symbol")` |
+| `GetBroadLaneServiceCount` | `GetOriginDetailValue("broad-lane-service-count")` |
+| `GetMedallionSectionsJson` | `GetOriginDetailLabel("medallion-entries")`, wrapped by the base's `MedallionSection` helper |
+
+**Bosmer is the one special case:** it returns TWO sections (native + path focus), so it keeps
+its separate `native-medallion-entries` and `focus-medallion-entries` keys and the base emits
+both.
+
+`GetNordPantheonBaselineState()` was the third claimed exclusion. It is only called BY those
+four, and the Nord adapter already holds a copy, so it moves too.
+
+**Result: the split has zero exclusions.** The durable gate needs no allowlist. The D13
+predicate (branches on who the PLAYER is, versus branches on a passed parameter) is still the
+right test to encode -- it simply turns out nothing currently falls in the second category.

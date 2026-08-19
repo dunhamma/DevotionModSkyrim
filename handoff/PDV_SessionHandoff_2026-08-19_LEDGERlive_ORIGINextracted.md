@@ -462,3 +462,25 @@ removal set has to be computed with these exclusions rather than "delete all 608
    must fall by exactly the number deleted).
 4. Full compile, then ORIGIN ESP wiring: 10 adapter host QUSTs + the `PDV_FLST_OriginAdapters`
    fill in `ORIGIN_*` index order + the manager backref.
+
+---
+
+## CORRECTION to session 7 -- the "some race-named functions CANNOT move" issue was WRONG
+
+Session 7 above reported that `GetBroadLaneDisplayName(Int origin)` and `GetBroadLaneSymbol(Int origin)`
+could not be dissolved because they answer about races the player is not. **That was inferred from the
+function signature and never checked against a call site.** Every caller derives the argument from
+`GetPlayerOriginRaceIndex()` (`PDV_DevotionLedger.psc:2665`, `PDV__ManagerQuest.psc:2153`,
+`PDV_OriginRuntimeBase.psc:11584`); no call site passes a literal or an `ORIGIN_*` constant. The
+parameter is vestigial.
+
+`GetBroadLaneServiceCount` and `GetMedallionSectionsJson` have the same shape and the same
+player-only callers. `GetNordPantheonBaselineState` is called only by those four.
+
+**So the split has ZERO exclusions** and the durable gate needs no allowlist. Full detail and the
+replacement mapping are in `references/authoring/PDV_2_0_ORIGIN_SwitchboardReversal.md` under
+"CORRECTION (2026-08-19)".
+
+Owner's standing instruction from this exchange, now in agent memory: **always verify a claim
+BEFORE making a recommendation that rests on it.** A signature says what a function CAN take,
+never what callers DO pass.

@@ -162,6 +162,23 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "hist-void-overreach-minus"
         EmitHistVoidOverreachMinus(reason)
         return True
+    elseIf signalId == "sleep-stop"
+        ; base HandlePlayerSleepStop dispatched this by origin index.
+        HandleArgonianSleepEvents(contextForm as Actor, reason)
+        return True
+    elseIf signalId == "substrate-action"
+        ; base HandleSubstrateActionEvent, Argonian arm. eventType rides the Float slot.
+        Int eventType = magnitude as Int
+        if Manager.PDV_ArgonianHistSubstrate
+            if eventType == 333
+                Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+                Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
+                Manager.PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_cooked_meal", reason)
+                Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier(), Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The first cooked meal kept Saxhleel practice.", "journal", GetArgonianCulturalPracticeLabel())
+                return True
+            endIf
+        endIf
+        return False
     endIf
 
     return False

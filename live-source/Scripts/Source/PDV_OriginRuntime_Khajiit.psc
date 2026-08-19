@@ -232,6 +232,17 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "god-strength-boundary"
         ScheduleNextKhajiitGodStrengthBoundary()
         return True
+    elseIf signalId == "outdoor-rest"
+        ; base HandlePlayerSleepStop, Khajiit arm. The base decides WHETHER to fire this from
+        ; the captured sleep-START context (hadSleepStartContext && sleepStartedOutside);
+        ; the adapter must not re-sample the wake cell. Khajiit answers no generic "sleep-stop".
+        HandleKhajiitRoadHome("outdoor_rest_" + reason)
+        return True
+    elseIf signalId == "crypt-clear-focus"
+        ; base ApplyUndeadCryptClearReaction tail. Deliberate slot reuse: the deity NAME rides
+        ; the reason parameter here. The "small" magnitude was a literal at the base call site.
+        BridgeKhajiitMatrixFocus(reason, "small")
+        return True
     endIf
 
     return False

@@ -1529,6 +1529,10 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "sleep-events"
         HandleBosmerSleepEvents(Game.GetPlayer(), reason)
         return True
+    elseIf signalId == "sleep-stop"
+        ; base HandlePlayerSleepStop dispatched this by origin index.
+        HandleBosmerSleepEvents(contextForm as Actor, reason)
+        return True
     endIf
 
     return False

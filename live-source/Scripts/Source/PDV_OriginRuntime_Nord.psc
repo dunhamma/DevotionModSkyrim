@@ -155,6 +155,33 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "kyne-champion-entry-tick"
         ProcessQueuedNordKyneChampionEntry()
         return True
+    elseIf signalId == "sleep-stop"
+        ; base HandlePlayerSleepStop dispatched this by origin index.
+        HandleNordSleepEvents(contextForm as Actor, reason)
+        return True
+    elseIf signalId == "substrate-action"
+        ; base HandleSubstrateActionEvent, Nord arm. eventType rides the Float slot.
+        ; Reproduced literally from the pre-change base: these arms do their OWN inline
+        ; substrate + Prisma bookkeeping and deliberately do NOT route through
+        ; RecordNordAncestralRest / RecordNordHearthReturn, which carry different copy and
+        ; extra StorageUtil counters.
+        Int eventType = magnitude as Int
+        if Manager.PDV_NordAncestorSubstrate
+            if eventType == 313
+                Float metricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
+                Int tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
+                Manager.PDV_NordAncestorSubstrate.RecordAncestralRestScaled(1.0, "open_sky_rest_" + reason)
+                Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The open sky kept the old practice.", "journal", GetNordAncestorLayerLabel())
+                return True
+            elseIf eventType == 333
+                Float hearthMetricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
+                Int hearthTierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
+                Manager.PDV_NordAncestorSubstrate.RecordHearthReturnScaled(1.0, "cooked_meal_" + reason)
+                Manager.SendPrismaSubstrateProgress("ancestor", hearthTierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - hearthMetricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
+                return True
+            endIf
+        endIf
+        return False
     endIf
 
     return False

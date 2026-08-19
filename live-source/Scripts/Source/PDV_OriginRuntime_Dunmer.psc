@@ -159,6 +159,10 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "disarm-ancestor-watch"
         DisarmDunmerAncestorWatch()
         return True
+    elseIf signalId == "sleep-stop"
+        ; base HandlePlayerSleepStop dispatched this by origin index.
+        HandleDunmerSleepEvents(contextForm as Actor, reason)
+        return True
     endIf
 
     return False

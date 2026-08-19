@@ -1099,6 +1099,10 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
         ; base HandlePlayerBelowHealthGate used to call TryOrcCodeHolds directly.
         TryOrcCodeHolds(contextForm as Actor)
         return True
+    elseIf signalId == "sleep-stop"
+        ; base HandlePlayerSleepStop dispatched this by origin index.
+        HandleOrcSleepEvents(contextForm as Actor, reason)
+        return True
     endIf
 
     return False

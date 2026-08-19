@@ -1146,7 +1146,8 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "ashabah-undead-site-clear"
         HandleRedguardAshAbahUndeadSiteClear(contextForm as Location)
         return True
-    elseIf signalId == "sleep"
+    elseIf signalId == "sleep" || signalId == "sleep-stop"
+        ; "sleep-stop" is the base HandlePlayerSleepStop dispatch; "sleep" is the older id.
         HandleRedguardSleepEvents(contextForm as Actor, reason)
         return True
     endIf

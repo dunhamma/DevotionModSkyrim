@@ -729,8 +729,28 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
     elseIf signalId == "hidden_talos_shrine" || signalId == "kill_thalmor_justiciar_unprovoked"
         ; The action key IS the signal id: the base names the act, the adapter owns what
         ; Imperials do about it.
+        if signalId == "hidden_talos_shrine" && !IsImperialVampireStateActive()
+            ; base HandleTalosShrineDefiance unlocked the Imperial broad Talos roster here,
+            ; behind the same vampire gate. The curated Talos award itself is race-free and
+            ; stays on the base.
+            StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
+            Manager.Trace(1, "Imperial broad Talos roster unlocked by shrine defiance: " + reason)
+        endIf
         ApplyImperialConcordatAction(signalId, reason)
         return True
+    elseIf signalId == "substrate-action"
+        ; base HandleSubstrateActionEvent, Imperial arm. eventType rides the Float slot.
+        Int eventType = magnitude as Int
+        if !IsImperialVampireStateActive() && Manager.PDV_ImperialAncestorSubstrate
+            if eventType == 330 || eventType == 331 || eventType == 332
+                Float metricBefore = Manager.PDV_ImperialAncestorSubstrate.GetMetric()
+                Int tierBefore = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
+                Manager.PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "craft_" + reason)
+                Manager.SendPrismaSubstrateProgress("imperial-civic", tierBefore, Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier(), Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", GetImperialCivicTierName())
+                return True
+            endIf
+        endIf
+        return False
     endIf
 
     return False
