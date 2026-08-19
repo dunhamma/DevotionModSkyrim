@@ -187,14 +187,15 @@ modules"), so the dispatcher is on the orchestrator and the 136 bodies are on th
 
 ---
 
-## 5. Open questions for the owner
+## 5. Owner decisions (resolved 2026-08-19 -- recommendations adopted)
 
 1. **Console access (Section 3):** RESOLVED -- shipped user build is MCM-only; the
    `PDV_DebugConsole` shim is greenlit as tester-build-only and hidden from users (not in the
    shipped FOMOD, not in MCM). Remaining owner input: the exact driver set the shim wraps.
-2. **MCM property vs double-hop (2c):** keep the `PDV_Manager.DebugRuntime.X()` double-hop
-   (recommended, matches the ESP budget), or let F2 add a direct `PDV_DebugRuntime` property to
-   MCM while it rebuilds the pages?
-3. **Dispatcher placement (4):** confirm `RunDebugCommand` + registers stay on the manager rather
-   than moving into `PDV_DebugRuntime`. Recommended: stay on the manager (region-map ruling; keeps
-   MCM's register writes unchanged).
+2. **MCM property vs double-hop (2c):** RESOLVED -- keep the `PDV_Manager.DebugRuntime.X()`
+   double-hop (a single mechanical find/replace, matches the ESP budget, negligible cost for
+   user-triggered debug). A direct `PDV_DebugRuntime` MCM property stays available to F2 as an
+   optional efficiency if it is already restructuring those pages, but D2 does not require it.
+3. **Dispatcher placement (4):** RESOLVED -- `RunDebugCommand` + the 4 scratch registers stay on
+   the manager (region-map ruling; keeps MCM's register writes unchanged). Only the 136 `Debug*`
+   bodies move to `PDV_DebugRuntime`.

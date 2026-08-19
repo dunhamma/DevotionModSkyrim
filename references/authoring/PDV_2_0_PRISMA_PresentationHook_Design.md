@@ -1,7 +1,9 @@
 # PDV 2.0 -- PRISMA Presentation Hook (design gate D1)
 
-Status: DRAFT for owner review. These signatures are proposed, not frozen. The owner reviews
-and freezes; this document does not itself freeze an interface.
+Status: Owner-accepted 2026-08-19 -- the recommendations in this document are adopted (see the
+resolved list in Section 5). The signature set in Section 3 is the agreed interface; the mechanical
+byte-freeze happens at PRISMA extraction (E2), where each adapter override is proved against a
+survey/panel parity fixture.
 
 Scope: design only. No source, manifest, or region-map edits accompany this document.
 
@@ -342,8 +344,8 @@ cross-module ladders (DAEDRIC pact, LEDGER patron/append, startup gate, broad la
 envelope logic and stay in PRISMA. #6 additionally needs the scar-compose fix or Nord loses a
 line silently.
 
-Recommendation: accept the tail-replacement mapping for #5/#6/#7 and the scar-compose fix for #6.
-At extraction, verify each adapter's `GetSurveyFragment()` reproduces its old
+Owner-accepted 2026-08-19: the tail-replacement mapping for #5/#6/#7 and the scar-compose fix for
+#6 are adopted. At extraction, verify each adapter's `GetSurveyFragment()` reproduces its old
 `Get<Race>SurveyText()` byte-for-byte (they should -- the override already delegates to the same
 lane function the switch called); a one-shot parity fixture over the ten survey outputs closes it.
 
@@ -368,19 +370,16 @@ RECOGNITION-owned, not ORIGIN-owned. D1 records only the remap: after E1/E2 the 
 hook is orthogonal to it. If RECOGNITION carries its own race branches, those are a RECOGNITION
 design concern, not part of this hook.
 
-### 5b. Open questions for the owner
+### 5b. Owner decisions (resolved 2026-08-19 -- recommendations adopted)
 
-1. **Named virtuals vs `detailKey` for the 7 new sections.** Recommended: named virtuals (the 8
-   switches are all first-class panel/MCM fields; type-safe dispatch, compiler-checked, a clean
-   one-switch->one-verb parity table). Alternative: route all 7 through new `GetOriginDetailLabel`
-   cases and add zero named verbs (smaller frozen surface, but re-imports a string-keyed lookup
-   the adapter ADR existed to remove). Decide before freeze.
-2. **Fallback ownership.** Recommended: the terminal no-race fallbacks (`"Devotion"`, `"journal"`,
-   the generic Book-of-Days sentence, the standing-band line) live in PRISMA (envelope), with the
-   base virtual returning `""`. Confirm this rather than pushing the fallback into the base default.
-3. **`GetMcmSummaryLine` parameterization.** Recommended: pass the envelope-computed
-   `standingLabel` in as a param (no adapter->Manager backref). Confirm vs. the alternative of the
-   adapter calling back to `Manager.GetCurrentStandingLabel()` (which would introduce a backref
-   this design otherwise avoids).
+1. **Named virtuals vs `detailKey` for the 7 new sections.** RESOLVED: named virtuals. The 8
+   switches are first-class panel/MCM fields; typed dispatch, compiler-checked, a clean
+   one-switch->one-verb parity table. (Rejected: routing all 7 through new `GetOriginDetailLabel`
+   cases -- it re-imports the string-keyed lookup the adapter ADR existed to remove.)
+2. **Fallback ownership.** RESOLVED: the terminal no-race fallbacks (`"Devotion"`, `"journal"`,
+   the generic Book-of-Days sentence, the standing-band line) live in PRISMA (envelope); the base
+   virtual returns `""`.
+3. **`GetMcmSummaryLine` parameterization.** RESOLVED: pass the envelope-computed `standingLabel`
+   in as a param; no adapter->Manager backref.
 4. **The `RepairBookOfDaysJournalText` region-map entry** (present in the map, absent from the
-   current file) -- confirm removed/renamed so A2 drops it; not a hook target either way.
+   current file) -- remains an A2 truth-up (drop the stale entry); not a hook target either way.
