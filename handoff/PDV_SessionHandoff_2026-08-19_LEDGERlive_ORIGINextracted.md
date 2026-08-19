@@ -107,3 +107,32 @@ through the wired ledger).
   v3-provider-seam-spec parallel.
 - To exercise the FAVOR toast before the MCM fix: trigger a "Noted" family (e.g. Orthodox) after
   **Clear active favor**, and close the MCM — but the MCM Debug page currently crashes, so fix MCM first.
+
+---
+
+## UPDATE — 2026-08-19 session 3 (queue item 1 SHIPPED: MCM quick unblock live on V3Dev)
+
+### What shipped
+- **Daedric page rebalanced**: the Neglect & decay block (11 rows) moved right→left → **37 left /
+  45 right** (was 26/56; the crash was right-column row 56 → buffer index 111). Zero options deleted.
+- **5 dead `RunPatternAction` arms (IDs 38-42) deleted** — a fresh call-site sweep re-confirmed no
+  caller passes them; the live neglect/decay buttons dispatch through their own `_oid` handlers.
+- **Status page roster capped** at 48 rendered rows + a "... and N more | Book of Days has the full
+  roster" tail row. Kills the latent ~54-deity overflow; nothing is hidden at the current roster size.
+- Column-budget constraint comments (~54 rows/column, index ~108) left in `BuildDaedricPage` and
+  `BuildStatusPage` so the next option-adder sees the ceiling.
+
+### Where it landed (and why there)
+- Committed on **feature/v3-ledger-extraction** `be572f0a` — the branch V3Dev reflects. ORIGIN's MCM
+  is rewired to `Manager.OriginRuntime.*`, which is not wired live, so an ORIGIN-built MCM.pex would
+  None-error on V3Dev; the deployable fix had to build from LEDGER state.
+- **Merged forward into feature/v3-origin-extraction** (clean auto-merge; all 11 OriginRuntime rewire
+  lines intact). Merged MCM compile-proven against the ORIGIN tree: 0/0.
+- **Deployed to V3Dev**: source synced hash-verified, targeted compile 0/0, `PDV_MCM.pex e89e689e`
+  (2026-08-19 10:17). Branch chain still fully unpushed.
+
+### Unblocked / next
+- MCM Debug page is usable again → the FAVOR visible-toast retry can run now: **Clear active favor** →
+  trigger a "Noted" family (e.g. Orthodox) → close the MCM.
+- Queue items 2-7 unchanged; next up is the MCM by-module rebuild (own focused session), then the
+  ORIGIN adapter split before any ORIGIN wiring.
