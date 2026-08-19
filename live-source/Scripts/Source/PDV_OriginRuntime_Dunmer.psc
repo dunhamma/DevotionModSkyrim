@@ -32,12 +32,19 @@ Function EnsureRuntimeWiring()
     EnsureDunmerAncestralUrn()
 EndFunction
 
-; ApplyInitialChoice() is NOT overridden: the Dunmer lane has no startup-choice verb
-; (PDV__ManagerQuest.ApplyStartupChoice does not dispatch ORIGIN_DUNMER).
+; ApplyInitialChoice() is NOT overridden, and this is a lane fact rather than an
+; interface gap: the Dunmer lane has no startup-choice verb at all. Re-checked
+; against the corrected two-argument virtual -- PDV__ManagerQuest.ApplyStartupChoice
+; dispatches Bosmer, Breton, Redguard, Orc and Nord, and has no ORIGIN_DUNMER branch,
+; so there is nothing to delegate to. Base default (no-op) is correct.
 
-; ApplyCurseHandlers() is NOT overridden: ApplyDunmerCurseHandlers(Int oldState,
-; Int newState, String reason) needs the curse transition pair, and the frozen
-; no-arg virtual carries neither value. See the manifest's interfaceGaps.
+; ApplyDunmerCurseHandlers keys the posture purely off the (oldState, newState)
+; transition and does not read reason today, but it is threaded anyway: the
+; parameter is part of the lane signature and must not be synthesised here if a
+; later body starts branching on it.
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyDunmerCurseHandlers(oldState, newState, reason)
+EndFunction
 
 ; EvaluateAtDawn() is NOT overridden: the Dunmer lane has no dawn verb.
 
@@ -104,19 +111,23 @@ Int Function GetOriginDetailValue(String detailKey)
 EndFunction
 
 ; -- Signals --
-; signalId doubles as the lane functions' `reason` argument: the frozen virtual has
-; no String channel, and most Dunmer signal verbs take one. Callers that need a
-; distinct trace reason must send a distinct signalId. `magnitude` carries the
+; signalId selects the lane verb; `reason` is the caller's own trace string and is
+; passed through UNCHANGED. This is load-bearing here, not cosmetic: PDV_DunmerAncestralUrn
+; (a MISC OnEquipped script) fires through PDV_EventBus.RouteDunmerPortableShrinePrayer(),
+; which composes "eventbus_" + eventType, and that provenance string has to reach
+; HandleDunmerPortableShrinePrayer(String reason) intact. Synthesising reason from
+; signalId would leave the urn working while silently losing its provenance -- see the
+; ADR ruling "the Dunmer urn rides the normal signal path". `magnitude` carries the
 ; Reclamation focus index and the AI relationship rank, both Ints by nature.
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "portable-shrine-prayer"
-        HandleDunmerPortableShrinePrayer(signalId)
+        HandleDunmerPortableShrinePrayer(reason)
         return True
     elseIf signalId == "player-home-bonus"
-        HandleDunmerPlayerHomeBonus(signalId)
+        HandleDunmerPlayerHomeBonus(reason)
         return True
     elseIf signalId == "reclamation-focus"
-        HandleDunmerReclamationFocus(magnitude as Int, signalId)
+        HandleDunmerReclamationFocus(magnitude as Int, reason)
         return True
     elseIf signalId == "honorable-victory"
         HandleDunmerHonorableVictory(contextForm)
@@ -128,19 +139,19 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
         RecordDunmerStoryVictoryEvidence(contextForm, magnitude as Int)
         return True
     elseIf signalId == "deviation-price"
-        HandleDunmerDeviationPrice(signalId)
+        HandleDunmerDeviationPrice(reason)
         return True
     elseIf signalId == "outdoor-good-daedra-shrine"
-        HandleDunmerOutdoorGoodDaedraShrine(signalId)
+        HandleDunmerOutdoorGoodDaedraShrine(reason)
         return True
     elseIf signalId == "clumsy-crime"
-        HandleDunmerClumsyCrime(signalId)
+        HandleDunmerClumsyCrime(reason)
         return True
     elseIf signalId == "twilight-window-rite"
-        TryAwardDunmerTwilightWindowSignal(signalId)
+        TryAwardDunmerTwilightWindowSignal(reason)
         return True
     elseIf signalId == "sleep-events"
-        HandleDunmerSleepEvents(contextForm as Actor, signalId)
+        HandleDunmerSleepEvents(contextForm as Actor, reason)
         return True
     elseIf signalId == "reclamation-memory"
         AwardActiveDunmerReclamationMemorySignal()
@@ -169,17 +180,20 @@ Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
     return IsDunmerOfferEligibleDeity(deity)
 EndFunction
 
-; GetFormalCommitmentOfferMessage() is NOT overridden: the frozen virtual returns a
-; String and takes no deity, while GetDunmerFormalCommitmentOfferMessage(deity)
-; returns a Message record chosen per deity. There is no lossless delegation.
-; See the manifest's interfaceGaps.
+Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    return GetDunmerFormalCommitmentOfferMessage(deity)
+EndFunction
 
 ; -- Presentation --
-Function ShowOriginNotification(String messageKey)
-    if messageKey == "deviation-price-notice"
-        SurfaceDunmerDeviationPriceNotice()
-    endIf
-EndFunction
+; ShowOriginNotification() / ShowOriginMessage() are NOT overridden: the Dunmer lane
+; has no Message-record notifier to delegate to. It has never had a ShowDunmerNotification
+; or ShowDunmerMessage; its one surfacing verb, SurfaceDunmerDeviationPriceNotice(),
+; composes its own Book of Days line and Prisma toast, takes no arguments, and has a
+; single in-lane caller (HandleDunmerDeviationPrice) -- it is not a cross-boundary
+; entry point. The earlier keyed ShowOriginNotification(String) override that routed
+; to it is removed: it did not match the corrected (Message, String) signature, so it
+; would have stopped being an override, and there is nothing outside ORIGIN that calls
+; it. Base default (no-op) is the honest answer.
 
 ; ===========================================================================
 ; Dunmer lane functions -- copied VERBATIM from PDV_OriginRuntimeBase.

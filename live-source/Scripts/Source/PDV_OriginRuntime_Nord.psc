@@ -33,14 +33,18 @@ Function EvaluateAtDawn()
     RunDawnRefreshNordAncestor()
 EndFunction
 
-; ApplyInitialChoice() is NOT overridden: ApplyNordInitialChoice(Int baselineValue,
-; String reason) needs the startup-choice option value and the caller's reason, and
-; the frozen no-arg virtual carries neither. See the manifest's interfaceGaps.
+; choiceValue is PDV__ManagerQuest.ApplyStartupChoice's optionValue and reason is its
+; caller-composed trace string; both arrive unchanged now that the corrected virtual
+; carries them, so this is a straight delegation.
+Function ApplyInitialChoice(Int choiceValue, String reason)
+    ApplyNordInitialChoice(choiceValue, reason)
+EndFunction
 
-; ApplyCurseHandlers() is NOT overridden: ApplyNordCurseHandlers(Int oldState,
-; Int newState, String reason) needs the curse transition pair and the reason that
-; drives ShouldSuppressNordCurseModal. Deriving them would fire (or wrongly
-; suppress) curse modals. See the manifest's interfaceGaps.
+; reason drives ShouldSuppressNordCurseModal inside the lane handler, so it must be
+; the caller's own string -- a synthesised one would fire or wrongly suppress a modal.
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyNordCurseHandlers(oldState, newState, reason)
+EndFunction
 
 ; -- State --
 String Function GetOriginStateLabel()
@@ -59,14 +63,19 @@ String Function GetSurveyFragment()
     return GetNordSurveyBaseText()
 EndFunction
 
-; The Nord lane has no lapse-shaped neglect predicate of its own: its neglect
-; spells are gated by booleans the LEDGER computes and passes in. The Nord-shaped,
-; race-gated state that suppresses the lane is vampire suppression, which is what
-; the ADR names as the tenth neglect predicate. Consumers wanting "has the Nord
-; lane gone quiet" must use the base's IsBroadLaneLapsed(), not this.
-Bool Function IsRaceLaneNeglected()
-    return IsNordVampireSuppressed()
-EndFunction
+; IsRaceLaneNeglected() is DELIBERATELY NOT overridden -- Nord inherits the base
+; default False. Per the ADR ruling "neglect is THREE pools, and Nord has no
+; race-lane one" (PDV_2_0_ADR_OriginAdapterInterface.md, 2026-08-19), neglect splits
+; into a patron/deity pool, a race/culture-lane pool, and a broad-lane pool. Nord
+; appears in the broad pool (the Kyne weather spell, reused as Nord's broad-lane
+; neglect) and in the patron pool (SyncNordPatronNeglectSpells) ONLY; it has no
+; race/culture-lane predicate at all, which is why the ADR counts nine such
+; predicates, not ten. An earlier cut of this adapter mapped the virtual to
+; IsNordVampireSuppressed(); that is OVERTURNED -- curse suppression is a third,
+; unrelated thing, and equating it with lane lapse would answer a question Nord
+; does not have. Consumers wanting "has the Nord broad lane gone quiet" must use
+; the base's IsBroadLaneLapsed(); vampire suppression is still readable through
+; GetOriginDetailValue("vampire-suppressed").
 
 String Function GetOriginDetailLabel(String detailKey)
     if detailKey == "devotion-mode"
@@ -107,36 +116,38 @@ Int Function GetOriginDetailValue(String detailKey)
 EndFunction
 
 ; -- Signals --
-; signalId doubles as the lane functions' `reason` argument: the frozen virtual has
-; no String channel, and every Nord signal verb takes one. Callers that need a
-; distinct trace reason must send a distinct signalId.
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+; signalId selects the lane verb; `reason` is the caller's own trace string and is
+; passed through UNCHANGED. It is never synthesised from signalId: reasons are
+; player-visible in the Ledger and some lane bodies branch on the exact string, so
+; substituting the id would silently change behaviour that no compile or
+; reconstruction-parity check would catch (ADR, "Corrections after the pilot").
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "tsun-adversity-survived"
-        HandleNordTsunAdversitySurvived(signalId)
+        HandleNordTsunAdversitySurvived(reason)
         return True
     elseIf signalId == "old-ways-state"
-        HandleNordOldWaysState(signalId)
+        HandleNordOldWaysState(reason)
         return True
     elseIf signalId == "kyne-talos-context"
-        HandleNordKyneTalosContext(signalId)
+        HandleNordKyneTalosContext(reason)
         return True
     elseIf signalId == "hircine-arkay-edge"
-        HandleNordHircineArkayEdge(signalId)
+        HandleNordHircineArkayEdge(reason)
         return True
     elseIf signalId == "ancestor-spine"
-        HandleNordAncestorSpine(signalId)
+        HandleNordAncestorSpine(reason)
         return True
     elseIf signalId == "ancestor-spine-pulse"
-        RecordNordAncestorSpine(signalId, magnitude)
+        RecordNordAncestorSpine(reason, magnitude)
         return True
     elseIf signalId == "ancestral-rest"
-        RecordNordAncestralRest(signalId, magnitude)
+        RecordNordAncestralRest(reason, magnitude)
         return True
     elseIf signalId == "hearth-return"
-        RecordNordHearthReturn(signalId, magnitude)
+        RecordNordHearthReturn(reason, magnitude)
         return True
     elseIf signalId == "sleep-events"
-        HandleNordSleepEvents(contextForm as Actor, signalId)
+        HandleNordSleepEvents(contextForm as Actor, reason)
         return True
     elseIf signalId == "kyne-champion-entry"
         MaybeShowNordKyneChampionEntry(contextForm as PDV_DeityBase, magnitude as Int)
@@ -149,13 +160,12 @@ Bool Function HandleContextualSignal(String signalId, Form contextForm = None, F
     return False
 EndFunction
 
-Function HandleLocationChange()
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef
-        return
-    endIf
-
-    HandleNordLocationChange(playerRef.GetCurrentLocation())
+; The caller's akNewLocation rides through as a Form (Location extends Form) and is
+; passed straight down. Re-sampling GetCurrentLocation() is NOT provably the same
+; location the OnLocationChange event carried, so the pass-through is the honest
+; wiring. HandleNordLocationChange already returns early on a None location.
+Function HandleLocationChange(Form newLocation = None)
+    HandleNordLocationChange(newLocation as Location)
 EndFunction
 
 ; -- Upkeep --
@@ -177,16 +187,21 @@ Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
     return IsNordOfferEligibleDeity(deity)
 EndFunction
 
-; GetFormalCommitmentOfferMessage() is NOT overridden: the frozen virtual returns a
-; String and takes no deity, while GetNordFormalCommitmentOfferMessage(deity)
-; returns a Message record chosen per deity. There is no lossless delegation.
-; See the manifest's interfaceGaps.
+Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    return GetNordFormalCommitmentOfferMessage(deity)
+EndFunction
 
 ; -- Presentation --
-Function ShowOriginNotification(String messageKey)
-    if messageKey == "kyne-champion-ambient-storm"
-        ShowNordNotification(Manager.PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
-    endIf
+; The corrected virtuals take the Message record and its fallback text, which is
+; exactly what the two PDV_DevotionLedger call sites already pass, so both are a
+; straight delegation. The earlier keyed ShowOriginNotification(String) is gone:
+; it forced the notifier to own a per-key Message table that the caller already had.
+Function ShowOriginNotification(Message messageRecord, String fallbackText)
+    ShowNordNotification(messageRecord, fallbackText)
+EndFunction
+
+Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
+    ShowNordMessage(messageRecord, fallbackText, suppressModal)
 EndFunction
 
 ; ===========================================================================
