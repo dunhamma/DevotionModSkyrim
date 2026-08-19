@@ -136,3 +136,60 @@ through the wired ledger).
   trigger a "Noted" family (e.g. Orthodox) → close the MCM.
 - Queue items 2-7 unchanged; next up is the MCM by-module rebuild (own focused session), then the
   ORIGIN adapter split before any ORIGIN wiring.
+
+### Branch reconciliation — the chain is now current (merge `67f431d2`)
+
+Audited every local and remote branch by ancestry against the chain tip. **Exactly one merge was
+owed, and it is done:** `feature/v3-provider-seam-spec` -> `feature/v3-origin-extraction`, clean.
+Because `9e1c3a65`'s parent IS the big-update tip `a51ac436`, that single merge carried all of
+big-update's 4 commits too: the `pdv_substrate_pacing_audit.mjs` gate reconciliation `a653006a`,
+3 docs, and **`PDV_2_0_ProviderSeam_ExtractionSpec.md`** — which queue item 4 depends on and which
+until now existed on no branch the chain could see.
+
+**Do NOT merge these two** (analysis done, don't redo it):
+- `hotfix/1.5.0e-daedric-consent-kid` (2 commits) — the fix commits already came over fix-only at
+  `252eb0ea`. What is left is the 1.5.0e **release stamp**: `da762400` sets
+  `PDV_BUILD_VERSION = "1.5.0e"`, plus changelog and release proof. 1.5.x is the maintenance line;
+  merging it corrupts the 2.0.0 version identity. Checked for stranded content — none: the 1.5.0d
+  "Large toast" UI is already in the chain (`styles.css` byte-identical, `is-large` in `app.js`).
+- `claude/clever-goldstine-e63b0a` (1 commit) — superseded AND regressive. Its LF/CRLF hashing fix
+  is already solved in the chain via `hashText` from `tools/lib/pdv_file_compare.mjs`
+  (`readTextNormalised`), and merging it would strip `assertKnownFlags`, regressing the CLI
+  flag-contract gate. Recommend deleting the branch.
+
+`main` and all five `codex/v3-*` QR branches are fully contained already. Correction to the note
+above: `feature/v3-big-update` **is pushed** and identical to `origin/feature/v3-big-update`; only
+ledger / origin-extraction / seam-spec are local-only.
+
+### NEW WORK ITEM — the substrate-pacing gate is blind after the extraction
+
+`tools/pdv_substrate_pacing_audit.mjs` on the chain: **exit 1, 28 FAILs**. On
+`feature/v3-big-update`: **exit 0, 0 FAILs**. The merge above did **not** improve it — re-run after
+merging is still 28 FAILs; only the wording of `source.argonian-maintenance-clock` changed. (I had
+predicted 28->27; that was wrong, and the reason is the point below.)
+
+Root cause, proven not inferred: the audit pins `MANAGER_PATH = PDV__ManagerQuest.psc` (line 28) and
+has no resolver, but the extractions moved the needled functions out. `IsArgonianHistNeglected` and
+`TryArgonianBedOfChoiceSleep` now live in `PDV_OriginRuntimeBase.psc`; `HasHistMaintenance` and
+`GetLastHistMaintenanceDevotionalDay` return **0 hits in the manager, 2 in ORB**. So
+`bodyFor(managerSource, ...)` yields an empty string and every positive needle in the AND collapses.
+
+**This is tool blindness, not a code regression** — ORIGIN is still inert and nothing is broken at
+runtime. Do not "fix" source to satisfy it. The fix is the resolver treatment `pdv_verify.mjs`
+already got (`3c7d459f`, `e3a870fa`): resolve a function body across the manager *and* the extracted
+modules. Checked for the nastier variant — vacuous PASSes, where a negated needle against an empty
+body passes for the wrong reason — and found none: every affected check ANDs at least one positive
+needle, so the blindness shows up honestly as red. Every future extraction re-breaks any gate that
+still pins a fixed source path, so this is worth fixing once, properly.
+
+### FAVOR toast — no wiring change was made, and none was indicated
+`be572f0a` touched one file and three functions (`BuildStatusPage`, `BuildDaedricPage`,
+`RunPatternAction`); filtering its diff for `toast|favor|notif|prisma|message` returns zero lines.
+The toast was **unblocked, not fixed**. Source reading confirms session 2's read independently:
+`GetFavorSurfacingLabel` hard-codes `FAVOR_FAMILY_ALTMER_DAWN_STEADINESS` as **"Quiet"**, and
+`SendContextualFavorToast` returns before `SendPrismaEventToast` on Quiet — so Dawn Steadiness
+emitting no toast is correct, and no MCM fix could have changed it. **Orthodox costly enforcement**
+is not in the Quiet list, classifies "Noted", and does call `SendPrismaEventToast` — that is the
+retry that proves the path. Also note `TryApplyContextualFavor` skips the toast entirely when
+`Manager.IsP2BookNoticeReason(reason)`, so don't drive the retry through a book-notice reason.
+Status: wiring reads correct **on source inspection**; runtime remains UNPROVEN.
