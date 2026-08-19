@@ -9331,7 +9331,7 @@ String Function GetDunmerReclamationFocusLabel(Int focusValue)
 EndFunction
 
 String Function GetNordScarLabel()
-    if HasNordVampireScar() && !IsNordVampireSuppressed()
+    if Manager.OriginRuntime.GetOriginDetailValue("vampire-scar") == 1 && !IsNordVampireSuppressed()
         return "The vampire scar still shows. The road is open again, but not unmarked."
     endIf
 
@@ -11043,126 +11043,18 @@ Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSle
         return
     endIf
 
-    Int originRace = GetPlayerOriginRaceIndex()
-    if originRace == Manager.ORIGIN_KHAJIIT
-        if !hadSleepStartContext
-            Manager.Trace(1, "Khajiit road-home rest skipped: sleep-start context missing.")
-        elseIf sleepStartedOutside
-            HandleKhajiitRoadHome("outdoor_rest_" + reason)
-        endIf
+    ; Road-home classification uses the CAPTURED sleep-start context, never a re-sample of the
+    ; wake cell. The base decides WHICH signal fires; the live adapter decides what it means.
+    if hadSleepStartContext && sleepStartedOutside
+        Manager.OriginRuntime.HandleContextualSignal("outdoor-rest", reason, playerRef)
     endIf
-
-    if originRace == Manager.ORIGIN_ARGONIAN
-        HandleArgonianSleepEvents(playerRef, reason)
-    endIf
-
-    if originRace == Manager.ORIGIN_BOSMER
-        HandleBosmerSleepEvents(playerRef, reason)
-    endIf
-
-    if originRace == Manager.ORIGIN_BRETON
-        HandleBretonSleepEvents(playerRef, reason)
-    endIf
-
-    if originRace == Manager.ORIGIN_DUNMER
-        HandleDunmerSleepEvents(playerRef, reason)
-    endIf
-
-    if originRace == Manager.ORIGIN_ALTMER
-        HandleAltmerSleepEvents(playerRef, reason)
-    endIf
-
-    if originRace == Manager.ORIGIN_NORD
-        HandleNordSleepEvents(playerRef, reason)
-    endIf
-
-    if originRace == Manager.ORIGIN_ORC
-        HandleOrcSleepEvents(playerRef, reason)
-    endIf
-
-    if originRace == Manager.ORIGIN_REDGUARD
-        HandleRedguardSleepEvents(playerRef, reason)
-    endIf
+    Manager.OriginRuntime.HandleContextualSignal("sleep-stop", reason, playerRef)
 EndFunction
 
 Function HandleSubstrateActionEvent(Int eventType, String reason)
-    Int origin = GetPlayerOriginRaceIndex()
-    if origin == Manager.ORIGIN_IMPERIAL && !IsImperialVampireStateActive() && Manager.PDV_ImperialAncestorSubstrate
-        if eventType == 330 || eventType == 331 || eventType == 332
-            Float metricBefore = Manager.PDV_ImperialAncestorSubstrate.GetMetric()
-            Int tierBefore = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-            Manager.PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "craft_" + reason)
-            Manager.SendPrismaSubstrateProgress("imperial-civic", tierBefore, Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier(), Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", GetImperialCivicTierName())
-        endIf
-    elseIf origin == Manager.ORIGIN_ARGONIAN && Manager.PDV_ArgonianHistSubstrate
-        if eventType == 333
-            Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
-            Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-            Manager.PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_cooked_meal", reason)
-            Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier(), Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The first cooked meal kept Saxhleel practice.", "journal", GetArgonianCulturalPracticeLabel())
-        endIf
-    elseIf origin == Manager.ORIGIN_NORD && Manager.PDV_NordAncestorSubstrate
-        if eventType == 313
-            Float metricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
-            Int tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-            Manager.PDV_NordAncestorSubstrate.RecordAncestralRestScaled(1.0, "open_sky_rest_" + reason)
-            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The open sky kept the old practice.", "journal", GetNordAncestorLayerLabel())
-        elseIf eventType == 333
-            Float metricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
-            Int tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-            Manager.PDV_NordAncestorSubstrate.RecordHearthReturnScaled(1.0, "cooked_meal_" + reason)
-            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
-        endIf
-    elseIf origin == Manager.ORIGIN_ALTMER && Manager.PDV_AltmerAncestorSubstrate && !IsAltmerFavorSuppressedByCurse()
-        ; P2 (2026-08-04) widened the spine's feed set, and answers the question P5 deferred:
-        ; YES, ordered study feeds the ancestral spine, as ordered craft already did.
-        ;
-        ; This adds NO income. TryAwardSubstrateDayCredit caps the substrate at ONE +4.0 credit per
-        ; devotional day whatever the source, so extra feeds change only WHICH act can claim the
-        ; day -- which is the whole point. A player is never stuck waiting on one specific chore.
-        ;
-        ; Routed through AwardAltmerAncestorSpinePulse rather than calling
-        ; RecordHeritageStandingScaled inline, so every feed gets the same bookkeeping, the same
-        ; Prisma progress push, and the same per-source Book of Days voice.
-        ; NOTE: these arms deliberately keep their OWN metricBefore / RecordHeritageStandingScaled /
-        ; SendPrismaSubstrateProgress rather than routing through AwardAltmerAncestorSpinePulse.
-        ; Consolidating them reads cleaner but drops the manager's substrate-progress producer count
-        ; below the floor asserted by tools/pdv_substrate_pacing_audit.mjs
-        ; (`source.actual-substrate-delta`, >= 19 producers, each reporting the real post-award
-        ; delta). The shared voice helper below is the part worth factoring out; the per-producer
-        ; delta reporting is intentionally NOT.
-        if eventType == 330 || eventType == 331
-            String craftToken = "smithing_"
-            if eventType == 331
-                craftToken = "enchantment_"
-            endIf
-            Float metricBefore = Manager.PDV_AltmerAncestorSubstrate.GetMetric()
-            Int tierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-            Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, craftToken + reason)
-            Float grantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
-            Manager.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
-            AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
-
-            ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
-            ; lawful form is his doctrine. Hard 1.2/day ceiling regardless of how many items.
-            if eventType == 331 && Manager.PDV_Magnus && Manager.ConsumeOncePerDaySignal("PDV.Signal.MagnusApertureKept")
-                Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Magnus, Manager.PDV_Magnus.SIGNAL_APERTURE_KEPT, None, 1.0)
-                Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Magnus, "The design holds", "marks an enchantment made as the art demands.")
-            endIf
-        elseIf eventType == 340 || eventType == 341 || eventType == 342
-            Float studyMetricBefore = Manager.PDV_AltmerAncestorSubstrate.GetMetric()
-            Int studyTierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
-            Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "study_" + reason)
-            Float studyGrantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - studyMetricBefore
-            Manager.SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
-            AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
-
-            ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT
-            ; dawn to decide whether the ledger noticed yesterday. Independent of the spine credit
-            ; above -- the stamp records that study HAPPENED, whether or not it claimed the day.
-            StorageUtil.SetIntValue(None, "PDV.Altmer.Xarxes.StudyDay", Manager.LedgerRuntime.GetDevotionalDay() + 2)
-        endIf
-    endIf
+    ; Race switch dissolved by the ORIGIN adapter split; the live adapter answers.
+    ; See references/authoring/PDV_2_0_ORIGIN_SwitchboardReversal.md for the original.
+    Manager.OriginRuntime.HandleContextualSignal("substrate-action", reason, None, eventType as Float)
 EndFunction
 
 Int Function GetInteriorSleepCellId(Actor playerRef)
@@ -11234,9 +11126,9 @@ Bool Function TryDeclareRestCell(String keyPrefix, Int sleepCellId)
 EndFunction
 
 Function HandlePlayerBelowHealthGate(Actor playerRef)
-    TryBosmerBaanDarGap(playerRef)
-    TryArgonianSithisNearDeathBurst(playerRef)
-    TryOrcCodeHolds(playerRef)
+    Manager.OriginRuntime.HandleContextualSignal("baandar-gap", "below_health_gate", playerRef)
+    Manager.OriginRuntime.HandleContextualSignal("sithis-near-death", "below_health_gate", playerRef)
+    Manager.OriginRuntime.HandleContextualSignal("code-holds", "below_health_gate", playerRef)
 EndFunction
 
 Function HandlePlayerBelowHealthSurvived(Actor playerRef)
@@ -11287,9 +11179,7 @@ Function HandleGreenPactViolation(String reason)
 EndFunction
 
 Function HandleStateTransitionConfirmationRite(String reason)
-    if IsBosmerOrigin()
-        ConfirmBosmerPendingTransition(reason)
-    endIf
+    Manager.OriginRuntime.HandleContextualSignal("confirm-pending-transition", reason)
 EndFunction
 
 Function HandleTalosWorshipperRescued(String reason)
@@ -11498,16 +11388,13 @@ Function ApplyUndeadCryptClearReaction(String deityName, String intensity, Locat
     Manager.SetSuppressAwardFavorToast(False)
     Manager.AccumulateQuestReactionSurface(deity, appliedReactionAmount, "small")
 
-    if IsKhajiitOrigin()
-        BridgeKhajiitMatrixFocus(deityName, "small")
-    endIf
+    Manager.OriginRuntime.HandleContextualSignal("crypt-clear-focus", deityName)
 EndFunction
 
 Function HandleTalosShrineDefiance(String reason)
-    if GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL && !IsImperialVampireStateActive()
-        StorageUtil.SetIntValue(None, "PDV.Imperial.TalosBroadUnlocked", 1)
-        Manager.Trace(1, "Imperial broad Talos roster unlocked by shrine defiance: " + reason)
-    endIf
+    ; The Imperial broad-Talos unlock and the Concordat action both moved into the Imperial
+    ; adapter; the award below is race-free and stays.
+    ; See references/authoring/PDV_2_0_ORIGIN_SwitchboardReversal.md for the original.
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.TalosShrineDefiance")
     if Manager.PDV_Talos
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Talos, Manager.PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)
@@ -11515,9 +11402,7 @@ Function HandleTalosShrineDefiance(String reason)
         Manager.Trace(1, "Talos shrine defiance skipped: PDV_Talos missing.")
     endIf
 
-    if GetPlayerOriginRaceIndex() == 1
-        ; Phase 7 verifier compatibility: ApplyConcordatPressure(-15, "talos_shrine_" + reason)
-        ApplyImperialConcordatAction("hidden_talos_shrine", "talos_shrine_" + reason)
+    if Manager.OriginRuntime.HandleContextualSignal("hidden_talos_shrine", "talos_shrine_" + reason)
         Manager.Trace(2, "Talos shrine defiance also applied Concordat pressure.")
     else
         Manager.Trace(2, "Talos shrine defiance awarded without Concordat pressure for non-Imperial origin.")
@@ -11525,11 +11410,11 @@ Function HandleTalosShrineDefiance(String reason)
 EndFunction
 
 Function HandleThalmorUnprovokedKill(Form victimForm)
-    if IsAltmerOrigin()
-        HandleAltmerAlignmentSignal("kill_thalmor_agent", victimForm, "thalmor_unprovoked_kill")
-    elseIf GetPlayerOriginRaceIndex() == 1
-        ApplyImperialConcordatAction("kill_thalmor_justiciar_unprovoked", "thalmor_unprovoked_kill")
-    endIf
+    ; Mattered to Altmer (alignment) and Imperials (Concordat) for different reasons; every
+    ; other race ignored it. Both signals fire, only the live adapter answers one.
+    ; See references/authoring/PDV_2_0_ORIGIN_SwitchboardReversal.md for the original.
+    Manager.OriginRuntime.HandleContextualSignal("kill_thalmor_agent", "thalmor_unprovoked_kill", victimForm)
+    Manager.OriginRuntime.HandleContextualSignal("kill_thalmor_justiciar_unprovoked", "thalmor_unprovoked_kill", victimForm)
 EndFunction
 
 Bool Function IsSyrabaneSignalEligible()
@@ -11667,27 +11552,10 @@ Float Function GetBroadLaneScratchValue(Int origin)
 EndFunction
 
 Int Function GetBroadLaneServiceCount(Int origin)
-    if origin == Manager.ORIGIN_IMPERIAL
-        return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_IMPERIAL) as Int
-    elseIf origin == Manager.ORIGIN_BRETON
-        return GetBretonPracticeCount(GetBretonTraditionValue())
-    elseIf origin == Manager.ORIGIN_ORC
-        return StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount")
-    elseIf origin == Manager.ORIGIN_ALTMER
-        return StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count")
-    elseIf origin == Manager.ORIGIN_NORD
-        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
-            return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_NORD_NINE) as Int
-        endIf
-        return Manager.LedgerRuntime.GetBroadPantheonStanding(Manager.LedgerRuntime.BROAD_PANTHEON_NORD_OLD) as Int
-    elseIf origin == Manager.ORIGIN_BOSMER
-        return GetBosmerFavorSignalCount()
-    elseIf origin == Manager.ORIGIN_DUNMER
-        return StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount")
-    elseIf origin == Manager.ORIGIN_REDGUARD
-        return StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount")
-    endIf
-    return 0
+    ; 'origin' is vestigial: every caller passed the player's own race. Kept so call sites
+    ; are unchanged.
+    ; See references/authoring/PDV_2_0_ORIGIN_SwitchboardReversal.md for the original.
+    return Manager.OriginRuntime.GetOriginDetailValue("broad-lane-service-count")
 EndFunction
 
 Int Function GetBroadLaneTierForOrigin(Int origin)
@@ -11713,49 +11581,19 @@ Int Function GetBroadLaneTierForOrigin(Int origin)
 EndFunction
 
 String Function GetBroadLaneDisplayName(Int origin)
-    if origin == Manager.ORIGIN_IMPERIAL
-        return "The Divines' Regard"
-    elseIf origin == Manager.ORIGIN_ALTMER
-        return "Orthodox Faith"
-    elseIf origin == Manager.ORIGIN_BOSMER
-        return "Y'ffre's Broad Faith"
-    elseIf origin == Manager.ORIGIN_BRETON
-        return "Breton Tradition"
-    elseIf origin == Manager.ORIGIN_DUNMER
-        return "Reclamation Communion"
-    elseIf origin == Manager.ORIGIN_NORD
-        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
-            return "Faith of the Holds"
-        endIf
-        return "Old Ways"
-    elseIf origin == Manager.ORIGIN_ORC
-        return "Malacath's Code"
-    elseIf origin == Manager.ORIGIN_REDGUARD
-        return "Ancestors' Regard"
+    ; 'origin' is vestigial -- see GetBroadLaneServiceCount.
+    String laneName = Manager.OriginRuntime.GetOriginDetailLabel("broad-lane-name")
+    if laneName != ""
+        return laneName
     endIf
     return "Broad Faith"
 EndFunction
 
 String Function GetBroadLaneSymbol(Int origin)
-    if origin == Manager.ORIGIN_IMPERIAL
-        return "akatosh"
-    elseIf origin == Manager.ORIGIN_ALTMER
-        return "auri-el"
-    elseIf origin == Manager.ORIGIN_BOSMER
-        return "yffre"
-    elseIf origin == Manager.ORIGIN_BRETON
-        return "journal"
-    elseIf origin == Manager.ORIGIN_DUNMER
-        return "ancestor"
-    elseIf origin == Manager.ORIGIN_NORD
-        if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
-            return "akatosh"
-        endIf
-        return "kyne"
-    elseIf origin == Manager.ORIGIN_ORC
-        return "malacath"
-    elseIf origin == Manager.ORIGIN_REDGUARD
-        return "tu-whacca"
+    ; 'origin' is vestigial -- see GetBroadLaneServiceCount.
+    String laneSymbol = Manager.OriginRuntime.GetOriginDetailLabel("broad-lane-symbol")
+    if laneSymbol != ""
+        return laneSymbol
     endIf
     return "journal"
 EndFunction
@@ -11858,9 +11696,7 @@ Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
     StorageUtil.SetStringValue(None, "PDV.Creed.LastTalosBetrayalSource", sourceReason)
 
     Manager.LedgerRuntime.AwardPiety(Manager.PDV_Talos, pietyLoss, reason)
-    if originRace == Manager.ORIGIN_IMPERIAL
-        ApplyConcordatPressure(concordatPressure, reason)
-    endIf
+    Manager.OriginRuntime.HandleContextualSignal("concordat-pressure", reason, None, concordatPressure as Float)
 
     Manager.SendPrismaEventToast("creed", Manager.PDV_Talos, surfaceText, "", "")
     Manager.SurfaceTransition("creed", "Talos betrayal", "drop", Manager.PDV_Talos.DeityIndex, "betrayal")
@@ -11983,26 +11819,12 @@ Bool Function SendPrismaSubstrateToast(String substrate, String phase, String co
 EndFunction
 
 String Function GetMedallionSectionsJson(Int originRace)
-    if originRace == Manager.ORIGIN_NORD
-        return MedallionSection("native", "Native worship", GetNordMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_IMPERIAL
-        return MedallionSection("native", "Native worship", GetImperialMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_BRETON
-        return MedallionSection("native", "Native worship", GetBretonMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_ALTMER
-        return MedallionSection("native", "Native worship", GetAltmerMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_BOSMER
-        return MedallionSection("native", "Native worship", GetBosmerNativeMedallionEntriesJson()) + "," + MedallionSection("substrate_focus", "Path focus", GetBosmerFocusMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_DUNMER
-        return MedallionSection("native", "Native worship", GetDunmerMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_KHAJIIT
-        return MedallionSection("native", "Native worship", GetKhajiitMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_ARGONIAN
-        return MedallionSection("native", "Native worship", GetArgonianMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_ORC
-        return MedallionSection("native", "Native worship", GetOrcMedallionEntriesJson())
-    elseIf originRace == Manager.ORIGIN_REDGUARD
-        return MedallionSection("native", "Native worship", GetRedguardMedallionEntriesJson())
+    ; 'originRace' is vestigial. The adapter returns its OWN fully-wrapped sections, which is
+    ; how Bosmer emits two (native + path focus) without the base knowing it is Bosmer.
+    ; See references/authoring/PDV_2_0_ORIGIN_SwitchboardReversal.md for the original.
+    String sections = Manager.OriginRuntime.GetOriginDetailLabel("medallion-sections")
+    if sections != ""
+        return sections
     endIf
 
     return MedallionSection("native", "Native worship", Manager.MedallionEntry("unknown", "Devotion", "substrate", "journal", None, False, "Your origin is not settled yet.", "Once your origin is known, the medallion can show the roster your people can name.", "Origin readback is pending."))
@@ -12029,11 +11851,9 @@ Bool Function IsFocusedPantheonBoonSuspended()
 EndFunction
 
 String Function GetPlayerCursePublicLabel()
-    if GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
-        String altmerCurseLabel = GetAltmerCursePublicLabel()
-        if altmerCurseLabel != ""
-            return altmerCurseLabel
-        endIf
+    String originCurseLabel = Manager.OriginRuntime.GetOriginDetailLabel("curse-public-label")
+    if originCurseLabel != ""
+        return originCurseLabel
     endIf
 
     if Manager.PDV_CurseStateService
@@ -12043,7 +11863,7 @@ String Function GetPlayerCursePublicLabel()
         endIf
     endIf
 
-    if HasNordVampireScar()
+    if Manager.OriginRuntime.GetOriginDetailValue("vampire-scar") == 1
         return "Cured vampire scar"
     endIf
 
