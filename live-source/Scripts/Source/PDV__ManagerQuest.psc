@@ -733,6 +733,10 @@ PDV_OriginRuntimeBase Property OriginRuntime Auto
 ; The ten race adapters, in ORIGIN_* index order (NORD=0 .. REDGUARD=9). Exactly one is
 ; ever bound to OriginRuntime above, chosen by birth race in ResolveOriginRuntime().
 FormList Property PDV_FLST_OriginAdapters Auto
+
+; Which race OriginRuntime is currently bound to, or -1 for unbound. Compared against the
+; origin global every tick so the binding follows the race whenever it is finally captured.
+Int _boundOriginRace = -1
 PDV_DaedricRuntime Property DaedricRuntime Auto
 
 Int Property DebugCommand = 0 Auto
@@ -847,8 +851,19 @@ Bool Function ResolveOriginRuntime()
         return False
     endIf
 
+    ; TIMING, and it is the whole point of this function: the origin global defaults to -1 and
+    ; is only written by PDV_Origin.InitializeOrigin(), which MainQuest defers to a player
+    ; load/sleep ingress -- long AFTER this quest's OnInit. RaceMenu also reports Nord before
+    ; the player commits, so the first Nord read is deliberately discarded as provisional.
+    ; Binding once at OnInit therefore binds nothing (or a provisional Nord) and never corrects
+    ; itself. This is called every tick and rebinds the moment the captured race changes.
+
     Int raceIndex = PDV_GLO_OriginRace.GetValueInt()
     if raceIndex < ORIGIN_NORD || raceIndex > ORIGIN_REDGUARD
+        return False
+    endIf
+
+    if raceIndex == _boundOriginRace && OriginRuntime
         return False
     endIf
 
@@ -859,18 +874,39 @@ Bool Function ResolveOriginRuntime()
     endIf
 
     OriginRuntime = picked
+    _boundOriginRace = raceIndex
+    Trace(1, "Origin runtime bound to race index " + raceIndex)
+    OnOriginRuntimeBound()
     return True
 EndFunction
 
+; Per-race setup. This used to sit unconditionally in OnInit, where OriginRuntime was still
+; None because the race was not captured yet -- so every one of these None-errored and the
+; race package never ran. It now fires on each successful bind, and again on a re-capture or
+; a debug race switch. The Ensure* verbs are idempotent by contract, so repeating is safe.
+Function OnOriginRuntimeBound()
+    if !OriginRuntime
+        return
+    endIf
+    OriginRuntime.EnsureRuntimeWiring()
+    OriginRuntime.EnsureBosmerRuntimeWiring()
+    OriginRuntime.EnsureNordRuntimeWiring()
+    OriginRuntime.EnsureDunmerAncestralUrn()
+    OriginRuntime.EnsureAltmerPracticeFocus()
+    OriginRuntime.EnsureArgonianHistSapToken()
+    OriginRuntime.EnsureKhajiitObserveMoonsPower()
+    RequestPanelRefresh()
+EndFunction
+
 Event OnInit()
-    ; Must precede every OriginRuntime call below.
+    ; Attempted, but the race is NOT known yet at quest start (global is -1 until the
+    ; player-load/sleep ingress captures it), so this normally binds nothing. The real bind
+    ; happens from OnUpdate once the capture lands; per-race setup runs in OnOriginRuntimeBound.
     ResolveOriginRuntime()
     InitializePreflightState()
     EnsurePhase8RuntimeWiring()
     EnsureAkatoshRuntimeIdentity()
     LedgerRuntime.EnsureCanonicalDeityDisplayNames()
-    OriginRuntime.EnsureBosmerRuntimeWiring()
-    OriginRuntime.EnsureNordRuntimeWiring()
     RegisterManagerShoutSignals()
     LedgerRuntime.EnsureLikesDislikesTable()
     LedgerRuntime.EnsurePrinceLikesDislikesTable()
@@ -882,10 +918,6 @@ Event OnInit()
     FavorRuntime.UpdateContextualFavorRuntime()
     LedgerRuntime.UpdateDisfavorStingRuntime()
     EnsureSurveyDevotionPower()
-    OriginRuntime.EnsureDunmerAncestralUrn()
-    OriginRuntime.EnsureAltmerPracticeFocus()
-    OriginRuntime.EnsureArgonianHistSapToken()
-    OriginRuntime.EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     HandleDiegeticLoad("init")
     RegisterForSingleUpdate(1.0)
@@ -893,6 +925,12 @@ EndEvent
 
 Event OnUpdate()
     _optimizationTimerFires += 1
+
+    ; Bind the origin adapter as soon as the race is captured, and follow it if it changes.
+    ; Two cheap reads; the work only happens on an actual change.
+    if PDV_GLO_OriginRace && PDV_GLO_OriginRace.GetValueInt() != _boundOriginRace
+        ResolveOriginRuntime()
+    endIf
 
     ; Pass 5 Task 2 -- menu early-out. One native call in place of the ~15 StorageUtil and
     ; global reads below. Nothing this tick does can change while a menu owns the screen,
@@ -6795,7 +6833,6 @@ Bool Function DebugSetCurseProofOriginRace(Int originRace)
     LedgerRuntime.RefreshPatronMirrors()
     FavorRuntime.UpdateContextualFavorRuntime()
     LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    OriginRuntime.EnsureKhajiitObserveMoonsPower()
     RequestPanelRefresh()
     Trace(1, "Curse proof origin set to " + OriginRuntime.GetOriginRaceLabel(originRace) + " (" + originRace + ")")
     return True
