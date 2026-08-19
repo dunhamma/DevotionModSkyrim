@@ -28,7 +28,7 @@ is one-named-verb-per-signal, and it collapses almost entirely into a single key
 
 ## Decision
 
-**Option A -- a small generic virtual interface.** The base declares 18 virtuals with safe
+**Option A -- a small generic virtual interface.** The base declares 19 virtuals with safe
 inert defaults; each adapter overrides only what its race implements. Race identity becomes
 object identity: no race switchboard survives at the boundary.
 
@@ -165,7 +165,7 @@ behavior review narrows to the dispatch tables plus the remapped call sites.
 
 ## Consequences
 
-Good: 288 named cross-boundary verbs collapse to 18; the base's ~225 race comparisons go
+Good: 288 named cross-boundary verbs collapse to 19; the base's ~225 race comparisons go
 away with the lanes; `PDV_EventBus` loses 94 named calls; wrong-origin inertness becomes
 structural; the presentation surface in MCM is only 6 verbs, so the keyed detail accessors
 absorb it easily.

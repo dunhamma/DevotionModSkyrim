@@ -12105,3 +12105,92 @@ String Function GetOriginRaceLabel(Int originRace)
 EndFunction
 
 
+
+; ---------------------------------------------------------------------------
+; ADAPTER INTERFACE -- the base virtual surface (ADR: PDV_2_0_ADR_OriginAdapterInterface)
+;
+; These 19 verbs are the ONLY way a caller outside ORIGIN may reach race
+; behaviour. Each PDV_OriginRuntime_<Race> adapter overrides the ones its race
+; implements; every default below is deliberately inert, so a signal sent to the
+; wrong origin returns False / "" / 0 and changes nothing. Wrong-origin silence
+; is therefore structural rather than re-checked inside each handler.
+;
+; Adapter overrides DELEGATE to the existing named race functions, whose bodies
+; are unchanged -- that is what keeps the split provable against origin_golden.
+; ---------------------------------------------------------------------------
+
+; -- Lifecycle --
+Function ApplyInitialChoice()
+EndFunction
+
+Function EnsureRuntimeWiring()
+EndFunction
+
+Function ApplyCurseHandlers()
+EndFunction
+
+Function EvaluateAtDawn()
+EndFunction
+
+; -- State --
+String Function GetOriginStateLabel()
+    return ""
+EndFunction
+
+Int Function GetOriginStateValue()
+    return 0
+EndFunction
+
+String Function GetOriginSummary()
+    return ""
+EndFunction
+
+String Function GetSurveyFragment()
+    return ""
+EndFunction
+
+Bool Function IsRaceLaneNeglected()
+    return False
+EndFunction
+
+String Function GetOriginDetailLabel(String key)
+    return ""
+EndFunction
+
+Int Function GetOriginDetailValue(String key)
+    return 0
+EndFunction
+
+; -- Signals --
+Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+    return False
+EndFunction
+
+Function HandleLocationChange()
+EndFunction
+
+; -- Upkeep --
+Function SyncRaceRewards()
+EndFunction
+
+Function SyncNeglectSpells()
+EndFunction
+
+; -- Patron and offers --
+Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
+    return False
+EndFunction
+
+String Function GetFormalCommitmentOfferMessage()
+    return ""
+EndFunction
+
+; -- Presentation --
+Function ShowOriginNotification(String messageKey)
+EndFunction
+
+; -- Gain provider (ADR D1). Becomes the PDV_GainModifierProvider override when
+;    the seam lands; 1.0 is the identity factor, so it is inert until then. --
+Float Function GetProviderGainMultiplier(PDV_DeityBase deity, Int phase)
+    return 1.0
+EndFunction
