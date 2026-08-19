@@ -355,6 +355,34 @@
           "calledByModules": [
             "ORIGIN"
           ]
+        },
+        {
+          "name": "GetQrQueueTransactionActive",
+          "signature": "Bool Function GetQrQueueTransactionActive()",
+          "calledByModules": [
+            "LEDGER",
+            "ORIGIN"
+          ]
+        },
+        {
+          "name": "SetQrQueueNeedsCurseRefresh",
+          "signature": "Function SetQrQueueNeedsCurseRefresh(Bool value)",
+          "calledByModules": [
+            "LEDGER",
+            "ORIGIN"
+          ]
+        },
+        {
+          "name": "SetQrQueueNeedsBretonRewardSync",
+          "signature": "Function SetQrQueueNeedsBretonRewardSync(Bool value)",
+          "calledByModules": [
+            "ORIGIN"
+          ]
+        },
+        {
+          "name": "GetQrQueueNeedsBretonRewardSync",
+          "signature": "Bool Function GetQrQueueNeedsBretonRewardSync()",
+          "calledByModules": []
         }
       ],
       "privateCount": 15

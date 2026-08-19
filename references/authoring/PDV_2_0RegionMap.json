@@ -1001,6 +1001,34 @@
           "endLine": 298,
           "loc": 9,
           "callerCount": 1
+        },
+        {
+          "name": "GetQrQueueNeedsBretonRewardSync",
+          "startLine": 10609,
+          "endLine": 10611,
+          "loc": 3,
+          "callerCount": 0
+        },
+        {
+          "name": "GetQrQueueTransactionActive",
+          "startLine": 10577,
+          "endLine": 10579,
+          "loc": 3,
+          "callerCount": 8
+        },
+        {
+          "name": "SetQrQueueNeedsBretonRewardSync",
+          "startLine": 10613,
+          "endLine": 10615,
+          "loc": 3,
+          "callerCount": 4
+        },
+        {
+          "name": "SetQrQueueNeedsCurseRefresh",
+          "startLine": 10617,
+          "endLine": 10619,
+          "loc": 3,
+          "callerCount": 2
         }
       ],
       "properties": [
@@ -12241,20 +12269,6 @@
           "callerCount": 1
         },
         {
-          "name": "GetQrQueueNeedsBretonRewardSync",
-          "startLine": 10609,
-          "endLine": 10611,
-          "loc": 3,
-          "callerCount": 0
-        },
-        {
-          "name": "GetQrQueueTransactionActive",
-          "startLine": 10577,
-          "endLine": 10579,
-          "loc": 3,
-          "callerCount": 8
-        },
-        {
           "name": "GetRaceCurseSurfaceShown",
           "startLine": 10605,
           "endLine": 10607,
@@ -12372,20 +12386,6 @@
           "endLine": 10639,
           "loc": 3,
           "callerCount": 1
-        },
-        {
-          "name": "SetQrQueueNeedsBretonRewardSync",
-          "startLine": 10613,
-          "endLine": 10615,
-          "loc": 3,
-          "callerCount": 4
-        },
-        {
-          "name": "SetQrQueueNeedsCurseRefresh",
-          "startLine": 10617,
-          "endLine": 10619,
-          "loc": 3,
-          "callerCount": 2
         },
         {
           "name": "SetRaceCurseSurfaceShown",
