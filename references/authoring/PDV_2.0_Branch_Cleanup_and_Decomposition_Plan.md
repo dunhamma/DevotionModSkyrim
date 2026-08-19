@@ -160,3 +160,35 @@ Longer proof work:
 - Rebuild from final live state, reopen the archive, compare every entry, and publish count, size, SHA-256, proof buckets, and remaining manual debt.
 
 The 2.0 release is ready to ship only when authority, compile/static, houseCARL readback, fresh-game runtime, manual presentation, performance, and release-package buckets all pass independently.
+
+
+## 6. Housekeeping / ESP cleanup debt (tracked)
+
+### Strip the stale property fills off the manager QUST
+
+**Observed live 2026-08-19/20** on a fresh Nord save (Papyrus.0.log): a block of
+`Property <X> on script pdv__managerquest ... cannot be initialized because the script no
+longer contains that property` warnings on `PDV__ManagerQuest (00C325)`. These are orphaned
+VMAD property FILLS left on the manager QUST after earlier extraction phases moved the
+properties into other module scripts. Verified: for each sampled name the property is now
+declared on the LEDGER script, not the manager (`manager=0, ledger=1`), and no Phase A/B/C
+commit removed a manager property -- so this is pre-existing extraction debt, not a rebuild
+regression.
+
+Affected fills seen so far (non-exhaustive): deity refs `PDV_Kynareth`, `PDV_Dibella`,
+`PDV_Stendarr`, `PDV_Akatosh`, `PDV_Zen`; piety/patron globals `PDV_GLO_ActivePiety`,
+`PDV_GLO_ActiveDeityIndex`, `PDV_GLO_PatronState`, `PDV_GLO_PatronDeity`; disfavor spells
+`PDV_SPEL_Disfavor_*`; plus `PDV_FLST_AllDeities`, `PDV_ModePresetRef`, `WarlockFaction`,
+`necromancerFaction`. Matches the earlier estimate of ~34 stale fills / ~198 warnings.
+
+- **Impact:** harmless at runtime (the fill is ignored; the property works from its real home
+  on the ledger QUST -- Status/Book/piety all render correctly), but it directly violates the
+  section-5 acceptance criterion "zero missing-script/property warnings," so it must be cleared
+  before that bucket can pass.
+- **Action (supervised ESP write, D10):** for the `PDV__ManagerQuest` QUST VMAD, remove every
+  property fill whose name is no longer declared on the current `PDV__ManagerQuest.psc`. Derive
+  the keep-list from the live script's property declarations; delete only the orphans. Do the
+  same sweep for any other host QUST that carries fills for since-moved properties.
+- **Verify:** houseCARL readback of the manager QUST VMAD shows only in-script properties;
+  a fresh-save Papyrus log shows zero "cannot be initialized" warnings for `pdv__managerquest`.
+- **Status:** OPEN -- deferred to the Phase-6 property-consolidation / ESP cleanup pass.
