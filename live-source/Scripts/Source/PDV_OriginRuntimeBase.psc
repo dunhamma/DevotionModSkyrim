@@ -6337,7 +6337,7 @@ PDV_DeityBase Function GetBretonChampionSource(Bool isBreton, Int traditionValue
         return Manager.GetActiveDeity()
     endIf
     if isBreton && traditionValue == Manager.BRETON_TRADITION_HIDDEN_ART
-        PDV_DaedricPathBase activePact = Manager.GetActiveDaedricPactPath()
+        PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
         if activePact && activePact.GetStoredTier() >= Manager.LedgerRuntime.TIER_CHAMPION
             return activePact
         endIf
@@ -6937,7 +6937,7 @@ Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return deity == Manager.LedgerRuntime.PDV_Kynareth || deity == Manager.PDV_Talos || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Zenithar || deity == Manager.PDV_Magnus || deity == Manager.PDV_Yffre || Manager.IsBretonHiddenArtDaedricOfferDeity(deity)
+    return deity == Manager.LedgerRuntime.PDV_Kynareth || deity == Manager.PDV_Talos || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Zenithar || deity == Manager.PDV_Magnus || deity == Manager.PDV_Yffre || Manager.DaedricRuntime.IsBretonHiddenArtDaedricOfferDeity(deity)
 EndFunction
 
 Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity, Int newTier)
@@ -7634,7 +7634,7 @@ String Function GetBretonBookOfDaysPathStatusLabel()
     Int practiceTier = GetBretonPracticeTier(GetBretonTraditionValue())
     String status = traditionLabel + " Practice " + Manager.GetPublicTierBand(practiceTier)
 
-    PDV_DaedricPathBase activePact = Manager.GetActiveDaedricPactPath()
+    PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if activePact
         return status + " / " + Manager.NormalizePublicDeityDisplayText(activePact.DeityName) + " Pact"
     endIf
@@ -7647,7 +7647,7 @@ String Function GetBretonBookOfDaysPathStatusLabel()
 EndFunction
 
 String Function GetBretonPatronSurveySentence(Int traditionValue)
-    PDV_DaedricPathBase activePact = Manager.GetActiveDaedricPactPath()
+    PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if activePact
         String pactName = Manager.GetPublicDeityDisplayName(activePact)
         if traditionValue == Manager.BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= Manager.LedgerRuntime.TIER_CHAMPION

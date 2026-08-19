@@ -423,7 +423,7 @@ Function RouteMephalaWebWoven(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleMephalaWebWoven(reason)
+    PDV_Manager.DaedricRuntime.HandleMephalaWebWoven(reason)
     Trace(2, "RouteMephalaWebWoven complete: " + reason)
 EndFunction
 
@@ -438,7 +438,7 @@ Function RouteBoethiahHonorableDuel(String asSourceId = "")
         reason = reason + "_" + asSourceId
     endIf
 
-    PDV_Manager.HandleBoethiahHonorableDuel(reason)
+    PDV_Manager.DaedricRuntime.HandleBoethiahHonorableDuel(reason)
     Trace(2, "RouteBoethiahHonorableDuel complete: " + reason)
 EndFunction
 
@@ -539,7 +539,7 @@ Function RouteHircineHuntRite()
         eventType = eventTypes.EVT_HIRCINE_HUNT_RITE
     endIf
 
-    PDV_Manager.HandleHircineHuntRite("eventbus_" + eventType)
+    PDV_Manager.DaedricRuntime.HandleHircineHuntRite("eventbus_" + eventType)
     Trace(2, "RouteHircineHuntRite complete: " + eventType)
 EndFunction
 
@@ -1560,7 +1560,7 @@ Function RouteDaedricPrinceSignal(Int pathIndex, String sourceId)
         eventType = eventTypes.EVT_DAEDRIC_PRINCE_SIGNAL
     endIf
 
-    PDV_Manager.HandleDaedricPrinceSignal(pathIndex, "eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.DaedricRuntime.HandleDaedricPrinceSignal(pathIndex, "eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteDaedricPrinceSignal complete: " + eventType + " index " + pathIndex)
 EndFunction
 
@@ -1570,7 +1570,7 @@ Function RouteDaedricShrinePrayer(Int pathIndex, String sourceId)
         return
     endIf
 
-    PDV_Manager.HandleDaedricShrinePrayer(pathIndex, "eventbus_" + sourceId)
+    PDV_Manager.DaedricRuntime.HandleDaedricShrinePrayer(pathIndex, "eventbus_" + sourceId)
     Trace(2, "RouteDaedricShrinePrayer complete: index " + pathIndex)
 EndFunction
 
@@ -1586,7 +1586,7 @@ Function RouteDaedricGenericSilenceProbe(String sourceId)
         eventType = eventTypes.EVT_DAEDRIC_GENERIC_SILENCE
     endIf
 
-    PDV_Manager.HandleDaedricGenericSilenceProbe("eventbus_" + eventType + "_" + sourceId)
+    PDV_Manager.DaedricRuntime.HandleDaedricGenericSilenceProbe("eventbus_" + eventType + "_" + sourceId)
     Trace(2, "RouteDaedricGenericSilenceProbe complete: " + eventType)
 EndFunction
 
@@ -1679,7 +1679,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     endIf
 
     ; V2: also deepen any OPEN transgressive-Prince paths (separate fan-out; path's own piety).
-    PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)
+    PDV_Manager.DaedricRuntime.RouteActionToOpenPaths(eventType, actorRef, targetRef)
 
     Trace(2, "RouteAction complete: event " + eventType + ", scored deities " + scoredCount)
 EndFunction

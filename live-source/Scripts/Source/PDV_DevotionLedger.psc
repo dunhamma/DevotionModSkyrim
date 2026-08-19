@@ -161,7 +161,7 @@ Function EnsureCanonicalDeityDisplayNames()
     repaired += RepairDeityRuntimeName(Manager.PDV_Magnus, "Magnus")
     repaired += RepairDeityRuntimeName(Manager.PDV_Xarxes, "Xarxes")
     repaired += RepairDeityRuntimeName(Manager.PDV_Syrabane, "Syrabane")
-    repaired += Manager.RepairDaedricPathRuntimeNames()
+    repaired += Manager.DaedricRuntime.RepairDaedricPathRuntimeNames()
     if repaired > 0 && Manager.GetDebugLevel() >= 1
         Debug.Trace("[PDV] Canonical deity display names repaired: " + repaired)
     endIf
@@ -943,11 +943,11 @@ Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False
     ; Guarded on newDeity != None so SetActiveDeity(None) (the patron-teardown path,
     ; incl. the Prince-commit sever above) cannot re-enter this and double-clear.
     if newDeity != None
-        PDV_DaedricPathBase priorPact = Manager.GetActiveDaedricPactPath()
+        PDV_DaedricPathBase priorPact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
         if priorPact
             priorPact.ClearLiveDaedricPactSpells()
             StorageUtil.SetFormValue(None, "PDV.Daedric.ActivePact", None)
-            Manager.SurfaceSwitchSeverance("prince_to_patron", priorPact.DeityName)
+            Manager.DaedricRuntime.SurfaceSwitchSeverance("prince_to_patron", priorPact.DeityName)
         endIf
     endIf
 
@@ -1345,8 +1345,8 @@ Function LoadPrinceLikesDislikesTable()
     while pldIndex < pldCount
         PDV_DaedricPathBase pldPath = Manager.PDV_FLST_DaedricPaths_All.GetAt(pldIndex) as PDV_DaedricPathBase
         if pldPath
-            Manager.ClearPrinceRowsForPath(pldPath)
-            Manager.LoadPrinceRowsForPath(pldPath)
+            Manager.DaedricRuntime.ClearPrinceRowsForPath(pldPath)
+            Manager.DaedricRuntime.LoadPrinceRowsForPath(pldPath)
         endIf
         pldIndex += 1
     endWhile
@@ -1888,7 +1888,7 @@ Function ProcessDawn()
     RunDawnConsolidateScratch()
     ProcessBroadPantheonDawn()
     Manager.OriginRuntime.EvaluateKhajiitFocusedEmphasis()
-    Manager.RunDawnConsolidateDaedricWeek()
+    Manager.DaedricRuntime.RunDawnConsolidateDaedricWeek()
     RunDawnRefreshTrackStates()
     Manager.OriginRuntime.EvaluateAltmerCrisisAtDawn()
     RunDawnApplyDecayNoop()
@@ -2284,7 +2284,7 @@ Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
     if PDV_ModePresetRef
         decayScalar = PDV_ModePresetRef.DecayScalar()
     endIf
-    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * Manager.GetCurseGainMultiplier(deity) * Manager.GetDaedricStigmaGainMultiplier(deity) * decayScalar)
+    Float newPiety = currentPiety - (DECAY_PER_DAY * multiplier * deity.GetEffectiveDecayMultiplier() * Manager.GetCurseGainMultiplier(deity) * Manager.DaedricRuntime.GetDaedricStigmaGainMultiplier(deity) * decayScalar)
     Float floorValue = GetDecayFloorForDeity(deity, currentPiety)
     if newPiety < floorValue
         newPiety = floorValue
@@ -3259,7 +3259,7 @@ Float Function RunGainPipeline(PDV_DeityBase deity, Float amount, Int stance, Bo
             appliedAmount = appliedAmount * deity.GetEffectiveGainMultiplierWithoutStance()
         endIf
         appliedAmount = appliedAmount * Manager.GetCurseGainMultiplier(deity)
-        appliedAmount = appliedAmount * Manager.GetDaedricStigmaGainMultiplier(deity)
+        appliedAmount = appliedAmount * Manager.DaedricRuntime.GetDaedricStigmaGainMultiplier(deity)
         appliedAmount = appliedAmount * GetSurvivalContextGainMultiplier(deity)
         if PDV_ModePresetRef
             appliedAmount = appliedAmount * PDV_ModePresetRef.GainMultiplier()
@@ -4190,7 +4190,7 @@ Function HandleCurseStateRefresh(String reason)
         endIf
         if Manager.PDV_HircinePath
             Manager.PDV_HircinePath.UpdateResidueRecovery()
-            Manager.DrainHircineResiduePrismaToasts()
+            Manager.DaedricRuntime.DrainHircineResiduePrismaToasts()
         endIf
     endIf
 EndFunction
@@ -4265,7 +4265,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
                     Manager.AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now.", Utility.GetCurrentGameTime() as Int, "curse.onset", "hircine", False, 3)
                 endIf
                 Manager.PDV_HircinePath.UpdateResidueRecovery()
-                Manager.DrainHircineResiduePrismaToasts()
+                Manager.DaedricRuntime.DrainHircineResiduePrismaToasts()
             endIf
         endIf
     endIf

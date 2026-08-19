@@ -530,7 +530,7 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
     endIf
 
     ; V2: also deepen any OPEN transgressive-Prince paths (fallback path; EventBus does the same).
-    PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)
+    PDV_Manager.DaedricRuntime.RouteActionToOpenPaths(eventType, actorRef, targetRef)
 
     Trace(2, "RouteAction complete: event " + eventType + ", scored deities " + scoredCount)
 EndFunction

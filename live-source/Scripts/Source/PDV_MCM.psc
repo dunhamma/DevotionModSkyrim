@@ -3209,12 +3209,12 @@ Function DebugForceSelectedDaedricTier(Int tierValue)
             path.DebugSeatChampionSilently()
             TraceMcm(1, "Daedric Champion forced for " + path.DeityName + "; authored offer queued for after menu close.")
             if manager
-                manager.QueueDaedricMilestoneMcmReplay(path, 2, 3, "mcm_force_" + tierLabel)
+                manager.DaedricRuntime.QueueDaedricMilestoneMcmReplay(path, 2, 3, "mcm_force_" + tierLabel)
             endIf
         else
             Int oldTier = path.GetStoredTier()
             if manager && tierValue > 0
-                manager.QueueDaedricMilestonePresentation(path, oldTier, tierValue, "mcm_force_" + tierLabel)
+                manager.DaedricRuntime.QueueDaedricMilestonePresentation(path, oldTier, tierValue, "mcm_force_" + tierLabel)
             endIf
             if tierValue > 0
                 path.DebugForceCommitmentSignals(path.CommitmentSignalsRequired, "mcm_daedric_force_" + tierLabel)
