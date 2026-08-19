@@ -12120,13 +12120,13 @@ EndFunction
 ; ---------------------------------------------------------------------------
 
 ; -- Lifecycle --
-Function ApplyInitialChoice()
+Function ApplyInitialChoice(Int choiceValue, String reason)
 EndFunction
 
 Function EnsureRuntimeWiring()
 EndFunction
 
-Function ApplyCurseHandlers()
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
 EndFunction
 
 Function EvaluateAtDawn()
@@ -12153,20 +12153,20 @@ Bool Function IsRaceLaneNeglected()
     return False
 EndFunction
 
-String Function GetOriginDetailLabel(String key)
+String Function GetOriginDetailLabel(String detailKey)
     return ""
 EndFunction
 
-Int Function GetOriginDetailValue(String key)
+Int Function GetOriginDetailValue(String detailKey)
     return 0
 EndFunction
 
 ; -- Signals --
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     return False
 EndFunction
 
-Function HandleLocationChange()
+Function HandleLocationChange(Form newLocation = None)
 EndFunction
 
 ; -- Upkeep --
@@ -12181,12 +12181,15 @@ Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)
     return False
 EndFunction
 
-String Function GetFormalCommitmentOfferMessage()
-    return ""
+Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
+    return None
 EndFunction
 
 ; -- Presentation --
-Function ShowOriginNotification(String messageKey)
+Function ShowOriginNotification(Message messageRecord, String fallbackText)
+EndFunction
+
+Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
 EndFunction
 
 ; -- Gain provider (ADR D1). Becomes the PDV_GainModifierProvider override when
