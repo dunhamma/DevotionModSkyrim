@@ -1,7 +1,7 @@
 Scriptname PDV_OriginRuntime_Orc extends PDV_OriginRuntimeBase
 
 ; ORIGIN adapter -- Orc lane (tranche t5). Per
-; references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md: the base declares 19
+; references/authoring/PDV_2_0_ADR_OriginAdapterInterface.md: the base declares 21
 ; virtuals with inert defaults; this adapter overrides only what the Orc lane
 ; implements and delegates each override to the existing named Orc function,
 ; whose body is copied here VERBATIM so the split stays provable against
@@ -983,16 +983,24 @@ EndFunction
 ; verbatim lane function above -- the hand-reviewable dispatch layer the ADR
 ; calls out as the one part parity cannot cover.
 ;
-; NOT overridden here, deliberately: ApplyInitialChoice / ApplyCurseHandlers
-; (the frozen no-arg signatures cannot carry ApplyOrcInitialChoice's
-; modeValue+reason or ApplyOrcCurseHandlers' oldState+newState+reason),
-; IsOfferEligibleDeity and GetFormalCommitmentOfferMessage (Malacath is the
-; innate Orc spine -- there is no Orc offer lane). See the manifest.
+; NOT overridden here, deliberately: IsOfferEligibleDeity and
+; GetFormalCommitmentOfferMessage (Malacath is the innate Orc spine -- there is
+; no Orc offer lane, and no GetOrcFormalCommitmentOfferMessage exists), and
+; HandleContextualQuery (no Orc lane entry point returns a value a caller
+; outside ORIGIN consumes). See the manifest.
 ; ============================================================================
 
 ; -- Lifecycle --
+Function ApplyInitialChoice(Int choiceValue, String reason)
+    ApplyOrcInitialChoice(choiceValue, reason)
+EndFunction
+
 Function EnsureRuntimeWiring()
     EnsureOrcLifeModeInitialized()
+EndFunction
+
+Function ApplyCurseHandlers(Int oldState, Int newState, String reason)
+    ApplyOrcCurseHandlers(oldState, newState, reason)
 EndFunction
 
 Function EvaluateAtDawn()
@@ -1045,62 +1053,59 @@ Int Function GetOriginDetailValue(String detailKey)
 EndFunction
 
 ; -- Signals --
-; The frozen signature carries no `String reason`, so the dispatch substitutes
-; the signal id. That is a real (small) delta in stored reason / trace text and
-; is called out in the manifest for the ADR's hand behavior review.
-Bool Function HandleContextualSignal(String signalId, Form contextForm = None, Float magnitude = 0.0)
+; `reason` is threaded through UNCHANGED. It is caller-composed (the EventBus
+; builds "eventbus_" + eventType + "_" + sourceId) and it is player-visible in
+; the Ledger, so substituting the signalId here would silently rewrite stored
+; reason and trace text. The signalId selects the handler and nothing else.
+Bool Function HandleContextualSignal(String signalId, String reason = "", Form contextForm = None, Float magnitude = 0.0)
     if signalId == "sleep"
         Actor sleepActor = contextForm as Actor
         if !sleepActor
             sleepActor = Game.GetPlayer()
         endIf
-        HandleOrcSleepEvents(sleepActor, signalId)
+        HandleOrcSleepEvents(sleepActor, reason)
         return True
     elseIf signalId == "story-craft-forge"
         HandleOrcStoryCraftForge(contextForm as Location)
         return True
     elseIf signalId == "stronghold-forge"
-        HandleOrcStrongholdForge(signalId)
+        HandleOrcStrongholdForge(reason)
         return True
     elseIf signalId == "stronghold-presence"
-        HandleOrcStrongholdPresence(magnitude as Int, signalId)
+        HandleOrcStrongholdPresence(magnitude as Int, reason)
         return True
     elseIf signalId == "blood-kin-crisis"
-        HandleOrcBloodKinCrisis(signalId)
+        HandleOrcBloodKinCrisis(reason)
         return True
     elseIf signalId == "city-dignity"
-        HandleOrcCityDignity(signalId)
+        HandleOrcCityDignity(reason)
         return True
     elseIf signalId == "legion-service"
-        HandleOrcLegionService(signalId)
+        HandleOrcLegionService(reason)
         return True
     elseIf signalId == "self-made-community"
-        HandleOrcSelfMadeCommunity(signalId)
+        HandleOrcSelfMadeCommunity(reason)
         return True
     elseIf signalId == "malacath-conduct"
-        HandleOrcMalacathConduct(magnitude as Int, signalId)
+        HandleOrcMalacathConduct(magnitude as Int, reason)
         return True
     elseIf signalId == "oath-break"
-        HandleOrcOathBreak(signalId)
+        HandleOrcOathBreak(reason)
         return True
     elseIf signalId == "four-holds-visit"
-        HandleOrcFourHoldsVisit(magnitude as Int, signalId)
+        HandleOrcFourHoldsVisit(magnitude as Int, reason)
         return True
     endIf
 
     return False
 EndFunction
 
-; The frozen signature carries no Location, so the delegation reads the player's
-; current location. The live caller (PDV_ActionRouter.HandleStoryChangeLocation)
-; passes akNewLocation; see the manifest.
-Function HandleLocationChange()
-    Actor locationPlayer = Game.GetPlayer()
-    if !locationPlayer
-        return
-    endIf
-
-    HandleOrcLocationChange(locationPlayer.GetCurrentLocation())
+; The caller's own location is passed in and used as-is -- the live caller
+; (PDV_ActionRouter.HandleStoryChangeLocation) hands over akNewLocation. Nothing
+; is re-sampled from Game.GetPlayer().GetCurrentLocation() any more, so the
+; earlier "not provably the caller's akNewLocation" concern is gone.
+Function HandleLocationChange(Form newLocation = None)
+    HandleOrcLocationChange(newLocation as Location)
 EndFunction
 
 ; -- Upkeep --
@@ -1113,14 +1118,19 @@ Function SyncNeglectSpells()
 EndFunction
 
 ; -- Presentation --
-Function ShowOriginNotification(String messageKey)
-    if messageKey == "hearth-held"
-        MaybeShowOrcHearthHeldNotice(messageKey)
-    elseIf messageKey == "hearth-held-missed-cadence"
-        MaybeShowOrcHearthHeldMissedCadenceNotice()
-    elseIf messageKey == "watchers"
-        MaybeShowOrcWatchersNotice(GetActiveOrcRewardMode(), messageKey)
-    endIf
+; Corrected signatures: the real Orc notifiers take a Message RECORD plus a
+; fallback string, and a modal variant exists. The earlier keyed
+; ShowOriginNotification(String) form was written against the pre-correction
+; interface and is replaced here. Nothing is lost by that: the three keys it
+; dispatched (MaybeShowOrcHearthHeldNotice / ...MissedCadenceNotice /
+; MaybeShowOrcWatchersNotice) have no caller outside ORIGIN -- they are only
+; reached from inside the lane bodies above.
+Function ShowOriginNotification(Message messageRecord, String fallbackText)
+    ShowOrcNotification(messageRecord, fallbackText)
+EndFunction
+
+Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)
+    ShowOrcMessage(messageRecord, fallbackText, suppressModal)
 EndFunction
 
 ; -- Gain provider (ADR D1) --
