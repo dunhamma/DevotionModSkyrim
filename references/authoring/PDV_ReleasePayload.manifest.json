@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
   "expectedEntryCount": 269,
-  "scriptPairCount": 116,
+  "scriptPairCount": 117,
   "releaseMetadata": [
     "CHANGELOG.txt",
     "README.txt"
@@ -98,6 +98,7 @@
     "Scripts/PDV_Deity_Zen.pex",
     "Scripts/PDV_Deity_Zenithar.pex",
     "Scripts/PDV_DevotionLedger.pex",
+    "Scripts/PDV_RecognitionRuntime.pex",
     "Scripts/PDV_DevotionRules.pex",
     "Scripts/PDV_DiegeticDeps.pex",
     "Scripts/PDV_DiegeticDirector.pex",
@@ -219,6 +220,7 @@
     "PDV_Deity_Zen",
     "PDV_Deity_Zenithar",
     "PDV_DevotionLedger",
+    "PDV_RecognitionRuntime",
     "PDV_DevotionRules",
     "PDV_DiegeticDeps",
     "PDV_DiegeticDirector",

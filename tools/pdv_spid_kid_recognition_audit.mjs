@@ -3,8 +3,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { familySourceText } from "./lib/pdv_symbol_home.mjs";
-
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE_ROOT = path.join(root, "live-source", "Scripts", "Source");
 const read = (...parts) => fs.readFileSync(path.join(root, ...parts), "utf8");
@@ -70,15 +68,18 @@ for (const kidPath of kidPaths) {
   }
 }
 
-const manager = familySourceText(root, SOURCE_ROOT);
+const manager = read("live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const recognitionRuntime = read("live-source", "Scripts", "Source", "PDV_RecognitionRuntime.psc");
+const ledger = read("live-source", "Scripts", "Source", "PDV_DevotionLedger.psc");
 const playerEvents = read("live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 const mcm = read("live-source", "Scripts", "Source", "PDV_MCM.psc");
 for (const token of [
   "PDV.Recognition.Claim", "PDV.Recognition.Release", "PDV.Recognition.State",
   "RECOGNITION_REACTION_NEUTRAL = 0", "RECOGNITION_REACTION_ENEMY = 1",
   "RECOGNITION_REACTION_ALLY = 2", "RECOGNITION_REACTION_FRIEND = 3",
-  "Function HandleKIDAction", "ConsumeDailyRepeatMultiplier(\"PDV.Signal.KID.\"",
-]) requireTrue(manager.includes(token), `manager contains ${token}`);
+]) requireTrue(recognitionRuntime.includes(token), `recognition runtime contains ${token}`);
+for (const token of ["Function HandleKIDAction", "ConsumeDailyRepeatMultiplier(\"PDV.Signal.KID.\""])
+  requireTrue(manager.includes(token), `manager contains ${token}`);
 for (const token of [
   "Faction _recognitionPlayerFaction = None",
   "Faction[] _recognitionCohortFactions",
@@ -87,18 +88,18 @@ for (const token of [
   "_recognitionCohortFactions[identityIndex] = Game.GetFormFromFile",
   "Bool recognitionEnabled = NpcReligiousRecognitionEnabled()",
   "Bool hostileRecognitionEnabled = NpcHostileRecognitionEnabled()",
-]) requireTrue(manager.includes(token), `manager recognition cache contains ${token}`);
+]) requireTrue(recognitionRuntime.includes(token), `recognition runtime cache contains ${token}`);
 requireTrue(
-  !manager.includes('return Game.GetFormFromFile(0x00071756, "Devotion.esp") as Faction') &&
-    !manager.includes('return Game.GetFormFromFile(0x00071757 + identityIndex, "Devotion.esp") as Faction'),
+  !recognitionRuntime.includes('return Game.GetFormFromFile(0x00071756, "Devotion.esp") as Faction') &&
+    !recognitionRuntime.includes('return Game.GetFormFromFile(0x00071757 + identityIndex, "Devotion.esp") as Faction'),
   "recognition getters do not repeat owned-form lookups",
 );
 requireTrue((manager.match(/sourceForm\.GetName\(\)/g) ?? []).length === 1, "KID source name resolves once per action");
 
-const syncRecognition = functionBlock(manager, "SyncNpcReligiousRecognition");
-const surfaceRecognition = functionBlock(manager, "SurfaceNpcRecognitionTransition");
-const recognitionPayload = functionBlock(manager, "GetNpcRecognitionPanelJson");
-const recognitionAdvisory = functionBlock(manager, "GetNpcRecognitionAdvisory");
+const syncRecognition = functionBlock(recognitionRuntime, "SyncNpcReligiousRecognition");
+const surfaceRecognition = functionBlock(recognitionRuntime, "SurfaceNpcRecognitionTransition");
+const recognitionPayload = functionBlock(recognitionRuntime, "GetNpcRecognitionPanelJson");
+const recognitionAdvisory = functionBlock(recognitionRuntime, "GetNpcRecognitionAdvisory");
 const focusedPanel = functionBlock(manager, "PushDevotionPanel");
 const updateEvent = eventBlock(manager, "OnUpdate");
 const compatPage = functionBlock(mcm, "BuildCompatPage");
@@ -107,8 +108,8 @@ requireTrue(syncRecognition.length > 0, "recognition sync function is present");
 requireTrue(surfaceRecognition.length > 0, "recognition transition presentation function is present");
 requireTrue(recognitionPayload.length > 0, "focused-panel recognition payload builder is present");
 requireTrue(
-  manager.includes('"PDV.Recognition.LastPresentedSignature"') &&
-    manager.includes('"PDV.Recognition.LastSignature"'),
+  recognitionRuntime.includes('"PDV.Recognition.LastPresentedSignature"') &&
+    recognitionRuntime.includes('"PDV.Recognition.LastSignature"'),
   "presentation dedupe is stored separately from relation-sync dedupe",
 );
 requireTrue(
@@ -147,7 +148,7 @@ const npcScanTokens = [
   "GetNthRef",
   "GetNumReferenceAliases",
 ];
-const recognitionSection = manager.slice(manager.indexOf("; SPID religious recognition"));
+const recognitionSection = recognitionRuntime;
 requireTrue(
   npcScanTokens.every((token) => !recognitionSection.includes(token)),
   "recognition state changes do not scan nearby or loaded NPCs",
@@ -157,7 +158,7 @@ for (const field of ["enabled", "managed", "status", "identity", "band", "adviso
   requireTrue(recognitionPayload.includes(`\\\"${field}\\\"`), `focused-panel recognition payload contains ${field}`);
 }
 requireTrue(
-  focusedPanel.includes(',\\"recognition\\":') && focusedPanel.includes("GetNpcRecognitionPanelJson()"),
+  focusedPanel.includes(',\\"recognition\\":') && focusedPanel.includes("RecognitionRuntime.GetNpcRecognitionPanelJson()"),
   "player-requested focused panel carries persistent recognition state",
 );
 requireTrue(
@@ -173,9 +174,44 @@ requireTrue(
   "focused-panel recognition state distinguishes disabled, external-owner, and below-Faithful states",
 );
 requireTrue(
-  compatPage.includes('AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)') &&
-    !/if\s+devMode\s+AddTextOption\("Current",\s*PDV_Manager\.GetNpcRecognitionStatusLine\(\)/i.test(compatPage),
+  compatPage.includes('AddTextOption("Current", PDV_Manager.RecognitionRuntime.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)') &&
+    !/if\s+devMode\s+AddTextOption\("Current",\s*PDV_Manager\.RecognitionRuntime\.GetNpcRecognitionStatusLine\(\)/i.test(compatPage),
   "MCM Current recognition line is visible outside developer mode",
+);
+requireTrue(
+  recognitionRuntime.includes("Scriptname PDV_RecognitionRuntime extends Quest") &&
+    recognitionRuntime.includes("PDV__ManagerQuest Property Manager Auto") &&
+    manager.includes("PDV_RecognitionRuntime Property RecognitionRuntime Auto"),
+  "recognition runtime owns a deep Quest module with one manager backref",
+);
+for (const name of [
+  "NpcReligiousRecognitionEnabled", "NpcHostileRecognitionEnabled", "SetNpcReligiousRecognitionEnabled",
+  "SetNpcHostileRecognitionEnabled", "GetNpcRecognitionStatusLine", "GetNpcRecognitionPanelJson",
+  "EnsureRecognitionModEvents", "InvalidateNpcReligiousRecognition", "SyncNpcReligiousRecognition",
+]) {
+  requireTrue(!functionBlock(manager, name), `manager no longer defines recognition function ${name}`);
+}
+requireTrue(
+  !manager.includes("Faction _recognitionPlayerFaction") &&
+    !manager.includes("Faction[] _recognitionCohortFactions") &&
+    !manager.includes("Bool _recognitionFormsResolved"),
+  "manager no longer owns recognition form cache",
+);
+for (const token of [
+  "RecognitionRuntime.EnsureRecognitionModEvents()",
+  "RecognitionRuntime.GetNpcRecognitionPanelJson()",
+  "RecognitionRuntime.InvalidateNpcReligiousRecognition()",
+  "RecognitionRuntime.SyncNpcReligiousRecognition()",
+]) requireTrue(manager.includes(token), `manager routes recognition through ${token}`);
+for (const token of [
+  "PDV_Manager.RecognitionRuntime.SetNpcReligiousRecognitionEnabled",
+  "PDV_Manager.RecognitionRuntime.SetNpcHostileRecognitionEnabled",
+  "PDV_Manager.RecognitionRuntime.GetNpcRecognitionStatusLine",
+]) requireTrue(mcm.includes(token), `MCM routes recognition through ${token}`);
+requireTrue(
+  (ledger.match(/Manager\.RecognitionRuntime\.SyncNpcReligiousRecognition\(\)/g) ?? []).length === 2 &&
+    !ledger.includes("Manager.SyncNpcReligiousRecognition()"),
+  "ledger routes both recognition sync calls through the module",
 );
 for (const token of ["RouteKIDEquippedAction", "RouteKIDTrophyPickup", "RouteKIDRemovedAction", "RegisterForMenu(\"BarterMenu\")"])
   requireTrue(playerEvents.includes(token), `player ingress contains ${token}`);

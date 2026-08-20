@@ -67,8 +67,8 @@ Phase 20 / Phase 21 status is unchanged by the release: 1.0.4 is a defect-and-co
 not a content build, so the open Phase 20 runtime/placement lane and the Phase 21
 Authoria-first compatibility lane below still stand as written.
 
-Current V3 module-decomposition addendum (2026-08-20): **ORIGIN is extracted at the
-static/compile/readback boundary.** `PDV_OriginRuntimeBase` is now the polymorphic
+Current V3 module-decomposition addendum (2026-08-20): **ORIGIN and RECOGNITION are
+extracted at the static/compile/readback boundary.** `PDV_OriginRuntimeBase` is the polymorphic
 interface/shared implementation and ten `PDV_OriginRuntime_<Race>` quests own the race
 lanes. `PDV__ManagerQuest.ResolveOriginRuntime` deliberately fills the unbound
 `OriginRuntime` property at runtime from `PDV_FLST_OriginAdapters`, reselecting when the
@@ -87,7 +87,19 @@ hash equality. Runtime/manual proof remains separate: Altmer/Baan Dar negative s
 race-change foreign-strip/no-double-dip, MCM open-time tab refresh, recognition-off silence,
 and final formal-offer wording. The `e739f79f` cast report is a reconciled historical
 baseline; full regeneration is deferred until the remaining modules land to avoid repeated
-authority churn. Next extraction order remains RECOGNITION, PRISMA, then DEBUG/MCM.
+authority churn. `PDV_RecognitionRuntime` now owns all 31 NPC-recognition functions, its
+three-form cache, mod-event arbitration, identity/band resolution, faction reactions, and
+transition presentation. Manager, ledger, and MCM callers route through the typed module;
+the dedicated StartGameEnabled host QUST (`07179F`) and both Manager backrefs are directly
+read back, and the 56-entry SEQ includes the host. Its four-script compile is 0/0, the
+extraction-aware SPID/KID recognition audit passes all 58 rules, and VMAD is 205/205 with
+zero unwaived findings. `PDV_Msg_Altmer_VampireExiledPath_Recognition` remains an ORIGIN
+message despite its historical name; it is not NPC-recognition ownership. Runtime/manual
+proof remains open for claim/release/state events, MCM toggles, faction reactions,
+recognition-off silence, panel JSON, and save/load persistence. The full verifier currently
+has 37 known decomposition-era gate failures (primarily ORIGIN call-home/readback drift),
+which are triaged for the post-module integration sweep rather than churned per module.
+Next extraction order is PRISMA, then DEBUG/MCM.
 
 Current v3.100 addendum: the 2026-07-14 bug-report cluster is adjudicated and its
 fix pass EXECUTED (authority: Part D of

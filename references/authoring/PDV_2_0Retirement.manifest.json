@@ -17436,11 +17436,11 @@
       "symbol": "PDV_Msg_Altmer_VampireExiledPath_Recognition",
       "kind": "property",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_RecognitionRuntime",
+      "targetModule": "PDV_OriginRuntimeBase",
       "action": "extract",
-      "adjudication": "clear",
-      "evidence": "live-source L469 (Message)",
-      "notes": ""
+      "adjudication": "reviewed",
+      "evidence": "PDV_OriginRuntime_Altmer consumes the message for the Altmer vampire Exiled-path transition; NPC recognition does not read it.",
+      "notes": "Corrected during RECOGNITION extraction. The word Recognition names an Altmer origin-path acknowledgement, not the SPID NPC-recognition subsystem. It remains manager-hosted reach-through until ORIGIN property migration is revisited."
     },
     {
       "symbol": "PDV_Msg_Altmer_CurseState_WerewolfHardHalt",

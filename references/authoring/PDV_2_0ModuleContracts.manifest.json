@@ -3613,6 +3613,41 @@
       "callForm": "RecognitionRuntime.<fn> (instance)",
       "public": [
         {
+          "name": "NpcReligiousRecognitionEnabled",
+          "signature": "Bool Function NpcReligiousRecognitionEnabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "NpcHostileRecognitionEnabled",
+          "signature": "Bool Function NpcHostileRecognitionEnabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "SetNpcReligiousRecognitionEnabled",
+          "signature": "Function SetNpcReligiousRecognitionEnabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "SetNpcHostileRecognitionEnabled",
+          "signature": "Function SetNpcHostileRecognitionEnabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "GetNpcRecognitionStatusLine",
+          "signature": "String Function GetNpcRecognitionStatusLine()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "EnsureRecognitionModEvents",
           "signature": "Function EnsureRecognitionModEvents()",
           "calledByModules": [
@@ -3642,7 +3677,7 @@
           ]
         }
       ],
-      "privateCount": 27
+      "privateCount": 22
     },
     "MANAGER": {
       "targetScript": "PDV__ManagerQuest",

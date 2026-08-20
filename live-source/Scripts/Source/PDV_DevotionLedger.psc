@@ -1230,7 +1230,7 @@ Function RefreshPatronMirrors()
         PDV_GLO_ActivePiety.SetValue(0.0)
         PDV_GLO_ActiveTier.SetValue(TIER_NONE as Float)
         PDV_GLO_ActiveDeityIndex.SetValue(-1.0)
-        Manager.SyncNpcReligiousRecognition()
+        Manager.RecognitionRuntime.SyncNpcReligiousRecognition()
         return
     endIf
 
@@ -1240,7 +1240,7 @@ Function RefreshPatronMirrors()
     PDV_GLO_ActivePiety.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Piety"))
     PDV_GLO_ActiveTier.SetValue(StorageUtil.GetFloatValue(deityForm, "PDV.Tier"))
     PDV_GLO_ActiveDeityIndex.SetValue(Manager.GetActiveDeity().DeityIndex as Float)
-    Manager.SyncNpcReligiousRecognition()
+    Manager.RecognitionRuntime.SyncNpcReligiousRecognition()
 EndFunction
 
 Function SetPatronState(Int patronState)

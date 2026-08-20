@@ -962,7 +962,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidNpcRecognition
         if EnsureManagerBinding("toggle_npc_recognition")
-            PDV_Manager.SetNpcReligiousRecognitionEnabled(!PDV_Manager.NpcReligiousRecognitionEnabled())
+            PDV_Manager.RecognitionRuntime.SetNpcReligiousRecognitionEnabled(!PDV_Manager.RecognitionRuntime.NpcReligiousRecognitionEnabled())
         endIf
         ForcePageReset()
         return
@@ -970,7 +970,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidNpcHostileRecognition
         if EnsureManagerBinding("toggle_npc_hostile_recognition")
-            PDV_Manager.SetNpcHostileRecognitionEnabled(!PDV_Manager.NpcHostileRecognitionEnabled())
+            PDV_Manager.RecognitionRuntime.SetNpcHostileRecognitionEnabled(!PDV_Manager.RecognitionRuntime.NpcHostileRecognitionEnabled())
         endIf
         ForcePageReset()
         return
@@ -2141,9 +2141,9 @@ Function BuildCompatPage()
 
     AddHeaderOption("NPC Recognition", OPTION_FLAG_NONE)
     if PDV_Manager
-        _oidNpcRecognition = AddTextOption("Religious recognition", OnOffLabel(PDV_Manager.NpcReligiousRecognitionEnabled()), OPTION_FLAG_NONE)
-        _oidNpcHostileRecognition = AddTextOption("Hard-rival reactions", OnOffLabel(PDV_Manager.NpcHostileRecognitionEnabled()), OPTION_FLAG_NONE)
-        AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
+        _oidNpcRecognition = AddTextOption("Religious recognition", OnOffLabel(PDV_Manager.RecognitionRuntime.NpcReligiousRecognitionEnabled()), OPTION_FLAG_NONE)
+        _oidNpcHostileRecognition = AddTextOption("Hard-rival reactions", OnOffLabel(PDV_Manager.RecognitionRuntime.NpcHostileRecognitionEnabled()), OPTION_FLAG_NONE)
+        AddTextOption("Current", PDV_Manager.RecognitionRuntime.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
     else
         AddTextOption("Religious recognition", "Unavailable", OPTION_FLAG_DISABLED)
         AddTextOption("Hard-rival reactions", "Unavailable", OPTION_FLAG_DISABLED)

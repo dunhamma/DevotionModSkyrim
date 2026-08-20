@@ -4646,6 +4646,10 @@
           "line": 468
         },
         {
+          "name": "PDV_Msg_Altmer_VampireExiledPath_Recognition",
+          "line": 469
+        },
+        {
           "name": "PDV_Msg_Altmer_CurseState_WerewolfHardHalt",
           "line": 470
         },
@@ -10901,10 +10905,6 @@
         }
       ],
       "properties": [
-        {
-          "name": "PDV_Msg_Altmer_VampireExiledPath_Recognition",
-          "line": 469
-        },
         {
           "name": "RECOGNITION_REACTION_NEUTRAL",
           "line": 27263
