@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
+import { readVmadScriptProperties } from "./lib/pdv_housecarl_vmad.mjs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 import { familySourceText } from "./lib/pdv_symbol_home.mjs";
@@ -27,12 +28,6 @@ const expectedProperties = [
   "PDV_Bless_Nord_NineDivines_T2",
 ];
 
-// Appended manager VMAD properties (Nine Divines, Observe-Moons, QuestReaction, etc.)
-// sit beyond houseCARL's bounded generic container expansion. Request the explicit
-// manager-module window through property 515 and resolve the values BY NAME
-// (parseProperties maps Name->Object). Widen this window when new manager properties land.
-const MANAGER_PROPERTY_WINDOW = Array.from({ length: 75 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${440 + i}]`);
-
 function normalizeFormKey(value) {
   const match = String(value ?? "").trim().match(/^([0-9A-Fa-f]{6}):(.+)$/);
   return match ? `${match[1].toUpperCase()}:${match[2].toLowerCase()}` : String(value ?? "").trim().toLowerCase();
@@ -44,23 +39,6 @@ function parseInventory(text) {
     rows.set(match[2], match[1]);
   }
   return rows;
-}
-
-function parseProperties(text, prefix = "VirtualMachineAdapter.Scripts[0].Properties") {
-  const names = new Map();
-  const out = new Map();
-  const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  for (const line of String(text).split(/\r?\n/)) {
-    const name = line.match(new RegExp(`${escaped}\\[(\\d+)\\](?:\\.Name)?\\s*=.*?Name=(PDV_[A-Za-z0-9_]+)`));
-    if (name) names.set(name[1], name[2]);
-    const scalarName = line.match(new RegExp(`${escaped}\\[(\\d+)\\]\\.Name\\s*=\\s*(PDV_[A-Za-z0-9_]+)`));
-    if (scalarName) names.set(scalarName[1], scalarName[2]);
-  }
-  for (const line of String(text).split(/\r?\n/)) {
-    const object = line.match(new RegExp(`${escaped}\\[(\\d+)\\]\\.Object\\s*=\\s*([0-9A-Fa-f]{6}:[^\\s\\r\\n]+)`));
-    if (object && names.has(object[1])) out.set(names.get(object[1]), object[2]);
-  }
-  return out;
 }
 
 function functionBlock(source, functionName) {
@@ -76,21 +54,13 @@ async function main() {
     plugins: ["Devotion.esp"], type: "SPEL", editorid_contains: "PDV_Bless_", fields: ["EditorID"], limit: 500, max_chars: 120_000,
   });
   const inventory = parseInventory(extractHousecarlText(inventoryResult));
-  const managerResult = await callHousecarl("housecarl_read_record", {
-    formid: "00C325:Devotion.esp", fields: [
-      "VirtualMachineAdapter.Scripts[0].Properties",
-      ...MANAGER_PROPERTY_WINDOW,
-    ], depth: 3, max_chars: 400_000,
-  }, { timeoutMs: 90_000 });
-  const managerProperties = parseProperties(extractHousecarlText(managerResult));
-  const appendedResult = await callHousecarl("housecarl_batch_record_detail", {
-    formids: ["00C325:Devotion.esp"],
-    fields: MANAGER_PROPERTY_WINDOW,
-    depth: 3,
-    max_chars: 180_000,
-  }, { timeoutMs: 90_000 });
-  const appendedProperties = parseProperties(extractHousecarlText(appendedResult));
-  for (const [name, target] of appendedProperties) managerProperties.set(name, target);
+  const managerReadback = await readVmadScriptProperties({ formid: "00C325:Devotion.esp" });
+  const managerProperties = managerReadback.properties;
+  if (managerReadback.duplicates.size) {
+    fail("manager VMAD uniqueness", `Duplicate manager properties: ${[...managerReadback.duplicates.keys()].join(", ")}.`);
+  } else {
+    pass("manager VMAD uniqueness", `All ${managerReadback.count} manager VMAD property names are unique.`);
+  }
 
   for (const property of expectedProperties) {
     const record = inventory.get(property);

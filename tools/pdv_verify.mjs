@@ -365,10 +365,13 @@ const PHASE18_RECORDS = {
 };
 
 const PHASE18_MANAGER_PROPERTIES = {
-  PDV_SPEL_SurveyDevotion: "PDV_SPEL_SurveyDevotion",
   PDV_Msg_Nord_CurseState_WerewolfOnset: "PDV_Msg_Nord_CurseState_WerewolfOnset",
   PDV_Msg_Nord_CurseState_VampireOnset: "PDV_Msg_Nord_CurseState_VampireOnset",
   PDV_Msg_Nord_CurseState_VampireCured: "PDV_Msg_Nord_CurseState_VampireCured",
+};
+
+const PHASE18_PRISMA_PROPERTIES = {
+  PDV_SPEL_SurveyDevotion: "PDV_SPEL_SurveyDevotion",
 };
 
 const PHASE18_EFFECT_PROPERTIES = {
@@ -761,6 +764,17 @@ const COMPILED_SCRIPTS = {
 };
 
 const MANAGER_PROPERTIES = {
+  PDV_QuestReactionRuntimeService: "PDV_QuestReactionRuntime",
+  FavorRuntime: "PDV_ContextualFavorRuntime",
+  LedgerRuntime: "PDV_DevotionLedger",
+  DaedricRuntime: "PDV_DaedricRuntime",
+  PDV_FLST_OriginAdapters: "PDV_FLST_OriginAdapters",
+  RecognitionRuntime: "PDV_RecognitionRuntime",
+  Prisma: "PDV_PrismaPresenter",
+  DebugRuntime: "PDV_DebugRuntime",
+};
+
+const LEDGER_PROPERTIES = {
   PDV_GLO_ActivePiety: "PDV_GLO_ActivePiety",
   PDV_GLO_ActiveTier: "PDV_GLO_ActiveTier",
   PDV_GLO_ActiveDeityIndex: "PDV_GLO_ActiveDeityIndex",
@@ -769,7 +783,7 @@ const MANAGER_PROPERTIES = {
   PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
 };
 
-const MANAGER_PREFLIGHT_PROPERTIES = {
+const LEDGER_PREFLIGHT_PROPERTIES = {
   PDV_GLO_PatronState: "PDV_GLO_PatronState",
 };
 
@@ -3017,6 +3031,13 @@ class Verifier {
       return;
     }
     this.checkObjectProperties("Phase 18 manager property", propertyMap(script), PHASE18_MANAGER_PROPERTIES);
+    const prismaDetail = this.recordDetails.get("PDV_PrismaPresenter");
+    const prismaScript = prismaDetail ? findScript(prismaDetail.fields || {}, "PDV_PrismaPresenter") : null;
+    if (!prismaScript) {
+      this.phase18Gap("Phase 18 Prisma property", "PDV_PrismaPresenter script readback is missing.", PDV_ESP);
+    } else {
+      this.checkObjectProperties("Phase 18 Prisma property", propertyMap(prismaScript), PHASE18_PRISMA_PROPERTIES);
+    }
   }
 
   checkPhase18SurveyEffectRecord() {
@@ -8221,16 +8242,25 @@ class Verifier {
     const props = propertyMap(script);
     this.checkObjectProperties("Manager property", props, MANAGER_PROPERTIES);
 
+    const ledgerDetail = this.recordDetails.get("PDV_DevotionLedger");
+    const ledgerScript = ledgerDetail ? findScript(ledgerDetail.fields || {}, "PDV_DevotionLedger") : null;
+    if (!ledgerScript) {
+      this.fail("Ledger script", "PDV_DevotionLedger script readback is missing.", PDV_ESP);
+    } else {
+      this.pass("Ledger script", "PDV_DevotionLedger script is attached to its module host.", PDV_ESP);
+      const ledgerProps = propertyMap(ledgerScript);
+      this.checkObjectProperties("Ledger property", ledgerProps, LEDGER_PROPERTIES);
+      if (this.recordsByEdid.has("PDV_GLO_PatronState")) {
+        this.checkObjectProperties("Ledger preflight property", ledgerProps, LEDGER_PREFLIGHT_PROPERTIES);
+      } else {
+        this.preflightGap("Ledger preflight property", "PDV_GLO_PatronState is script-ready but CK/global wiring is pending.", PDV_ESP);
+      }
+    }
+
     if (props.has("PDV_Faction_Hunted_Vigilant")) {
       this.fail("Retired manager property", "PDV_Faction_Hunted_Vigilant remains serialized in the manager VMAD after its Papyrus declaration was retired.", PDV_ESP);
     } else {
       this.pass("Retired manager property", "PDV_Faction_Hunted_Vigilant is absent from the manager VMAD.", PDV_ESP);
-    }
-
-    if (this.recordsByEdid.has("PDV_GLO_PatronState")) {
-      this.checkObjectProperties("Manager preflight property", props, MANAGER_PREFLIGHT_PROPERTIES);
-    } else {
-      this.preflightGap("Manager preflight property", "PDV_GLO_PatronState is script-ready but CK/global wiring is pending.", PDV_ESP);
     }
 
     const vmad = fields.VirtualMachineAdapter || {};

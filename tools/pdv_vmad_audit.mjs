@@ -14,6 +14,12 @@
  *                          is a form/array type and which no VMAD entry supplies.
  *                          These dereference to None at runtime.
  *   C. Present-but-null  - a VMAD entry exists but its Object is (null link).
+ *   D. Present-but-undeclared - a VMAD fill survives after its property moved
+ *                          out of the attached script. Papyrus ignores it and
+ *                          emits an initialization warning on a fresh instance.
+ *   E. Duplicate-name    - one attachment carries the same property name more
+ *                          than once, leaving ambiguous authoring state even
+ *                          when both copies currently point to the same value.
  *
  * WHAT IT DELIBERATELY DOES NOT CHECK
  *   Scalar (Int/Float/Bool/String) absence under detector B. Papyrus applies the
@@ -40,11 +46,12 @@
  *   node tools/pdv_vmad_audit.mjs --json     Machine-readable document on stdout.
  *
  * The verdict is the EXIT CODE, never a grepped field. Exit 1 means at least one
- * un-waived detector A/B/C finding survived independent re-read.
+ * un-waived detector A/B/C/D/E finding survived independent re-read.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
+import { devotionSource } from "./lib/pdv_paths.mjs";
 
 // Refuse unrecognised flags. These tools read argv with includes()/indexOf(), so an
 // unknown or mistyped flag would otherwise fall through to a default and the run would
@@ -58,8 +65,7 @@ for (const arg of process.argv.slice(2)) {
 
 
 const ROOT = process.cwd();
-const DEFAULT_SOURCE_DIR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
-const SOURCE_DIR = process.env.PDV_DEVOTION_SOURCE_DIR || DEFAULT_SOURCE_DIR;
+const SOURCE_DIR = process.env.PDV_DEVOTION_SOURCE_DIR || devotionSource();
 const MIRROR_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 const WAIVERS_PATH = path.join(ROOT, "references", "authoring", "PDV_VMAD_AuditWaivers.json");
 const PLUGIN = "Devotion.esp";
@@ -450,7 +456,10 @@ async function main() {
   // -------------------------------------------------------------
   const hypotheses = [];
   const missingSourceWarnings = [];
-  const liveNamesFor = (w) => new Map((liveByWork.get(keyOf(w)) ?? []).filter((p) => p.name).map((p) => [p.name, p]));
+  // Papyrus and VMAD property matching are case-insensitive. Preserve original
+  // spelling for reports, but normalize every comparison key.
+  const propertyKey = (name) => String(name ?? "").toLowerCase();
+  const liveNamesFor = (w) => new Map((liveByWork.get(keyOf(w)) ?? []).filter((p) => p.name).map((p) => [propertyKey(p.name), p]));
 
   for (const w of work) {
     if (!scripts.has(w.scriptName)) {
@@ -458,14 +467,32 @@ async function main() {
       continue;
     }
     const effective = resolveEffectiveProperties(scripts, w.scriptName);
+    const effectiveByKey = new Map([...effective].map(([name, decl]) => [propertyKey(name), { name, decl }]));
+    const liveProperties = liveByWork.get(keyOf(w)) ?? [];
     const liveByName = liveNamesFor(w);
     for (const [property, decl] of effective) {
       if (decl.autoReadOnly || decl.optional || !decl.isObject) continue;
-      const live = liveByName.get(property);
+      const live = liveByName.get(propertyKey(property));
       if (!live) {
         hypotheses.push({ detector: "B", formid: w.formid, editorid: w.editorid, scriptName: w.scriptName, declaredIn: decl.declaredIn, property, declaredType: decl.type });
       } else if (live.hasNullLink) {
         hypotheses.push({ detector: "C", formid: w.formid, editorid: w.editorid, scriptName: w.scriptName, declaredIn: decl.declaredIn, property, declaredType: decl.type });
+      }
+    }
+    const liveNameCounts = new Map();
+    for (const live of liveProperties.filter((property) => property.name)) {
+      const key = propertyKey(live.name);
+      const current = liveNameCounts.get(key) ?? { name: live.name, count: 0 };
+      current.count += 1;
+      liveNameCounts.set(key, current);
+      if (!effectiveByKey.has(key)) {
+        hypotheses.push({ detector: "D", formid: w.formid, editorid: w.editorid, scriptName: w.scriptName, declaredIn: w.scriptName, property: live.name, declaredType: live.type ?? "VMAD-only" });
+      }
+    }
+    for (const { name: property, count: occurrenceCount } of liveNameCounts.values()) {
+      if (occurrenceCount > 1) {
+        const decl = effectiveByKey.get(propertyKey(property))?.decl;
+        hypotheses.push({ detector: "E", formid: w.formid, editorid: w.editorid, scriptName: w.scriptName, declaredIn: decl?.declaredIn ?? w.scriptName, property, declaredType: decl?.type ?? "VMAD-only", occurrenceCount });
       }
     }
   }
@@ -489,9 +516,9 @@ async function main() {
       }
     }
     for (const [property, decl] of candidates) {
-      const present = members.filter((m) => liveNamesFor(m).has(property));
+      const present = members.filter((m) => liveNamesFor(m).has(propertyKey(property)));
       if (present.length / members.length < 0.6) continue;
-      for (const m of members.filter((x) => !liveNamesFor(x).has(property))) {
+      for (const m of members.filter((x) => !liveNamesFor(x).has(propertyKey(property)))) {
         // Attribute to the FAMILY, not to decl.declaredIn: when each leaf declares
         // its own copy (every Prince declares its own Notif_Stigma_* trio), the
         // candidate map holds whichever member happened to be scanned last, and
@@ -517,7 +544,8 @@ async function main() {
   for (const formid of new Set(active.map((f) => f.formid))) {
     const perScript = new Map();
     for (const w of work.filter((x) => x.formid === formid)) {
-      perScript.set(`${w.rootPrefix}#${w.scriptIndex}`, new Map((await readProperties(w)).filter((p) => p.name).map((p) => [p.name, p])));
+      const list = (await readProperties(w)).filter((p) => p.name);
+      perScript.set(`${w.rootPrefix}#${w.scriptIndex}`, { list, byName: new Map(list.map((p) => [propertyKey(p.name), p])) });
     }
     verifyCache.set(formid, perScript);
   }
@@ -528,10 +556,19 @@ async function main() {
     const w = work.find((x) => x.formid === f.formid && x.scriptName === f.scriptName);
     const props = w && verifyCache.get(f.formid)?.get(`${w.rootPrefix}#${w.scriptIndex}`);
     if (!props) { dropped.push({ ...f, reason: "re-read produced no data" }); continue; }
-    const live = props.get(f.property);
+    const live = props.byName.get(propertyKey(f.property));
     if (f.detector === "C") {
       if (live?.hasNullLink) confirmed.push(f);
       else dropped.push({ ...f, reason: live ? `re-read shows ${live.object ?? live.data}, not null` : "re-read shows the property absent" });
+    } else if (f.detector === "D") {
+      const effective = w && scripts.has(w.scriptName) ? resolveEffectiveProperties(scripts, w.scriptName) : new Map();
+      const declared = [...effective.keys()].some((name) => propertyKey(name) === propertyKey(f.property));
+      if (live && !declared) confirmed.push(f);
+      else dropped.push({ ...f, reason: live ? "re-read source now declares the property" : "re-read shows the VMAD fill absent" });
+    } else if (f.detector === "E") {
+      const occurrenceCount = props.list.filter((property) => propertyKey(property.name) === propertyKey(f.property)).length;
+      if (occurrenceCount > 1) confirmed.push({ ...f, occurrenceCount });
+      else dropped.push({ ...f, reason: `re-read shows ${occurrenceCount} occurrence(s), not a duplicate` });
     } else if (live) {
       dropped.push({ ...f, reason: "re-read found the property bound after all" });
     } else {
@@ -587,7 +624,7 @@ async function main() {
       reported: reportedFindings,
       dedupedIntoObjectLevel: confirmed.filter((f) => f.detector === "A").length - siblingOnly.length,
       dropped: dropped.length,
-      byDetector: ["A", "B", "C"].reduce((acc, d) => ({ ...acc, [d]: confirmed.filter((f) => f.detector === d).length }), {}),
+      byDetector: ["A", "B", "C", "D", "E"].reduce((acc, d) => ({ ...acc, [d]: confirmed.filter((f) => f.detector === d).length }), {}),
     },
     findingGroups,
     dropped,

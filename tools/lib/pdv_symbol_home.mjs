@@ -87,7 +87,31 @@ export function decompositionFamily(repoRoot) {
 // picks up when it moves across the module boundary. Same qualifier-agnostic
 // posture as callTokenPattern().
 export function stripQualifiers(s) {
-  return String(s).replace(/\b(?:PDV_Manager|Manager|[A-Za-z_]\w*Runtime(?:Service)?)\./g, "");
+  let out = String(s);
+  let previous = "";
+  // Cross-module calls can carry stacked forward references, for example
+  // Manager.Prisma.SendPrismaToast or Manager.LedgerRuntime.AwardPiety.
+  // Strip until stable so the reconstructed family text matches the original
+  // manager-local call token rather than stopping at Prisma./LedgerRuntime.
+  while (out !== previous) {
+    previous = out;
+    out = out.replace(/\b(?:PDV_Manager|Manager|Prisma|[A-Za-z_]\w*Runtime(?:Service)?)\./g, "");
+  }
+  return out;
+}
+
+// Return the substantive implementation when a decomposed interface keeps an
+// empty base virtual beside a race-adapter override. A first-match parser sees
+// the stub and reports the live behavior missing; longest-body selection is a
+// deterministic proxy for the implementation that actually owns the work.
+export function substantialFunctionBlock(source, functionName) {
+  const pattern = new RegExp(
+    `(?:[A-Za-z_][\\w]*\\s+)?Function\\s+${esc(functionName)}\\b[\\s\\S]*?EndFunction`,
+    "gi",
+  );
+  const matches = [...String(source).matchAll(pattern)].map((match) => match[0]);
+  if (!matches.length) return "";
+  return matches.sort((left, right) => right.length - left.length)[0];
 }
 
 // The .psc basename where `Function name` currently lives, read from reality:

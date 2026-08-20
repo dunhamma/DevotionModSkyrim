@@ -21,7 +21,9 @@ const KNOWN_FLAGS = new Set(["--check", "--json", "--write"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_refresh_seq" });
 
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
-const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
+const DEVOTION_MOD = path.resolve(
+  process.env.PDV_DEVOTION_ROOT || path.join(ANVIL_ROOT, "mods", "Devotion"),
+);
 const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
 const DEVOTION_SEQ = path.join(DEVOTION_MOD, "Seq", "Devotion.seq");
 const MUTAGEN_BRIDGE = path.join(

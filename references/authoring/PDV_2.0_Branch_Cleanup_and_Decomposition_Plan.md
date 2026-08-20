@@ -193,4 +193,9 @@ Affected fills seen so far (non-exhaustive): deity refs `PDV_Kynareth`, `PDV_Dib
   same sweep for any other host QUST that carries fills for since-moved properties.
 - **Verify:** houseCARL readback of the manager QUST VMAD shows only in-script properties;
   a fresh-save Papyrus log shows zero "cannot be initialized" warnings for `pdv__managerquest`.
-- **Status:** OPEN -- deferred to the Phase-6 property-consolidation / ESP cleanup pass.
+- **Status:** STATIC CLOSED 2026-08-20 -- direct houseCARL consolidation removed 35 undeclared
+  fills plus 25 later identical-name duplicates (60 removals total). The manager now has 455
+  unique properties, zero undeclared fills, and zero duplicate names; extracted module references
+  remain filled. `pdv_vmad_audit.mjs` now derives the full VMAD range, refuses partial evidence,
+  and independently fails on undeclared or duplicate properties. Fresh-game Papyrus-log proof
+  remains part of the runtime acceptance pass.

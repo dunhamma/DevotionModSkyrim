@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
+import { readVmadScriptProperties } from "./lib/pdv_housecarl_vmad.mjs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 
@@ -131,10 +132,10 @@ async function main() {
   }
 
   const moonIds = Array.from({ length: 20 }, (_, index) => `${(0x716c8 + index).toString(16).toUpperCase().padStart(6, "0")}:Devotion.esp`);
-  const [moonRecordsResult, moonMessagesResult, managerResult] = await Promise.all([
+  const [moonRecordsResult, moonMessagesResult, managerReadback] = await Promise.all([
     callHousecarl("housecarl_batch_record_detail", { formids: ["0716C6:Devotion.esp", "0716C7:Devotion.esp", "0716DC:Devotion.esp", "070523:Devotion.esp", "070524:Devotion.esp"], fields: ["EditorID", "Name", "Effects", "Items", "Type", "TargetType", "CastType", "EquipmentType", "Flags"], depth: 4, max_chars: 60_000 }),
     callHousecarl("housecarl_batch_record_detail", { formids: moonIds, fields: ["EditorID", "Name", "Description"], depth: 2, max_chars: 100_000 }),
-    callHousecarl("housecarl_read_record", { formid: "00C325:Devotion.esp", fields: Array.from({ length: 75 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${440 + i}]`), depth: 3, max_chars: 180_000 }),
+    readVmadScriptProperties({ formid: "00C325:Devotion.esp" }),
   ]);
   const moonText = extractHousecarlText(moonRecordsResult);
   const moonList = blocks(moonText, "FormList")[0] || "";
@@ -156,7 +157,9 @@ async function main() {
     && field(moonEffect, "Flags") === field(surveyEffect, "Flags");
   if (powerMatchesSurvey) pass("Observe the Moons power input", "Observe the Moons and Survey Devotion are self-targeted Lesser Powers bound to Skyrim's Voice slot with matching child-effect flags.");
   else fail("Observe the Moons power input", "Observe the Moons and Survey Devotion must both use Skyrim's Voice equipment type (025BEE), never EitherHand, and retain matching child-effect flags.");
-  const managerProperties = scriptPropertyMap(extractHousecarlText(managerResult), 0);
+  const managerProperties = managerReadback.properties;
+  if (managerReadback.duplicates.size) fail("manager VMAD uniqueness", `Duplicate manager properties: ${[...managerReadback.duplicates.keys()].join(", ")}.`);
+  else pass("manager VMAD uniqueness", `All ${managerReadback.count} manager VMAD property names are unique.`);
   const moonBindings = new Map([
     ["PDV_Power_Khajiit_ObserveMoons", "0716C7:Devotion.esp"],
     ["PDV_FLST_KhajiitMoonContemplations", "0716DC:Devotion.esp"],

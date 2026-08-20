@@ -72,17 +72,21 @@ drop the standalone `summary`, `Patron`, `mode`, `Standing` rows once their cont
 in. Confirm no other surface reads those individual rows before removing them.
 - **Status:** OPEN -- deferred to MCM rebuild.
 
-## Deity name renders lowercase in Prisma surfacing (2026-08-20, owner-flagged) -- DEDICATED PASS
+## Deity name rendered lowercase in Prisma smoke (2026-08-20, owner-flagged) -- RUNTIME RECHECK
 
-Second occurrence of a lowercase deity name (first was Talos, quest-reaction line). Auri-El
-in the tier-reach card: "Favor deepened / Your devotion to auri-el has reached Champion."
-NOT the Papyrus layer -- GetPublicDeityDisplayName / BuildTierReachJournalLine / SendPrismaEventToast
-(PDV__ManagerQuest.psc:7689/1674/1415) all produce "Auri-El"; Auri-El ESP DeityName (QUST 03DE88) is
-correct. The lowercase "auri-el" is Altmers Prisma SYMBOL/key -- so the render bug is in the PRISMA
-BRIDGE JS/view (tier + journal toast templates compose from the symbol instead of the deity field).
-Fix the templates, bump index.html cache key, re-check Talos + all multi-word/hyphenated names
-(Tuwhacca, Zen, Baan Dar, Auri-El). See the ForCodex handoff (2026-08-20) section 3a.
-- **Status:** OPEN -- dedicated dev pass (render bug, not copy).
+Observed during the intake smoke: "Favor deepened / Your devotion to auri-el has reached
+Champion." Current-source investigation disproved the provisional claim that the live Prisma
+template composes this sentence from the lowercase symbol. The repository and `Devotion-V3Dev`
+Prisma assets are byte-identical; the tier renderer calls `deityName(payload)`, the presenter
+builds the journal line from `GetJournalDeityName(deityIndex)`, and that resolver calls
+`GetPublicDeityDisplayName`. `pdv_prisma_ui_audit.mjs` now fails closed if tier display copy uses
+the symbol field or if the presenter stops resolving the public display name; its regression
+case covers Talos, Tu'whacca, Z'en, Baan Dar, and Auri-El.
+
+This closes the current-source defect hypothesis, not the observation. Recheck on the next
+fresh-game/runtime pass with the current PEX and Prisma cache. If it recurs, capture the exact
+payload and loaded asset/version before changing copy or renderer code.
+- **Status:** STATIC CLOSED; RUNTIME RECHECK OPEN.
 
 ## Formal commitment offer must NAME the deity + rewrite drafts (2026-08-20, owner-flagged)
 
@@ -91,4 +95,26 @@ deity, and the current drafts read mediocre -- owner will supply rewrites. Recor
 GetXFormalCommitmentOfferMessage -> PDV_Msg_<Race>_<Deity>_Offer (Altmer AuriEl/Magnus/Xarxes/
 Trinimac/Syrabane; same shape for Breton/Dunmer/Imperial/Nord/Redguard). Audit every offer Message
 record for the deity name; drop owners rewritten drafts here. See ForCodex handoff section 3b.
-- **Status:** OPEN -- owner to draft; Codex to apply to the Message records.
+
+Direct houseCARL readback on 2026-08-20 found 45 actual offer records. Every record names the
+deity in `Name`, but 23 descriptions do not contain the deity's explicit public name:
+
+- Nord (12): `PDV_Msg_Nord_Kyne_Offer`, `PDV_Msg_Nord_Tsun_Offer`,
+  `PDV_Msg_Nord_Stuhn_Offer`, `PDV_Msg_Nord_Akatosh_Offer`,
+  `PDV_Msg_Nord_Mara_Offer`, `PDV_Msg_Nord_Arkay_Offer`,
+  `PDV_Msg_Nord_Stendarr_Offer`, `PDV_Msg_Nord_Zenithar_Offer`,
+  `PDV_Msg_Nord_Julianos_Offer`, `PDV_Msg_Nord_Dibella_Offer`,
+  `PDV_Msg_Nord_Kynareth_Offer`, `PDV_Msg_Nord_Orkey_Offer`.
+- Dunmer (3): `PDV_Msg_Dunmer_Azura_Offer`, `PDV_Msg_Dunmer_Boethiah_Offer`,
+  `PDV_Msg_Dunmer_Mephala_Offer`.
+- Altmer (3): `PDV_Msg_Altmer_AuriEl_Offer`, `PDV_Msg_Altmer_Magnus_Offer`,
+  `PDV_Msg_Altmer_Xarxes_Offer`.
+- Imperial (4): `PDV_Msg_Imperial_Akatosh_Offer`, `PDV_Msg_Imperial_Talos_Offer`,
+  `PDV_Msg_Imperial_Mara_Offer`, `PDV_Msg_Imperial_Zenithar_Offer`.
+- Redguard (1): `PDV_Msg_Redguard_HoonDing_Offer`.
+- Breton (0): all 11 descriptions already name their deity.
+
+The remaining 22 descriptions already contain the deity's public name. No Message record was
+changed in the module-closeout tranche: the owner rewrite is the authority for this copy pass.
+- **Status:** INVENTORY COMPLETE; OPEN -- owner to draft 23 descriptions, Codex to apply and
+  read back the Message records.
