@@ -40,6 +40,12 @@ String Property DAEDRIC_LIVE_SPELLS_KEY = "PDV.Daedric.LivePactSpells" AutoReadO
 String Property DAEDRIC_PREPACT_NOTICE_QUEUE_KEY = "PDV.Daedric.PendingPrePactNotices" AutoReadOnly
 String Property DAEDRIC_PREPACT_NOTICE_SHOWN_KEY = "PDV.Daedric.PrePactNoticeShown" AutoReadOnly
 
+; Consent latch. A pact is GLOBAL (one active pact at a time, stored under
+; DAEDRIC_ACTIVE_PACT_KEY), so consent is a single global flag, not per-path. Until the
+; player accepts, tier gain does NOT commit a pact (OnTierChange gates MakeActiveDaedricPact
+; on this) and ClampPiety parks piety below Champion so the Devoted offer can fire.
+String Property DAEDRIC_PACT_CONSENT_KEY = "PDV.Daedric.PactConsented" AutoReadOnly
+
 ; Pre-pact "a Prince has taken notice" surface (Book of Days line + soft toast + panel
 ; badge) fires once a still-uncommitted Prince reaches this piety; below it the Prince
 ; accrues piety in silence. Quest reactions surface separately, only once the Prince
@@ -47,8 +53,11 @@ String Property DAEDRIC_PREPACT_NOTICE_SHOWN_KEY = "PDV.Daedric.PrePactNoticeSho
 Float Property DAEDRIC_PREPACT_NOTICE_PIETY = 20.0 AutoReadOnly
 
 Function OnTierChange(Int oldTier, Int newTier)
-    if newTier > 0
-        ; Advancing (or re-granting at a tier) makes THIS Prince the active pact.
+    if newTier > 0 && HasDaedricPactConsent()
+        ; Advancing (or re-granting at a tier) makes THIS Prince the active pact --
+        ; but ONLY once the player has consented. Without consent, crossing a tier stays
+        ; pure surfacing (ShowTierEntryMessage below); no pact commits and piety is parked
+        ; below Champion by ClampPiety until the formal offer is accepted.
         MakeActiveDaedricPact()
     elseIf IsActiveDaedricPact()
         ; The active pact lapsed to nothing; drop its effects and the pointer.
@@ -70,6 +79,15 @@ EndFunction
 
 Bool Function IsActiveDaedricPact()
     return StorageUtil.GetFormValue(None, DAEDRIC_ACTIVE_PACT_KEY) == GetDeityForm()
+EndFunction
+
+; Global consent latch (one active pact at a time, so one flag). 0/1 int stored globally.
+Bool Function HasDaedricPactConsent()
+    return StorageUtil.GetIntValue(None, DAEDRIC_PACT_CONSENT_KEY) == 1
+EndFunction
+
+Function SetDaedricPactConsent(Bool consented)
+    StorageUtil.SetIntValue(None, DAEDRIC_PACT_CONSENT_KEY, consented as Int)
 EndFunction
 
 ; Make this Prince the single active pact: strip whatever pact spells are currently
@@ -165,6 +183,12 @@ EndFunction
 Function ShowCommitmentBeat()
 EndFunction
 
+; Virtual accessor for the formal 3-button pact-offer message. Base returns None;
+; concrete PDV_DaedricPath_<Prince> scripts override to surface their Msg_Commitment.
+Message Function GetCommitmentOfferMessage()
+    return None
+EndFunction
+
 Bool Function HandleChampionOfferResult(Int selection, String reason)
     if selection <= 0
         return True
@@ -254,9 +278,8 @@ Function AddCommitmentSignal(String reason)
     Int newCount = GetCommitmentSignalCount() + 1
     StorageUtil.SetIntValue(GetDeityForm(), "PDV.Daedric.CommitmentSignals", newCount)
     StorageUtil.SetFloatValue(GetDeityForm(), "PDV.Daedric.LastCommitmentSignal", Utility.GetCurrentGameTime())
-    if newCount == CommitmentSignalsRequired
-        ShowCommitmentBeat()
-    endIf
+    ; The 3-signal ShowCommitmentBeat popup is retired: the formal Accept/Deny/Wait offer
+    ; replaces it. The signal count is still recorded above; only the beat popup is dropped.
     TraceDaedric(2, "Commitment signal " + newCount + " (" + reason + ")")
 EndFunction
 
@@ -645,6 +668,13 @@ Float Function ClampPiety(Float amount)
         return 0.0
     elseIf amount > PIETY_MAX
         return PIETY_MAX
+    endIf
+
+    ; Pre-consent piety park: with no pact consent, cap at just below Champion so tier can
+    ; read Devoted (fires the offer) but never Champion. Runaway piety is held here until
+    ; the player accepts.
+    if !HasDaedricPactConsent() && amount > ThresholdChampion - 1.0
+        return ThresholdChampion - 1.0
     endIf
 
     return amount

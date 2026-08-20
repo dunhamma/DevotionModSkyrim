@@ -13,6 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -26,7 +27,7 @@ const CONTRACT_PATH = path.join(AUTHORING, "PDV_MainQuestFullCoverageContract.js
 const FULL_PATH = path.join(AUTHORING, "PDV_QuestReactionMatrix_Full.csv");
 const T11_PATH = path.join(AUTHORING, "PDV_QuestReactionMatrix_Tranche11_MainQuestFullCoverage.csv");
 const SIGNAL_SCENARIOS_PATH = path.join(AUTHORING, "PDV_SignalFloorSmokeScenarios_2026-07-09.json");
-const MANAGER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 const EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 const PRISMA_APP_PATH = path.join(ROOT, "native", "DevotionPrismaBridge", "mod", "PrismaUI", "views", "Devotion", "app.js");
 const PRISMA_SYMBOLS = {
@@ -245,7 +246,9 @@ function main() {
     const full = loadCsv(FULL_PATH);
     const t11 = loadCsv(T11_PATH);
     const scenarios = JSON.parse(fs.readFileSync(SIGNAL_SCENARIOS_PATH, "utf8"));
-    const manager = fs.readFileSync(MANAGER_PATH, "utf8");
+    // Family text, not manager-only: the debug/probe and Paarthurnax roster bodies move
+    // into extracted modules, and a manager-only read makes present code look absent.
+    const manager = familySourceText(ROOT, SOURCE_DIR);
     const events = fs.readFileSync(EVENTS_PATH, "utf8");
     const app = fs.readFileSync(PRISMA_APP_PATH, "utf8");
     checkContract(contract);

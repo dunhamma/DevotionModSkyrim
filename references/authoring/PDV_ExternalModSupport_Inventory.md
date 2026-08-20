@@ -1,27 +1,27 @@
 # PDV External-Mod Support Inventory
 
-Updated: 2026-08-12 AEST
+Updated: 2026-08-14 AEST
 Class: LIVING -- hand-authored authority (`PDV_STANDARDS.md` section 5.3 class 1)
-Status: complete inventory of current repository support; the full B01-B07 JoJ set is packaged in v1.5.0d, and the final official-content ambiguity resolutions are authored in the repository for the next package
+Status: complete inventory of current V3 repository support; one official catalog auto-installs all data-only integrations and exactly five mechanism adapters remain dependency-detected options; combined Skyrim/Authoria proof remains open
 
 <!-- pdv-inventory-counts {
   "g1DataOnlyPatches": 75,
   "g2PluginPatches": 5,
   "g1WithAwardRows": 75,
-  "g2WithAwardRows": 3,
-  "totalReactionCells": 423,
-  "totalAwardRows": 2836,
-  "hubFoldersTotal": 80,
-  "hubSupportFolders": 1,
+  "g2WithAwardRows": 4,
+  "totalReactionCells": 452,
+  "totalAwardRows": 2916,
+  "hubFoldersTotal": 0,
+  "hubSupportFolders": 0,
   "manifestOptions": 80,
   "sourceCsvs": 78,
-  "reconstructedCsvs": 5,
+  "reconstructedCsvs": 0,
   "coreRows": 4108,
   "coreEditorIds": 354,
   "coreQuestExpansionEditorIds": 0,
   "coreCreationClubEditorIds": 31,
   "splitCoverageMods": 9,
-  "splitCoverageCollisions": 1,
+  "splitCoverageCollisions": 0,
   "kidLiveRules": 31,
   "kidLiveRuleNames": 45,
   "kidDeclaredEmptyLanes": 0,
@@ -30,23 +30,26 @@ Status: complete inventory of current repository support; the full B01-B07 JoJ s
   "spidFactionRules": 29,
   "swapInisDistinct": 1,
   "swapEntries": 11,
-  "papyrusHookPlugins": 7
+  "papyrusHookPlugins": 8,
+  "officialCatalogFiles": 1,
+  "adapterOptions": 5,
+  "dataOnlyFomodOptions": 0
 } -->
 
 ## Purpose
 
 One place to answer "what external-mod content does Devotion actually support?".
 
-Before this doc the answer was spread across the FOMOD manifest, 78 per-mod
-source CSVs, the core matrix, a KID ini, a BaseObjectSwapper ini and a handful
+Before this doc the answer was spread across compatibility data, 78 per-mod
+quest CSVs, the core matrix, a KID ini, a BaseObjectSwapper ini and a handful
 of Papyrus hooks, and nothing tied them together. The grouping below is by
 **attach mechanism** -- *how* the support reaches the game -- because that is
 the distinction that actually decides whether a user needs to install anything.
 
-**The distinction that matters most:** some support ships as a real installable
-patch the user opts into; some is baked into base Devotion with no patch at all.
-Both are real support. Only the first one appears in the PatchHub installer, so
-reading the installer alone systematically undercounts what the mod covers.
+**The distinction that matters most:** all 75 data-only sources now compile into
+one required official catalog; only five integrations need selectable plugin/script
+adapters. Runtime plugin and sentinel checks keep absent data sources inert. Reading
+the five installer choices alone therefore undercounts what the mod covers.
 
 ### Regenerating
 
@@ -108,10 +111,10 @@ only be judged thin once you know what is in it.
 
 | Bucket | What it means |
 |---|---|
-| **machine-verified** | The channel/ini/plugin was read off disk and contains what this doc says. Everything in the tables is at least this. |
-| **runtime open** | No in-game evidence that the hook fires. The hub manifest's own option description says so. Most of the hub sits here. |
+| **machine-verified** | The catalog/ini/plugin was read off disk and contains what this doc says. Everything in the tables is at least this. |
+| **runtime open** | No post-cutover in-game evidence that the hook fires. Most integrations remain here until combined smoke. |
 | **tester-release packaged** | Present in the verified `PDV-QuestModPatchHub-20260811.zip` tester archive; this is package-byte evidence, not runtime proof. |
-| **reconstructed source** | The shipped channel is authoritative; the per-mod source CSV was rebuilt from it on 2026-08-08. Award data is verbatim, `outcome` prose is authored. Recorded in each row's `citation`. |
+| **reconstructed source** | Historical provenance label for CSV rows rebuilt during the V1 audit; in V3 the reviewed CSV is authoritative and the official catalog is generated output. |
 
 Nothing below is claimed as runtime-proven. Where a mod's support is proven in
 game, that proof lives in a runbook, not here.
@@ -122,37 +125,37 @@ game, that proof lives in a runbook, not here.
 
 | # | Group | Attach mechanism | Entries | Ships a plugin? | User installs anything? |
 |---|---|---|---:|---|---|
-| **G1** | Per-mod quest-reaction patches, data-only | `common/<Mod>/` StorageUtil channel JSON | **75** | No | Yes -- PatchHub option |
-| **G2** | Per-mod patches that ship a plugin | ESP (+ TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- PatchHub option |
-| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **158** editor ids (2137 rows) | n/a -- in `Devotion.esp` | **No** |
+| **G1** | Per-mod quest reactions, data-only | one required `PDV_QuestReactionPatches.v2.json` catalog | **75** | No | No separate choice -- auto-installed |
+| **G2** | Integrations that require a mechanism adapter | ESP (+ observer/TIF fragments / SEQ / BOS ini) | **5** | Yes | Yes -- dependency-detected option |
+| **G3** | Covered by the CORE mod, no separate patch | rows in `PDV_QuestReactionMatrix_Full.csv` | **354** editor ids (4108 rows) | n/a -- in `Devotion.esp` | **No** |
 | **G4** | Item-keyword support (KID) | flat `PDV_*_KID.ini` files | **31** live rules (45 filters), no empty lanes | No | No -- in core |
-| **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 patch | Yes -- PatchHub option |
-| **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **7** plugins | No | **No** |
+| **G5** | Shrine / world-object support (BaseObjectSwapper) | `PDV_DaedricShrinesAIO_SWAP.ini` | **1** ini, 11 swaps | Yes -- inside the G2 adapter | Yes -- detected adapter option |
+| **G6** | Papyrus activity hooks, no quest stage | plugin literals in `PDV_PlayerEvents` / `PDV__ManagerQuest` / `PDV_Origin` | **8** plugins | No | **No** |
 | **G7** | NPC religious recognition (SPID) | `PDV_ReligiousRecognition_DISTR.ini` | **58** rules: 29 classifiers + 29 cohort assignments | No | No -- in core |
 
-G1 + G2 = the 80 PatchHub options, 1:1 with the 80 manifest entries and the 80
-`common/` folders. 423 quest-reaction cells, 2836 deity award rows.
+G1 + G2 = the 80 compatibility manifest entries. They compile into 452 qualified
+quest-stage/semantic keys and 2916 deity award rows, but only five become installer options.
 
-**Read this next to the installer:** a user who installs zero PatchHub options
-still gets G3, G4 and G6. That is the majority of the reaction surface by row
-count -- 2137 core rows against 2836 in the whole hub.
+**Read this next to the installer:** the required package always installs G1 data;
+the user may see only the five G2 choices. Core contributes 4108 rows and the
+official third-party catalog contributes 2916 rows.
 
 ---
 
-## G1 -- Per-mod quest-reaction patches (data-only)
+## G1 -- Per-mod quest reactions (data-only)
 
-A `common/<Mod>/` folder containing exactly one file: a StorageUtil channel JSON
-under `SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/`. No plugin, no
-script, no master. The channel declares `questWatchPlugins` and `questEditorIds`;
-`PDV__ManagerQuest.ResolveQuestReactionCellFile` checks the core matrix first,
-then each registered channel, first hit wins.
+Each source remains a local authoring CSV, but all 75 compile into the single
+delta-only official V2 catalog. No source owns a package folder, plugin, script,
+or master. `PDV_QuestReactionRuntime` activates source-owned qualified keys only
+when its plugin and sentinels resolve; precedence is core, official, then sorted
+extensions.
 
 Column meanings: **Quests** = distinct quest editor ids watched. **Cells** =
 distinct `(formid|stage)` resolutions reacted to -- a quest with several endings
 contributes several. **Rows** = individual deity awards across those cells.
 
-Every mod listed has a channel with award rows > 0. Confirmed by reading the
-shipped channels, not by the folder existing.
+Every mod listed has catalog-owned award rows greater than zero. The build proves
+every canonical CSV row maps once; package-folder existence is not support evidence.
 
 #### New Quests and Lands
 
@@ -323,10 +326,10 @@ is real but reaches piety by a different route entirely. This is the case where
 
 | Mod | Depends on | Ships | Mechanism | Deities | Proof state |
 |---|---|---|---|---|---|
-| Aetherium Forge Destroys Items | `Aetherium Forge Destroys Items.esp` | ESP (1 QUST, ESL-flagged) + `PDV_AFDIObserver.pex` + `PDV_Patch_AFDI.seq` | Papyrus observer quest polling 30 artifact-destroyed GlobalVariables on a 15s `OnUpdate`; routes via `ApplyExternalReaction` | see below | runtime open; save/load evidence open |
+| Aetherium Forge Destroys Items | `Aetherium Forge Destroys Items.esp` | ESP (1 QUST, ESL-flagged) + `PDV_AFDIObserver.pex` + `PDV_Patch_AFDI.seq` | Papyrus observer polls 30 artifact-destroyed GlobalVariables on a 15s `OnUpdate`, then submits one `afdi|artifact_destroyed.*` semantic event to Quest Reaction Runtime | see below | backend compile/catalog/VMAD proof passes; runtime and save/load evidence open |
 | Daedric Shrines AIO prayer activators | `man_DaedricShrines.esp` | ESP (11 ACTI, ESL-flagged) + `PDV_DaedricShrinesAIO_SWAP.ini` | BaseObjectSwapper -- see [G5](#g5--shrine--world-object-support-baseobjectswapper) | Azura, Hermaeus Mora, Hircine, Mehrunes Dagon, Mephala, Molag Bal, Namira, Peryite, Sanguine, Sheogorath, Vaermina | runtime open; placement evidence open |
 
-**AFDI deity coverage**, read from `PDV_AFDIObserver.psc`:
+**AFDI deity coverage**, read from `PDV_QRE_AFDI.csv` (the observer no longer owns outcomes):
 
 - Destroying a Prince's artifact: `-` milestone to that Prince, plus `+` small to
   Stendarr and Syrabane. Owners recognised: Azura, Boethiah, Clavicus Vile,
@@ -340,6 +343,11 @@ is real but reaches piety by a different route entirely. This is the case where
 
 The observer baselines an existing save on first run (`PDV.AFDI.BaselineVersion`)
 so a player who already destroyed artifacts gets no retroactive award.
+
+Slice 1D-A also removed the adapter's typed `AFDI_Anchor` property. All 30 globals
+resolve by filename and local FormID; direct readback proves the adapter ESP now has
+only `Devotion.esp` as a master and binds `PDV_QuestReactionRuntimeService` to
+`0716DF:Devotion.esp`. This is build/readback proof, not gameplay proof.
 
 > The observer's poll LIFECYCLE was rewritten by a concurrent session on 2026-08-08
 > while this inventory was being compiled (resolve backoff, and retirement of the
@@ -618,9 +626,9 @@ the reaction layer without double-applying it.
    verbatim from the channel; `editor_id` and `formid` were resolved by direct
    houseCARL readback; `quest_name` is the record's own Name field. **The
    `outcome` prose is authored, not recovered.** Each row's `citation` says so.
-3. **Two G2 options award nothing through quest stages** (AFDI,
-   DaedricShrinesAIO). They have hub folders and ESPs and no channel. Counting
-   hub folders as "mods with quest reactions" overcounts by two.
+3. **One G2 option has no catalog outcomes** (`DaedricShrinesAIO`): its purpose is
+   eleven BOS-routed activators. AFDI now has 29 semantic events and 80 catalog-owned
+   outcomes; its observer submits identity only.
 4. **`--check` gates counts, not correctness.** It proves this doc's arithmetic
    still matches the shipped files. It does not prove a deity assignment is
    right, that a stage exists in the target mod, or that anything fires.
@@ -642,13 +650,13 @@ the reaction layer without double-applying it.
 
 | Source | Path | Authority for |
 |---|---|---|
-| PatchHub manifest | `references/authoring/PDV_QuestPatchHub.manifest.json` | The 80 options: name, dependency, description, folders, category |
-| FOMOD installer | `dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml` | What each option actually installs, and its dependency gate |
-| Shipped channels | `dist/PDV_QuestModPatches_FOMOD/common/<Mod>/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/*.json` | What a patch really reacts to and awards |
-| Per-mod source CSVs | `references/authoring/patches/PDV_QRM_*.csv` | Authoring intent and citations (78 files; slug does not always match the hub folder) |
+| Compatibility manifest | `references/authoring/PDV_QuestReactionCompatibility.manifest.json` | All 80 source identities, plugins, sentinels, CSVs, adapter assets and package metadata |
+| Generated FOMOD | `dist/PDV_QuestModPatches_FOMOD/` | One required official catalog plus exactly five dependency-gated adapter options |
+| Official catalog | `SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json` | Generated quest/semantic identities and outcome deltas for 79 catalog-backed sources |
+| Per-mod source CSVs | `references/authoring/patches/PDV_QRM_*.csv`, `PDV_QRE_AFDI.csv` | Authoring intent and citations (78 quest CSVs plus semantic outcomes) |
 | Core matrix | `references/authoring/PDV_QuestReactionMatrix_Full.csv` | G3. **Generated** -- edit the `Tranche*` files |
 | KID | `mod-data/PDV_GreenPact_KID.ini`, `mod-data/PDV_ItemRecognition_KID.ini` | G4 |
-| BOS swap | `dist/PDV_QuestModPatches_FOMOD/common/DaedricShrinesAIO/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini` | G5 |
+| BOS swap | `patch-source/DaedricShrinesAIO/SKSE/Plugins/BaseObjectSwapper/PDV_DaedricShrinesAIO_SWAP.ini` | Canonical G5 source; generated into the Daedric Shrines adapter option |
 | Papyrus | `live-source/Scripts/Source/{PDV_PlayerEvents,PDV__ManagerQuest,PDV_Origin}.psc` | G6 |
 | SPID | `mod-data/PDV_ReligiousRecognition_DISTR.ini` | G7 |
 | Packaging decisions | `references/authoring/PDV_ModPackaging_StateAuthority.md` | Current tester-release package state and its proof boundary |

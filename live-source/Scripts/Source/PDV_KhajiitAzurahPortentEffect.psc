@@ -9,6 +9,7 @@ PDV__ManagerQuest Property PDV_Manager Auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
     if PDV_Manager && akTarget == Game.GetPlayer()
-        PDV_Manager.TryUseKhajiitAzurahPortent(akTarget)
+        PDV_Manager.OriginRuntime.TryUseKhajiitAzurahPortent(akTarget)
     endIf
 EndEvent
+

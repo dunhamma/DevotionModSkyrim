@@ -132,9 +132,7 @@ Keyword Property ActorTypeDragon Auto
 ActorBase Property Paarthurnax Auto
 
 Int Property MQ305_FORM_ID = 0x00046EF2 AutoReadOnly
-String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix" AutoReadOnly
-String Property QUEST_REACTION_CHANNEL_FOLDER = "../StorageUtilData/PlayerDevotion/Channels" AutoReadOnly
-String Property QUEST_REACTION_STAGE_ADAPTER_FOLDER = "../StorageUtilData/PlayerDevotion/QuestStageAdapters" AutoReadOnly
+String Property QUEST_REACTION_MATRIX_FILE = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2" AutoReadOnly
 
 String Property MOD_EVENT_CONCORDAT_COMPLIANCE = "PDV.ConcordatCompliance" AutoReadOnly
 String Property MOD_EVENT_CONCORDAT_DEFIANCE = "PDV.ConcordatDefiance" AutoReadOnly
@@ -261,6 +259,7 @@ Event OnInit()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
     ResolveKIDKeywords()
+    ConfigureQuestReactionRuntime(False)
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -273,6 +272,7 @@ Event OnPlayerLoadGame()
     PDV_OriginQueuedThisLoad = false
     PDV_BardFormsResolved = false
     ResolveKIDKeywords()
+    ConfigureQuestReactionRuntime(True)
     RegisterForPlayerEvents()
     StartBardPerformancePoll()
     QueueOriginInitialization()
@@ -282,10 +282,18 @@ Event OnPlayerLoadGame()
     Trace(2, "Player load observed; sleep hooks refreshed.")
 EndEvent
 
-; B3 / fix-plan Group 2. The manager's 1s master poll and the quest-reaction worker are
+Function ConfigureQuestReactionRuntime(Bool fromLoad)
+    if PDV_EventBusService && PDV_EventBusService.PDV_QuestReactionRuntimeService
+        PDV_EventBusService.PDV_QuestReactionRuntimeService.Configure(Self, fromLoad)
+    else
+        Trace(1, "Quest Reaction runtime configure skipped: EventBus binding unavailable.")
+    endIf
+EndFunction
+
+; B3 / fix-plan Group 2. The manager's 1s master poll and Quest Reaction runtime are
 ; single-update chains, each re-armed ONLY at the end of its own OnUpdate. Both live on
 ; Quest scripts, which never receive OnPlayerLoadGame (it is alias-only) -- so the
-; worker's own load-resume handler is dead code and nothing re-kicks the manager. A
+; runtime's quest OnInit cannot replace alias-owned load resumption. A
 ; single tick lost to a Papyrus stack dump (routine under VM saturation in a large list)
 ; permanently stopped dawn processing, pact activation, the startup choice and the
 ; reconcile for the rest of the playthrough.
@@ -638,20 +646,23 @@ Event OnItemCrafted(ObjectReference akBench, Location akLocation, Form akCreated
 EndEvent
 
 Event OnQuestStageChange(Quest akQuest, Int aiNewStage)
+    String logicalEventId = ""
     if PDV_EventBusService && akQuest
-        String logicalEventId = "quest_" + akQuest.GetFormID() + "_" + aiNewStage
+        logicalEventId = "quest_" + akQuest.GetFormID() + "_" + aiNewStage
         PDV_EventBusService.BeginLogicalDevotionalAct(logicalEventId)
         RouteP2ImmersiveQuestStage(akQuest, aiNewStage, logicalEventId)
-        RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)
     else
         RouteP2ImmersiveQuestStage(akQuest, aiNewStage)
-        RouteQuestReactionStage(akQuest, aiNewStage)
     endIf
     RoutePaarthurnaxSpareQuestStage(akQuest, aiNewStage)
     RouteCuratedMilestoneQuestStage(akQuest, aiNewStage)
     if PDV_EventBusService && akQuest
         PDV_EventBusService.FlushLogicalDevotionalAct()
     endIf
+    ; Quest Reaction owns a separate persisted transaction. Keep its catalog
+    ; admission outside the ordinary broad scope so no long-running QR work can
+    ; stall or replace the logical act being flushed above.
+    RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)
 EndEvent
 
 Event OnPDVConcordatCompliance(String eventName, String strArg, Float numArg, Form sender)
@@ -898,7 +909,7 @@ EndFunction
 
 Event OnLevelIncrease(Int aiLevel)
     if PDV_EventBusService && PDV_EventBusService.PDV_Manager
-        PDV_EventBusService.PDV_Manager.HandleWayfarerAkatoshLevel()
+        PDV_EventBusService.PDV_Manager.OriginRuntime.HandleWayfarerAkatoshLevel()
         Trace(2, "Level increase routed to Experience Mode handler at level " + aiLevel + ".")
     else
         Trace(1, "Level increase skipped: PDV_Manager not assigned.")
@@ -1656,7 +1667,6 @@ Function RegisterForP2ImmersiveSignals()
     RegisterQuestStageList(PDV_FLST_Daedric_MoraLiveSources)
     RegisterQuestStageList(PDV_FLST_Daedric_NocturnalLiveSources)
     RegisterQuestStageList(PDV_FLST_Daedric_PeryiteLiveSources)
-    RegisterQuestReactionMatrix()
     RegisterQuestReactionFaucetEvents()
     ; Raise-undead is detected in OnSpellCast (caster-side vanilla event, auto-forwarded to
     ; the alias). No PO3 registration - both MagicEffectApplyEx (target-side) and
@@ -1821,114 +1831,6 @@ Function CacheQuestReactionFaucetList(String listKey)
         endIf
         sourceIndex += 1
     endWhile
-EndFunction
-
-Function RegisterQuestReactionMatrix()
-    RegisterQuestReactionMatrixFile(QUEST_REACTION_MATRIX_FILE, "core")
-    RegisterQuestReactionChannelFolder()
-    RegisterQuestReactionStageAdapterFolder()
-EndFunction
-
-Function RegisterQuestReactionChannelFolder()
-    ; Per-mod patch channels: every JSON dropped in the Channels folder is a
-    ; matrix file. The discovered list is cached in StorageUtil so the manager's
-    ; cell resolver never pays a folder scan on the reaction hot path.
-    StorageUtil.StringListClear(None, "PDV.QR.ChannelFiles")
-    String[] channelNames = JsonUtil.JsonInFolder(QUEST_REACTION_CHANNEL_FOLDER)
-    if !channelNames
-        Trace(2, "Quest reaction channel folder empty or absent; no per-mod channels registered.")
-        return
-    endIf
-
-    Int channelIndex = 0
-    while channelIndex < channelNames.Length
-        String channelName = channelNames[channelIndex]
-        if channelName != ""
-            String channelFile = QUEST_REACTION_CHANNEL_FOLDER + "/" + channelName
-            if JsonUtil.JsonExists(channelFile)
-                RegisterQuestReactionMatrixFile(channelFile, channelName)
-                StorageUtil.StringListAdd(None, "PDV.QR.ChannelFiles", channelFile, False)
-            else
-                Trace(1, "Quest reaction channel listed but unreadable: " + channelFile)
-            endIf
-        endIf
-        channelIndex += 1
-    endWhile
-    Trace(2, "Quest reaction channels registered: " + StorageUtil.StringListCount(None, "PDV.QR.ChannelFiles") + ".")
-EndFunction
-
-Function RegisterQuestReactionStageAdapterFolder()
-    ; Optional package adapters remap a physical quest stage to a synthetic matrix
-    ; stage. Cache their loaded file paths so quest-stage routing never scans a
-    ; folder while handling an event.
-    StorageUtil.StringListClear(None, "PDV.QR.StageAdapterFiles")
-    String[] adapterNames = JsonUtil.JsonInFolder(QUEST_REACTION_STAGE_ADAPTER_FOLDER)
-    if !adapterNames
-        return
-    endIf
-
-    Int adapterIndex = 0
-    while adapterIndex < adapterNames.Length
-        String adapterName = adapterNames[adapterIndex]
-        if adapterName != ""
-            String adapterFile = QUEST_REACTION_STAGE_ADAPTER_FOLDER + "/" + adapterName
-            if JsonUtil.JsonExists(adapterFile)
-                ReloadQuestReactionMatrixJsonFile(adapterFile)
-                if JsonUtil.IsGood(adapterFile)
-                    StorageUtil.StringListAdd(None, "PDV.QR.StageAdapterFiles", adapterFile, False)
-                endIf
-            else
-                Trace(1, "Quest-stage adapter listed but unreadable: " + adapterFile)
-            endIf
-        endIf
-        adapterIndex += 1
-    endWhile
-    Trace(2, "Quest-stage adapters registered: " + StorageUtil.StringListCount(None, "PDV.QR.StageAdapterFiles") + ".")
-EndFunction
-
-Function RegisterQuestReactionMatrixFile(String matrixFile, String label)
-    if !JsonUtil.JsonExists(matrixFile)
-        Trace(1, "Quest reaction matrix JSON missing: " + matrixFile)
-        return
-    endIf
-
-    ReloadQuestReactionMatrixJsonFile(matrixFile)
-
-    ; The watch list has outgrown the 128-element Papyrus array ceiling, and a
-    ; truncated array here silently unhooks every quest past the cap. Read the
-    ; list by index so no full array is ever materialized.
-    Int sourceIndex = 0
-    Int registeredCount = 0
-    Int sourceCount = JsonUtil.StringListCount(matrixFile, "questWatchFormIds")
-    if sourceCount > 0
-        while sourceIndex < sourceCount
-            String entryFormId = JsonUtil.StringListGet(matrixFile, "questWatchFormIds", sourceIndex)
-            String entryPlugin = JsonUtil.StringListGet(matrixFile, "questWatchPlugins", sourceIndex)
-            Quest sourceQuest = GetQuestReactionRuntimeFormFromEntry(entryFormId, entryPlugin) as Quest
-            if sourceQuest
-                PO3_Events_Alias.RegisterForQuestStage(Self, sourceQuest)
-                StorageUtil.SetIntValue(None, "PDV.QuestReaction.LocalFormId." + sourceQuest.GetFormID(), entryFormId as Int)
-                registeredCount += 1
-            endIf
-            sourceIndex += 1
-        endWhile
-    else
-        String[] formIds = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchFormIdsCsv"), ",")
-        String[] plugins = StringUtil.Split(JsonUtil.GetStringValue(matrixFile, "questWatchPluginsCsv"), ",")
-        sourceCount = formIds.Length
-        while sourceIndex < sourceCount
-            Quest sourceQuest = GetQuestReactionRuntimeFormFromCsv(formIds, plugins, sourceIndex) as Quest
-            if sourceQuest
-                PO3_Events_Alias.RegisterForQuestStage(Self, sourceQuest)
-                StorageUtil.SetIntValue(None, "PDV.QuestReaction.LocalFormId." + sourceQuest.GetFormID(), formIds[sourceIndex] as Int)
-                registeredCount += 1
-            endIf
-            sourceIndex += 1
-        endWhile
-        Trace(1, "Quest reaction matrix used the CSV fallback (" + label + "); a split this size can truncate at the array cap.")
-    endIf
-
-    Trace(2, "Quest reaction matrix hooks refreshed (" + label + "): " + registeredCount + " of " + sourceCount + " quest entries registered.")
 EndFunction
 
 Function RegisterQuestStageList(FormList sourceList)
@@ -2442,7 +2344,10 @@ Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage, String pare
         PDV_EventBusService.RouteDaedricPrinceSignal(12, "po3_queststage_daedric_mora_da04")
     endIf
     if ShouldRouteP2QuestStage(PDV_FLST_Daedric_NocturnalLiveSources, sourceQuest, 136533, 200, "daedric_nocturnal_tg09", newStage)
-        Int resolvedStage = ResolveQuestReactionStageAdapter(sourceQuest, newStage)
+        Int resolvedStage = newStage
+        if PDV_EventBusService.PDV_QuestReactionRuntimeService
+            resolvedStage = PDV_EventBusService.PDV_QuestReactionRuntimeService.ResolveQuestStage(sourceQuest, newStage)
+        endIf
         if resolvedStage == 200
             PDV_EventBusService.RouteDaedricPrinceSignal(13, "po3_queststage_daedric_nocturnal_tg09")
         else
@@ -2515,75 +2420,7 @@ Function RouteQuestReactionStage(Quest sourceQuest, Int newStage, String logical
         return
     endIf
 
-    Int resolvedStage = ResolveQuestReactionStageAdapter(sourceQuest, newStage)
-    PDV_EventBusService.RouteQuestReaction(sourceQuest, resolvedStage, logicalEventId)
-EndFunction
-
-Int Function ResolveQuestReactionStageAdapter(Quest sourceQuest, Int newStage)
-    ; Each opt-in JSON adapter identifies a watched quest by its owning plugin and
-    ; local FormID, then maps an installed GlobalVariable value to a synthetic
-    ; matrix stage. Missing, malformed, or non-matching adapters preserve the
-    ; physical stage.
-    if !sourceQuest
-        return newStage
-    endIf
-
-    Int adapterIndex = 0
-    Int adapterCount = StorageUtil.StringListCount(None, "PDV.QR.StageAdapterFiles")
-    while adapterIndex < adapterCount
-        String adapterFile = StorageUtil.StringListGet(None, "PDV.QR.StageAdapterFiles", adapterIndex)
-        String sourcePlugin = JsonUtil.GetStringValue(adapterFile, "sourcePlugin")
-        Int sourceFormId = JsonUtil.GetIntValue(adapterFile, "sourceFormId")
-        Int sourceStage = JsonUtil.GetIntValue(adapterFile, "sourceStage")
-        if sourcePlugin != "" && sourceStage == newStage && Game.GetModByName(sourcePlugin) != 255
-            Quest configuredQuest = Game.GetFormFromFile(sourceFormId, sourcePlugin) as Quest
-            if configuredQuest == sourceQuest
-                String selectorKind = JsonUtil.GetStringValue(adapterFile, "selectorKind")
-                if selectorKind == ""
-                    selectorKind = "global"
-                endIf
-                String selectorPlugin = JsonUtil.GetStringValue(adapterFile, "selectorPlugin")
-                Int selectorFormId = JsonUtil.GetIntValue(adapterFile, "selectorFormId")
-                if selectorPlugin != "" && Game.GetModByName(selectorPlugin) != 255
-                    Int selectorValue = 0
-                    Bool selectorResolved = false
-                    if selectorKind == "global"
-                        GlobalVariable selectorGlobal = Game.GetFormFromFile(selectorFormId, selectorPlugin) as GlobalVariable
-                        if selectorGlobal
-                            selectorValue = selectorGlobal.GetValueInt()
-                            selectorResolved = true
-                        endIf
-                    elseIf selectorKind == "player_item_count"
-                        Form selectorItem = Game.GetFormFromFile(selectorFormId, selectorPlugin)
-                        Actor selectorPlayer = Game.GetPlayer()
-                        if selectorItem && selectorPlayer
-                            selectorValue = selectorPlayer.GetItemCount(selectorItem)
-                            if selectorValue > 0
-                                selectorValue = 1
-                            endIf
-                            selectorResolved = true
-                        endIf
-                    endIf
-                    if selectorResolved
-                        Int valueIndex = 0
-                        Int valueCount = JsonUtil.IntListCount(adapterFile, "selectorValues")
-                        while valueIndex < valueCount
-                            if JsonUtil.IntListGet(adapterFile, "selectorValues", valueIndex) == selectorValue
-                                Int targetStage = JsonUtil.IntListGet(adapterFile, "targetStages", valueIndex)
-                                if targetStage > 0
-                                    Trace(2, "Quest-stage adapter route: " + adapterFile + " physical=" + newStage + " selectorKind=" + selectorKind + " selector=" + selectorValue + " matrixStage=" + targetStage)
-                                    return targetStage
-                                endIf
-                            endIf
-                            valueIndex += 1
-                        endWhile
-                    endIf
-                endIf
-            endIf
-        endIf
-        adapterIndex += 1
-    endWhile
-    return newStage
+    PDV_EventBusService.RouteQuestReaction(sourceQuest, newStage, logicalEventId)
 EndFunction
 
 Function RouteQuestReactionBookFaucet(Form sourceForm, Bool firstRead)
@@ -2823,23 +2660,6 @@ EndFunction
 ; the cache CacheQuestReactionFaucetForms builds once per load, so the function is deleted
 ; rather than left as a second, slower way to ask the same question.
 
-Function ReloadQuestReactionMatrixJson()
-    ReloadQuestReactionMatrixJsonFile(QUEST_REACTION_MATRIX_FILE)
-    CacheQuestReactionSpellFaucetForms()
-    ; 12.2. The faucet cache is derived from this file, so a reload must rebuild it or the
-    ; runtime would keep answering from the pre-reload matrix.
-    CacheQuestReactionFaucetForms()
-EndFunction
-
-Function ReloadQuestReactionMatrixJsonFile(String matrixFile)
-    JsonUtil.Unload(matrixFile, false)
-    if !JsonUtil.Load(matrixFile)
-        Trace(1, "Quest reaction matrix JSON load failed: " + JsonUtil.GetErrors(matrixFile))
-    elseIf !JsonUtil.IsGood(matrixFile)
-        Trace(1, "Quest reaction matrix JSON parse failed: " + JsonUtil.GetErrors(matrixFile))
-    endIf
-EndFunction
-
 String Function GetQuestReactionFormIdKey(String listKey)
     if listKey == "questWatch"
         return "questWatchFormIds"
@@ -3071,14 +2891,8 @@ Bool Function MarkGenericBookRead(Form bookForm)
     Float seenDay = StorageUtil.GetFloatValue(None, dayKey)
 
     if seenDay <= 0.0
-        ; Migration: a pre-P15 save carries the old `.Seen` int with no timestamp. Treat that as
-        ; "read just now", NOT as never-read -- otherwise an existing library would all become
-        ; re-creditable at once on the first load after the update.
-        String legacyKey = "PDV.BookRead." + bookForm.GetFormID() + ".Seen"
-        if StorageUtil.GetIntValue(None, legacyKey) == 1
-            StorageUtil.SetFloatValue(None, dayKey, nowTime)
-            return false
-        endIf
+        ; First sighting of this book on this save: stamp the day and credit it. (Pre-P15 `.Seen`
+        ; legacy-migration branch removed -- not-save-safe; a fresh save carries no `.Seen` int.)
         StorageUtil.SetFloatValue(None, dayKey, nowTime)
         return true
     endIf
@@ -3436,3 +3250,4 @@ Int Function GetDevotionalDayStamp()
     endIf
     return truncatedDay + 2
 EndFunction
+

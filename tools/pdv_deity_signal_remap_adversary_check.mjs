@@ -8,9 +8,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { familySourceText, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 
 const files = {
   manager: path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc"),
@@ -187,7 +189,13 @@ function potentialOffRosterHostileSurfaces(fullEntries, stanceByName, daedricNam
   return findings;
 }
 
-const manager = read(files.manager);
+// Searched, never hashed or rewritten. The 2.0 rebuild moves manager bodies into
+// deep modules, so reading only PDV__ManagerQuest.psc makes every positive needle
+// below fail about relocated-but-correct code AND every negated "must not
+// contain" needle pass vacuously. familySourceText() is strictly additive:
+// manager text first and verbatim, then each extracted module with qualifiers
+// stripped; scripts not yet extracted are skipped.
+const manager = familySourceText(ROOT, SOURCE_DIR);
 const mcm = read(files.mcm);
 const playerEvents = read(files.playerEvents);
 const eventBus = read(files.eventBus);
@@ -261,8 +269,12 @@ for (const lane of ["KNIGHTS_ROAD", "GREEN_WAY", "HIDDEN_ART"]) {
   assert(`breton ${lane.toLowerCase()} shared award funnel`, bretonPracticeAward.includes(`traditionValue == BRETON_TRADITION_${lane}`) && bretonPracticeAward.includes("SetBretonPracticeCount(traditionValue, GetBretonPracticeCount(traditionValue) + appliedPoints)"), `${lane} must write applied points through the shared capped practice store.`);
 }
 assert("breton all-lane survey practice band", bretonSurvey.includes('String practiceText = " Practice: " + GetPublicTierBand(practiceTier) + "."') && bretonSurvey.includes('"You walk the Knight\'s Road: vow, mercy, and protective justice." + practiceText') && bretonSurvey.includes('"You walk the Hidden Art: occult practice and the double life." + practiceText') && bretonSurvey.includes('"You walk the Green Way: the old druidic covenant." + practiceText') && !bretonSurvey.includes("practice points).") && !bretonSurvey.includes("proven acts"), "All three Breton Survey branches must share the concise qualitative practice band and omit numeric or retired proven-act wording.");
-const bretonDebugAdd = functionBody(manager, "DebugAddBretonPracticePoints");
-const bretonDebugSet = functionBody(manager, "DebugSetBretonPracticePoints");
+// Qualifier-stripped: these two bodies stayed in the manager (so familySourceText
+// emits them verbatim) while their callees moved, giving the calls an
+// `OriginRuntime.` hop. That is a relocation, not a routing change -- the needle
+// still pins the callee, its arguments, and the funnel it goes through.
+const bretonDebugAdd = stripQualifiers(functionBody(manager, "DebugAddBretonPracticePoints"));
+const bretonDebugSet = stripQualifiers(functionBody(manager, "DebugSetBretonPracticePoints"));
 assert("breton debug practice funnel", bretonDebugAdd.includes("AwardBretonPracticePulse(GetBretonTraditionValue(), requestedPoints") && bretonDebugSet.includes("SetBretonPracticeCount(traditionValue, practicePoints)") && bretonDebugSet.includes('PDV.Breton.PracticePointsToday') && !manager.includes('StorageUtil.SetIntValue(None, "PDV.Debug.BretonPracticePulseSeq", 0)') && manager.includes("String Function DebugGetBretonPracticeSummary()") && manager.includes("String Function DebugResetBretonPracticePoints()"), "Breton debug controls must expose summary/set/reset, preserve the unique pulse sequence across target changes, and route +1/+2 pulses through the real capped practice funnel.");
 assert("breton debug menu current", mcm.includes('AddHeaderOption("Breton practice"') && mcm.includes('AddSliderOption("Practice target"') && mcm.includes('AddTextOption("Add renewable practice", "+1 capped pulse"') && mcm.includes('AddTextOption("Add curated practice", "+2 capped pulse"') && mcm.includes("DebugSetBretonPracticePoints") && mcm.includes("DebugAddBretonPracticePoints(1)") && mcm.includes("DebugAddBretonPracticePoints(2)") && mcm.includes("DebugGetBretonPracticeSummary") && mcm.includes("DebugResetBretonPracticePoints") && !mcm.includes("Broad + 6 acts") && !mcm.includes("Breton -> Knights Road") && !mcm.includes("Forces the Breton tradition so its tradition-gated reward family becomes testable. Then force piety and Run Dawn."), "MCM Breton controls must use practice-point language, expose capped boundary tools, and omit retired six-act/piety instructions.");
 const curseProofSetter = functionBody(manager, "DebugSetCurseProofOriginRace");

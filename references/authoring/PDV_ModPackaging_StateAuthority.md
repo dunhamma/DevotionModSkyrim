@@ -1,17 +1,17 @@
 # PDV Mod Packaging State Authority
 
-Updated: 2026-08-12 AEST
-Status: v1.5.0 final all-in-one release packaged and byte-verified from clean commit `e63de5f5` (README requirements repackage of the published v1.5.0); tagged and published. The v1.5.0d prerelease receipt below is retained as historical evidence.
+Updated: 2026-08-15 AEST
+Status: v1.5.0 final remains the published line from clean commit `e63de5f5`; the ground-up V3 Slice 1 catalog wire, runtime, semantic, and package backend is green, installed Anvil admission preflight passes, and one combined fresh-game plus Authoria smoke remains before runtime acceptance.
 
-The v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
+The published v1.5.0 package incorporates the closed official-quest work: all 18 ambiguity
 decisions, the `FreeformRiften02` selector adapter, the owner-approved tag/profile
 correction slate, and the core matrix expanded to 4,108 cells across 354 quest
 EditorIDs (main-quest coverage reconciled, PR #76). The optional SPID NPC
 religious-recognition feature is deliberately unadvertised in 1.5.0 and now defaults
 OFF (owner decision 2026-08-12): it is wired but not yet in-game validated, and its
 hard-rival path sets a faction ENEMY reaction that needs an attack-on-sight check
-before it is advertised. The build is byte-verified but NOT yet tagged or published;
-do not describe it as publicly shipped until it is.
+before it is advertised. The archive is tagged and published; this does not promote
+the unadvertised SPID feature or close its runtime evidence.
 
 ## Purpose
 
@@ -23,7 +23,7 @@ The dated ARR review is preserved in
 `PDV_QuestModPatches_ARR_Review_2026-08-06.md`. That review is source evidence;
 this file owns the current decision and state.
 
-## Locked package boundary
+## Locked v1.5 package boundary
 
 1. Devotion core carries vanilla, DLC, Creation Club, and generic runtime
    capabilities. It does not carry named modlist or third-party reaction data.
@@ -37,6 +37,61 @@ this file owns the current decision and state.
    but the public tester distribution is one all-in-one FOMOD: required core
    plus every dependency-gated optional patch. A PatchHub-only archive may be
    retained as an internal proof artifact, not as the player download.
+
+## Locked ground-up V3 package boundary
+
+1. Core retains the same no-third-party-master boundary.
+2. The 75 data-only compatibility sources compile into one deterministic,
+   delta-only third-party catalog and install automatically in the all-in-one
+   package. Runtime plugin and sentinel checks keep absent sources inert.
+3. Only the five integrations that ship an ESPFE or patch-owned script remain
+   dependency-detected FOMOD choices. Their narrow source masters remain
+   conditional and never become core masters.
+4. Per-source CSVs remain local authoring inputs. `dist` is generated output,
+   never the semantic source of `sourceMod`, option ownership, or catalog data.
+5. Core, official third-party, and external-extension catalogs load in that
+   order using fully-qualified `pluginName|localFormId|stage` identity. A bad
+   source rejects only itself.
+6. Typed-bucket member names in the serialized PapyrusUtil catalogs are
+   lowercase; top-level bucket names and stored values preserve case. Integer
+   selector arrays serialize under `intList`. Generation fails on conflicting
+   case-fold collisions, and installed-profile preflight uses the same wire
+   validator before Skyrim starts.
+
+The full Slice 1 interface, schema, activation, collision, and proof contract is
+`PDV_V3Slice1QuestReaction.manifest.json`. This V3 boundary does not retroactively
+change the published v1.5 installer.
+
+Slice 1D-A backend proof is now green for AFDI. Its observer preserves the
+30-global baseline/backoff/poll-retirement mechanism but submits one
+`afdi|artifact_destroyed.*` semantic event into `PDV_QuestReactionRuntime`;
+devotional outcomes live only in the official v2 catalog. Direct houseCARL
+readback of the canonical/generated-identical ESP proves one Runtime property binding,
+`PDV_QuestReactionRuntimeService -> 0716DF:Devotion.esp`, and a sole
+`Devotion.esp` master after dynamic resolution replaced the typed AFDI anchor.
+The SGE SEQ and PEX were regenerated and the adapter source/bytecode lock refreshed.
+This is compile, package-byte, VMAD, and master proof only: AFDI runtime behavior
+remains open for the combined fresh-game smoke.
+
+Slice 1D-B backend proof is green. `PDV_QuestReactionCompatibility.manifest.json`
+now generates the entire compatibility tree: one required official V2 catalog,
+75 data-only integrations with no individual installer option, and exactly five
+dependency-detected adapter folders. The generated tree contains 31 files and no
+V1 channel/stage-adapter payload. `PDV_QuestReactionPackageV3.receipt.json` records
+every path, byte length, SHA-256, and the tree hash. Installer simulation reports
+zero destination collisions; normalized sorted ZIP creation extracts and exact-hash
+verifies every member. This is package/backend proof only. Real mod-manager detection,
+installed source/sentinel behavior, and Skyrim gameplay remain for combined smoke.
+
+The first installed V2 attempt exposed a packaging-critical wire defect rather
+than a content or ESP defect: PapyrusUtil folds lookup keys, but the generated
+catalog member names were camel-case. The corrected generator now emits
+Papyrus-addressable lowercase members, regenerates the required catalog copy and
+both receipts, and preserves the locked 450/4,108 core, 423/2,916 official, 29
+semantic-event, and 80/75/5 integration counts. The installed Anvil profile now
+passes core/official wire validation and precedence. This remains backend and
+installed-file proof until the corrected fresh-game smoke confirms runtime
+activation and player surfaces.
 
 ## Public-copy boundary
 
@@ -59,12 +114,12 @@ milestone Chronicle entry may accompany the act, but it does not create a
 second toast. Capped, duplicate, zero-credit, and classify-only events create no
 false player-facing acknowledgement.
 
-Every PatchHub channel carries the player-facing name of its owning FOMOD
-option. The core queue preserves that name through finalisation: the transient
+Every compatibility source carries its player-facing name in the V2 catalog.
+The core queue preserves that name through finalisation: the transient
 Prisma toast displays it and the persistent Book-of-Days entry stores and
 displays it. Core reactions omit the optional field. Existing saves pad the new
 journal source list before appending, so a new label cannot attach to an older
-entry. For patch testing, these two labelled surfaces are the player-visible
+entry. For compatibility testing, these two labelled surfaces are the player-visible
 confirmation that routing fired; logs remain diagnostic evidence, not the
 player acceptance surface.
 
@@ -94,9 +149,9 @@ Book entry must reuse the same resolved practice line.
   (manager getters recompiled, PDV_MCM recompiled to satisfy the dependency gate).
   Adds a user-selectable Normal/Large Prisma toast size (MCM: Presentation -> Toast
   size) for 4K legibility; the Prisma view cache key was bumped to match. The Large
-  sizing awaits a 4K in-game confirmation before publish.
-- NOT yet tagged or published. Runtime, presentation, balance, and save/load
-  observations remain post-release tester evidence, not release gates.
+  sizing still awaits a 4K in-game confirmation.
+- Tagged and published. Runtime, presentation, balance, and save/load observations
+  remain post-release tester evidence, not release gates.
 
 ## v1.5.0d prerelease state (historical)
 
@@ -170,7 +225,7 @@ Book entry must reuse the same resolved practice line.
 Every future package build or packaging status change updates this file with:
 
 - build date, version, source commit, archive filename, byte size, and SHA-256;
-- core payload manifest count and PatchHub option/channel/plugin inventory;
+- core payload manifest count plus V3 required-catalog/adapter inventory;
 - intentionally included and excluded files;
 - machine-gate results and exact unresolved failures;
 - runtime-route, player-surface, semantic, save/load, and support evidence;

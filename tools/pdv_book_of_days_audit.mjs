@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { hashBytes, hashText } from "./lib/pdv_file_compare.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(TOOLS_DIR, "..");
@@ -27,6 +28,11 @@ const NATIVE_MAIN = path.join(ROOT, "native", "DevotionPrismaBridge", "src", "ma
 const results = [];
 const add = (level, message, source = "") => results.push({ level, message, source });
 const read = (filePath) => fs.readFileSync(filePath, "utf8");
+// Resolver-aware manager text: the manager's decomposition family, not the manager
+// alone, so a needle tracks a journal routine that has moved into an extracted
+// module. Strictly additive. This is for SEARCHING only -- every PEX/bytecode
+// freshness comparison below still uses the MANAGER path's own mtime, untouched.
+const readManagerFamily = () => familySourceText(ROOT, SOURCE);
 const BYTE_EXTENSIONS = new Set([".ttf", ".woff", ".woff2"]);
 const hash = (filePath) => BYTE_EXTENSIONS.has(path.extname(filePath).toLowerCase()) ? hashBytes(filePath) : hashText(filePath);
 
@@ -38,9 +44,11 @@ function mustExist(filePath) {
   return true;
 }
 
-function requireText(filePath, needles, label) {
+// sourceText overrides what is SEARCHED while filePath still names the file for
+// existence and reporting -- used to search the manager's decomposition family.
+function requireText(filePath, needles, label, sourceText) {
   if (!mustExist(filePath)) return;
-  const source = read(filePath);
+  const source = sourceText ?? read(filePath);
   for (const needle of needles) {
     if (source.includes(needle)) {
       add("PASS", `${label} contains ${needle}.`, filePath);
@@ -50,9 +58,9 @@ function requireText(filePath, needles, label) {
   }
 }
 
-function forbidText(filePath, needles, label) {
+function forbidText(filePath, needles, label, sourceText) {
   if (!mustExist(filePath)) return;
-  const source = read(filePath);
+  const source = sourceText ?? read(filePath);
   for (const needle of needles) {
     if (source.includes(needle)) {
       add("FAIL", `${label} still contains stale marker ${needle}.`, filePath);
@@ -258,15 +266,15 @@ requireText(MANAGER, [
   "GetTierStandingLabel(newTier)",
   "GetTierStandingLabel(TIER_CHAMPION)",
   'PDV_DiegeticDirectorService && !(eventClass == "tier" && direction == "reach")',
-], "manager source");
+], "manager source", fs.existsSync(MANAGER) ? readManagerFamily() : undefined);
 
 forbidText(MANAGER, [
   "path not yet chosen",
   'j = j + ",\\"summary\\":\\"A record of devotional acts since the path began.\\""',
-], "manager source");
+], "manager source", fs.existsSync(MANAGER) ? readManagerFamily() : undefined);
 
 if (mustExist(MANAGER)) {
-  const manager = read(MANAGER);
+  const manager = readManagerFamily();
   const journalBuilder = functionBlock(manager, "BuildJournalPayloadJson");
   if (
     manager.includes("String Function BuildJournalPayloadJson(Int page") ||
@@ -365,7 +373,7 @@ forbidText(DIRECTOR, [
 ], "director source");
 
 if (mustExist(MANAGER)) {
-  const manager = read(MANAGER);
+  const manager = readManagerFamily();
   const managerMap = parseNameSymbolMap(functionBlock(manager, "GetPrismaSymbolForDeity"));
   for (const name of ["Peryite", "Stendarr", "Kyne", "Akatosh", "Baan Dar", "Auri-El", "Hircine"]) {
     const symbol = managerMap.get(name);

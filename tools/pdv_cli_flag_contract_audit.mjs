@@ -109,6 +109,7 @@ function trackedActiveDocs() {
     .split(/\r?\n/)
     .filter(Boolean)
     .filter((file) => !file.startsWith("archive/") && !file.startsWith("_retired/"))
+    .filter((file) => fs.existsSync(path.join(ROOT, file)))
     .map((file) => ({ file, text: fs.readFileSync(path.join(ROOT, file), "utf8") }));
 }
 

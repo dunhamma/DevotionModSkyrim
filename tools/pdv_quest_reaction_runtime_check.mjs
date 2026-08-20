@@ -16,11 +16,11 @@ import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
 // for fixtures that never ran.
-const KNOWN_FLAGS = new Set(["--allow-overflow", "--expected-sequence", "--help", "--json", "--log", "--max-job-ms", "--self-test"]);
+const KNOWN_FLAGS = new Set(["--allow-overflow", "--expected-sequence", "--help", "--json", "--log", "--max-admission-ms", "--max-job-ms", "--self-test"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_reaction_runtime_check" });
 
 const DEFAULT_LOG = path.join("C:/Users/Admin", "Documents", "My Games", "Skyrim Special Edition", "Logs", "Script", "Papyrus.0.log");
-const ACTIONS = ["ENQUEUE", "COALESCE", "START", "COMPLETE", "RESUME", "OVERFLOW"];
+const ACTIONS = ["ENQUEUE", "COALESCE", "BUILD", "START", "COMPLETE", "RESUME", "OVERFLOW"];
 
 function usage() {
   return [
@@ -29,6 +29,7 @@ function usage() {
     "Options:",
     "  --log <path>                    Papyrus log path. Defaults to Papyrus.0.log.",
     "  --expected-sequence <key,...>   Require the final enqueue/start/complete key sequence.",
+    "  --max-admission-ms <milliseconds> Fail when an ENQUEUE admission exceeds the limit.",
     "  --max-job-ms <milliseconds>      Fail when START-to-COMPLETE latency exceeds the limit.",
     "  --allow-overflow                 Report (but do not fail on) an explicit overload probe.",
     "  --self-test                      Check an embedded successful synthetic log.",
@@ -38,7 +39,7 @@ function usage() {
 }
 
 function parseArgs(argv) {
-  const options = { logPath: DEFAULT_LOG, expectedSequence: [], maxJobMs: null, allowOverflow: false, selfTest: false, json: false, help: false };
+  const options = { logPath: DEFAULT_LOG, expectedSequence: [], maxAdmissionMs: null, maxJobMs: null, allowOverflow: false, selfTest: false, json: false, help: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--log") {
@@ -49,6 +50,12 @@ function parseArgs(argv) {
       if (!raw) throw new Error("--expected-sequence requires a comma-separated list of reaction keys.");
       options.expectedSequence = raw.split(",").map((value) => value.trim()).filter(Boolean);
       if (!options.expectedSequence.length) throw new Error("--expected-sequence must contain at least one reaction key.");
+    } else if (arg === "--max-admission-ms") {
+      const raw = argv[++index];
+      options.maxAdmissionMs = Number(raw);
+      if (!raw || !Number.isFinite(options.maxAdmissionMs) || options.maxAdmissionMs <= 0) {
+        throw new Error("--max-admission-ms requires a positive number.");
+      }
     } else if (arg === "--max-job-ms") {
       const raw = argv[++index];
       options.maxJobMs = Number(raw);
@@ -83,15 +90,21 @@ function token(line, names) {
 }
 
 function parseMarker(line, lineNumber) {
-  const match = line.match(/\[PDV\]\[QR_QUEUE\]\s+(ENQUEUE|COALESCE|START|COMPLETE|RESUME|OVERFLOW)\b/i);
+  const match = line.match(/\[PDV\]\[QR_QUEUE\]\s+(ENQUEUE|COALESCE|BUILD|START|COMPLETE|RESUME|OVERFLOW)\b/i);
   if (!match) return null;
   const action = match[1].toUpperCase();
   const explicitMs = token(line, ["elapsedMs", "durationMs"]);
   const elapsedSeconds = token(line, ["elapsed"]);
   const markerTail = line.slice((match.index ?? 0) + match[0].length).trim();
-  const firstToken = markerTail.match(/^([A-Za-z][A-Za-z0-9_-]*)\b/)?.[1] ?? "";
   const namedJob = token(line, ["job", "jobId", "id"]);
-  const implicitJob = ["ENQUEUE", "START", "COMPLETE"].includes(action) && !["key", "pending", "rejected"].includes(firstToken.toLowerCase()) ? firstToken : "";
+  const admissionRaw = token(line, ["admissionMs"]);
+  const legacyBuildRaw = token(line, ["buildMs"]);
+  // V3 writes a human verb before the persisted job id, e.g. "START started
+  // v3qr_2 ...".  Do not mistake that verb for the job: pair only the explicit
+  // V3/legacy queue identifier, wherever it appears in the marker tail.
+  const implicitJob = ["ENQUEUE", "BUILD", "START", "COMPLETE"].includes(action)
+    ? (markerTail.match(/\b((?:v3)?qr_[0-9]+)\b/i)?.[1] ?? "")
+    : "";
   return {
     action,
     line: lineNumber,
@@ -100,7 +113,8 @@ function parseMarker(line, lineNumber) {
     key: token(line, ["key", "reactionKey"]),
     sequence: token(line, ["sequence", "seq"]),
     timestamp: timestampMs(line),
-    buildMs: Number.isFinite(Number(token(line, ["buildMs"]))) ? Number(token(line, ["buildMs"])) : null,
+    admissionMs: admissionRaw !== "" && Number.isFinite(Number(admissionRaw)) ? Number(admissionRaw) : null,
+    buildMs: legacyBuildRaw !== "" && Number.isFinite(Number(legacyBuildRaw)) ? Number(legacyBuildRaw) : null,
     durationMs: explicitMs && Number.isFinite(Number(explicitMs))
       ? Number(explicitMs)
       : (elapsedSeconds && Number.isFinite(Number(elapsedSeconds)) ? Number(elapsedSeconds) * 1000 : null),
@@ -112,6 +126,49 @@ function suffixMatches(actual, expected) {
   if (actual.length < expected.length) return false;
   const suffix = actual.slice(-expected.length);
   return suffix.every((value, index) => value === expected[index]);
+}
+
+function lifecycleIdentity(marker) {
+  if (marker.job) return `job:${marker.job}`;
+  if (marker.key) return `key:${marker.key}`;
+  return "";
+}
+
+function pushPending(map, identity, value) {
+  if (!identity) return;
+  const pending = map.get(identity) ?? [];
+  pending.push(value);
+  map.set(identity, pending);
+}
+
+function shiftPending(map, identity) {
+  if (!identity) return null;
+  const pending = map.get(identity);
+  if (!pending?.length) return null;
+  const value = pending.shift();
+  if (!pending.length) map.delete(identity);
+  return value;
+}
+
+function pairLifecycles(markers) {
+  const enqueued = new Map();
+  const active = new Map();
+  const pairs = [];
+  const unmatchedCompletions = [];
+  for (const marker of markers) {
+    const identity = lifecycleIdentity(marker);
+    if (marker.action === "ENQUEUE") {
+      pushPending(enqueued, identity, marker);
+    } else if (marker.action === "START") {
+      pushPending(active, identity, { enqueue: shiftPending(enqueued, identity), start: marker });
+    } else if (marker.action === "COMPLETE") {
+      const lifecycle = shiftPending(active, identity);
+      if (!lifecycle) unmatchedCompletions.push(marker);
+      pairs.push({ enqueue: lifecycle?.enqueue ?? null, start: lifecycle?.start ?? null, complete: marker });
+    }
+  }
+  const incomplete = [...active.values()].flat().map((entry) => entry.start);
+  return { pairs, incomplete, unmatchedCompletions };
 }
 
 function findSafetyFailures(lines) {
@@ -149,56 +206,98 @@ function findVmLifecycleObservations(lines) {
   return observations;
 }
 
+function parseCatalogSummaries(lines) {
+  const admissions = [];
+  const indexes = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (!/\[PDV\]\[QR_QUEUE\]\s+CATALOG\s+loaded\b/i.test(line)) continue;
+    const entry = { line: index + 1, text: line.trim() };
+    const numericToken = (names) => {
+      const raw = token(line, names);
+      if (raw === "") return null;
+      const value = Number(raw);
+      return Number.isFinite(value) ? value : null;
+    };
+    const catalogs = numericToken(["catalogs"]);
+    const sources = numericToken(["sources"]);
+    const active = numericToken(["active"]);
+    const inactive = numericToken(["inactive"]);
+    const rejected = numericToken(["rejected"]);
+    const questKeys = numericToken(["questKeys"]);
+    const semanticKeys = numericToken(["semanticKeys"]);
+    if (catalogs != null) admissions.push({ ...entry, catalogs, sources, active, inactive, rejected });
+    if (questKeys != null) indexes.push({ ...entry, questKeys, semanticKeys, active, rejected });
+  }
+  return { admissions, indexes, latestAdmission: admissions.at(-1) ?? null, latestIndex: indexes.at(-1) ?? null };
+}
+
 export function evaluateLog(logText, options = {}) {
   const lines = logText.split(/\r?\n/);
   const markers = lines.map(parseMarker).filter(Boolean);
   const byAction = Object.fromEntries(ACTIONS.map((action) => [action, markers.filter((marker) => marker.action === action)]));
   const safetyFailures = findSafetyFailures(lines);
   const vmLifecycleObservations = findVmLifecycleObservations(lines);
-  const startsByJob = new Map(byAction.START.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
-  const enqueueByJob = new Map(byAction.ENQUEUE.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
-  const completeByJob = new Map(byAction.COMPLETE.filter((entry) => entry.job).map((entry) => [entry.job, entry]));
-  const incomplete = [];
-  for (const start of byAction.START) {
-    const complete = start.job ? completeByJob.get(start.job) : byAction.COMPLETE.find((entry) => entry.key && entry.key === start.key && entry.line > start.line);
-    if (!complete) incomplete.push(start);
-  }
-  const durations = byAction.COMPLETE.map((complete) => {
-    const start = complete.job ? startsByJob.get(complete.job) : byAction.START.find((entry) => entry.key === complete.key && entry.line < complete.line);
-    const enqueue = complete.job ? enqueueByJob.get(complete.job) : byAction.ENQUEUE.find((entry) => entry.key === complete.key && entry.line < complete.line);
+  const catalogSummaries = parseCatalogSummaries(lines);
+  const { pairs, incomplete, unmatchedCompletions } = pairLifecycles(markers);
+  const durations = pairs.map(({ enqueue, start, complete }) => {
     const jobMs = start?.timestamp != null && complete.timestamp != null ? complete.timestamp - start.timestamp : null;
     const endToEndMs = complete.durationMs ?? (enqueue?.timestamp != null && complete.timestamp != null ? complete.timestamp - enqueue.timestamp : null);
     const ingressMs = enqueue?.timestamp != null && start?.timestamp != null ? start.timestamp - enqueue.timestamp : null;
-    return { job: complete.job, key: complete.key, line: complete.line, jobMs, endToEndMs, ingressMs, ingressBuildMs: enqueue?.buildMs ?? null };
+    return { job: complete.job, key: complete.key, line: complete.line, jobMs, endToEndMs, ingressMs, admissionMs: enqueue?.admissionMs ?? null, legacyIngressBuildMs: enqueue?.buildMs ?? null };
   });
   const expected = options.expectedSequence ?? [];
   const enqueueKeys = byAction.ENQUEUE.map((entry) => entry.key).filter(Boolean);
+  const buildKeys = byAction.BUILD.map((entry) => entry.key).filter(Boolean);
   const startKeys = byAction.START.map((entry) => entry.key).filter(Boolean);
   const completeKeys = byAction.COMPLETE.map((entry) => entry.key).filter(Boolean);
   const checks = [];
   const add = (ok, id, detail) => checks.push({ status: ok ? "PASS" : "FAIL", id, detail });
+  const admission = catalogSummaries.latestAdmission;
+  const catalogIndex = catalogSummaries.latestIndex;
+  add(Boolean(admission) && admission.catalogs >= 2, "catalogs-admitted", admission ? `Latest catalog admission loaded ${admission.catalogs}; require at least 2.` : "No catalog admission summary was found.");
+  add(Boolean(catalogIndex) && catalogIndex.questKeys > 0, "quest-keys-active", catalogIndex ? `Latest catalog index has ${catalogIndex.questKeys} active quest keys.` : "No catalog index summary was found.");
   add(markers.length > 0, "markers-present", "Papyrus log contains [PDV][QR_QUEUE] lifecycle markers.");
   add(byAction.ENQUEUE.length > 0, "enqueue-present", "At least one queue job was enqueued.");
+  add(byAction.BUILD.length > 0, "build-present", "At least one queued job completed bounded catalog materialization.");
   add(byAction.START.length > 0, "start-present", "At least one queue job began processing.");
   add(byAction.COMPLETE.length > 0, "complete-present", "At least one queue job completed.");
   add(incomplete.length === 0, "started-jobs-complete", incomplete.length ? `${incomplete.length} started job(s) lack a completion marker.` : "Every started job has a later completion marker.");
+  add(unmatchedCompletions.length === 0, "completed-jobs-started", unmatchedCompletions.length ? `${unmatchedCompletions.length} completed job(s) lack a preceding unmatched START marker.` : "Every completed job has its own preceding START marker.");
   add(safetyFailures.length === 0, "no-critical-safety-failure", safetyFailures.length ? safetyFailures.map((entry) => `${entry.id}@${entry.line}`).join(", ") : "No stack dump, frozen-stack marker, or BROAD_SCOPE_ABORT found.");
   add(options.allowOverflow || byAction.OVERFLOW.length === 0, "no-overflow", byAction.OVERFLOW.length ? `${byAction.OVERFLOW.length} overflow marker(s) found.` : "No queue overflow marker found.");
-  if (options.maxJobMs != null) {
-    const unavailable = durations.filter((entry) => entry.jobMs == null);
-    const slow = durations.filter((entry) => entry.jobMs != null && entry.jobMs > options.maxJobMs);
+  if (options.maxAdmissionMs != null) {
+    const unavailable = byAction.ENQUEUE.filter((entry) => entry.admissionMs == null);
+    const slow = byAction.ENQUEUE.filter((entry) => entry.admissionMs != null && entry.admissionMs > options.maxAdmissionMs);
     add(
       unavailable.length === 0 && slow.length === 0,
+      "admission-latency-within-limit",
+      unavailable.length
+        ? `${unavailable.length} enqueue marker(s) lack admissionMs.`
+        : (slow.length
+          ? `${slow.length} admission(s) exceeded ${options.maxAdmissionMs} ms: ${slow.map((entry) => `${entry.job || entry.key}=${entry.admissionMs}`).join(", ")}.`
+          : `Every queue admission finished within ${options.maxAdmissionMs} ms.`),
+    );
+  }
+  if (options.maxJobMs != null) {
+    const unavailable = durations.filter((entry) => entry.jobMs == null);
+    const invalid = durations.filter((entry) => entry.jobMs != null && entry.jobMs < 0);
+    const slow = durations.filter((entry) => entry.jobMs != null && entry.jobMs > options.maxJobMs);
+    add(
+      unavailable.length === 0 && invalid.length === 0 && slow.length === 0,
       "job-latency-within-limit",
       unavailable.length
         ? `${unavailable.length} completed job(s) lack START-to-COMPLETE timestamps.`
-        : (slow.length
-          ? `${slow.length} job(s) exceeded ${options.maxJobMs} ms: ${slow.map((entry) => `${entry.job || entry.key}=${entry.jobMs}`).join(", ")}.`
-          : `Every completed job finished within ${options.maxJobMs} ms of START.`),
+        : invalid.length
+          ? `${invalid.length} completed job(s) produced negative latency, indicating cross-session lifecycle pairing: ${invalid.map((entry) => `${entry.job || entry.key}=${entry.jobMs}`).join(", ")}.`
+          : (slow.length
+            ? `${slow.length} job(s) exceeded ${options.maxJobMs} ms: ${slow.map((entry) => `${entry.job || entry.key}=${entry.jobMs}`).join(", ")}.`
+            : `Every completed job finished within ${options.maxJobMs} ms of its matched START.`),
     );
   }
   if (expected.length) {
     add(suffixMatches(enqueueKeys, expected), "expected-enqueue-sequence", `Expected final enqueue keys: ${expected.join(" -> ")}; saw ${enqueueKeys.slice(-expected.length).join(" -> ") || "none"}.`);
+    add(suffixMatches(buildKeys, expected), "expected-build-sequence", `Expected final build keys: ${expected.join(" -> ")}; saw ${buildKeys.slice(-expected.length).join(" -> ") || "none"}.`);
     add(suffixMatches(startKeys, expected), "expected-start-sequence", `Expected final start keys: ${expected.join(" -> ")}; saw ${startKeys.slice(-expected.length).join(" -> ") || "none"}.`);
     add(suffixMatches(completeKeys, expected), "expected-complete-sequence", `Expected final completion keys: ${expected.join(" -> ")}; saw ${completeKeys.slice(-expected.length).join(" -> ") || "none"}.`);
   }
@@ -210,25 +309,49 @@ export function evaluateLog(logText, options = {}) {
     markerCounts: Object.fromEntries(ACTIONS.map((action) => [action.toLowerCase(), byAction[action].length])),
     safetyFailures,
     vmLifecycleObservations,
+    catalogSummaries,
     incomplete: incomplete.map((entry) => ({ job: entry.job, key: entry.key, line: entry.line })),
     durations,
-    sequence: { expected, enqueue: enqueueKeys, start: startKeys, complete: completeKeys },
+    sequence: { expected, enqueue: enqueueKeys, build: buildKeys, start: startKeys, complete: completeKeys },
   };
 }
 
 function selfTestLog() {
   return [
-    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_1 key=207142|200 cells=45 buildMs=10 pending=1",
-    "[07/15/2026 - 11:00:00PM] [PDV][QR_QUEUE] ENQUEUE qr_2 key=219947|150 cells=45 buildMs=12 pending=2",
-    "[07/15/2026 - 11:00:00PM] VM is freezing...",
-    "[07/15/2026 - 11:00:00PM] VM is frozen",
-    "[07/15/2026 - 11:00:00PM] Reverting game...",
-    "[07/15/2026 - 11:00:01PM] Loading game...",
-    "[07/15/2026 - 11:00:01PM] VM is thawing...",
-    "[07/15/2026 - 11:00:01PM] [PDV][QR_QUEUE] START qr_1 key=207142|200 cells=45",
-    "[07/15/2026 - 11:00:03PM] [PDV][QR_QUEUE] COMPLETE qr_1 key=207142|200 cells=45 elapsed=3.0",
-    "[07/15/2026 - 11:00:03PM] [PDV][QR_QUEUE] START qr_2 key=219947|150 cells=45",
-    "[07/15/2026 - 11:00:04PM] [PDV][QR_QUEUE] COMPLETE qr_2 key=219947|150 cells=45 elapsed=4.0",
+    "[08/14/2026 - 05:56:20PM] [PDV][QR_QUEUE] CATALOG loaded catalogs=2 sources=83 active=81 inactive=2 rejected=0",
+    "[08/14/2026 - 05:56:20PM] [PDV][QR_QUEUE] CATALOG loaded questKeys=873 semanticKeys=29 active=81 rejected=0",
+    "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_2 key=Skyrim.esm|210731|150 cells=0 sourceCells=45 materialized=0 admissionMs=24.000000 pending=1",
+    "[08/14/2026 - 05:56:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_3 key=Skyrim.esm|148154|160 cells=0 sourceCells=45 materialized=0 admissionMs=18.000000 pending=2",
+    "[08/14/2026 - 05:56:24PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_4 key=Skyrim.esm|207142|200 cells=0 sourceCells=45 materialized=0 admissionMs=21.000000 pending=3",
+    "[08/14/2026 - 05:56:25PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_5 key=Skyrim.esm|221587|220 cells=0 sourceCells=22 materialized=0 admissionMs=16.000000 pending=4",
+    "[08/14/2026 - 05:56:26PM] [PDV][QR_QUEUE] BUILD completed v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0 materializeMs=3000.000000",
+    "[08/14/2026 - 05:56:26PM] [PDV][QR_QUEUE] START started v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0",
+    "[08/14/2026 - 05:56:31PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_2 key=Skyrim.esm|210731|150 cells=25 sourceCells=45 skipped=20 meta=0 elapsed=7.729004",
+    "[08/14/2026 - 05:56:31PM] [PDV][QR_QUEUE] BUILD completed v3qr_3 key=Skyrim.esm|148154|160 cells=25 sourceCells=45 skipped=20 meta=0 materializeMs=8000.000000",
+    "[08/14/2026 - 05:56:31PM] [PDV][QR_QUEUE] START started v3qr_3 key=Skyrim.esm|148154|160 cells=25 sourceCells=45 skipped=20 meta=0",
+    "[08/14/2026 - 05:56:36PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_3 key=Skyrim.esm|148154|160 cells=25 sourceCells=45 skipped=20 meta=0 elapsed=12.684021",
+    "[08/14/2026 - 05:56:36PM] [PDV][QR_QUEUE] BUILD completed v3qr_4 key=Skyrim.esm|207142|200 cells=25 sourceCells=45 skipped=20 meta=0 materializeMs=12000.000000",
+    "[08/14/2026 - 05:56:36PM] [PDV][QR_QUEUE] START started v3qr_4 key=Skyrim.esm|207142|200 cells=25 sourceCells=45 skipped=20 meta=0",
+    "[08/14/2026 - 05:56:42PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_4 key=Skyrim.esm|207142|200 cells=25 sourceCells=45 skipped=20 meta=0 elapsed=17.491028",
+    "[08/14/2026 - 05:56:42PM] [PDV][QR_QUEUE] BUILD completed v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0 materializeMs=17000.000000",
+    "[08/14/2026 - 05:56:42PM] [PDV][QR_QUEUE] START started v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0",
+    "[08/14/2026 - 05:56:45PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_5 key=Skyrim.esm|221587|220 cells=11 sourceCells=22 skipped=11 meta=0 elapsed=19.790039",
+    "[08/14/2026 - 06:06:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_2 key=Skyrim.esm|210731|150 cells=0 sourceCells=45 materialized=0 admissionMs=20.000000 pending=1",
+    "[08/14/2026 - 06:06:23PM] [PDV][QR_QUEUE] BUILD completed v3qr_2 key=Skyrim.esm|210731|150 cells=21 sourceCells=45 skipped=24 meta=0 materializeMs=4000.000000",
+    "[08/14/2026 - 06:06:23PM] [PDV][QR_QUEUE] START started v3qr_2 key=Skyrim.esm|210731|150 cells=21 sourceCells=45 skipped=24 meta=0",
+    "[08/14/2026 - 06:06:23PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_3 key=Skyrim.esm|148154|160 cells=0 sourceCells=45 materialized=0 admissionMs=17.000000 pending=2",
+    "[08/14/2026 - 06:06:24PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_4 key=Skyrim.esm|207142|200 cells=0 sourceCells=45 materialized=0 admissionMs=19.000000 pending=3",
+    "[08/14/2026 - 06:06:25PM] [PDV][QR_QUEUE] ENQUEUE queued v3qr_5 key=Skyrim.esm|221587|220 cells=0 sourceCells=22 materialized=0 admissionMs=15.000000 pending=4",
+    "[08/14/2026 - 06:06:27PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_2 key=Skyrim.esm|210731|150 cells=21 sourceCells=45 skipped=24 meta=0 elapsed=4.120972",
+    "[08/14/2026 - 06:06:27PM] [PDV][QR_QUEUE] BUILD completed v3qr_3 key=Skyrim.esm|148154|160 cells=21 sourceCells=45 skipped=24 meta=0 materializeMs=4000.000000",
+    "[08/14/2026 - 06:06:27PM] [PDV][QR_QUEUE] START started v3qr_3 key=Skyrim.esm|148154|160 cells=21 sourceCells=45 skipped=24 meta=0",
+    "[08/14/2026 - 06:06:31PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_3 key=Skyrim.esm|148154|160 cells=21 sourceCells=45 skipped=24 meta=0 elapsed=8.432068",
+    "[08/14/2026 - 06:06:31PM] [PDV][QR_QUEUE] BUILD completed v3qr_4 key=Skyrim.esm|207142|200 cells=21 sourceCells=45 skipped=24 meta=0 materializeMs=7000.000000",
+    "[08/14/2026 - 06:06:31PM] [PDV][QR_QUEUE] START started v3qr_4 key=Skyrim.esm|207142|200 cells=21 sourceCells=45 skipped=24 meta=0",
+    "[08/14/2026 - 06:06:35PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_4 key=Skyrim.esm|207142|200 cells=21 sourceCells=45 skipped=24 meta=0 elapsed=12.873047",
+    "[08/14/2026 - 06:06:35PM] [PDV][QR_QUEUE] BUILD completed v3qr_5 key=Skyrim.esm|221587|220 cells=7 sourceCells=22 skipped=15 meta=0 materializeMs=10000.000000",
+    "[08/14/2026 - 06:06:35PM] [PDV][QR_QUEUE] START started v3qr_5 key=Skyrim.esm|221587|220 cells=7 sourceCells=22 skipped=15 meta=0",
+    "[08/14/2026 - 06:06:36PM] [PDV][QR_QUEUE] COMPLETE completed v3qr_5 key=Skyrim.esm|221587|220 cells=7 sourceCells=22 skipped=15 meta=0 elapsed=13.445007",
   ].join(os.EOL);
 }
 
@@ -237,9 +360,38 @@ function printReport(report) {
   for (const check of report.checks) console.log(`[${check.status}] ${check.id}: ${check.detail}`);
   console.log(`Markers: ${Object.entries(report.markerCounts).map(([key, value]) => `${key}=${value}`).join(" ")}`);
   for (const duration of report.durations) {
-    console.log(`Completion: job=${duration.job || "?"} key=${duration.key || "?"} jobMs=${duration.jobMs ?? "unavailable"} endToEndMs=${duration.endToEndMs ?? "unavailable"} queueWaitMs=${duration.ingressMs ?? "unavailable"} ingressBuildMs=${duration.ingressBuildMs ?? "unavailable"}`);
+    console.log(`Completion: job=${duration.job || "?"} key=${duration.key || "?"} jobMs=${duration.jobMs ?? "unavailable"} endToEndMs=${duration.endToEndMs ?? "unavailable"} queueWaitMs=${duration.ingressMs ?? "unavailable"} admissionMs=${duration.admissionMs ?? "unavailable"} legacyIngressBuildMs=${duration.legacyIngressBuildMs ?? "unavailable"}`);
   }
   console.log(`Proof boundary: ${report.proofBoundary}`);
+}
+
+function assertCatalogAdmissionSelfTests(logText, options) {
+  const noCatalogs = evaluateLog(logText.replace("catalogs=2", "catalogs=0"), options);
+  if (noCatalogs.checks.find((check) => check.id === "catalogs-admitted")?.status !== "FAIL") {
+    throw new Error("Self-test mutation: zero admitted catalogs did not fail.");
+  }
+  const noQuestKeys = evaluateLog(logText.replace("questKeys=873", "questKeys=0"), options);
+  if (noQuestKeys.checks.find((check) => check.id === "quest-keys-active")?.status !== "FAIL") {
+    throw new Error("Self-test mutation: zero active quest keys did not fail.");
+  }
+}
+
+function assertIngressAdmissionSelfTests(logText, options) {
+  const missingAdmission = evaluateLog(logText.replace(" admissionMs=24.000000", ""), options);
+  if (missingAdmission.checks.find((check) => check.id === "admission-latency-within-limit")?.status !== "FAIL") {
+    throw new Error("Self-test mutation: missing admissionMs did not fail.");
+  }
+  const slowAdmission = evaluateLog(logText.replace("admissionMs=24.000000", "admissionMs=1001.000000"), options);
+  if (slowAdmission.checks.find((check) => check.id === "admission-latency-within-limit")?.status !== "FAIL") {
+    throw new Error("Self-test mutation: slow admission did not fail.");
+  }
+}
+
+function assertBoundedBuildSelfTests(logText, options) {
+  const missingFinalBuild = evaluateLog(logText.replace("[08/14/2026 - 06:06:35PM] [PDV][QR_QUEUE] BUILD completed v3qr_5 key=Skyrim.esm|221587|220 cells=7 sourceCells=22 skipped=15 meta=0 materializeMs=10000.000000", ""), options);
+  if (missingFinalBuild.checks.find((check) => check.id === "expected-build-sequence")?.status !== "FAIL") {
+    throw new Error("Self-test mutation: missing bounded BUILD marker did not fail.");
+  }
 }
 
 function main() {
@@ -251,6 +403,19 @@ function main() {
   const logText = options.selfTest
     ? selfTestLog()
     : fs.readFileSync(options.logPath, "utf8");
+  if (options.selfTest) {
+    options.maxAdmissionMs = 1000;
+    options.expectedSequence = [
+      "Skyrim.esm|210731|150",
+      "Skyrim.esm|148154|160",
+      "Skyrim.esm|207142|200",
+      "Skyrim.esm|221587|220",
+    ];
+    options.maxJobMs = 10000;
+    assertCatalogAdmissionSelfTests(logText, options);
+    assertIngressAdmissionSelfTests(logText, options);
+    assertBoundedBuildSelfTests(logText, options);
+  }
   const report = evaluateLog(logText, options);
   if (options.json) console.log(JSON.stringify(report, null, 2));
   else printReport(report);

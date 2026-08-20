@@ -2,8 +2,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { callHousecarl, extractHousecarlText } from "./lib/pdv_housecarl_stdio.mjs";
+import { readVmadScriptProperties } from "./lib/pdv_housecarl_vmad.mjs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -12,7 +14,7 @@ const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_pantheon_record_readback" });
 
 const ROOT = process.cwd();
-const MANAGER_SOURCE = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 const json = process.argv.includes("--json");
 const findings = [];
 const pass = (check, detail) => findings.push({ status: "PASS", check, detail });
@@ -25,12 +27,6 @@ const expectedProperties = [
   "PDV_Bless_Nord_NineDivines_T1",
   "PDV_Bless_Nord_NineDivines_T2",
 ];
-
-// Appended manager VMAD properties (Nine Divines, Observe-Moons, QuestReaction, etc.)
-// sit beyond houseCARL's bounded generic container expansion. Request an explicit
-// TAIL WINDOW and resolve the ones we need BY NAME (parseProperties maps Name->Object),
-// so the audit survives future property insertions instead of pinning absolute indices.
-const TAIL_SLOTS = Array.from({ length: 11 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${488 + i}]`);
 
 function normalizeFormKey(value) {
   const match = String(value ?? "").trim().match(/^([0-9A-Fa-f]{6}):(.+)$/);
@@ -45,49 +41,26 @@ function parseInventory(text) {
   return rows;
 }
 
-function parseProperties(text, prefix = "VirtualMachineAdapter.Scripts[0].Properties") {
-  const names = new Map();
-  const out = new Map();
-  const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  for (const line of String(text).split(/\r?\n/)) {
-    const name = line.match(new RegExp(`${escaped}\\[(\\d+)\\](?:\\.Name)?\\s*=.*?Name=(PDV_[A-Za-z0-9_]+)`));
-    if (name) names.set(name[1], name[2]);
-    const scalarName = line.match(new RegExp(`${escaped}\\[(\\d+)\\]\\.Name\\s*=\\s*(PDV_[A-Za-z0-9_]+)`));
-    if (scalarName) names.set(scalarName[1], scalarName[2]);
-  }
-  for (const line of String(text).split(/\r?\n/)) {
-    const object = line.match(new RegExp(`${escaped}\\[(\\d+)\\]\\.Object\\s*=\\s*([0-9A-Fa-f]{6}:[^\\s\\r\\n]+)`));
-    if (object && names.has(object[1])) out.set(names.get(object[1]), object[2]);
-  }
-  return out;
-}
-
 function functionBlock(source, functionName) {
   const match = source.match(new RegExp(`(?:^|\\n)Function\\s+${functionName}\\b[\\s\\S]*?\\nEndFunction`, "i"));
   return match?.[0] ?? "";
 }
 
 async function main() {
-  const source = fs.readFileSync(MANAGER_SOURCE, "utf8");
+  // Search the whole decomposition family, not just the manager: functions extracted
+  // into deep modules would otherwise read as absent and every needle below would fail.
+  const source = familySourceText(ROOT, SOURCE_DIR);
   const inventoryResult = await callHousecarl("housecarl_cross_plugin_query", {
     plugins: ["Devotion.esp"], type: "SPEL", editorid_contains: "PDV_Bless_", fields: ["EditorID"], limit: 500, max_chars: 120_000,
   });
   const inventory = parseInventory(extractHousecarlText(inventoryResult));
-  const managerResult = await callHousecarl("housecarl_read_record", {
-    formid: "00C325:Devotion.esp", fields: [
-      "VirtualMachineAdapter.Scripts[0].Properties",
-      ...TAIL_SLOTS,
-    ], depth: 3, max_chars: 350_000,
-  }, { timeoutMs: 90_000 });
-  const managerProperties = parseProperties(extractHousecarlText(managerResult));
-  const appendedResult = await callHousecarl("housecarl_batch_record_detail", {
-    formids: ["00C325:Devotion.esp"],
-    fields: TAIL_SLOTS,
-    depth: 3,
-    max_chars: 40_000,
-  }, { timeoutMs: 90_000 });
-  const appendedProperties = parseProperties(extractHousecarlText(appendedResult));
-  for (const [name, target] of appendedProperties) managerProperties.set(name, target);
+  const managerReadback = await readVmadScriptProperties({ formid: "00C325:Devotion.esp" });
+  const managerProperties = managerReadback.properties;
+  if (managerReadback.duplicates.size) {
+    fail("manager VMAD uniqueness", `Duplicate manager properties: ${[...managerReadback.duplicates.keys()].join(", ")}.`);
+  } else {
+    pass("manager VMAD uniqueness", `All ${managerReadback.count} manager VMAD property names are unique.`);
+  }
 
   for (const property of expectedProperties) {
     const record = inventory.get(property);

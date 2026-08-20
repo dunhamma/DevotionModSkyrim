@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -14,7 +15,10 @@ assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_khajiit_re
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative) => fs.readFileSync(path.join(root, relative), "utf8");
-const manager = read("live-source/Scripts/Source/PDV__ManagerQuest.psc");
+// Manager text for SEARCHING is the whole decomposition family: as functions move out
+// of PDV__ManagerQuest.psc into extracted modules, a manager-only read goes blind and
+// every needle below either fails or (when negated) passes vacuously.
+const manager = familySourceText(root, path.join(root, "live-source/Scripts/Source"));
 const rescue = read("live-source/Scripts/Source/PDV_T3DailyLowHealthSaveEffect.psc");
 const baanRescue = read("live-source/Scripts/Source/PDV_KhajiitBaanDarRescueEffect.psc");
 const playerEvents = read("live-source/Scripts/Source/PDV_PlayerEvents.psc");
@@ -74,7 +78,7 @@ check("portent.day-key", /PDV\.Khajiit\.AzurahPortent\.Day/.test(manager) && /Ge
 check("portent.native-cast", /PDV_SPEL_Khajiit_AzurahPortentDetect\.Cast/.test(manager) && !/FindClosestActor|GetNthRef|GetNumRefs/.test(portent), "Portent must cast conditioned native detection without actor searches");
 check("portent.script-gate", /TryUseKhajiitAzurahPortent/.test(portent), "lesser-power effect must route through the manager eligibility gate");
 
-check("baan.final-guard", /!HasRuntimeEligibility\(\)/.test(rescue) && /CanExecuteKhajiitBaanDarRescue\(playerRef\)/.test(baanRescue) && /return 0\.50/.test(baanRescue), "Baan Dar rescue must defend immediately before healing and restore to 50% Health");
+check("baan.final-guard", /!HasRuntimeEligibility\(\)/.test(rescue) && /HandleContextualQuery\(\"baandar-rescue-eligible\"[^\r\n]*playerRef\)\s*==\s*1/.test(baanRescue) && /return 0\.50/.test(baanRescue), "Baan Dar rescue must defend immediately before healing and restore to 50% Health");
 check("baan.manager-eligibility", /GetPlayerOriginRaceIndex\(\) != ORIGIN_KHAJIIT/.test(manager) && /GetKhajiitFocusedEmphasis\(\) != KHAJIIT_FOCUS_BAANDAR/.test(manager) && /GetTier\(PDV_BaanDar\) < TIER_CHAMPION/.test(manager) && /HasSpell\(PDV_Bless_Khajiit_BaanDar_T3\)/.test(manager), "manager must require origin, focus, Champion tier, and the correct T3");
 
 check("prisma.payload", ["currentFocus", "godInStrength", "focusStanding", "substrateTier", "resonating"].every((token) => manager.includes(`\\\"${token}\\\"`)), "extended lunar payload fields are incomplete");

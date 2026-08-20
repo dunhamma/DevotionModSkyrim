@@ -22,6 +22,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { devotionSource, devotionPrismaView } from "./lib/pdv_paths.mjs";
+import { callTokenPattern } from "./lib/pdv_symbol_home.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -32,10 +34,10 @@ assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ros
 const TOOLS_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(TOOLS_DIR, "..");
 const SPEC_DIR = path.join(PROJECT_ROOT, "references", "authoring");
-const DEVOTION_SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+const DEVOTION_SOURCE = devotionSource();
 const MANAGER_PATH = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
 const DEITYBASE_PATH = path.join(DEVOTION_SOURCE, "PDV_DeityBase.psc");
-const APP_JS_PATH = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";
+const APP_JS_PATH = devotionPrismaView();
 
 const JSON_MODE = process.argv.includes("--json");
 const STRICT = process.argv.includes("--strict");
@@ -195,7 +197,13 @@ if (fs.existsSync(MANAGER_PATH)) {
   } else {
     add("FAIL", "Manager does not emit a per-deity nextText threshold string.", MANAGER_PATH);
   }
-  if (manager.match(/primary\s*=\s*ClampValue\(piety\s*\/\s*150\.0/)) {
+  // Resolver-driven so the stale-scale guard tracks ClampValue's extraction
+  // into PDV_DevotionRules (matches bare or owning-script-qualified) instead of
+  // a hand-patched qualifier prefix.
+  const staleChampionScaleRe = new RegExp(
+    "primary\\s*=\\s*" + callTokenPattern("ClampValue", PROJECT_ROOT).source + "piety\\s*\\/\\s*150\\.0",
+  );
+  if (manager.match(staleChampionScaleRe)) {
     add("FAIL", "Panel instrument still normalizes piety / 150.0 (stale champion scale).", MANAGER_PATH);
   } else {
     add("PASS", "Panel instrument normalizes piety against the champion threshold.", MANAGER_PATH);

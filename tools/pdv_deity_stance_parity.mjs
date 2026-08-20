@@ -35,18 +35,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { openHousecarl, extractHousecarlText, resolveHousecarlExe } from "./lib/pdv_housecarl_stdio.mjs";
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { resolveDevotionRoot } from "./lib/pdv_paths.mjs";
+import { familySourceText, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
 
 const KNOWN_FLAGS = new Set(["--json", "--matrix"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_deity_stance_parity" });
 const AS_JSON = process.argv.includes("--json");
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const MANAGER = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
-const MCM = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
+const MCM = path.join(SOURCE_DIR, "PDV_MCM.psc");
 const matrixArg = process.argv[process.argv.indexOf("--matrix") + 1];
 const MATRIX = process.argv.includes("--matrix") && matrixArg
   ? path.resolve(ROOT, matrixArg)
-  : "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
+  : path.join(resolveDevotionRoot(), "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionCore.v2.json");
 
 const RACES = ["Nord", "Imperial", "Breton", "Altmer", "Bosmer", "Dunmer", "Khajiit", "Argonian", "Orc", "Redguard"];
 const ESP_STANCE_NAME = { 0: "NATIVE", 1: "FOREIGN", 2: "TABOO", 3: "HOSTILE" };
@@ -117,15 +119,29 @@ function parseRuntimeMigration(src) {
 }
 
 function functionBlock(src, functionName) {
-  const start = src.indexOf(`Function ${functionName}`);
-  if (start < 0) return "";
+  // Anchored on the declaration's open paren, not a bare prefix match. A plain
+  // indexOf("Function SetActiveDeity") also matches "Function SetActiveDeityRef"
+  // and returns the WRONG body -- which silently reported the real function's
+  // contract as missing once SetActiveDeity moved out of the manager.
+  const decl = new RegExp("Function\\s+" + functionName + "\\s*\\(");
+  const hit = decl.exec(src);
+  if (!hit) return "";
+  const start = hit.index;
   const tail = src.slice(start);
   const end = tail.indexOf("\nEndFunction");
   return end < 0 ? tail : tail.slice(0, end);
 }
 
-const managerSrc = fs.readFileSync(MANAGER, "utf8");
-const mcmSrc = fs.readFileSync(MCM, "utf8");
+// Searched, not hashed or written. The 2.0 rebuild moves manager functions into
+// deep modules, so reading only PDV__ManagerQuest.psc makes every parse and
+// source-contract needle below blind to a body that merely relocated.
+// familySourceText() is strictly additive: manager text first and verbatim, then
+// each extracted module with qualifiers stripped.
+const managerSrc = familySourceText(ROOT, SOURCE_DIR);
+// Qualifier-stripped for the same reason: the MCM's calls picked up a
+// `LedgerRuntime.` hop when SetActiveDeity moved, which is a relocation, not a
+// contract change. The needle below still pins the receiver and the arguments.
+const mcmSrc = stripQualifiers(fs.readFileSync(MCM, "utf8"));
 const ROSTER = parseRosters(managerSrc);
 const CANON = parseCanonicalNames(managerSrc);
 const RUNTIME_MIGRATION = parseRuntimeMigration(managerSrc);
@@ -136,11 +152,17 @@ if (Object.keys(ROSTER).length !== RACES.length) {
 if (Object.keys(CANON).length === 0) fail("parse", "parsed no canonical deity names from RepairDeityRuntimeName");
 
 const selectionBlock = functionBlock(managerSrc, "SetActiveDeity");
-if (!selectionBlock.includes("IsDashboardDeityInOriginRoster(newDeity") || !selectionBlock.includes("UsesFormalCommitmentOffersForDeity(newDeity")) {
-  fail("source-contract", "SetActiveDeity lacks the central roster/formal-offer selection guard");
+if (!selectionBlock.includes("!IsDeityReachableForCurrentOrigin(newDeity)")) {
+  fail("source-contract", "SetActiveDeity lacks the shared current-origin reachability guard");
 }
-if (!mcmSrc.includes("forcePatronManager.SetActiveDeity(forcePatronDeity, True)") || !mcmSrc.includes("primeNeglectManager.SetActiveDeity(primeNeglectDeity, True)")) {
-  fail("source-contract", "MCM patron/neglect test controls do not use the explicit off-roster debug override");
+const mcmDebugTargetsUseOrdinaryGuard =
+  mcmSrc.includes('forcePatronManager.IsDebugDeityTargetEligible(forcePatronDeity, "Force selected patron")') &&
+  mcmSrc.includes("forcePatronManager.SetActiveDeity(forcePatronDeity)") &&
+  mcmSrc.includes('primeNeglectManager.IsDebugDeityTargetEligible(primeNeglectDeity, "Prime neglect eligible")') &&
+  mcmSrc.includes("primeNeglectManager.SetActiveDeity(primeNeglectDeity)") &&
+  !/SetActiveDeity\s*\([^\r\n)]*,\s*True\s*\)/i.test(mcmSrc);
+if (!mcmDebugTargetsUseOrdinaryGuard) {
+  fail("source-contract", "MCM patron/neglect controls must preflight reachability and use the ordinary guarded setter without an off-roster override");
 }
 const grandfatherBlock = functionBlock(managerSrc, "IsGrandfatheredOffRosterPatron");
 if (!grandfatherBlock.includes("PATRON_STATE_ACTIVE") || !grandfatherBlock.includes('stance == "FOREIGN" || stance == "TOLERATED"')) {
@@ -165,7 +187,7 @@ if (!fs.existsSync(MATRIX)) {
   process.exit(1);
 }
 const strings = JSON.parse(fs.readFileSync(MATRIX, "utf8")).string ?? {};
-const jsonStance = (race, name) => strings[`stance.${race}.${name}`] ?? null;
+const jsonStance = (race, name) => strings[`stance.${race}.${name}`.toLowerCase()] ?? null;
 
 // ---- 4. ESP stances, read live ---------------------------------------------------
 try { resolveHousecarlExe(); } catch (error) {

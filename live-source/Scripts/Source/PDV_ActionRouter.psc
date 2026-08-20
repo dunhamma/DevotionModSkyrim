@@ -170,7 +170,7 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
 
         RouteActionWithAttribution(nonHostileEvent, ATTR_DIRECT_PLAYER, killerActor as Form, victimActor as Form)
         if PDV_Manager
-            PDV_Manager.HandleArgonianShadowscaleKill(playerActor)
+            PDV_Manager.OriginRuntime.HandleArgonianShadowscaleKill(playerActor)
         endIf
         return
     endIf
@@ -183,25 +183,25 @@ Function HandleStoryKillActor(ObjectReference akVictim, ObjectReference akKiller
 
     RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, killerActor as Form, victimActor as Form)
     if PDV_Manager
-        PDV_Manager.HandleArgonianShadowscaleKill(playerActor)
+        PDV_Manager.OriginRuntime.HandleArgonianShadowscaleKill(playerActor)
         if eventType == EVT_KILLED_HOSTILE_HUMANOID_IN_COMBAT && aiCrimeStatus == 0 && aiRelationshipRank <= -2
             ; Story Manager contributes the hostile/non-murder half only. The
             ; player-alias kill receiver must independently contribute direct
             ; kill plus clean-opener evidence before the substrate can fire.
-            PDV_Manager.RecordDunmerStoryVictoryEvidence(victimActor as Form, aiRelationshipRank)
+            PDV_Manager.OriginRuntime.RecordDunmerStoryVictoryEvidence(victimActor as Form, aiRelationshipRank)
         endIf
-        PDV_Manager.HandleHoonDingBreakthroughKill(victimActor as Form, eventType)
+        PDV_Manager.OriginRuntime.HandleHoonDingBreakthroughKill(victimActor as Form, eventType)
         ; A UNIQUE (named/boss) undead defeat is the marked Ash'abah death-burden that
         ; lets a Redguard switch INTO the Ash'abah sect mid-game (origin/undead/Unique
         ; gating lives in the manager). Routine undead are not Unique, so this no-ops on
         ; casual draugr fighting.
-        PDV_Manager.HandleRedguardAshAbahMajorBurden(victimActor as Form, eventType)
-        PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akLocation)
-        PDV_Manager.TrackUndeadCryptClearSiteVisit(akLocation)
+        PDV_Manager.OriginRuntime.HandleRedguardAshAbahMajorBurden(victimActor as Form, eventType)
+        PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akLocation)
+        PDV_Manager.OriginRuntime.TrackUndeadCryptClearSiteVisit(akLocation)
         ; Final-kill fast path for clearable undead sites. If the clear flag settles later,
         ; HandleStoryChangeLocation also checks the old location when the player leaves.
-        PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akLocation)
-        PDV_Manager.HandleUndeadCryptSiteClear(akLocation)
+        PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akLocation)
+        PDV_Manager.OriginRuntime.HandleUndeadCryptSiteClear(akLocation)
     endIf
 EndFunction
 
@@ -258,7 +258,7 @@ Function RouteThalmorUnprovokedKill(Actor victimActor)
         return
     endIf
 
-    PDV_Manager.HandleThalmorUnprovokedKill(victimActor as Form)
+    PDV_Manager.OriginRuntime.HandleThalmorUnprovokedKill(victimActor as Form)
 EndFunction
 
 Function HandleStoryCraftItem(ObjectReference akBench, Location akLocation, Form akCreatedItem)
@@ -274,7 +274,7 @@ Function HandleStoryCraftItem(ObjectReference akBench, Location akLocation, Form
     endIf
 
     if eventType == EVT_SMITH_ITEM && PDV_Manager
-        PDV_Manager.HandleOrcStoryCraftForge(akLocation)
+        PDV_Manager.OriginRuntime.HandleOrcStoryCraftForge(akLocation)
     endIf
 
     RouteActionWithAttribution(eventType, ATTR_DIRECT_PLAYER, GetPlayerActor() as Form, akCreatedItem)
@@ -296,7 +296,7 @@ Function HandleStoryIncreaseSkill(String asSkill)
     endIf
 
     if PDV_Manager
-        PDV_Manager.HandleAltmerMagicSkillIncrease(asSkill)
+        PDV_Manager.OriginRuntime.HandleAltmerMagicSkillIncrease(asSkill)
     endIf
 
     RouteActionWithAttribution(EVT_INCREASE_SKILL, ATTR_DIRECT_PLAYER, GetPlayerActor() as Form, None)
@@ -311,17 +311,12 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
     ; Runs on EVERY location change (before the one-shot discovery gate) so the
     ; Eldergleam interior-cell catch can arm/disarm as the player comes and goes.
     if PDV_Manager
-        PDV_Manager.UpdateArgonianSanctuaryActive(akNewLocation)
-        ; Bosmer Songs of the Green + Hearth discovery counter. Self-contained
-        ; (own per-FormID seen keys + Eldergleam arm/disarm), so it rides every
-        ; change here rather than the one-shot MarkLocationSeen gate below.
-        PDV_Manager.HandleBosmerLocationChange(akNewLocation)
-        PDV_Manager.HandleNordLocationChange(akNewLocation)
-        PDV_Manager.HandleOrcLocationChange(akNewLocation)
-        PDV_Manager.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
-        PDV_Manager.TrackUndeadCryptClearSiteVisit(akNewLocation)
-        PDV_Manager.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
-        PDV_Manager.HandleUndeadCryptSiteClear(akOldLocation)
+        ; The selected origin adapter owns the race-specific location verb. This
+        ; replaces five parallel, self-gated race calls with one polymorphic dispatch.
+        PDV_Manager.OriginRuntime.HandleLocationChange(akNewLocation)
+        PDV_Manager.OriginRuntime.TrackUndeadCryptClearSiteVisit(akNewLocation)
+        PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
+        PDV_Manager.OriginRuntime.HandleUndeadCryptSiteClear(akOldLocation)
     endIf
 
     if !MarkLocationSeen(akNewLocation)
@@ -331,7 +326,7 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
 
     RouteActionWithAttribution(EVT_DISCOVER_LOCATION, ATTR_DIRECT_PLAYER, akActor as Form, akNewLocation as Form)
     if PDV_Manager
-        PDV_Manager.HandleArgonianSacredWaterDiscovery(akNewLocation)
+        PDV_Manager.OriginRuntime.HandleArgonianSacredWaterDiscovery(akNewLocation)
     endIf
 EndFunction
 
@@ -482,20 +477,35 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
         return
     endIf
 
-    PDV_Manager.HandleSubstrateActionEvent(eventType, GetEventReason(eventType))
+    String eventReason = GetEventReason(eventType)
+    PDV_Manager.OriginRuntime.HandleSubstrateActionEvent(eventType, eventReason)
 
     Int i = 0
     Int count = PDV_FLST_AllDeities.GetSize()
     Int scoredCount = 0
+    Bool detachedBroadEvent = !PDV_Manager.LedgerRuntime.ShouldSurfaceLikesDislikesEvent(eventType)
+    String detachedBroadPool = ""
+    Float detachedBestPositive = 0.0
+    Float detachedWorstNegative = 0.0
+    if detachedBroadEvent
+        detachedBroadPool = PDV_Manager.LedgerRuntime.GetActiveBroadPantheonPoolId()
+    endIf
 
-    PDV_Manager.HandleBretonActionPracticeSignal(eventType, GetEventReason(eventType))
-    PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)
+    PDV_Manager.OriginRuntime.HandleBretonActionPracticeSignal(eventType, eventReason)
+    if !detachedBroadEvent
+        PDV_Manager.LedgerRuntime.BeginLikesDislikesSurface(eventType, logicalEventId)
+    endIf
     while i < count
         PDV_DeityBase deity = PDV_FLST_AllDeities.GetAt(i) as PDV_DeityBase
         if deity
             Float delta = deity.ScoreAction(eventType, actorRef, targetRef)
             if delta != 0.0
-                PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))
+                Float broadDelta = PDV_Manager.LedgerRuntime.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason, detachedBroadEvent, detachedBroadPool)
+                if broadDelta > detachedBestPositive
+                    detachedBestPositive = broadDelta
+                elseIf broadDelta < detachedWorstNegative
+                    detachedWorstNegative = broadDelta
+                endIf
                 scoredCount += 1
 
                 if GetDebugLevel() >= 2
@@ -508,10 +518,14 @@ Function RouteActionWithAttribution(Int eventType, Int attributionType, Form act
 
         i += 1
     endWhile
-    PDV_Manager.FlushLikesDislikesSurface(eventType)
+    if detachedBroadEvent
+        PDV_Manager.LedgerRuntime.CommitDetachedBroadPantheonEvent(logicalEventId, detachedBroadPool, detachedBestPositive, detachedWorstNegative, eventType)
+    else
+        PDV_Manager.LedgerRuntime.FlushLikesDislikesSurface(eventType)
+    endIf
 
     ; V2: also deepen any OPEN transgressive-Prince paths (fallback path; EventBus does the same).
-    PDV_Manager.RouteActionToOpenPaths(eventType, actorRef, targetRef)
+    PDV_Manager.DaedricRuntime.RouteActionToOpenPaths(eventType, actorRef, targetRef)
 
     Trace(2, "RouteAction complete: event " + eventType + ", scored deities " + scoredCount)
 EndFunction
@@ -750,3 +764,8 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
+
+
+
+
+

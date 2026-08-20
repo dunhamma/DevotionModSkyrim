@@ -85,6 +85,7 @@ Work Rule".
 | `tools/pdv_pantheon_record_readback.mjs` | Direct houseCARL focused Imperial/Nord reward and substrate inherited-property readback |
 | `tools/pdv_pantheon_presentation_readback.mjs` | Direct houseCARL broad reward, active-substrate, Observe-the-Moons, manager VMAD, and player-visible `Spine` readback |
 | `tools/pdv_active_effect_naming_audit.mjs` | Direct houseCARL audit of every `PDV_Bless_*` parent spell and child MGEF; parent spells use family/tier headings while child effects use concise mechanical or distinct scripted-effect labels |
+| `tools/pdv_penalty_serialization_audit.mjs` | Direct houseCARL gate for every linked `Neglect`, `Disfavor`, and `Price` effect; requires `Recover` and exactly one valid magnitude/`Detrimental` encoding while reporting non-modifier script effects separately |
 | `tools/pdv_guide_tables_gen.mjs` | Regenerates race-guide bonus tables from the reward spec JSONs and prints them to STDOUT -- it does NOT edit the guide `.md` files; guide tables are hand-spliced from its output. Its old Observant/Faithful "retired-word" lint was retired 2026-07-15 (those are the ratified broad bands); a per-family vocabulary gate is the tracked follow-up. |
 | `tools/pdv_main_quest_full_coverage_audit.mjs` | Fail-closed static/generated-readback gate for the 2026-07-15 main-quest contract: 45 identities x 25 exact stages, 951 T11 rows, 1978-cell compiled matrix, strict integer stages, no `echo`, exact 17/11 Paarthurnax rosters, and indexed 134-watch registration. A PASS is not in-game route/display proof. |
 | `tools/pdv_guide_bbcode.mjs` | Emits `dist/nexus-articles/*.bb` from the 10 race guides and hard-fails on surviving review tags, HTML comments, or non-ASCII -- the Nexus release gate. Run after ANY guide edit. |
@@ -99,11 +100,17 @@ Work Rule".
 | `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, live manager eligibility/source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
 | `tools/pdv_prisma_parity_unitd_check.mjs` | Read-only verifier for Prisma parity Unit D journal/toast wiring, carryover award funnel, director resolver preservation, and Daedric commitment-title readback |
 | `tools/pdv_prisma_to_oneoh_audit.mjs` | Read-only roll-up verifier for Prisma-to-1.0 wiring; checks current producer callsites, source/live parity, repo/live Prisma UI parity, and adversarial negative fixtures before runtime smoke |
-| `tools/pdv_deity_stance_parity.mjs` | Cross-checks the three sources of a deity stance -- the matrix JSON `stance.<Race>.<Deity>` (wins at runtime), the ESP `Stance_<Race>` VMAD property (fallback), and `IsDashboardDeityInOriginRoster`. Fails on ESP/JSON drift and on an off-roster deity reading NATIVE; warns where the JSON value cannot be expressed in the record at all. Derives rosters and canonical names from source rather than pinning them |
-| `tools/pdv_patch_source_deploy.mjs` | Deploys `patch-source/` (the source of truth for patch-only Papyrus) into the FOMOD tree, producing the AFDI two-path duplication. `--check` gates that `dist/` matches and that no `.psc` has changed since its last compile; `--write` regenerates; `--relock` accepts new bytecode after recompiling |
+| `tools/pdv_deity_stance_parity.mjs` | Cross-checks the three sources of a deity stance -- the matrix JSON `stance.<Race>.<Deity>` (wins at runtime), the ESP `Stance_<Race>` VMAD property (fallback), and `IsDashboardDeityInOriginRoster`. Also pins the shared production setter/debug reachability predicate and rejects any `SetActiveDeity(..., True)` bypass. Fails on ESP/JSON drift and on an off-roster deity reading NATIVE; warns where the JSON value cannot be expressed in the record at all. Derives rosters and canonical names from source rather than pinning them |
+| `tools/pdv_patch_source_lock.mjs` | Gates canonical optional-adapter PSC/PEX pairs by normalized source hash and exact bytecode hash; `--relock` accepts reviewed bytecode after recompiling |
+| `tools/pdv_quest_reaction_build.mjs` | Single V3 Quest Reaction build entrypoint for deterministic catalogs, the required-catalog/five-adapter FOMOD tree, exact receipts, installer simulation, and verified normalized archives |
+| `tools/pdv_quest_reaction_semantic_adapter_audit.mjs` | Verifies the V3 AFDI observer keeps its baseline/backoff/poll-retirement lifecycle, submits exactly one catalog-owned semantic event per routed destruction, and leaves no Manager batch or devotional-outcome ownership in adapter code |
 | `tools/lib/pdv_daedric_effect_model.mjs` | Explicit all-Prince boon/price model and independently tunable ActorValue-family bands; exceptional packets such as Mora Champion live in the Prince declaration rather than editor-ID override maps |
 | `tools/pdv_generate_daedric_contract.mjs` | Generates the all-Prince Daedric record contract and non-Hircine path scripts from the content manifest, race/Prince matrix, and explicit effect model. **Report-only by default**; `--self-test` proves model invariants and zero reviewed-contract drift, while writes remain explicit through `--write-contract` or `--scaffold-scripts --source-dir <path>` |
 | `tools/pdv_prisma_ui_audit.mjs` | Read-only Prisma UI policy audit; blocks gameplay scripts from opening focused/blocking Prisma UI without default-off/player-owned gating and fails stale Book-of-Days manager/MCM bytecode |
+| `tools/pdv_v3_prisma_extraction_audit.mjs` | Read-only V3 PRISMA extraction gate for the 114-function presenter, typed ORIGIN presentation seam, module references, and 48-public/66-private contract |
+| `tools/pdv_v3_debug_extraction_audit.mjs` | Read-only V3 DEBUG extraction gate for the 136-function harness, retained manager dispatcher/registers, typed MCM double-hop, zero Global surface, and 111-public/25-private contract |
+| `tools/pdv_module_contract_sync.mjs` | Derives the current V3 module interface/ownership contract from source plus RegionMap; checks declaration splits, qualified calls, override collisions, manager-stranded bodies, and inheritance cycles. `--check` is read-only; `--write` refreshes the manifest |
+| `tools/pdv_ship_optimization_audit.mjs` | Trigger-first Papyrus/Prisma ship-cost audit. Derives the exact script-pair inventory from the release manifest and fails closed on accepted batching, caching, and bounded-lifetime contracts while leaving runtime profiler and font-visual proof as separate gates |
 | `tools/pdv_prisma_toast_fallback_audit.mjs` | Read-only Prisma-first toast fallback audit; fails raw player-facing top-left-only gameplay notices, checks stable toast helpers use shared fallback behavior, and hardens the P2 book route from `OnBookRead` through `ShowP2BookNotice` |
 | `tools/pdv_phase2_reward_readback_audit.mjs` | Read-only Phase 2 static closeout audit for reward records, manager spell/deity properties, FLST/SEQ/SGE state, Green Pact static layer plus the plant-food baseline, capstone records, and real-hook classification |
 | `tools/pdv_dislike_consequence_audit.mjs` | Read-only strict audit for dislike-consequence V2; checks the shared-domain spec, 32-deity CSV threshold/domain coverage, manager/router source gates, and live ESP readback |
@@ -468,7 +475,7 @@ For Daedric Prince CAT-6 work, first run `tools\pdv_generate_daedric_contract.mj
 
 For design-first thin-Prince artifact faucets, keep the scope to low-risk equip events unless a richer artifact-use support path has been designed. The artifact faucet FormLists for Molag Bal, Hircine, Meridia, Sheogorath, Mehrunes Dagon, and Nocturnal are authored and read back with the `housecarl_*` MCP tools; `tools\pdv_quest_matrix_compile.mjs --check` must report the matching Part D faucet count before live JSON write. This is machine/readback proof only until in-game artifact-equip smoke and wrong-origin silence are captured.
 
-The compiler spawns `PapyrusCompiler.exe` directly with the project import chain, compiles known scripts whose `.pex` output is missing or older than source, treats Papyrus warnings as failures, and runs the verifier after successful compiles unless `--skip-verify` is used. The active set now includes the proven v2 scripts plus the V3 Preflight script slice (`PDV_EventTypes` and `PDV_EventBus`), the Phase 18 `PDV_SurveyDevotionEffect` status surface, the Phase 20 Argonian concrete substrate (`PDV_Substrate_ArgonianHist`), the Phase 20 Orc life-mode source routes, the Phase 20 Redguard sect source routes, the Phase 20 Bosmer favor-parity source routes, the Phase 20 Khajiit moon/road/focus proof routes, and all generated non-Hircine `PDV_DaedricPath_<Prince>` scripts. The optional known set includes the V3 Structural Skeleton base scripts (`PDV_ReputationTrack`, `PDV_StateTrack`, `PDV_SubstrateBase`, `PDV_SacredPlace`, `PDV_DaedricPathBase`, `PDV_CurseState`). The import chain now also includes the local `powerofthree's Papyrus Extender\Source\scripts` headers so alias-side shout ingress compiles against `PO3_Events_Alias`. `--strict-phase3`, `--strict-preflight`, `--strict-skeleton`, `--strict-pattern-proving`, `--strict-phase7`, `--strict-phase8`, `--strict-phase9`, `--strict-phase10`, `--strict-khajiit`, `--strict-commitment`, `--strict-neglect-decay`, `--strict-phase11`, `--strict-phase12`, `--strict-phase13`, `--strict-phase14`, `--strict-phase15`, `--strict-phase16`, `--strict-phase17`, `--strict-phase18`, `--strict-phase19`, `--strict-phase20-roster`, `--strict-phase20-altmer`, `--strict-phase20-race-costing`, and `--strict-nord` all pass through to the verifier. The emitted compiler command uses the short canonical flags: `-f=<flags>`, `-i=<source-dirs>`, and `-o=<output-dir>`.
+The compiler spawns `PapyrusCompiler.exe` directly with the project import chain, compiles known scripts whose `.pex` output is missing or older than source, treats Papyrus warnings as failures, and runs the verifier after successful compiles unless `--skip-verify` is used. `references\authoring\PDV_ReleasePayload.manifest.json` is the single shipped-script inventory for default, `--all`, and `--list`; do not add a second active/optional list in the compiler. Default and `--all` compilation fail if any manifested source is absent instead of silently shrinking the target set. `node .\tools\pdv_compile_inventory_audit.mjs` verifies exact manifest/compiler/source agreement against the compiler's resolved `PDV_COMPILE_SOURCE_ROOT` (or its normal Anvil source root) without building bytecode. The import chain includes the local `powerofthree's Papyrus Extender\Source\scripts` headers so alias-side shout ingress compiles against `PO3_Events_Alias`. `--strict-phase3`, `--strict-preflight`, `--strict-skeleton`, `--strict-pattern-proving`, `--strict-phase7`, `--strict-phase8`, `--strict-phase9`, `--strict-phase10`, `--strict-khajiit`, `--strict-commitment`, `--strict-neglect-decay`, `--strict-phase11`, `--strict-phase12`, `--strict-phase13`, `--strict-phase14`, `--strict-phase15`, `--strict-phase16`, `--strict-phase17`, `--strict-phase18`, `--strict-phase19`, `--strict-phase20-roster`, `--strict-phase20-altmer`, `--strict-phase20-race-costing`, and `--strict-nord` all pass through to the verifier. The emitted compiler command uses the short canonical flags: `-f=<flags>`, `-i=<source-dirs>`, and `-o=<output-dir>`.
 
 The verifier is read-only. It checks expected Anvil paths, reads `Devotion.esp` through the Anvil MO2 MCP Mutagen bridge, validates baseline framework records and VMAD properties, checks script source/pex freshness, reports SEQ drift, confirms the active MO2 profile/load order, and looks for CK output shadow files. It also source-gates the generated small-signal tables in the deployed manager: `LIKES_DISLIKES_VERSION = 8`, `PRINCE_LD_VERSION = 3`, exact CSV-generated `LoadRowsForDeity` coverage for 32 deities / 315 rows, exact `LoadPrinceRowsForPath` coverage for 16 Prince paths / 160 rows, and `GetLikesDislikesEventTypes` coverage for all 31 deity CSV event IDs. V3 Preflight source/pex readiness is covered; the framework-owned CK/xEdit records (`PDV_GLO_PatronState`, `PDV_EventTypes`, `PDV_EventBus`) report as INFO in default mode, and `--strict-preflight` promotes unresolved Preflight gaps to FAIL for gate-close runs. V3 Structural Skeleton now covers the full dev-only scaffold contract: track records/globals/FormLists, substrate/sacred-place/Daedric/curse records, required VMAD wiring, dev FormList membership, MCM scaffold properties, and the Hircine-not-in-`PDV_FLST_AllDeities` contradiction check. Array readback is verifier-visible when arrays exist, but absent manual arrays remain INFO in default mode. `--strict-phase7` adds the Nord/Imperial-first signal gate: PO3 shout registration on `PDV_PlayerEvents`, the shout event constant, EventBus shout/shrine routes, manager shout/shrine helpers, deity-side shout anti-farm helpers, live `PDV_Player` alias + `PDV_PlayerEvents` property readback on `PDV__ManagerQuest`, and readback for the actual hidden Talos shrine reference named in `references\authoring\PDV_Phase7SignalReceivers.manifest.json`. `--strict-phase8` adds the ConcordatStanding record/property and threshold-array gate, Talos track-multiplier wiring checks, manager runtime-wiring fallback detection, reused Phase 7 ingress source checks, and the MCM/source contract for committed state, pending state, extreme gate, and Talos effective multiplier readback. `--strict-phase9` adds Bosmer path-state arrays/properties, Y'ffre/Zen/Baan Dar deity path eligibility, Bosmer manager/message wiring, threshold/`IsAedric` balancing readback for the Bosmer deity records, and ACTI proof-surface base record readback for route IDs `41-45`. `--strict-phase10` adds Dunmer ancestor substrate graduation checks for source contract, substrate record/scripts/properties, manager property, the two reused Dunmer proof ACTI records, and distinct portable/private shrine cooldown keys. `--strict-khajiit` checks the focused-emphasis source contract, `PDV_GLO_KhajiitFocusedEmphasis`, and manager wiring. `--strict-commitment` checks the Kyne commitment source/MCM contract and existing manager/deity properties. `--strict-neglect-decay` remains a legacy combined gate for the Kyne neglect/decay source contract, `PDV_MGEF_Neglect_Kyne`, `PDV_SPEL_Neglect_Kyne`, and manager spell-property wiring; it now also enables the standalone Phase 16 and Phase 17 checks. `--strict-phase11` verifies the Arngeir/Kynareth privilege pilot manifest; live dialogue readback only runs when that manifest is explicitly marked `live-dialogue-authored`. `--strict-phase12` adds contextual-favor lane/family presence checks, manager wiring/readback assertions for favor records and state keys, and explicit readback for `PDV_State_NordPantheonBaseline` as a `QUST` with `PDV_StateTrack` attached. `--strict-phase13` checks the Hircine/Nord Daedric packet and Hircine-not-in-`PDV_FLST_AllDeities` contract. `--strict-phase14` checks the generic commitment source surface plus the live Phase 14 manifest. `--strict-phase15` checks the shared curse-transition surface plus the live Phase 15 manifest. `--strict-phase16` checks the generic neglect-selection surface plus the live Phase 16 manifest. `--strict-phase17` checks the standalone decay/balancing manifest, locked decay and gain constants, active-patron passive-decay skip, grace, once-per-day guard, broad-worship multiplier, persistent floor helper, vampire `IsAedric` floor bypass, tier-down hysteresis, Orc post-clamp gain multiplier helper, and debug proof surface. `--strict-phase18` / `--strict-nord` checks the Survey Devotion spell/effect records, manager/MCM source contracts including grant-only handling plus exact `Skyrim.esm:025BEE` Voice-slot readback for `Survey Devotion`, Nord curse-message records, manager/effect VMAD wiring, and the four CK-authored Nord dialogue contracts in `references\authoring\PDV_Phase18StatusNord.manifest.json`; live dialogue readback now runs because that manifest is marked `live-dialogue-authored`. `--strict-phase20-roster` checks `references\authoring\PDV_DeityCoverageMatrix.json` against the Phase 4 stance and Daedric matrices, fails missing race coverage, excludes Jyggalag unless adopted later, and fails dev-only language for locked gods or Skyrim-present Princes. The default verifier also checks `PDV_MedallionRoster.manifest.json`: all ten race rosters must stay visible, pending entries without live deity records must carry disabled reasons, live records must read back for honest display, and the manager source must block direct medallion commitment. `--strict-phase20-altmer` checks the Altmer implementation manifest, decision sources, crisis enum, drafted content rows, rejected-hook families, immersion proof, planned verifier contract, runtime proof case coverage, and source-scaffolded manager/EventBus/EventTypes/receiver hooks once the manifest status is `source-scaffolded` or later; `PDV_State_AltmerCrisis` record readback begins when the status moves to `record-wired`, record-wired Altmer favor families must have `KYWD` / `MGEF` / `SPEL` records, spell-effect membership, effect keyword, and manager spell-property wiring, and record-wired Altmer trigger surfaces must have ACTI records with `PDV_EventSignalActivator`, route IDs, origin gates, source IDs, and daily keys; `--strict-phase20-race-costing` checks all Phase 20 race implementation-costing manifests for schema, sources, state surfaces, enum contracts, required content rows, rejected hooks, immersion proof, verifier gates, first slices, and runtime proof cases; `--strict-phase21-roster` remains accepted as a temporary alias. The verifier also reads back `PDV_PreflightRouterServicesOverlay.esp` when that reversible canary exists.
 
@@ -565,11 +572,163 @@ Phase 10 Dunmer substrate proof-graduation is closed as of 2026-05-24. The count
 
 `tools\pdv_extract_quest_stage_readback.mjs` is the Phase 20 read-only quest-stage follow-up. It reads `references\vanilla-gameplay\extracted\vanilla-quest-candidates.csv`, uses the local Mutagen bridge to read exact QUST stages/objectives/fragments/aliases from vanilla/DLC masters, and writes `references\vanilla-gameplay\extracted\vanilla-quest-stage-readback.csv`. Use it for dossier/review work only; it does not write ESP data or authorize `sourceFillEntries`.
 
-`tools\pdv_quest_matrix_compile.mjs` compiles the frozen quest-reaction matrix, Part D faucet CSV, stance matrices, quest-stage readback, and the narrow manual quest FormID fallback into `D:\Wabbajack\modlists\Anvil\mods\Devotion\SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json`. Run `node .\tools\pdv_quest_matrix_compile.mjs --check` before writing live JSON, then compile `PDV_EventBus`, `PDV_PlayerEvents`, and `PDV__ManagerQuest` after receiver/manager source edits.
+`tools\pdv_quest_matrix_compile.mjs` remains the V1 compiler used by the public 1.5 line and the pure tuple compiler consumed by the V2 build. For V3, `tools\pdv_quest_reaction_build.mjs` consumes `references\authoring\PDV_QuestReactionCompatibility.manifest.json` plus the frozen core, 78 quest CSVs, AFDI semantic CSV, stage selectors, and locked adapter assets. It deterministically generates `PDV_QuestReactionCore.v2.json`, `PDV_QuestReactionPatches.v2.json`, the 31-file required-catalog/five-adapter FOMOD tree, and exact SHA-256 receipts. Use `node .\tools\pdv_quest_reaction_build.mjs --self-test --check --json`; use `--write` only when reviewed authoring inputs intentionally change. `--package --output <new.zip>` refuses overwrite, writes normalized deterministic ZIP metadata, extracts the archive, and exact-hash verifies all 31 members. The generated PapyrusUtil wire keeps top-level bucket names and values unchanged but lowercases every member name inside typed buckets; integer selector arrays belong in `intList`. Conflicting case-fold collisions fail generation. For an installed V3 profile, run `node .\tools\pdv_matrix_runtime_preflight.mjs --mo2 <root> --profile <name> --compat-mod <installed-compatibility-mod-name> --expected-core 353 --expected-official-sources 79 --json`; it uses the same wire validator as generation, rejects mixed-case/unaddressable catalogs before Skyrim starts, checks the winning core and official v2 catalogs, and does not inspect retired V1 channels. Slice 1C-B consumes the fixed core/official files plus sorted `QuestReactionExtensions/*.json`, with qualified quest and semantic keys only. Backend/static/compile/package, installed-profile admission, and combined Anvil gameplay are green; Authoria installer/support acceptance remains open.
 
 Current remap note (main-quest expansion 2026-07-15): source tranches through T11 compile to 1978 cells / 172 quest keys / 134 watched quests / 45 deity names / 26 faucet acts. Use `node .\tools\pdv_quest_tranche_merge.mjs`, then `node .\tools\pdv_main_quest_full_coverage_audit.mjs --json`, then the formal-offer/remap/signal-floor gates before claiming source/readback readiness. For the representative smoke set, run `node .\tools\pdv_signal_floor_smoke_gate.mjs --json`; use `--write-ledger` to regenerate `PDV_SignalFloorSmokeLedger.{md,json}` after source, runtime JSON, or Papyrus log evidence changes. The Debug: State & Rewards MCM page has a `Signal-floor smoke` controlled route selector backed by `PDV__ManagerQuest.DebugRunSignalFloorSmokeScenario`, but those routes remain backend/log convenience only. Green source/readback gates still do not prove runtime-route, Active Effects, Book of Days, Survey/status, Prisma/notification, save/load stack behavior, or the expanded Paarthurnax/main-quest surface; use `references\authoring\PDV_1_0_CoTest_Runbook_2026-07-10.md` for live tester/Codex steps.
 
-Quest-reaction delivery is bounded by the Start-Game-Enabled `PDV_QuestReactionWorker` quest. `ApplyQuestReaction` snapshots and enqueues one logical stage reaction. New 1.0.4 jobs compact unreachable/zero-value base cells and inactive meta slots at ingress, persist only runnable rows plus source/skipped/meta counts and ingress-build timing, and then apply at most two reactions every `0.1` seconds. Already-saved jobs without the additive `Compacted` key retain the legacy worker-side cheap-skip path. After the row stream drains, the worker performs one aggregate, curse/reward reconciliation, panel refresh, toast, and Book of Days beat. The Papyrus optimisation audit classified the former synchronous fan-out as **broken** (a 45-cell stage could monopolise the VM), repeated per-cell traces/finalisation as **suboptimal**, and the EventBus/PlayerEvents event-driven ingress as **clean**. Run `node .\tools\pdv_quest_reaction_performance_audit.mjs` for the source contract and `node .\tools\pdv_quest_reaction_runtime_check.mjs --max-job-ms 2000` after a live sweep. The checker treats paired save-load freeze/thaw lifecycle as an observation; explicit stack dumps, frozen-stack markers, broad-scope aborts, incomplete jobs, overflow, and over-limit START-to-COMPLETE timings remain failures. The performance MCM control deliberately queues MQ101/105/106/206 through manager routes only; never use `setstage MQ106 200` on a test save. Runtime proof still requires a fresh Skyrim relaunch, queue lifecycle log, one visible final toast/Book beat per job, and a save/load resume check.
+Quest-reaction delivery in the public 1.5 line is bounded by the legacy
+`PDV_QuestReactionWorker` implementation. That line remains the behavior oracle
+for existing saves: it compacts non-runnable rows at ingress, applies at most two
+reactions every `0.1` seconds, and emits one final aggregate surface.
+
+The ground-up V3 Quest Reaction contract lives in
+`references\authoring\PDV_V3Slice1QuestReaction.manifest.json`. Slice 1B now
+runs all eight deterministic parity cases and replaces--not wraps--the legacy
+implementation. The existing `0716DF:Devotion.esp` quest hosts
+`PDV_QuestReactionRuntime`; Runtime owns qualified catalog resolution,
+duplicate suppression, `PDV.V3.QR.*` FIFO state, bounded processing, resume,
+cleanup, and status. Manager owns scoring/presentation through a narrow callback
+seam. EventBus and MCM target Runtime directly, while PlayerEvents configures it
+on alias init/load. The 1.5 queue keys and Worker identity are intentionally not
+migrated because V3 is new-game-only.
+
+Run `node .\tools\pdv_quest_reaction_characterization.mjs` and
+`node .\tools\pdv_quest_reaction_performance_audit.mjs --self-test` for deterministic
+and static proof. Then run
+`node .\tools\pdv_quest_reaction_runtime_check.mjs --max-admission-ms 1000 --max-job-ms 180000` after a
+fresh Skyrim sweep. Runtime acceptance still requires FIFO lifecycle markers,
+    one visible final toast/Book beat per accepted job, and a mid-job save/load
+    resume. The consolidated catalog v2 compiler and Runtime cutover are
+    backend-green. The AFDI semantic adapter migration and generated package
+    consolidation are also backend-green. The combined fresh-game Anvil lane is
+    now green for the four-job FIFO/player surfaces, non-empty-queue RESUME, and
+    organic MQ102 stage 160. Authoria FOMOD detection, source/sentinel behavior,
+    adapters, and support acceptance are the remaining Slice 1 gate.
+
+The Quest Reaction architecture self-test also protects the shared public-source
+boundary: every positive, negative, and mixed final toast and Book entry must use
+the sanitized source value. Its negative mutations fail if the sanitizer is
+removed or if Book alone is changed back to raw `sourceModName`; qualified
+Bethesda identities remain available to queue diagnostics.
+
+The 2026-08-14 fresh-game canary passed qualified ingress, five complete queue
+lifecycles, the four-job FIFO sweep, four Book of Days entries, and reload after
+the queue had already drained. A follow-up save at job 2 cell 4/21 emitted
+`RESUME pending=3` and drained jobs 2-4 in FIFO order; four qualified toast
+correlations reached both Prisma receipt and render. Re-run that captured shape with
+`node .\tools\pdv_quest_reaction_runtime_check.mjs --expected-sequence
+"Skyrim.esm|210731|150,Skyrim.esm|148154|160,Skyrim.esm|207142|200,Skyrim.esm|221587|220"
+--max-job-ms 180000` for the deliberate save/load run. The same canary exposed
+three player-surface defects now owned by the stacked canary-fix branch: Old
+Ways deities leaked through the Nine Divines baseline; four persistent Book
+entries initially produced only one visibly observed toast; and the resumed
+job repeated several later-job Divine names in one new Book entry.
+
+The stacked fix is checked with
+`node .\tools\pdv_quest_reaction_eligibility_audit.mjs --self-test` and
+`node .\tools\pdv_prisma_toast_cardinality_audit.mjs --self-test`. The first
+locks selected-baseline scoring plus the deliberate taboo/hostile and Daedric
+exceptions. The second requires four distinct logical correlations to render
+four toasts while preserving exact-duplicate suppression. Build the Manager
+with `pdv_compile.mjs --script PDV__ManagerQuest`, build the native bridge with
+the documented releasedbg xmake command, sync `app.js` and `index.html`, then
+fully restart Skyrim before the counted retest. At debug level 2,
+`PDV_TOAST_TRACE` markers distinguish Manager submission, native receipt and
+Interop dispatch, and UI receipt/dedupe/render. The Runtime now owns one
+persisted armed update chain, defers re-arm when a saved active slice owns the
+resume, and checkpoints `CellIndex` after each applied cell. The queued Manager
+surface lists each deity once; the existing arrow/rune carries higher piety
+magnitude instead of repeated names. The corrected counted run on 2026-08-14
+logged four enqueues, four starts, four FIFO completions, one `RESUME pending=3`
+from cell 2/21, four Prisma receipts/renders, zero UI dedupes, and no overlap,
+overflow, stack, or broad-scope failure. The tester confirmed four visible
+toasts and no repeated deity names in any newly-created Book entry. Resume and
+presentation proof therefore pass. Two subsequent fresh lane sweeps also pass:
+Old Ways logged `NordOldWays`, accepted `20/20/20/9` cells, and manually included
+Stuhn/Shor while excluding Akatosh; Nine Divines logged `NordNineDivines`,
+accepted `21/21/21/7`, and manually excluded Stuhn/Shor/Tsun while retaining
+Akatosh. Each lane completed four FIFO jobs with one resume and no overlap,
+overflow, stack, or broad-scope failure. This closes the stacked canary-fix
+runtime/manual proof. Catalog-v2, semantic-adapter, generated-package backend,
+and combined Anvil gameplay now pass; Authoria installer, source/sentinel,
+adapter, and support acceptance remains open.
+
+For isolated patch-only Papyrus, set `PDV_COMPILE_SOURCE_ROOT` and
+`PDV_COMPILE_OUTPUT_ROOT` to the patch source/output folders, set
+`PDV_TRACKED_SOURCE_ROOT` to the same source, and pass the live core source folder
+through `PDV_COMPILE_EXTRA_IMPORT_ROOTS`. Slice 1D-A uses that path to compile
+`PDV_AFDIObserver` without copying patch code into core. After compile, run
+`node .\tools\pdv_patch_source_lock.mjs --relock`, then regenerate and verify the
+package with `pdv_quest_reaction_build.mjs --write` and `--check`.
+
+AFDI now submits one catalog-owned `afdi|artifact_destroyed.*` semantic event per
+routable destruction. The observer retains baseline/backoff/poll-retirement behavior
+but contains no deity outcome literals. Direct houseCARL readback proves the adapter
+ESP binds only `PDV_QuestReactionRuntimeService -> 0716DF:Devotion.esp` and now has
+only `Devotion.esp` as a master; its SEQ was regenerated after the master prune.
+These are compile/readback proofs, not AFDI runtime or save/load proof.
+
+Papyrus logs may append multiple fresh sessions whose persisted sequence resets
+to `v3qr_1`. `pdv_quest_reaction_runtime_check.mjs` therefore pairs lifecycle
+occurrences in order rather than mapping the whole file by job ID; it fails a
+completion without its own preceding start and rejects negative latency. Its
+self-test contains two sessions with reused IDs.
+
+The V2 runtime checker also requires the latest configuration/reload summaries
+to report at least two admitted catalogs and nonzero active quest keys. An
+isolated corrupt extension may increase `rejected` without failing valid core and
+official admission. Runtime emits debug-gated `CATALOG_REJECT` markers only on
+configuration/reload paths. Its lifecycle is now `ENQUEUE -> BUILD -> START ->
+COMPLETE`: admission persists a lightweight header and reports `admissionMs`, then
+the existing scheduler materializes catalog cells through persisted build cursors
+at the shared two-work-item tick budget before application starts. PlayerEvents
+flushes the ordinary quest broad scope before this independent submission. This
+fix adds no polling, scheduler, property, VMAD surface, or public Runtime method.
+Backend/static and targeted compile proof pass. The 2026-08-15 smoke then proved
+organic MQ102 stage-160 admission at `45.013428` ms and an ordered complete
+lifecycle. A clean four-job sweep saved during job 1 at `build=8/45`, resumed
+with `pending=4`, and drained four FIFO BUILD/START/COMPLETE chains; every
+admission was about 45 ms and there was no overflow, stack safety failure, or
+`BROAD_SCOPE_ABORT`. Runtime-route and materialization-resume proof therefore
+pass. The tester also confirmed four visible toasts and four correct,
+duplicate-free Book entries from that counted run. The bounded-ingress fix is
+therefore fully smoke-proven; broader Slice 1 compatibility and Authoria
+acceptance remain separate gates.
+
+The separate `likes_dislikes_345` discover-location abort is handled on
+`codex/v3-broad-scope-likes-fix`. Non-presented generic action fan-out must not
+call `BeginLikesDislikesSurface` across the all-deity loop. EventBus and the
+ActionRouter fallback capture the active broad pool, collect the strongest
+eligible applied positive (or most severe eligible negative) in local
+variables, and commit once through `CommitDetachedBroadPantheonEvent`. Run
+`node .\tools\pdv_broad_pantheon_audit.mjs --self-test`, the Quest Reaction
+performance/characterization/eligibility gates, and compile
+`PDV__ManagerQuest`, `PDV_EventBus`, and `PDV_ActionRouter` before syncing.
+Backend/static plus isolated and synced live compilation are green. The Anvil
+overlap run passed `pdv_quest_reaction_runtime_check.mjs` with the expected
+quest sequence and no `BROAD_SCOPE_ABORT`; the tester also confirmed both final
+player surfaces. That run did not record a separate numeric broad-standing
+before/after readout, so the deterministic model remains the proof for exact
+strongest-positive/most-severe-negative selection. Full Authoria testing is deferred until the V3 core and
+generated compatibility installer are assembled; Anvil remains the current
+runtime canary lane.
+
+Slice 1B compile/readback closeout (2026-08-13) used:
+
+```powershell
+node .\tools\pdv_compile.mjs --script PDV_QuestReactionRuntime --script PDV__ManagerQuest --script PDV_EventBus --script PDV_PlayerEvents --script PDV_MCM --skip-verify
+node .\tools\pdv_compile_inventory_audit.mjs
+node .\tools\pdv_quest_reaction_performance_audit.mjs --self-test
+```
+
+The compile produced 0 errors and 0 warnings for all five scripts; inventory is
+100/100. `housecarl_load_order_status(profile="Devotion Dev",
+lookup="Devotion.esp")` first confirmed the Anvil instance and active framework.
+Direct `housecarl_read_record` calls for `0716DF`, `00C325`, `046AF7`,
+and `03AFBE` in `Devotion.esp` confirmed the repurposed Runtime host plus its
+Manager/EventBus/MCM bindings. V1 local-key fallback is retired; fully-qualified
+collision behavior is covered by deterministic backend fixtures, while corrected
+installed runtime activation still requires the fresh-game smoke.
 
 `tools\pdv_skyrim_refs_bridge.mjs` is a read-only lookup bridge into the neutral `dunhamma/SkyrimGamePlayReferences` repo. Set `SKYRIM_GAMEPLAY_REFERENCES_ROOT` when the clone is not under `scratch\SkyrimGamePlayReferences`. Use it to list or search broad reference tables such as reverse keywords, faction relationships, condition-bearing effects, cells, containers/furniture, enchantments, leveled lists, FormLists, shouts, and worldspaces. It does not copy data into PDV or replace local xEdit/CK verification. Bridge rules live in `references\vanilla-gameplay\PDV_SkyrimGamePlayReferences_Bridge.md`.
 
@@ -1105,6 +1264,38 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-20 AEST - All-family penalty serialization gate and first regression correction:**
+Penalty record serialization stays outside the V3 module interfaces: modules decide when a
+penalty spell applies or clears, while `node .\tools\pdv_penalty_serialization_audit.mjs` checks
+the live SPEL/MGEF contract through direct houseCARL. The gate accepts negative magnitude without
+`Detrimental` or positive magnitude with `Detrimental`, requires `Recover`, and fails the two buff-
+producing sign/flag combinations. Its first 81-spell sweep found one concrete fixture, Kyne's reused Frost
+Resistance neglect (`+8`, no `Detrimental`); the existing linked MGEF gained `Detrimental` with no
+FormID, link, actor-value, or magnitude change. Post-write: 79/79 modifier pairs valid; three
+legacy scripted Hircine price effects are reported as non-modifiers. This is readback proof only.
+The invariant is every linked Neglect, Disfavor, and Price modifier, not the Kyne record. The
+umbrella verifier targets this tree when `PDV_DEVOTION_ROOT` is set. The Requiem penalty audit now
+uses the same shared resolver and passes 44/44 against both the default public tree and V3Dev;
+the Argonian spec/live visible name is reconciled to `The Hist Silenced`.
+
+**2026-08-20 AEST - V3 post-module integration gate reconciliation:**
+After ORIGIN, RECOGNITION, PRISMA, and DEBUG extraction, the 37 known verifier failures were
+retired as one integration checkpoint rather than churned during each module move. Normal
+location ingress now calls `OriginRuntime.HandleLocationChange(...)` once; contextual ORIGIN
+events and queries, including moon observation and Baan Dar rescue eligibility, route through
+the generic typed seam. Any verifier that follows decomposed behavior must read the complete
+module family, join every matching polymorphic override body, and inspect an explicit VMAD
+property window instead of assuming manager residence, selecting the first override, or using
+a stale tail slice. Supervised VMAD consolidation removed stale fills and duplicate property
+names, and the retirement manifest is now fully adjudicated and guarded against retired live
+declarations. The all-race reachability gate checks exact ordinary rosters and exact reviewed
+formal-offer sets; the all-race neglect gate requires every origin adapter to own reward and
+neglect isolation and checks its exact neglect helper and spell-reference families, with Kyne
+retained only as a concrete regression fixture. Full verification is
+clean at `FAIL=0, WARN=0, TODO=0, PASS=4104, INFO=100`; formal/reachability passes 412/412 and VMAD
+passes 207/207 attachments. This evidence is static, compile, and readback proof only; fresh-game,
+player-surface, save/load, and package proof remain separate.
+
 **2026-08-11 AEST - Daedric effect-model decomposition (balance-neutral):**
 Daedric boon and price composition moved behind
 `tools/lib/pdv_daedric_effect_model.mjs`. The compiler now consumes one
@@ -1325,7 +1516,7 @@ main-quest stages with `setstage` from QASmoke: `MQ106` stage 200 is a shutdown 
 
 **2026-07-13 AEST - Breton architecture audit and Hidden Art layered-pact repair:** Runtime co-test passed Book of Days, the Hidden Art Champion route, Prince boon, price waiver, current-pool preservation, and the controlled Mora Champion offer. Breton same-family Champion records are cumulative absolute totals and replace T2, while a distinct patron boon remains beside the lane reward. Hidden Art waives the integrated Prince price and duplicate stigma; non-Hidden-Art pacts still carry their ordinary price. Mora's tuned Champion boon is `+20 Alteration; +20 Magicka`. The new Magicka effect and all 18 Daedric Health/Magicka/Stamina price effects use `PeakValueModifier` plus `Recover`, so they alter the reversible maximum pool rather than continuously draining the current pool. Survey uses one sentence: `Your pact with Hermaeus Mora has opened Hidden Art - Champion.` The manager suppresses waived price copy, presents the combined boon mechanic, and no longer resends a successful milestone toast after the native bridge has queued it.
 
-**2026-06-30 AEST - Requiem felt-penalty backend closeout:** The Requiem swallowed-regen penalty tail is now backend/readback clean for the active rows that should be felt as max-health penalties. Argonian Hist Distant uses `PDV_MGEF_Neglect_ArgonianHist_Health` (`Health -10`), Breton Tradition Distant uses `PDV_MGEF_Neglect_Breton_Health` (`Health -10`), and Breton Excommunication uses `PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health` (`Health -15`). Imperial civic neglect is intentionally preserved as `PDV_MGEF_Neglect_Imperial_Restoration` / `ResistDisease -5`. New preflight/readback command: `node .\tools\pdv_requiem_penalty_audit.mjs`; latest result `PASS=44`. The live `Devotion.esp` and `Devotion.seq` were refreshed with backups under `Backups\phase20-race-rewards\` and `Seq\`; houseCARL confirmed the converted MGEFs and zero old-regeneration spell refs on `Devotion Dev`. Proof boundary: this is authority/readback/backend smoke only. In-game Requiem Active Effects, `player.getav Health`, HP-bar movement, and manual magnitude feel remain open in `references\authoring\PDV_InGameTestingNeeded_Runbook.md`.
+**2026-06-30 AEST - Requiem felt-penalty backend closeout (resolver refreshed 2026-08-20):** The Requiem swallowed-regen penalty tail is now backend/readback clean for the active rows that should be felt as max-health penalties. Argonian Hist Distant uses `PDV_MGEF_Neglect_ArgonianHist_Health` (`Health -10`, visible effect name `The Hist Silenced`), Breton Tradition Distant uses `PDV_MGEF_Neglect_Breton_Health` (`Health -10`), and Breton Excommunication uses `PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health` (`Health -15`). Imperial civic neglect is intentionally preserved as `PDV_MGEF_Neglect_Imperial_Restoration` / `ResistDisease -5`. Preflight/readback command: `node .\tools\pdv_requiem_penalty_audit.mjs`; it now uses `tools/lib/pdv_paths.mjs`, so `PDV_DEVOTION_ROOT` selects the inspected tree. Current results are `PASS=44` on both the default public tree and V3Dev. The live `Devotion.esp` and `Devotion.seq` were refreshed with backups under `Backups\phase20-race-rewards\` and `Seq\`; houseCARL confirmed the converted MGEFs and zero old-regeneration spell refs on `Devotion Dev`. Proof boundary: this is authority/readback/backend smoke only. In-game Requiem Active Effects, `player.getav Health`, HP-bar movement, and manual magnitude feel remain open in `references\authoring\PDV_InGameTestingNeeded_Runbook.md`.
 
 **2026-06-29 AEST - Prisma-first toast fallback hardening:** Transient gameplay acknowledgements are now Prisma-first through `PDV__ManagerQuest.SendPrismaToastPayloadOrFallback(...)`, which tries `PDV_PrismaBridge.SendOverlayJson(...)` and uses vanilla top-left `Debug.Notification(...)` only as fallback when Prisma is unavailable or the send fails. `ShowP2BookNotice`, shift/substrate/Daedric/event toast helpers, Daedric milestone toasts, and clear gameplay acknowledgement notices now route through that helper; raw top-left calls are limited to explicit seed/debug diagnostics and the shared fallback. `tools\pdv_prisma_toast_fallback_audit.mjs` guards the policy and the P2 book path from `PDV_PlayerEvents.OnBookRead` to `ShowP2BookNotice`, including Nord `Skyrim.esm:0ED161` / `Book1CheapNordsArise`. Proof boundary: source/audit/compile only until fresh in-game Prisma display and fallback-off-modlist tests are recorded.
 

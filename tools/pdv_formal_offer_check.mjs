@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /*
- * Read-only formal deity-offer verifier.
+ * Read-only race-authorized deity reachability and formal-offer verifier.
  *
- * This checks the post-Kyne formal-offer scale-out without owning the writing:
+ * This checks the all-race formal-offer scale-out without owning the writing:
  * - source eligibility and accept/decline/refuse flow in the live manager
  * - explicit no-offer exclusions for emergent/setup races
  * - formal-offer MESG/property readback through the existing record helper
@@ -10,16 +10,17 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { familySourceText, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
+import { extractHousecarlText, openHousecarl } from "./lib/pdv_housecarl_stdio.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const DEFAULT_SPEC = path.join(PROJECT_ROOT, "references", "authoring", "PDV_FormalOffer_RecordWave.spec.json");
-const DEFAULT_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV__ManagerQuest.psc";
-const DEFAULT_SOURCE_DIR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
-const DEFAULT_ESP = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Devotion.esp";
-const AUTHOR_PROJECT = path.join(PROJECT_ROOT, "tools", "pdv-phase20-race-author", "PdvPhase20RaceAuthor.csproj");
+const DEFAULT_DEVOTION_ROOT = process.env.PDV_DEVOTION_ROOT || "D:/Wabbajack/modlists/Anvil/mods/Devotion-V3Dev";
+const DEFAULT_SOURCE = path.join(DEFAULT_DEVOTION_ROOT, "Scripts", "Source", "PDV__ManagerQuest.psc");
+const DEFAULT_SOURCE_DIR = path.join(DEFAULT_DEVOTION_ROOT, "Scripts", "Source");
+const DEFAULT_ESP = path.join(DEFAULT_DEVOTION_ROOT, "Devotion.esp");
 
 // Curse-driven severance must remain recoverable and must not masquerade as the
 // player's one-time "Refuse" choice. Add a function here only with a cited design
@@ -91,9 +92,12 @@ const expectedResponseProperties = [
   "PDV_Msg_Redguard_OfferResponse_Refuse"
 ];
 
-main(process.argv.slice(2));
+main(process.argv.slice(2)).catch((error) => {
+  console.error(error.stack || error.message);
+  process.exitCode = 1;
+});
 
-function main(argv) {
+async function main(argv) {
   const args = parseArgs(argv);
   const findings = [];
   const add = (status, check, detail, filePath = null) => findings.push({ status, check, detail, path: filePath });
@@ -121,17 +125,26 @@ function main(argv) {
     verifySpecShape(spec, specPath, pass, fail);
   }
 
+  const sourceDir = path.resolve(args.sourceDir || path.dirname(sourcePath) || DEFAULT_SOURCE_DIR);
+
   if (!fs.existsSync(sourcePath)) {
     fail("Formal offer source", "Live PDV__ManagerQuest.psc is missing.", sourcePath);
   } else {
-    const sourceText = readText(sourcePath);
+    // Searched, never hashed or rewritten. The 2.0 rebuild moves manager bodies
+    // into deep modules, so reading only PDV__ManagerQuest.psc would report the
+    // formal-offer flow missing when it merely relocated -- and would let the
+    // negated "must not contain" needles pass vacuously. familySourceText() is
+    // strictly additive: manager text first and verbatim, then each extracted
+    // module with qualifiers stripped; unextracted trees are unaffected.
+    const sourceText = familySourceText(PROJECT_ROOT, sourceDir).replace(/\r\n/g, "\n");
     verifySourceContract(sourceText, sourcePath, pass, fail);
   }
 
-  verifyCurseCommitmentBoundaries(path.resolve(args.sourceDir || DEFAULT_SOURCE_DIR), pass, fail, warn);
+  verifyCurseCommitmentBoundaries(sourceDir, pass, fail, warn);
+  verifyDebugReachabilityBoundaries(sourceDir, pass, fail);
 
   if (!args.sourceOnly && spec) {
-    verifyEspReadback(specPath, espPath, pass, fail, warn);
+    await verifyEspReadback(spec, espPath, pass, fail, warn);
   }
 
   const failCount = findings.filter((finding) => finding.status === "FAIL").length;
@@ -217,7 +230,8 @@ function usage(exitCode, errorMessage = null) {
     "",
     "Notes:",
     "  - Read-only.",
-    "  - Checks source formal-offer flow and delegates ESP/property readback to pdv-phase20-race-author --check-rewards.",
+    "  - Checks source formal-offer flow and reads the active Devotion.esp winner directly through houseCARL.",
+    "  - Defaults to Devotion-V3Dev; set PDV_DEVOTION_ROOT or pass explicit source/ESP paths to override.",
     "  - Writing quality belongs to references/authoring/PDV_FormalOfferWriting_Handoff.md."
   ].join("\n"));
   process.exit(exitCode);
@@ -236,9 +250,9 @@ function verifySpecShape(spec, specPath, pass, fail) {
   ].filter((editorId) => !editorId.startsWith("PDV_Msg_Nord_"));
 
   if (messageRecords.length === 46) {
-    pass("Formal offer spec shape", "Spec declares 46 post-Kyne message records.", specPath);
+    pass("Formal offer spec shape", "Spec declares the 46 reviewed all-race formal-offer message records.", specPath);
   } else {
-    fail("Formal offer spec shape", `Expected 46 post-Kyne message records, found ${messageRecords.length}.`, specPath);
+    fail("Formal offer spec shape", `Expected 46 reviewed all-race formal-offer message records, found ${messageRecords.length}.`, specPath);
   }
 
   for (const editorId of expectedSpecIds) {
@@ -333,7 +347,7 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "return GetBretonFormalCommitmentOfferMessage(deity)",
     "return GetRedguardFormalCommitmentOfferMessage(deity)",
     "Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)",
-    "return IsNordOfferEligibleDeity(deity) || IsImperialOfferEligibleDeity(deity) || IsDunmerOfferEligibleDeity(deity) || IsAltmerOfferEligibleDeity(deity) || IsRedguardOfferEligibleDeity(deity) || IsBretonOfferEligibleDeity(deity)",
+    "return IsOfferEligibleDeity(deity) || IsDaedricPactOfferEligibleDeity(deity)",
     "Bool Function IsImperialTalosOfferAllowed()",
     "PDV_ConcordatStandingTrack.GetValue() <= 50",
     "Bool Function ShouldSuppressImperialTalosTierSurface(PDV_DeityBase deity)",
@@ -342,8 +356,16 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "Function DispatchDiegeticCue(String eventClass, String surfaceKey, String direction, PDV_DeityBase deity, String toneOverride = \"\")"
   ];
 
+  // A call that stayed in the manager but whose callee moved gains a forward-ref
+  // hop (BuildX(...) -> LedgerRuntime.BuildX(...)). That is a relocation, not a
+  // contract change, so the positive needles below are matched against the raw
+  // text OR a qualifier-stripped view. The forbidden/exclusion needles further
+  // down deliberately keep using the raw text only.
+  const qualifierFreeText = stripQualifiers(sourceText);
+  const containsSnippet = (snippet) => sourceText.includes(snippet) || qualifierFreeText.includes(snippet);
+
   for (const snippet of requiredSourceSnippets) {
-    if (sourceText.includes(snippet)) {
+    if (containsSnippet(snippet)) {
       pass("Formal offer source flow", `Manager contains: ${snippet}`, sourcePath);
     } else {
       fail("Formal offer source flow", `Manager is missing: ${snippet}`, sourcePath);
@@ -358,7 +380,7 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
   }
 
   const helperExpectations = [
-    ["IsNordOfferEligibleDeity", ["PDV_Kyne"]],
+    ["IsNordOfferEligibleDeity", ["PDV_Kyne", "PDV_Talos", "PDV_Shor", "PDV_Tsun", "PDV_Stuhn", "PDV_Mara", "PDV_Arkay", "PDV_Dibella", "PDV_Akatosh", "PDV_Stendarr", "PDV_Zenithar", "PDV_Julianos", "PDV_Kynareth"]],
     ["IsDunmerOfferEligibleDeity", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala"]],
     ["IsAltmerOfferEligibleDeity", ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Trinimac", "PDV_Syrabane"]],
     ["IsBretonOfferEligibleDeity", ["PDV_Stendarr", "PDV_Akatosh", "PDV_Mara", "PDV_Arkay", "PDV_Julianos", "PDV_Zenithar", "PDV_Kynareth", "PDV_Dibella", "PDV_Magnus", "PDV_Talos", "PDV_Yffre"]],
@@ -371,16 +393,20 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
       fail("Formal offer eligibility helper", `${helperName} is missing.`, sourcePath);
       continue;
     }
-    for (const propertyName of deityProperties) {
-      if (body.includes(propertyName)) {
-        pass("Formal offer eligibility helper", `${helperName} references ${propertyName}.`, sourcePath);
-      } else {
-        fail("Formal offer eligibility helper", `${helperName} does not reference ${propertyName}.`, sourcePath);
-      }
+    const expected = [...deityProperties].sort();
+    const referenced = [...new Set(body.match(/\bPDV_[A-Za-z0-9_]+\b/g) || [])]
+      .filter((propertyName) => propertyName !== "PDV_DeityBase")
+      .sort();
+    const missing = expected.filter((propertyName) => !referenced.includes(propertyName));
+    const unexpected = referenced.filter((propertyName) => !expected.includes(propertyName));
+    if (!missing.length && !unexpected.length) {
+      pass("Formal offer eligibility helper", `${helperName} has exactly its reviewed race-authorized deity set (${expected.length}).`, sourcePath);
+    } else {
+      fail("Formal offer eligibility helper", `${helperName} drifted: missing=${missing.join(",") || "none"}; unexpected=${unexpected.join(",") || "none"}.`, sourcePath);
     }
   }
 
-  const forbiddenSourceSnippets = [
+  const forbiddenSourceFunctions = [
     "GetBosmerFormalCommitmentOfferMessage",
     "GetKhajiitFormalCommitmentOfferMessage",
     "GetOrcFormalCommitmentOfferMessage",
@@ -388,23 +414,34 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "IsBosmerOfferEligibleDeity",
     "IsKhajiitOfferEligibleDeity",
     "IsOrcOfferEligibleDeity",
-    "IsArgonianOfferEligibleDeity",
+    "IsArgonianOfferEligibleDeity"
+  ];
+  for (const functionName of forbiddenSourceFunctions) {
+    if (extractFunctionBody(sourceText, functionName)) {
+      fail("Formal offer source exclusion", `Decomposition family must not declare ${functionName}.`, sourcePath);
+    } else {
+      pass("Formal offer source exclusion", `Decomposition family excludes ${functionName}.`, sourcePath);
+    }
+  }
+
+  const forbiddenSourceTokens = [
     "PDV_Msg_Redguard_Satakal_Offer",
     "PDV_Msg_Redguard_Ruptga_Offer",
     "PDV_Msg_Redguard_Tava_Offer",
     "PDV_Msg_Redguard_Onsi_Offer",
     "PDV_Msg_Redguard_Sep_Offer"
   ];
-  for (const snippet of forbiddenSourceSnippets) {
-    if (sourceText.includes(snippet)) {
-      fail("Formal offer source exclusion", `Manager must not contain ${snippet}.`, sourcePath);
+  for (const token of forbiddenSourceTokens) {
+    if (sourceText.includes(token)) {
+      fail("Formal offer source exclusion", `Decomposition family must not contain ${token}.`, sourcePath);
     } else {
-      pass("Formal offer source exclusion", `Manager excludes ${snippet}.`, sourcePath);
+      pass("Formal offer source exclusion", `Decomposition family excludes ${token}.`, sourcePath);
     }
   }
 
   const quietEmergenceSnippets = [
-    "SurfaceTransition(\"emergence\", focusDeity.DeityName, \"onset\", focusDeity.DeityIndex, \"revelation\")",
+    "SendPrismaShiftToast(\"Your road turns toward \" + GetKhajiitFocusLabel(focusValue) + \".\"",
+    "AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, \"focus.emergence\"",
     "PDV_DeityBase Function GetKhajiitFocusDeity(Int focusValue)",
     "SurfaceTransition(\"emergence\", traditionDeity.DeityName, \"onset\", traditionDeity.DeityIndex, \"revelation\")",
     "PDV_DeityBase Function GetBretonTraditionDeity(Int traditionValue)",
@@ -413,7 +450,7 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
     "SurfaceTransition(\"reorientation\", GetRedguardSectLabel(), \"shift\", -1, \"turning\")"
   ];
   for (const snippet of quietEmergenceSnippets) {
-    if (sourceText.includes(snippet)) {
+    if (containsSnippet(snippet)) {
       pass("Quiet-emergence source cue", `Manager contains: ${snippet}`, sourcePath);
     } else {
       fail("Quiet-emergence source cue", `Manager is missing: ${snippet}`, sourcePath);
@@ -506,50 +543,214 @@ function extractFunctionBody(sourceText, functionName) {
   return rest.slice(0, endMatch.index + "\nEndFunction".length);
 }
 
-function verifyEspReadback(specPath, espPath, pass, fail, warn) {
-  if (!fs.existsSync(AUTHOR_PROJECT)) {
-    fail("Formal offer ESP readback", "pdv-phase20-race-author project is missing.", AUTHOR_PROJECT);
-    return;
-  }
+async function verifyEspReadback(spec, espPath, pass, fail, warn) {
   if (!fs.existsSync(espPath)) {
     fail("Formal offer ESP readback", "Devotion.esp is missing.", espPath);
     return;
   }
 
-  const result = spawnSync("dotnet", [
-    "run",
-    "--project",
-    AUTHOR_PROJECT,
-    "-c",
-    "Release",
-    "--",
-    "--check-rewards",
-    "--rewards-spec",
-    specPath,
-    "--esp",
-    espPath
-  ], {
-    cwd: PROJECT_ROOT,
-    encoding: "utf8",
-    maxBuffer: 32 * 1024 * 1024
-  });
+  const session = openHousecarl({ cwd: PROJECT_ROOT, timeoutMs: 90_000 });
+  try {
+    const v3Status = extractHousecarlText(await session.call("housecarl_load_order_status", {
+      lookup: path.basename(path.dirname(espPath)),
+      max_chars: 12_000
+    }));
+    if (!/as a mod:\s+ENABLED/i.test(v3Status)) {
+      fail("Formal offer V3 profile", `${path.basename(path.dirname(espPath))} is not enabled in the active houseCARL profile.`, espPath);
+      return;
+    }
+    pass("Formal offer V3 profile", `${path.basename(path.dirname(espPath))} is enabled in the active houseCARL profile.`, espPath);
 
-  const output = `${result.stdout || ""}${result.stderr || ""}`.trim();
-  if (result.error) {
-    fail("Formal offer ESP readback", `Could not run pdv-phase20-race-author: ${result.error.message}`, espPath);
-  } else if (result.status === 0) {
-    pass("Formal offer ESP readback", "pdv-phase20-race-author --check-rewards passed for formal-offer spec.", espPath);
-  } else {
-    fail("Formal offer ESP readback", `pdv-phase20-race-author --check-rewards failed: ${output}`, espPath);
-  }
+    const inventoryText = extractHousecarlText(await session.call("housecarl_cross_plugin_query", {
+      plugins: ["Devotion.esp"],
+      type: "MESG",
+      editorid_contains: "PDV_Msg_",
+      fields: ["EditorID"],
+      limit: 500,
+      max_chars: 160_000
+    }));
+    const inventory = new Map();
+    for (const match of inventoryText.matchAll(/formid=([0-9A-F]{6}:Devotion\.esp)\s+editorid=(PDV_Msg_[A-Za-z0-9_]+)/gi)) {
+      inventory.set(match[2], match[1]);
+    }
 
-  if (result.status !== 0 && output && output.length > 0) {
-    warn("Formal offer ESP readback output", firstLines(output, 12), espPath);
+    const expectedRecords = spec.messageRecords || [];
+    const formids = [];
+    for (const record of expectedRecords) {
+      const formid = inventory.get(record.editorId);
+      if (!formid) fail("Formal offer ESP record", `${record.editorId} is missing from the active Devotion.esp winner.`, espPath);
+      else formids.push(formid);
+    }
+    if (formids.length !== expectedRecords.length) return;
+
+    const detailText = extractHousecarlText(await session.call("housecarl_batch_record_detail", {
+      formids,
+      fields: ["EditorID", "Name", "Description", "MenuButtons"],
+      depth: 3,
+      max_chars: 300_000
+    }));
+    const blocks = splitRecordBlocks(detailText, "Message");
+    const byEditorId = new Map(blocks.map((block) => [readRecordField(block, "EditorID"), block]));
+    for (const record of expectedRecords) {
+      const block = byEditorId.get(record.editorId);
+      if (!block) {
+        fail("Formal offer ESP readback", `${record.editorId} was not returned by direct houseCARL detail readback.`, espPath);
+        continue;
+      }
+      compareRecordField(record.editorId, "title", readRecordField(block, "Name"), record.title, pass, fail, espPath);
+      compareRecordField(record.editorId, "body", readRecordField(block, "Description"), record.body, pass, fail, espPath);
+      const actualButtons = [...block.matchAll(/MenuButtons\[(\d+)\]\.Text\s*=\s*(.+)\r?$/gm)]
+        .sort((left, right) => Number(left[1]) - Number(right[1]))
+        .map((match) => match[2].trim());
+      const expectedButtons = record.buttons || [];
+      if (JSON.stringify(actualButtons) === JSON.stringify(expectedButtons)) {
+        pass("Formal offer ESP buttons", `${record.editorId} button text matches the spec.`, espPath);
+      } else {
+        fail("Formal offer ESP buttons", `${record.editorId} buttons ${JSON.stringify(actualButtons)} do not match ${JSON.stringify(expectedButtons)}.`, espPath);
+      }
+    }
+  } catch (error) {
+    fail("Formal offer ESP readback", `Direct houseCARL readback failed: ${error.message}`, espPath);
+  } finally {
+    session.close();
   }
 }
 
-function firstLines(text, limit) {
-  return text.split(/\r?\n/).slice(0, limit).join(" | ");
+function verifyDebugReachabilityBoundaries(sourceDir, pass, fail) {
+  if (!fs.existsSync(sourceDir)) {
+    fail("Debug deity reachability", "Live source directory is missing.", sourceDir);
+    return;
+  }
+
+  const sourceFiles = fs.readdirSync(sourceDir).filter((name) => name.toLowerCase().endsWith(".psc"));
+  const sourceByFile = new Map(sourceFiles.map((name) => [name, readText(path.join(sourceDir, name))]));
+  const findFunction = (functionName) => {
+    for (const [fileName, sourceText] of sourceByFile) {
+      const block = extractFunctionBlocks(sourceText).find((candidate) => candidate.name.toLowerCase() === functionName.toLowerCase());
+      if (block) return { ...block, fileName, filePath: path.join(sourceDir, fileName) };
+    }
+    return null;
+  };
+
+  const reachability = findFunction("IsDeityReachableForCurrentOrigin");
+  if (!reachability) {
+    fail("Debug deity reachability", "IsDeityReachableForCurrentOrigin is missing.", sourceDir);
+  } else if (reachability.body.includes("IsDashboardDeityInOriginRoster") && reachability.body.includes("UsesFormalCommitmentOffersForDeity")) {
+    pass("Debug deity reachability", "The shared predicate delegates to current-origin roster and formal-offer eligibility.", reachability.filePath);
+  } else {
+    fail("Debug deity reachability", "The shared predicate does not delegate to both current-origin roster and formal-offer eligibility.", reachability.filePath);
+  }
+
+  const activeSetter = findFunction("SetActiveDeity");
+  if (activeSetter?.body.includes("!IsDeityReachableForCurrentOrigin(newDeity)")) {
+    pass("Active deity reachability", "SetActiveDeity uses the shared current-origin predicate.", activeSetter.filePath);
+  } else {
+    fail("Active deity reachability", "SetActiveDeity is missing the shared current-origin predicate.", activeSetter?.filePath || sourceDir);
+  }
+
+  const dashboardRoster = findFunction("IsDashboardDeityInOriginRoster");
+  const expectedRaceRosters = new Map([
+    ["NORD", ["PDV_Kyne", "PDV_Kynareth", "PDV_Talos", "PDV_Shor", "PDV_Tsun", "PDV_Stuhn", "PDV_Mara", "PDV_Akatosh", "PDV_Arkay", "PDV_Stendarr", "PDV_Julianos", "PDV_Dibella", "PDV_Zenithar"]],
+    ["IMPERIAL", ["PDV_Kynareth", "PDV_Mara", "PDV_Akatosh", "PDV_Arkay", "PDV_Stendarr", "PDV_Julianos", "PDV_Dibella", "PDV_Zenithar"]],
+    ["BRETON", ["PDV_Kynareth", "PDV_Talos", "PDV_Mara", "PDV_Akatosh", "PDV_Arkay", "PDV_Stendarr", "PDV_Julianos", "PDV_Dibella", "PDV_Zenithar", "PDV_Magnus", "PDV_Yffre"]],
+    ["ALTMER", ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Trinimac", "PDV_Syrabane"]],
+    ["BOSMER", ["PDV_Yffre", "PDV_AuriEl", "PDV_Xarxes", "PDV_BaanDar", "PDV_Zen"]],
+    ["DUNMER", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala"]],
+    ["KHAJIIT", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala", "PDV_BaanDar", "PDV_Rajhin", "PDV_Alkosh", "PDV_Khenarthi"]],
+    ["ARGONIAN", ["PDV_Hist", "PDV_Sithis"]],
+    ["ORC", ["PDV_Malacath"]],
+    ["REDGUARD", ["PDV_Tuwhacca", "PDV_Leki", "PDV_HoonDing"]]
+  ]);
+  if (!dashboardRoster) {
+    fail("All-race ordinary reachability roster", "IsDashboardDeityInOriginRoster is missing.", sourceDir);
+  } else {
+    for (const [race, expectedValues] of expectedRaceRosters) {
+      const arm = dashboardRoster.body.match(new RegExp(`(?:if|elseIf)\\s+originRace\\s*==\\s*Manager\\.ORIGIN_${race}([\\s\\S]*?)(?=elseIf|endIf)`, "i"))?.[1] || "";
+      const expected = [...expectedValues].sort();
+      const actual = [...new Set(arm.match(/\bPDV_[A-Za-z0-9_]+\b/g) || [])].sort();
+      const missing = expected.filter((propertyName) => !actual.includes(propertyName));
+      const unexpected = actual.filter((propertyName) => !expected.includes(propertyName));
+      if (arm && !missing.length && !unexpected.length) {
+        pass("All-race ordinary reachability roster", `${race} has exactly its reviewed race-authorized deity set (${expected.length}).`, dashboardRoster.filePath);
+      } else {
+        fail("All-race ordinary reachability roster", `${race} drifted: missing=${missing.join(",") || "none"}; unexpected=${unexpected.join(",") || "none"}.`, dashboardRoster.filePath);
+      }
+    }
+  }
+
+  const guardedMutators = [
+    "DebugForceSetPietyByIndex",
+    "DebugForceSetPietyTodayByIndex",
+    "DebugPrimeDecayGraceByIndex",
+    "DebugPrimeDecayEligibleByIndex",
+    "DebugRunDecayProofDaysByIndex",
+    "DebugAwardCuratedSignalByIndex",
+    "DebugSeedCommitmentSignalDaysByIndex",
+    "DebugSeedCommitmentSignalDaysForDeity"
+  ];
+  for (const functionName of guardedMutators) {
+    const block = findFunction(functionName);
+    if (!block) fail("Ordinary debug reachability", `${functionName} is missing.`, sourceDir);
+    else if (block.body.includes("IsDebugDeityTargetEligible")) pass("Ordinary debug reachability", `${functionName} uses the shared debug guard.`, block.filePath);
+    else fail("Ordinary debug reachability", `${functionName} can mutate a deity without the shared debug guard.`, block.filePath);
+  }
+
+  const mcm = sourceByFile.get("PDV_MCM.psc") || "";
+  if (/UnsafeApplyActiveDeityState\s*\(/i.test(mcm)) fail("Ordinary MCM reachability", "PDV_MCM directly calls the unsafe active-deity state writer.", path.join(sourceDir, "PDV_MCM.psc"));
+  else pass("Ordinary MCM reachability", "PDV_MCM has no direct off-roster active-deity bypass.", path.join(sourceDir, "PDV_MCM.psc"));
+  for (const functionName of ["DebugOverridePatron", "DebugApplySelectedPiety", "DebugApplySelectedPietyToday", "DebugApplyCuratedSignal", "DebugFireSelectedDislike"]) {
+    const block = findFunction(functionName);
+    if (block?.body.includes("RequireEligibleDebugDeity")) pass("Ordinary MCM reachability", `${functionName} rejects an ineligible selected deity.`, block.filePath);
+    else fail("Ordinary MCM reachability", `${functionName} is missing the selected-deity eligibility guard.`, block?.filePath || sourceDir);
+  }
+
+  const unsafeBypasses = [];
+  for (const [fileName, sourceText] of sourceByFile) {
+    for (const block of extractFunctionBlocks(sourceText)) {
+      if (/UnsafeApplyActiveDeityState\s*\(/i.test(block.body) && block.name !== "UnsafeApplyActiveDeityState") unsafeBypasses.push(`${fileName}::${block.name}`);
+    }
+  }
+  const expectedBypasses = ["PDV_DevotionLedger.psc::SetActiveDeity", "PDV_DevotionLedger.psc::UnsafeFaultInjectActiveDeity"];
+  if (JSON.stringify(unsafeBypasses) === JSON.stringify(expectedBypasses)) {
+    pass("Unsafe fault injection isolation", "The unchecked active-deity writer is called only by the guarded setter and named fault injector.", sourceDir);
+  } else {
+    fail("Unsafe fault injection isolation", `Unexpected unchecked active-deity writer owners: ${JSON.stringify(unsafeBypasses)}.`, sourceDir);
+  }
+
+  const unsafeInjector = findFunction("UnsafeFaultInjectActiveDeity");
+  const unsafeCleanup = findFunction("ClearUnsafeFaultInjection");
+  if (unsafeInjector?.body.includes("[PDV][UNSAFE_FAULT_INJECTION]") && unsafeInjector.body.includes("PDV.Debug.UnsafeFaultInjectionActive") && unsafeInjector.body.includes("PDV.Debug.UnsafeFaultInjectionEver")) {
+    pass("Unsafe fault injection marker", "The isolated injector emits and stores an unmistakable unsafe marker.", unsafeInjector.filePath);
+  } else {
+    fail("Unsafe fault injection marker", "The isolated injector is missing its runtime/persistent unsafe marker.", unsafeInjector?.filePath || sourceDir);
+  }
+  if (unsafeCleanup?.body.includes("ClearPendingCommitment") && unsafeCleanup.body.includes("SyncFirstTierRaceRewardRuntime") && unsafeCleanup.body.includes("DebugClosePrismaSurfaces")) {
+    pass("Unsafe fault injection cleanup", "Cleanup clears pending commitment, reward state, and Prisma surfaces.", unsafeCleanup.filePath);
+  } else {
+    fail("Unsafe fault injection cleanup", "Unsafe injection cleanup is incomplete.", unsafeCleanup?.filePath || sourceDir);
+  }
+  const consentFixture = findFunction("DebugConsentDivinePatronThenRaiseSanguine");
+  if (consentFixture?.body.includes("ClearUnsafeFaultInjection") && consentFixture.body.includes("previousPatronState") && mcm.includes("[UNSAFE] Divine patron then raise Sanguine")) {
+    pass("Unsafe fault injection self-cleanup", "The sole user-facing invalid-state fixture is labelled unsafe, self-cleans, and restores the prior patron mode.", consentFixture.filePath);
+  } else {
+    fail("Unsafe fault injection self-cleanup", "The user-facing invalid-state fixture is not clearly labelled or self-cleaning.", consentFixture?.filePath || sourceDir);
+  }
+}
+
+function splitRecordBlocks(text, type) {
+  return String(text)
+    .split(new RegExp(`(?=\\r?\\ntype=${type}\\s)`, "i"))
+    .filter((block) => new RegExp(`(?:^|\\n)type=${type}\\s`, "i").test(block));
+}
+
+function readRecordField(block, fieldName) {
+  const escaped = escapeRegExp(fieldName);
+  return block.match(new RegExp(`^\\s*${escaped}\\s*=\\s*(.*)$`, "m"))?.[1]?.trim() ?? "";
+}
+
+function compareRecordField(editorId, fieldName, actual, expected, pass, fail, filePath) {
+  if (actual === expected) pass("Formal offer ESP text", `${editorId} ${fieldName} matches the spec.`, filePath);
+  else fail("Formal offer ESP text", `${editorId} ${fieldName} does not match the spec.`, filePath);
 }
 
 function printTextSummary(summary) {

@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -15,10 +16,12 @@ assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_broad_pant
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTRACT_PATH = path.join(ROOT, "references", "authoring", "PDV_BroadPantheonContracts.json");
+const SOURCE_ROOT = path.join(ROOT, "live-source", "Scripts", "Source");
 const MANAGER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
 const MCM_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_MCM.psc");
 const PLAYER_EVENTS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_PlayerEvents.psc");
 const EVENT_BUS_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc");
+const QUEST_REACTION_RUNTIME_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_QuestReactionRuntime.psc");
 const ACTION_ROUTER_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_ActionRouter.psc");
 const DEITY_BASE_PATH = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_DeityBase.psc");
 const RUNTIME_LEDGER_PATH = path.join(ROOT, "references", "authoring", "PDV_PantheonSubstrateRuntimeEvidenceLedger.json");
@@ -35,11 +38,14 @@ function norm(value) {
 }
 
 function bodyFor(source, functionName) {
-  const start = source.search(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "i"));
-  if (start < 0) return "";
-  const tail = source.slice(start);
-  const end = tail.search(/\n\s*EndFunction\b/i);
-  return end >= 0 ? tail.slice(0, end + 12) : tail;
+  const starts = [...source.matchAll(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "ig"))];
+  const bodies = [];
+  for (const match of starts) {
+    const tail = source.slice(match.index);
+    const end = tail.search(/\n\s*EndFunction\b/i);
+    bodies.push(end >= 0 ? tail.slice(0, end + 12) : tail);
+  }
+  return bodies.join("\n");
 }
 
 function eventBodyFor(source, eventName) {
@@ -69,6 +75,26 @@ export function aggregateLogicalEvent(deltas) {
   return negative.length ? Math.min(...negative) : 0;
 }
 
+export function hasDetachedActionShape(body) {
+  const eventReasonAssignment = body.search(/String\s+eventReason\s*=\s*GetEventReason\s*\(\s*eventType\s*\)/i);
+  const substrateCall = body.search(/HandleSubstrateActionEvent\s*\(\s*eventType\s*,\s*eventReason\s*\)/i);
+  // Qualifier-agnostic: the extraction added a hop (PDV_Manager.X -> PDV_Manager.LedgerRuntime.X).
+  // The assertion is unchanged -- the flag is still the negation of one ShouldSurfaceLikesDislikesEvent
+  // call on eventType; only the owning-script path in front of it is no longer pinned.
+  return /detachedBroadEvent\s*=\s*!(?:[A-Za-z_]\w*\.)*ShouldSurfaceLikesDislikesEvent\s*\(\s*eventType\s*\)/i.test(body)
+    && /GetActiveBroadPantheonPoolId\s*\(\s*\)/i.test(body)
+    && eventReasonAssignment >= 0
+    && substrateCall > eventReasonAssignment
+    && (body.match(/GetEventReason\s*\(\s*eventType\s*\)/gi) ?? []).length === 1
+    && /AwardPietyFromLikesDislikes\s*\([^\r\n]*detachedBroadEvent[^\r\n]*detachedBroadPool/i.test(body)
+    && /CommitDetachedBroadPantheonEvent\s*\(\s*logicalEventId\s*,\s*detachedBroadPool[^\r\n]*eventType\s*\)/i.test(body);
+}
+
+export function hasDetachedCommitShape(body) {
+  return /ApplyBroadPantheonEventResult\s*\(/i.test(body)
+    && !/BeginBroadPantheonEvent|FlushBroadPantheonEvent|WaitMenuMode/i.test(body);
+}
+
 export function foldSignedScratch(value, scratch, signedCap = 4.3, poolCap = 50) {
   const folded = Math.max(-signedCap, Math.min(signedCap, scratch));
   return Math.max(0, Math.min(poolCap, value + folded));
@@ -92,7 +118,7 @@ export function settleReturningBroadAct(value, scratch, currentDay, lastProcesse
   return foldSignedScratch(Math.max(0, value - pastDecayDays * 0.1), scratch);
 }
 
-export function evaluate({ contract, managerSource, playerEventsSource, eventBusSource, actionRouterSource, deityBaseSource, mcmSource = "" }) {
+export function evaluate({ contract, managerSource, playerEventsSource, eventBusSource, questReactionRuntimeSource, actionRouterSource, deityBaseSource, mcmSource = "" }) {
   const findings = [];
   const add = (ok, id, detail) => findings.push({ status: ok ? "PASS" : "FAIL", id, detail });
   const shared = contract.shared ?? {};
@@ -118,15 +144,9 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
     add(Boolean(pool), `contract.pool.${id}`, `${id} must exist`);
     add(Boolean(pool) && sameMembers(pool.eligibleImmediately, roster), `contract.roster.${id}`, `${id} roster must be ${roster.join(", ")}`);
     add(pool?.rewardFamily?.tier3 === null, `contract.no-t3.${id}`, `${id} must cap at T2`);
-    add(pool?.migration?.versionKey === "PDV.BroadPantheon.Version", `contract.migration-version.${id}`, `${id} must use PDV.BroadPantheon.Version`);
   }
   add(/explicit Talos stance, prayer, or defiance unlock/i.test(poolById.get("ImperialDivines")?.conditional?.Talos ?? ""), "contract.imperial-talos", "Imperial Talos must be conditionally unlocked");
   add(poolById.get("NordNineDivines")?.rewardFamily?.recordPolicy?.includes("distinct Nord records") === true, "contract.nord-distinct-records", "Nord Nine Divines must use distinct records");
-  const imperialMigration = poolById.get("ImperialDivines")?.migration;
-  const oldWaysMigration = poolById.get("NordOldWays")?.migration;
-  const nineMigration = poolById.get("NordNineDivines")?.migration;
-  add(/oldCount\s*\*\s*50\s*\/\s*6/i.test(imperialMigration?.formula ?? "") && /oldCount\s*\*\s*50\s*\/\s*6/i.test(oldWaysMigration?.formula ?? ""), "contract.count-migration", "Imperial and Old Ways must migrate oldCount*50/6");
-  add(/maxEligibleDeityPiety/i.test(nineMigration?.formula ?? "") && nineMigration?.neverSumGods === true, "contract.nine-divines-migration", "Nine Divines must seed from max eligible piety and never sum gods");
   const resistanceFamilyIsExact = (pool) => {
     const tier1 = pool?.rewardFamily?.tier1?.effects ?? [];
     const tier2 = pool?.rewardFamily?.tier2?.effects ?? [];
@@ -153,7 +173,6 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   add(runtimeCards.every((card) => ["runtimeRoute", "organicRoute", "manualDisplay", "saveLoad"].every((slot) => Object.hasOwn(card, slot))), "evidence.proof-buckets", "every adversarial card must keep runtime, organic, manual, and save/load proof separate");
 
   for (const id of Object.keys(EXPECTED_ROSTERS)) add(managerSource.includes(id), `source.pool-key.${id}`, `${id} must be represented in manager source`);
-  add(managerSource.includes("PDV.BroadPantheon.Version"), "source.migration-version", "manager must version broad-pantheon migration");
   add(hasNumber(managerSource, "BROAD_PANTHEON_SEEKER_THRESHOLD", 25), "source.seeker-threshold", "manager must define broad Seeker threshold 25");
   add(hasNumber(managerSource, "BROAD_PANTHEON_FAITHFUL_THRESHOLD", 50), "source.faithful-threshold", "manager must define broad Faithful threshold 50");
   add(hasNumber(managerSource, "BROAD_PANTHEON_POOL_MAX", 50), "source.pool-cap", "manager must define broad pool cap 50");
@@ -166,7 +185,6 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   const accumulate = bodyFor(managerSource, "AccumulateBroadPantheonDelta");
   const flush = bodyFor(managerSource, "FlushBroadPantheonEvent");
   const dawn = bodyFor(managerSource, "ProcessBroadPantheonDawn");
-  const migration = bodyFor(managerSource, "MigrateBroadPantheonPools");
   const sync = bodyFor(managerSource, "SyncBroadPantheonRewards");
   const broadBookTier = bodyFor(managerSource, "BuildBroadLaneTierReachJournalLine");
   const devotionalDayBody = bodyFor(managerSource, "GetDevotionalDay");
@@ -177,7 +195,6 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   add(Boolean(accumulate), "source.accumulate-event", "AccumulateBroadPantheonDelta must exist");
   add(Boolean(flush), "source.flush-event", "FlushBroadPantheonEvent must exist");
   add(Boolean(dawn), "source.dawn-fold", "ProcessBroadPantheonDawn must exist");
-  add(Boolean(migration), "source.migration", "MigrateBroadPantheonPools must exist");
   add(Boolean(sync), "source.reward-sync", "SyncBroadPantheonRewards must exist");
   add(/The Divines' Regard - Observant/i.test(sync) && /Old Ways - Observant/i.test(sync) && /Faith of the Holds - Observant/i.test(sync), "source.public-broad-ranks", "Broad reward trace labels must use the public Observant/Faithful rank vocabulary, never player-facing Seeker.");
   add(/return\s+GetBroadLaneDisplayName\(originRace\)\s*\+\s*" has reached "/i.test(broadBookTier) && !/"Your /i.test(broadBookTier), "source.broad-book-possessive", "Broad Book of Days tier lines must say '<family> has reached <band>' without the malformed 'Your <family>'.");
@@ -187,8 +204,6 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   add(/positive/i.test(flush) && /negative/i.test(flush), "source.positive-precedence", "flush must prefer an eligible positive over the negative accumulator");
   add(/PIETY_DAILY_MAX_DELTA/i.test(dawn), "source.dawn-signed-cap", "dawn fold must use the shared signed 4.3 cap");
   add(/BROAD_PANTHEON_DECAY/i.test(dawn) && /PATRON_STATE_ACTIVE|suppressed|activePool/i.test(dawn), "source.suppressed-decay", "dawn processing must address pool decay outside the active broad lane");
-  add(/50(?:\.0+)?\s*\/\s*6(?:\.0+)?|\/\s*6(?:\.0+)?\s*\*\s*50(?:\.0+)?/i.test(migration), "source.count-migration", "Imperial/Old Ways count migration must implement oldCount*50/6");
-  add(/max|highest/i.test(migration) && /NineDivines/i.test(migration), "source.nine-divines-migration", "Nine Divines migration must seed from the highest eligible deity, never a sum");
   add(!/CivicServiceCount[^\r\n]*(>=|>)\s*[36]/i.test(sync), "source.no-civic-count-gate", "broad reward sync must not gate Imperial rewards on civic service count");
   add(/PATRON_STATE_BROAD/i.test(sync) && /25(?:\.0+)?|BROAD_PANTHEON_SEEKER_THRESHOLD/i.test(sync) && /50(?:\.0+)?|BROAD_PANTHEON_FAITHFUL_THRESHOLD/i.test(sync), "source.two-tier-sync", "broad reward sync must resolve highest-slot-only 25/50 tiers");
 
@@ -203,18 +218,26 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   const eventBusQuest = bodyFor(eventBusSource, "RouteQuestReaction");
   const routerAction = bodyFor(actionRouterSource, "RouteActionWithAttribution");
   add(/String\s+logicalEventId\s*=\s*"book_"/i.test(onBookRead) && /RouteGenericBookRead\s*\([^\r\n]*logicalEventId/i.test(onBookRead) && /RouteP2ImmersiveSource\s*\([^\r\n]*logicalEventId/i.test(onBookRead), "source.book-parent-identity", "book scoring and P2 source routing must inherit one book logical-event identity");
-  add(/String\s+logicalEventId\s*=\s*"quest_"/i.test(onQuestStageChange) && /RouteP2ImmersiveQuestStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange) && /RouteQuestReactionStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange), "source.quest-parent-identity", "P2 and quest-reaction receivers must inherit one quest-stage logical-event identity");
+  const questBeginIndex = onQuestStageChange.indexOf("BeginLogicalDevotionalAct(logicalEventId)");
+  const questFlushIndex = onQuestStageChange.indexOf("FlushLogicalDevotionalAct()");
+  const questReactionIndex = onQuestStageChange.indexOf("RouteQuestReactionStage(akQuest, aiNewStage, logicalEventId)");
+  add(/String\s+logicalEventId\s*=\s*""/i.test(onQuestStageChange) && /logicalEventId\s*=\s*"quest_"/i.test(onQuestStageChange) && /RouteP2ImmersiveQuestStage\s*\([^\r\n]*logicalEventId/i.test(onQuestStageChange) && questBeginIndex >= 0 && questBeginIndex < questFlushIndex && questFlushIndex < questReactionIndex, "source.quest-scope-separation", "ordinary quest/P2/curated broad work must flush before the independently persisted Quest Reaction transaction is admitted");
   add(/JoinLogicalDevotionalAct\s*\(\s*parentLogicalEventId\s*\)/i.test(p2Source) && /JoinLogicalDevotionalAct\s*\(\s*parentLogicalEventId\s*\)/i.test(p2QuestStage) && /if\s*!joinedParentEvent/i.test(p2Source) && /if\s*!joinedParentEvent/i.test(p2QuestStage), "source.p2-nested-join", "P2 source and quest-stage receivers must join a supplied parent identity and create roots only when standalone");
   add(/String\s+logicalEventId\s*=\s*""/i.test(genericAction) && /RouteAction\s*\([^\r\n]*logicalEventId/i.test(genericAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(eventBusAction), "source.action-parent-identity", "generic action scoring must pass a supplied parent identity into the likes/dislikes surface");
-  add(/String\s+logicalEventId\s*=\s*""/i.test(questReactionStage) && /RouteQuestReaction\s*\([^\r\n]*logicalEventId/i.test(questReactionStage) && /ApplyQuestReaction\s*\([^\r\n]*logicalEventId/i.test(eventBusQuest), "source.quest-reaction-parent-identity", "quest reaction routing must pass a supplied parent identity into the manager");
+  add(/String\s+logicalEventId\s*=\s*""/i.test(questReactionStage) && /RouteQuestReaction\s*\([^\r\n]*logicalEventId/i.test(questReactionStage) && /SubmitQuestStage\s*\([^\r\n]*logicalEventId/i.test(eventBusQuest) && !/BeginBroadPantheonEvent|JoinLogicalDevotionalAct|FlushBroadPantheonEvent/i.test(questReactionRuntimeSource), "source.quest-reaction-independent-transaction", "quest reaction retains event attribution while Runtime owns a separate persisted transaction with no borrowed broad scope");
   add(/String\s+logicalEventId\s*=\s*""/i.test(routerAction) && /RouteActionWithAttribution\s*\([^\r\n]*logicalEventId/i.test(routerAction) && /BeginLikesDislikesSurface\s*\(\s*eventType\s*,\s*logicalEventId\s*\)/i.test(routerAction), "source.router-parent-identity", "fallback action routing must preserve a supplied parent identity");
+  const detachedBroadCommit = bodyFor(managerSource, "CommitDetachedBroadPantheonEvent");
+  add(hasDetachedActionShape(eventBusAction) && hasDetachedActionShape(routerAction), "source.nonsurface-action-detached-broad", "non-presented action fan-out must aggregate locally and commit once without holding the shared broad scope");
+  add(hasDetachedCommitShape(detachedBroadCommit), "source.detached-broad-atomic-commit", "detached action results must commit without opening, waiting on, or clearing the shared broad scope");
+  add(/likes_dislikes_"\s*\+\s*eventType\s*\+\s*"_"\s*\+\s*Utility\.GetCurrentGameTime/i.test(detachedBroadCommit), "source.detached-broad-identity", "detached fallback identities must preserve event type plus game time");
   const shrinePrayer = bodyFor(managerSource, "HandleShrinePrayer");
   const shoutAttack = bodyFor(managerSource, "HandleShoutAttack");
   add(/BeginBroadPantheonEvent/i.test(shrinePrayer) && /FlushBroadPantheonEvent/i.test(shrinePrayer), "source.shrine-event-scope", "multi-deity shrine prayer must aggregate inside one logical broad event");
   add(/BeginBroadPantheonEvent/i.test(shoutAttack) && /FlushBroadPantheonEvent/i.test(shoutAttack), "source.shout-event-scope", "shout fan-out must aggregate inside one logical broad event");
   const onePoolDawn = bodyFor(managerSource, "ProcessOneBroadPantheonDawn");
   const throughDay = bodyFor(managerSource, "ProcessBroadPantheonThroughDay");
-  add(/WriteZeroReservedDevotionalDayStamp\s*\(\s*GetBroadPantheonScratchDayKey/i.test(flush)
+  const applyResult = bodyFor(managerSource, "ApplyBroadPantheonEventResult");
+  add(/WriteZeroReservedDevotionalDayStamp\s*\(\s*GetBroadPantheonScratchDayKey/i.test(applyResult)
     && /ReadZeroReservedDevotionalDayStamp\s*\(\s*GetBroadPantheonScratchDayKey/i.test(throughDay)
     && /scratchDay\s*=\s*scratchStamp\s*-\s*2/i.test(throughDay)
     && /scratchDay\s*<=\s*targetDay/i.test(throughDay), "source.broad-scratch-day", "signed scratch must carry its own zero-reserved devotional day and fold only through its stamped day");
@@ -226,46 +249,49 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
   add(/scratchEligible\s*&&\s*firstDecayDay\s*<=\s*scratchDay/i.test(throughDay)
     && /firstDecayDay\s*=\s*scratchDay\s*\+\s*1/i.test(throughDay), "source.signed-activity-skips-inactivity", "a folded positive or negative scratch must exclude its own activity day from inactivity decay");
   const catchupBeforeAct = bodyFor(managerSource, "CatchUpBroadPantheonDecayBeforeCurrentDay");
-  add(/CatchUpBroadPantheonDecayBeforeCurrentDay\s*\(\s*_broadPantheonEventPool\s*\)/i.test(flush)
+  add(/CatchUpBroadPantheonDecayBeforeCurrentDay\s*\(\s*poolId\s*\)/i.test(applyResult)
     && /targetDay\s*=\s*GetDevotionalDay\(\)\s*-\s*1/i.test(catchupBeforeAct)
     && /ProcessBroadPantheonThroughDay\s*\(\s*poolId\s*,\s*targetDay/i.test(catchupBeforeAct), "source.returning-act-decay-order", "a returning positive or negative act must settle already-owed inactivity through yesterday before opening today's scratch");
   const questCapBody = bodyFor(managerSource, "MarkQuestReactionFaucet");
-  add(/pdvCurrentDawnDay\s*=\s*GetDevotionalDay\(\)/i.test(managerSource), "source.scheduler-day-zero", "auto-dawn scheduler must use the canonical negative-floor devotional day");
+  add(/pdvCurrentDawnDay\s*=\s*(?:[A-Za-z_]\w*\.)*GetDevotionalDay\(\)/i.test(managerSource), "source.scheduler-day-zero", "auto-dawn scheduler must use the canonical negative-floor devotional day");
   add(/GetDevotionalDay\(\)\s*\+\s*2/i.test(questCapBody), "source.quest-cap-day-zero", "quest reaction daily cap must reserve zero with day+2 encoding");
   add(/ShouldSyncLegacyPatronBoons/i.test(deityBaseSource) && /RACE_NORD|RACE_IMPERIAL/i.test(deityBaseSource) && /return\s+False/i.test(deityBaseSource), "source.legacy-focused-t1-suppressed", "Nord and Imperial deity records must not transiently grant legacy focused T1");
-  const migrationFixture = bodyFor(managerSource, "DebugRunBroadPantheonMigrationFixture");
   const pacingCatchup = bodyFor(managerSource, "DebugRunBroadPantheonCatchupForPacing");
-  const productionWithoutMigrationFixture = managerSource.replace(migrationFixture, "");
-  add(!/(?:Adjust|Set)IntValue\s*\([^\r\n]*PDV\.Imperial\.CivicServiceCount/i.test(productionWithoutMigrationFixture)
-    && /SetIntValue\s*\([^\r\n]*PDV\.Imperial\.CivicServiceCount[^\r\n]*3/i.test(migrationFixture), "source.frozen-imperial-counter", "Imperial civic service count must be frozen outside the explicit throwaway-save migration fixture");
-  add(!/(?:Adjust|Set)IntValue\s*\([^\r\n]*PDV\.Nord\.OldWaysContextCount/i.test(productionWithoutMigrationFixture)
-    && /SetIntValue\s*\([^\r\n]*PDV\.Nord\.OldWaysContextCount[^\r\n]*6/i.test(migrationFixture), "source.frozen-oldways-counter", "Nord Old Ways count must be frozen outside the explicit throwaway-save migration fixture");
+  add(!/(?:Adjust|Set)IntValue\s*\([^\r\n]*PDV\.Imperial\.CivicServiceCount/i.test(managerSource), "source.frozen-imperial-counter", "production code must never write PDV.Imperial.CivicServiceCount; the legacy civic counter stays frozen");
+  add(!/(?:Adjust|Set)IntValue\s*\([^\r\n]*PDV\.Nord\.OldWaysContextCount/i.test(managerSource), "source.frozen-oldways-counter", "production code must never write PDV.Nord.OldWaysContextCount; the legacy Old Ways counter stays frozen");
   const legacyBroadSeed = bodyFor(managerSource, "DebugSeedBroadLane");
-  add(/SetBroadPantheonStanding\s*\(\s*BROAD_PANTHEON_IMPERIAL\s*,\s*BROAD_PANTHEON_FAITHFUL_THRESHOLD/i.test(legacyBroadSeed), "source.debug-imperial-pool-seed", "the legacy MCM broad-lane seed must write ImperialDivines standing 50, not a frozen counter");
+  add(/SetBroadPantheonStanding\s*\(\s*(?:[A-Za-z_]\w*\.)*BROAD_PANTHEON_IMPERIAL\s*,\s*(?:[A-Za-z_]\w*\.)*BROAD_PANTHEON_FAITHFUL_THRESHOLD/i.test(legacyBroadSeed), "source.debug-imperial-pool-seed", "the legacy MCM broad-lane seed must write ImperialDivines standing 50, not a frozen counter");
   const awardPiety = bodyFor(managerSource, "AwardPietyInternal");
-  add(/queuedQuestReaction\s*=\s*_qrQueueTransactionActive/i.test(awardPiety)
-    && /ownsBroadEvent\s*=\s*!queuedQuestReaction\s*&&\s*_broadPantheonEventDepth\s*==\s*0/i.test(awardPiety)
-    && /_broadPantheonSelfEventSequence\s*\+=\s*1/i.test(awardPiety)
-    && /if\s+_broadPantheonSelfEventSequence\s*<=\s*0/i.test(awardPiety)
+  // AwardPietyInternal moved out of the manager, so the two manager-private counters it
+  // used to touch directly are now reached through their accessor pairs. Each needle below
+  // accepts EITHER the direct field spelling or exactly the equivalent accessor spelling of
+  // the SAME operation -- the read, the increment, the <=0 wrap guard, and the unique label
+  // are all still required; nothing is relaxed to a bare name.
+  add(/queuedQuestReaction\s*=\s*(?:_qrQueueTransactionActive|(?:[A-Za-z_]\w*\.)*GetQrQueueTransactionActive\s*\(\s*\))/i.test(awardPiety)
+    && /ownsBroadEvent\s*=\s*trackBroadPantheon\s*&&\s*!queuedQuestReaction\s*&&\s*_broadPantheonEventDepth\s*==\s*0/i.test(awardPiety)
+    && /(?:_broadPantheonSelfEventSequence\s*\+=\s*1|(?:[A-Za-z_]\w*\.)*SetBroadPantheonSelfEventSequence\s*\(\s*(?:[A-Za-z_]\w*\.)*GetBroadPantheonSelfEventSequence\s*\(\s*\)\s*\+\s*\(?\s*1)/i.test(awardPiety)
+    && /if\s+(?:_broadPantheonSelfEventSequence|(?:[A-Za-z_]\w*\.)*GetBroadPantheonSelfEventSequence\s*\(\s*\))\s*<=\s*0/i.test(awardPiety)
     && /String\s+eventLabel\s*=\s*reason/i.test(awardPiety)
     && /eventLabel\s*=\s*"piety"/i.test(awardPiety)
-    && /BeginBroadPantheonEvent\s*\(\s*eventLabel\s*\+\s*"_auto_"\s*\+\s*_broadPantheonSelfEventSequence/i.test(awardPiety), "source.unique-self-owned-events", "every unscoped piety award must create a unique manager-owned broad event identity");
-  add(/IsRecentBroadPantheonEventDuplicate/i.test(flush) && /RememberBroadPantheonEvent/i.test(flush) && /StringListCount\s*\([^\r\n]*>=\s*8/i.test(managerSource), "source.recent-event-ring", "logical-event dedupe must retain a bounded recent-ID ring so immediate A/B/A fan-out cannot multiply the pool delta");
+    && /BeginBroadPantheonEvent\s*\(\s*eventLabel\s*\+\s*"_auto_"\s*\+\s*(?:_broadPantheonSelfEventSequence|(?:[A-Za-z_]\w*\.)*GetBroadPantheonSelfEventSequence\s*\(\s*\))/i.test(awardPiety), "source.unique-self-owned-events", "every unscoped piety award must create a unique manager-owned broad event identity");
+  add(/IsRecentBroadPantheonEventDuplicate/i.test(applyResult) && /RememberBroadPantheonEvent/i.test(applyResult) && /StringListCount\s*\([^\r\n]*>=\s*8/i.test(managerSource), "source.recent-event-ring", "logical-event dedupe must retain a bounded recent-ID ring so immediate A/B/A fan-out cannot multiply the pool delta");
   const resetPool = bodyFor(managerSource, "ResetBroadPantheonPool");
   add(/StringListClear\s*\(\s*None\s*,\s*GetBroadPantheonRecentEventIdsKey\s*\(\s*poolId\s*\)/i.test(resetPool)
     && /FloatListClear\s*\(\s*None\s*,\s*GetBroadPantheonRecentEventTimesKey\s*\(\s*poolId\s*\)/i.test(resetPool)
     && /GetBroadPantheonScratchDayKey\s*\(\s*poolId\s*\)[^\r\n]*0/i.test(resetPool), "source.recent-event-ring-reset", "pool reset must clear both recent-event rings and the scratch-day stamp");
   const talosDefiance = bodyFor(managerSource, "HandleTalosShrineDefiance");
   const talosPressure = bodyFor(managerSource, "HandleImperialTalosPressure");
+  const contextualSignal = bodyFor(managerSource, "HandleContextualSignal");
   add(/ShrinePrayerHasAlias\s*\([^\r\n]*"Talos"\)/i.test(shrinePrayer) && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(shrinePrayer), "source.talos-unlock-prayer", "explicit Imperial Talos prayer must unlock Talos for the broad roster");
-  add(/GetPlayerOriginRaceIndex\(\)\s*==\s*ORIGIN_IMPERIAL/i.test(talosDefiance) && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(talosDefiance), "source.talos-unlock-defiance", "Imperial Talos shrine defiance must unlock Talos for the broad roster");
+  add(/HandleContextualSignal\s*\(\s*"hidden_talos_shrine"/i.test(talosDefiance)
+    && /signalId\s*==\s*"hidden_talos_shrine"/i.test(contextualSignal)
+    && /!IsImperialVampireStateActive/i.test(contextualSignal)
+    && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(contextualSignal), "source.talos-unlock-defiance", "Imperial Talos shrine defiance must unlock Talos for the broad roster");
   add(/GetPlayerOriginRaceIndex\(\)\s*!=\s*ORIGIN_IMPERIAL/i.test(talosPressure) && /IsImperialVampireStateActive/i.test(talosPressure) && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(talosPressure), "source.talos-unlock-stance", "eligible Imperial Talos pressure must unlock Talos while rejecting wrong-origin and vampire routes");
   const imperialCurse = bodyFor(managerSource, "ApplyImperialCurseHandlers");
   const imperialRewardFamily = bodyFor(managerSource, "SyncImperialRewardFamily");
   add(/SetFloatValue\s*\(\s*None\s*,\s*GetBroadPantheonScratchKey\s*\(\s*BROAD_PANTHEON_IMPERIAL\s*\)\s*,\s*0\.0/i.test(imperialCurse), "source.vampire-clears-scratch", "Imperial vampire onset must clear pending broad-pool scratch");
   add(/!IsImperialVampireStateActive/i.test(imperialRewardFamily) && /SyncImperialRewards/i.test(imperialCurse), "source.vampire-clears-focused", "Imperial vampire halt must remove focused T2/T3 rewards as well as broad/substrate rewards");
-  add(/GetPlayerOriginRaceIndex\s*\(\s*\)\s*==\s*ORIGIN_NORD/i.test(migration) && /GetPatronState\s*\(\s*\)\s*==\s*PATRON_STATE_BROAD/i.test(migration) && /GetNordPantheonBaselineState/i.test(migration) && /NORD_BASELINE_NINE_DIVINES/i.test(migration), "source.conditional-nine-seed", "Nine Divines migration seed must be limited to a broad Nord using that baseline");
-  add(/SyncBroadPantheonRewards/i.test(migration), "source.migration-sync", "migration must immediately reconcile broad reward spells");
   const baselineSwitch = bodyFor(managerSource, "DebugSetNordPantheonBaseline");
   const debugAccept = bodyFor(managerSource, "DebugAcceptPendingCommitment");
   const pacingOffer = bodyFor(managerSource, "DebugRunPatronOfferForPacing");
@@ -283,7 +309,7 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
     && /ProcessBroadPantheonThroughDay\s*\(\s*poolId\s*,\s*targetDay\s*,\s*signedCap\s*,\s*"mcm_ps_a11_catchup"/i.test(pacingCatchup), "source.ps-a11-production-catchup", "PS-A11 must require a suppressed, settled, real-gain pool and exercise the production catch-up routine through gain day +5");
   add(/_oidPacingBroadCatchup/i.test(mcmSource)
     && /DebugRunBroadPantheonCatchupForPacing\s*\(\s*\)/i.test(mcmSource)
-    && /PDV_Manager\.DebugRunBroadPantheonCatchupForPacing\s*\(\s*_selectedBroadPantheonPool\s*\)/i.test(mcmSource), "source.ps-a11-mcm-control", "Pacing MCM must expose the PS-A11 production catch-up control for the selected broad pool");
+    && /PDV_Manager\.(?:DebugRuntime\.)?DebugRunBroadPantheonCatchupForPacing\s*\(\s*_selectedBroadPantheonPool\s*\)/i.test(mcmSource), "source.ps-a11-mcm-control", "Pacing MCM must expose the PS-A11 production catch-up control for the selected broad pool");
 
   return { status: findings.some((item) => item.status === "FAIL") ? "FAIL" : "PASS", findings };
 }
@@ -306,6 +332,18 @@ function selfTest() {
   expect("negative activity preserves later catch-up", elapsedBroadDecayDaysWithActivity(7, 4, 0, 5) === 2);
   expect("positive return preserves past decay", Math.abs(settleReturningBroadAct(10, 2, 5, 0, 0) - 11.8) < 0.0001);
   expect("negative return preserves past decay", Math.abs(settleReturningBroadAct(10, -2, 5, 0, 0) - 7.8) < 0.0001);
+  const detachedActionFixture = `
+    String eventReason = GetEventReason(eventType)
+    PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)
+    Bool detachedBroadEvent = !PDV_Manager.ShouldSurfaceLikesDislikesEvent(eventType)
+    String detachedBroadPool = PDV_Manager.GetActiveBroadPantheonPoolId()
+    Float broadDelta = PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason, detachedBroadEvent, detachedBroadPool)
+    PDV_Manager.CommitDetachedBroadPantheonEvent(logicalEventId, detachedBroadPool, bestPositive, worstNegative, eventType)`;
+  expect("non-presented action uses detached broad result", hasDetachedActionShape(detachedActionFixture));
+  expect("duplicate event-reason lookup is rejected", !hasDetachedActionShape(detachedActionFixture.replace("PDV_Manager.HandleSubstrateActionEvent(eventType, eventReason)", "PDV_Manager.HandleSubstrateActionEvent(eventType, GetEventReason(eventType))")));
+  expect("legacy fan-out fixture is rejected", !hasDetachedActionShape("PDV_Manager.BeginLikesDislikesSurface(eventType, logicalEventId)"));
+  expect("detached commit cannot borrow the shared scope", hasDetachedCommitShape("ApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)"));
+  expect("waiting detached commit is rejected", !hasDetachedCommitShape("BeginBroadPantheonEvent(logicalEventId)\nApplyBroadPantheonEventResult(poolId, logicalEventId, chosenDelta)"));
   const failed = checks.filter((item) => !item.ok).length;
   if (flags.has("--json")) console.log(JSON.stringify({ schema: "pdv.broad-pantheon-audit-self-test.v1", status: failed ? "FAIL" : "PASS", assertions: checks }, null, 2));
   else {
@@ -325,13 +363,17 @@ function main() {
     process.exitCode = 2;
     return;
   }
-  const managerSource = fs.existsSync(MANAGER_PATH) ? fs.readFileSync(MANAGER_PATH, "utf8") : "";
+  // Resolver-aware: the manager's decomposition family, not the manager alone. Once a
+  // broad-pantheon routine moves into an extracted module a manager-only read is blind --
+  // positive needles fail and negated needles pass vacuously. Strictly additive.
+  const managerSource = fs.existsSync(MANAGER_PATH) ? familySourceText(ROOT, SOURCE_ROOT) : "";
   const playerEventsSource = fs.existsSync(PLAYER_EVENTS_PATH) ? fs.readFileSync(PLAYER_EVENTS_PATH, "utf8") : "";
   const eventBusSource = fs.existsSync(EVENT_BUS_PATH) ? fs.readFileSync(EVENT_BUS_PATH, "utf8") : "";
+  const questReactionRuntimeSource = fs.existsSync(QUEST_REACTION_RUNTIME_PATH) ? fs.readFileSync(QUEST_REACTION_RUNTIME_PATH, "utf8") : "";
   const actionRouterSource = fs.existsSync(ACTION_ROUTER_PATH) ? fs.readFileSync(ACTION_ROUTER_PATH, "utf8") : "";
   const deityBaseSource = fs.existsSync(DEITY_BASE_PATH) ? fs.readFileSync(DEITY_BASE_PATH, "utf8") : "";
   const mcmSource = fs.existsSync(MCM_PATH) ? fs.readFileSync(MCM_PATH, "utf8") : "";
-  const result = evaluate({ contract, managerSource, playerEventsSource, eventBusSource, actionRouterSource, deityBaseSource, mcmSource });
+  const result = evaluate({ contract, managerSource, playerEventsSource, eventBusSource, questReactionRuntimeSource, actionRouterSource, deityBaseSource, mcmSource });
   const report = { schema: "pdv.broad-pantheon-audit.v1", contract: path.relative(ROOT, CONTRACT_PATH).replaceAll("\\", "/"), ...result };
   if (flags.has("--json")) console.log(JSON.stringify(report, null, 2));
   else {

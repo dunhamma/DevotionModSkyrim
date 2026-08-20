@@ -18,6 +18,7 @@ Scriptname PDV_MCM extends SKI_ConfigBase
 
 PDV__ManagerQuest Property PDV_Manager Auto
 PDV_EventBus Property PDV_EventBusService Auto
+PDV_QuestReactionRuntime Property PDV_QuestReactionRuntimeService Auto
 PDV_ModePreset Property PDV_ModePresetRef Auto
 FormList Property PDV_FLST_AllDeities Auto
 FormList Property PDV_FLST_RepTracks_All Auto
@@ -147,6 +148,15 @@ Int _oidCommitmentReset = -1
 Int _oidAcceptCommitmentOffer = -1
 Int _oidDeclineCommitmentOffer = -1
 Int _oidRefuseCommitmentOffer = -1
+Int _oidConsentSeedSanguine = -1
+Int _oidConsentEvaluate = -1
+Int _oidConsentAccept = -1
+Int _oidConsentNotYet = -1
+Int _oidConsentRefuse = -1
+Int _oidConsentDivineThenRaise = -1
+Int _oidConsentAlcoholTwice = -1
+Int _oidConsentForceMigrate = -1
+Int _oidConsentReadback = -1
 Int _oidHircineReset = -1
 Int _oidHircineHuntRite = -1
 Int _oidHircineRenounce = -1
@@ -268,6 +278,13 @@ Function OnConfigInit()
     InitializePages()
     RegisterJournalHotkey()
     ApplyInGameEffectsPreference()
+EndFunction
+
+; SkyUI only rebuilds Pages on load (OnGameReload); a mid-session console unlock of the
+; dev tabs (raise PDV_GLO_DebugLevel) was therefore invisible until a save/reload. Rebuild
+; on every menu open so the owner-only Debug tabs surface immediately on the next open.
+Function OnConfigOpen()
+    InitializePages()
 EndFunction
 
 Function ApplyInGameEffectsPreference()
@@ -583,6 +600,24 @@ Function OnOptionHighlight(Int a_option)
         SetInfoText("Declines the pending commitment offer and postpones it.")
     elseIf a_option == _oidRefuseCommitmentOffer
         SetInfoText("Refuses the pending commitment offer and applies rupture/cooldown.")
+    elseIf a_option == _oidConsentSeedSanguine
+        SetInfoText("Sets Sanguine to Devoted piety with two recent commitment signal-days, clears consent and any active pact. Leaves the offer's preconditions met with consent withheld.")
+    elseIf a_option == _oidConsentEvaluate
+        SetInfoText("Runs the formal commitment-offer evaluator now and reports whether an offer would fire and for which deity. The 3-button pact message replays after the menu closes.")
+    elseIf a_option == _oidConsentAccept
+        SetInfoText("Accepts the pending commitment: records pact consent and makes Sanguine the single active pact. Shows the consent readback afterward.")
+    elseIf a_option == _oidConsentNotYet
+        SetInfoText("Declines/postpones the pending commitment offer. Shows the consent readback afterward.")
+    elseIf a_option == _oidConsentRefuse
+        SetInfoText("Refuses the pending commitment offer (rupture/cooldown). Shows the consent readback afterward.")
+    elseIf a_option == _oidConsentDivineThenRaise
+        SetInfoText("UNSAFE fault-injection fixture: temporarily sets a divine patron, raises Sanguine to offer-ready, verifies suppression, then clears the invalid patron state and restores the prior patron mode. Permanently marks the run invalid as gameplay proof.")
+    elseIf a_option == _oidConsentAlcoholTwice
+        SetInfoText("Fires the sanguine_alcohol KID action twice and reports Sanguine piety before/after so the second hit is seen capped by the once-per-day gate.")
+    elseIf a_option == _oidConsentForceMigrate
+        SetInfoText("Forces an active pact with no recorded consent, then re-runs the consent migration. The pact should clear while PDV.Piety is preserved.")
+    elseIf a_option == _oidConsentReadback
+        SetInfoText("Shows Sanguine stored piety and tier, pact consent, active-pact state, and the consent-schema version.")
     elseIf a_option == _oidHircineReset
         SetInfoText("Resets the Hircine proving ledger, residue, and curse state to a clean baseline.")
     elseIf a_option == _oidHircineHuntRite
@@ -669,7 +704,7 @@ EndFunction
 Function OnOptionSelect(Int a_option)
     if a_option == _oidSurveyDevotion
         if EnsureManagerBinding("survey_devotion")
-            ShowMessage(PDV_Manager.GetSurveyDevotionText(), False, "$OK", "")
+            ShowMessage(PDV_Manager.Prisma.GetSurveyDevotionText(), False, "$OK", "")
         else
             ShowMessage("Devotion is still starting up.", False, "$OK", "")
         endIf
@@ -678,7 +713,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidExportReport
         if EnsureManagerBinding("export_report")
-            String reportFile = PDV_Manager.ExportDevotionReport()
+            String reportFile = PDV_Manager.Prisma.ExportDevotionReport()
             if reportFile != ""
                 ShowMessage("Devotion report saved as '" + reportFile + "' in your Skyrim game folder (same folder as SkyrimSE.exe). Attach that file to your bug report. If you cannot find it, search your PC for " + reportFile + ". For a crash or a hard-to-repro bug, also attach your Papyrus log (Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log); the report file lists the exact path.", False, "$OK", "")
             else
@@ -919,7 +954,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidToastSize
         if EnsureManagerBinding("toggle_toast_size")
-            PDV_Manager.SetPrismaToastLargeEnabled(!PDV_Manager.PrismaToastLargeEnabled())
+            PDV_Manager.Prisma.SetPrismaToastLargeEnabled(!PDV_Manager.Prisma.PrismaToastLargeEnabled())
         endIf
         ForcePageReset()
         return
@@ -927,7 +962,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidNpcRecognition
         if EnsureManagerBinding("toggle_npc_recognition")
-            PDV_Manager.SetNpcReligiousRecognitionEnabled(!PDV_Manager.NpcReligiousRecognitionEnabled())
+            PDV_Manager.RecognitionRuntime.SetNpcReligiousRecognitionEnabled(!PDV_Manager.RecognitionRuntime.NpcReligiousRecognitionEnabled())
         endIf
         ForcePageReset()
         return
@@ -935,7 +970,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidNpcHostileRecognition
         if EnsureManagerBinding("toggle_npc_hostile_recognition")
-            PDV_Manager.SetNpcHostileRecognitionEnabled(!PDV_Manager.NpcHostileRecognitionEnabled())
+            PDV_Manager.RecognitionRuntime.SetNpcHostileRecognitionEnabled(!PDV_Manager.RecognitionRuntime.NpcHostileRecognitionEnabled())
         endIf
         ForcePageReset()
         return
@@ -999,31 +1034,31 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidApplyDomainSting
         if PDV_Manager
-            PDV_Manager.DebugApplyDomainSting(_pendingDisfavorDomain, _pendingDisfavorSharp)
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            PDV_Manager.DebugRuntime.DebugApplyDomainSting(_pendingDisfavorDomain, _pendingDisfavorSharp)
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
 
     if a_option == _oidDisfavorBurst
         if PDV_Manager
-            PDV_Manager.DebugBurstAntiStack()
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            PDV_Manager.DebugRuntime.DebugBurstAntiStack()
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
 
     if a_option == _oidDisfavorShow
         if PDV_Manager
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
 
     if a_option == _oidDisfavorClear
         if PDV_Manager
-            PDV_Manager.ClearAllDisfavorStings()
-            ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+            PDV_Manager.LedgerRuntime.ClearAllDisfavorStings()
+            ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         endIf
         return
     endIf
@@ -1034,7 +1069,7 @@ Function OnOptionSelect(Int a_option)
             seedPrompt = "Set the active Breton tradition directly to 50 practice points (Devoted)? This bypasses daily pacing and is reward/UI proof only."
         endIf
         if ShowMessage(seedPrompt, True, "$Yes", "$No")
-            PDV_Manager.DebugSeedBroadLane()
+            PDV_Manager.DebugRuntime.DebugSeedBroadLane()
             ForcePageReset()
         endIf
         return
@@ -1043,7 +1078,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidApplyBretonPractice
         if EnsureManagerBinding("debug_breton_practice_target")
             if ShowMessage("Set the active Breton tradition directly to " + (_pendingBretonPractice as Int) + " practice points? This resets today's debug budget and bypasses pacing.", True, "$Yes", "$No")
-                ShowMessage(PDV_Manager.DebugSetBretonPracticePoints(_pendingBretonPractice as Int), False, "$OK", "")
+                ShowMessage(PDV_Manager.DebugRuntime.DebugSetBretonPracticePoints(_pendingBretonPractice as Int), False, "$OK", "")
                 ForcePageReset()
             endIf
         endIf
@@ -1052,7 +1087,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidAddBretonRenewable
         if EnsureManagerBinding("debug_breton_practice_renewable")
-            ShowMessage(PDV_Manager.DebugAddBretonPracticePoints(1), False, "$OK", "")
+            ShowMessage(PDV_Manager.DebugRuntime.DebugAddBretonPracticePoints(1), False, "$OK", "")
             ForcePageReset()
         endIf
         return
@@ -1060,7 +1095,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidAddBretonCurated
         if EnsureManagerBinding("debug_breton_practice_curated")
-            ShowMessage(PDV_Manager.DebugAddBretonPracticePoints(2), False, "$OK", "")
+            ShowMessage(PDV_Manager.DebugRuntime.DebugAddBretonPracticePoints(2), False, "$OK", "")
             ForcePageReset()
         endIf
         return
@@ -1068,7 +1103,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidShowBretonPractice
         if EnsureManagerBinding("debug_breton_practice_summary")
-            ShowMessage(PDV_Manager.DebugGetBretonPracticeSummary(), False, "$OK", "")
+            ShowMessage(PDV_Manager.DebugRuntime.DebugGetBretonPracticeSummary(), False, "$OK", "")
         endIf
         return
     endIf
@@ -1076,7 +1111,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidResetBretonPractice
         if EnsureManagerBinding("debug_breton_practice_reset")
             if ShowMessage("Reset the active Breton tradition to zero practice points and clear today's debug budget?", True, "$Yes", "$No")
-                ShowMessage(PDV_Manager.DebugResetBretonPracticePoints(), False, "$OK", "")
+                ShowMessage(PDV_Manager.DebugRuntime.DebugResetBretonPracticePoints(), False, "$OK", "")
                 ForcePageReset()
             endIf
         endIf
@@ -1118,14 +1153,14 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidRunDawn
         if ShowMessage("Run ProcessDawn now?", True, "$Yes", "$No")
-            PDV_Manager.ProcessDawn()
+            PDV_Manager.LedgerRuntime.ProcessDawn()
             ForcePageReset()
         endIf
         return
     endIf
 
     if a_option == _oidShowPietyMap
-        ShowMessage(PDV_Manager.DebugGetPietyMapString(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugGetPietyMapString(), False, "$OK", "")
         return
     endIf
 
@@ -1143,8 +1178,8 @@ Function OnOptionSelect(Int a_option)
     endIf
 
     if a_option == _oidReloadQuestMatrix
-        if PDV_Manager
-            ShowMessage(PDV_Manager.DebugReloadQuestMatrix(), False, "$OK", "")
+        if PDV_QuestReactionRuntimeService
+            ShowMessage(PDV_QuestReactionRuntimeService.DebugReloadCatalog(), False, "$OK", "")
         endIf
         return
     endIf
@@ -1172,7 +1207,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidDiegeticD1
         if PDV_Manager
-            PDV_Manager.DebugSetDiegeticD1Enabled(!PDV_Manager.DebugGetDiegeticD1Enabled())
+            PDV_Manager.DebugRuntime.DebugSetDiegeticD1Enabled(!PDV_Manager.DebugRuntime.DebugGetDiegeticD1Enabled())
         endIf
         ForcePageReset()
         return
@@ -1296,7 +1331,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidKhajiitLunarSeedT2
         if EnsureManagerBinding("debug_khajiit_lunar_seed")
             if ShowMessage("Seed the Khajiit lunar substrate directly to metric 25 (tier 2)? Boundary proof only; bypasses the daily metric budget.", True, "$Yes", "$No")
-                ShowMessage(PDV_Manager.DebugSetKhajiitLunarMetric(25.0), False, "$OK", "")
+                ShowMessage(PDV_Manager.DebugRuntime.DebugSetKhajiitLunarMetric(25.0), False, "$OK", "")
             endIf
         endIf
         return
@@ -1305,7 +1340,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidKhajiitLunarSeedT3
         if EnsureManagerBinding("debug_khajiit_lunar_seed")
             if ShowMessage("Seed the Khajiit lunar substrate directly to metric 75 (tier 3)? Boundary proof only; bypasses the daily metric budget.", True, "$Yes", "$No")
-                ShowMessage(PDV_Manager.DebugSetKhajiitLunarMetric(75.0), False, "$OK", "")
+                ShowMessage(PDV_Manager.DebugRuntime.DebugSetKhajiitLunarMetric(75.0), False, "$OK", "")
             endIf
         endIf
         return
@@ -1314,7 +1349,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidKhajiitLunarReset
         if EnsureManagerBinding("debug_khajiit_lunar_reset")
             if ShowMessage("Reset the Khajiit lunar substrate to zero and clear today's metric budget?", True, "$Yes", "$No")
-                ShowMessage(PDV_Manager.DebugResetKhajiitLunarSubstrate(), False, "$OK", "")
+                ShowMessage(PDV_Manager.DebugRuntime.DebugResetKhajiitLunarSubstrate(), False, "$OK", "")
             endIf
         endIf
         return
@@ -1322,7 +1357,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidKhajiitLunarBudgetShow
         if EnsureManagerBinding("debug_khajiit_lunar_budget")
-            ShowMessage(PDV_Manager.DebugGetKhajiitLunarBudgetSummary(), False, "$OK", "")
+            ShowMessage(PDV_Manager.DebugRuntime.DebugGetKhajiitLunarBudgetSummary(), False, "$OK", "")
         endIf
         return
     endIf
@@ -1467,6 +1502,88 @@ Function OnOptionSelect(Int a_option)
         return
     endIf
 
+    if a_option == _oidConsentSeedSanguine
+        PDV__ManagerQuest mgrConsentSeed = GetManagerService()
+        if mgrConsentSeed
+            ShowMessage(mgrConsentSeed.DebugRuntime.DebugSeedSanguineOfferReady(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentEvaluate
+        PDV__ManagerQuest mgrConsentEval = GetManagerService()
+        if mgrConsentEval
+            ShowMessage(mgrConsentEval.DebugRuntime.DebugEvaluateConsentOfferReport(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentAccept
+        PDV__ManagerQuest mgrConsentAccept = GetManagerService()
+        if mgrConsentAccept
+            mgrConsentAccept.DebugRuntime.DebugAcceptPendingCommitment()
+            ShowMessage(mgrConsentAccept.DebugRuntime.DebugSanguineConsentReadback(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentNotYet
+        PDV__ManagerQuest mgrConsentNotYet = GetManagerService()
+        if mgrConsentNotYet
+            mgrConsentNotYet.DebugRuntime.DebugDeclinePendingCommitment()
+            ShowMessage(mgrConsentNotYet.DebugRuntime.DebugSanguineConsentReadback(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentRefuse
+        PDV__ManagerQuest mgrConsentRefuse = GetManagerService()
+        if mgrConsentRefuse
+            mgrConsentRefuse.DebugRuntime.DebugRefusePendingCommitment()
+            ShowMessage(mgrConsentRefuse.DebugRuntime.DebugSanguineConsentReadback(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentDivineThenRaise
+        PDV__ManagerQuest mgrConsentDivine = GetManagerService()
+        if mgrConsentDivine
+            ShowMessage(mgrConsentDivine.DebugRuntime.DebugConsentDivinePatronThenRaiseSanguine(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentAlcoholTwice
+        PDV__ManagerQuest mgrConsentAlcohol = GetManagerService()
+        if mgrConsentAlcohol
+            ShowMessage(mgrConsentAlcohol.DebugRuntime.DebugFireSanguineAlcoholTwice(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentForceMigrate
+        PDV__ManagerQuest mgrConsentMigrate = GetManagerService()
+        if mgrConsentMigrate
+            ShowMessage(mgrConsentMigrate.DebugRuntime.DebugForceUnconsentedPactThenMigrate(), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    endIf
+
+    if a_option == _oidConsentReadback
+        PDV__ManagerQuest mgrConsentReadback = GetManagerService()
+        if mgrConsentReadback
+            ShowMessage(mgrConsentReadback.DebugRuntime.DebugSanguineConsentReadback(), False, "$OK", "")
+        endIf
+        return
+    endIf
+
     if a_option == _oidHircineReset
         RunPatternAction("Reset the Hircine proving state to a clean baseline?", 30)
         return
@@ -1581,10 +1698,12 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidForceSelectedPatron
         PDV__ManagerQuest forcePatronManager = GetManagerService()
         PDV_DeityBase forcePatronDeity = GetSelectedDeity()
-        if forcePatronManager && forcePatronDeity
-            forcePatronManager.SetActiveDeity(forcePatronDeity, True)
+        if forcePatronManager && forcePatronManager.IsDebugDeityTargetEligible(forcePatronDeity, "Force selected patron")
+            forcePatronManager.LedgerRuntime.SetActiveDeity(forcePatronDeity)
             Debug.Notification("PDV: active patron forced.")
             ForcePageReset()
+        elseIf forcePatronDeity
+            Debug.Notification("PDV: selected deity is not reachable for this origin.")
         else
             Debug.Notification("PDV: select a deity first.")
         endIf
@@ -1594,15 +1713,17 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidPrimeNeglectEligible
         PDV__ManagerQuest primeNeglectManager = GetManagerService()
         PDV_DeityBase primeNeglectDeity = GetSelectedDeity()
-        if primeNeglectManager && primeNeglectDeity
+        if primeNeglectManager && primeNeglectManager.IsDebugDeityTargetEligible(primeNeglectDeity, "Prime neglect eligible")
             ; Deterministic active-patron neglect setup, modal-free: make the selected deity the
             ; active patron, then drop its piety to 0 so ApplyGenericNeglectFlags selects it (piety
             ; <= NEGLECT_ACTIVE_PIETY_MAX). Sidesteps Prime-decay-eligible, which sets piety 20 and
             ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
-            primeNeglectManager.SetActiveDeity(primeNeglectDeity, True)
-            primeNeglectManager.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
+            primeNeglectManager.LedgerRuntime.SetActiveDeity(primeNeglectDeity)
+            primeNeglectManager.DebugRuntime.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
             Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
             ForcePageReset()
+        elseIf primeNeglectDeity
+            Debug.Notification("PDV: selected deity is not reachable for this origin.")
         else
             Debug.Notification("PDV: select a deity first.")
         endIf
@@ -1612,7 +1733,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidNeglectRunPass
         PDV__ManagerQuest neglectManager = GetManagerService()
         if neglectManager
-            neglectManager.DebugRunNeglectPass()
+            neglectManager.DebugRuntime.DebugRunNeglectPass()
             Debug.Notification("PDV: neglect pass run.")
         else
             Debug.Notification("PDV: manager is not assigned.")
@@ -1623,7 +1744,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidPrimeRaceLaneNeglect
         PDV__ManagerQuest raceLaneNeglectManager = GetManagerService()
         if raceLaneNeglectManager
-            raceLaneNeglectManager.DebugPrimeRaceLaneNeglect()
+            raceLaneNeglectManager.DebugRuntime.DebugPrimeRaceLaneNeglect()
             ForcePageReset()
         else
             Debug.Notification("PDV: manager is not assigned.")
@@ -1635,7 +1756,7 @@ Function OnOptionSelect(Int a_option)
         PDV__ManagerQuest decayGraceManager = GetManagerService()
         PDV_DeityBase decayGraceDeity = GetSelectedDeity()
         if decayGraceManager && decayGraceDeity
-            decayGraceManager.DebugPrimeDecayGraceByIndex(decayGraceDeity.DeityIndex)
+            decayGraceManager.DebugRuntime.DebugPrimeDecayGraceByIndex(decayGraceDeity.DeityIndex)
             Debug.Notification("PDV: decay grace primed.")
         else
             Debug.Notification("PDV: select a deity first.")
@@ -1647,7 +1768,7 @@ Function OnOptionSelect(Int a_option)
         PDV__ManagerQuest decayEligibleManager = GetManagerService()
         PDV_DeityBase decayEligibleDeity = GetSelectedDeity()
         if decayEligibleManager && decayEligibleDeity
-            decayEligibleManager.DebugPrimeDecayEligibleByIndex(decayEligibleDeity.DeityIndex)
+            decayEligibleManager.DebugRuntime.DebugPrimeDecayEligibleByIndex(decayEligibleDeity.DeityIndex)
             Debug.Notification("PDV: decay eligible primed.")
         else
             Debug.Notification("PDV: select a deity first.")
@@ -1658,7 +1779,7 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidDecayRunPass
         PDV__ManagerQuest decayRunManager = GetManagerService()
         if decayRunManager
-            decayRunManager.DebugRunDecayPass()
+            decayRunManager.DebugRuntime.DebugRunDecayPass()
             Debug.Notification("PDV: decay pass run.")
         else
             Debug.Notification("PDV: manager is not assigned.")
@@ -1670,7 +1791,7 @@ Function OnOptionSelect(Int a_option)
         PDV__ManagerQuest decayProofManager = GetManagerService()
         PDV_DeityBase decayProofDeity = GetSelectedDeity()
         if decayProofManager && decayProofDeity
-            decayProofManager.DebugRunDecayProofDaysByIndex(decayProofDeity.DeityIndex)
+            decayProofManager.DebugRuntime.DebugRunDecayProofDaysByIndex(decayProofDeity.DeityIndex)
             Debug.Notification("PDV: decay proof days run.")
         else
             Debug.Notification("PDV: select a deity first.")
@@ -1736,7 +1857,7 @@ Event OnKeyDown(Int a_keyCode)
         if journalVisible
             StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
             Debug.Notification("The Book of Days closes.")
-            PDV_Manager.ClosePrismaJournal()
+            PDV_Manager.Prisma.ClosePrismaJournal()
             return
         endIf
 
@@ -1750,7 +1871,7 @@ Event OnKeyDown(Int a_keyCode)
 
         StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
         Debug.Notification("The Book of Days opens.")
-        PDV_Manager.SendPrismaJournalPayload(True)
+        PDV_Manager.Prisma.SendPrismaJournalPayload(True)
         return
     endIf
 
@@ -1774,7 +1895,7 @@ Event OnKeyDown(Int a_keyCode)
         Debug.Notification("The Devotion panel opens.")
         ; Player-owned UI entry point: push fresh panel data, then focus the view so the
         ; dashboard filter buttons are clickable.
-        PDV_Manager.PushDevotionPanel(True)
+        PDV_Manager.Prisma.PushDevotionPanel(True)
         PDV_PrismaBridge.OpenDevotionPanel()
         return
     endIf
@@ -1786,7 +1907,7 @@ Function OpenBookOfDaysFromMcm()
     endIf
     StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
     Debug.Notification("The Book of Days opens.")
-    PDV_Manager.SendPrismaJournalPayload(True)
+    PDV_Manager.Prisma.SendPrismaJournalPayload(True)
 EndFunction
 
 Function OnOptionSliderOpen(Int a_option)
@@ -1890,12 +2011,12 @@ Function BuildPlayerPage()
         AddTextOption("Summary", GetPlayerPageSummaryLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Startup", GetPlayerPageStartupLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Path", GetExperienceModeLabel(), OPTION_FLAG_DISABLED)
-        AddTextOption("Mode", PDV_Manager.GetPlayerMcmModeLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Patron", PDV_Manager.GetPlayerMcmPatronLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Standing", PDV_Manager.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Curse", PDV_Manager.GetPlayerMcmCurseLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Favor", PDV_Manager.GetPlayerMcmFavorLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Neglect", PDV_Manager.GetPlayerMcmNeglectLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Mode", PDV_Manager.Prisma.GetPlayerMcmModeLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Patron", PDV_Manager.Prisma.GetPlayerMcmPatronLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Standing", PDV_Manager.Prisma.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Curse", PDV_Manager.Prisma.GetPlayerMcmCurseLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Favor", PDV_Manager.FavorRuntime.GetPlayerMcmFavorLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Neglect", PDV_Manager.LedgerRuntime.GetPlayerMcmNeglectLine(), OPTION_FLAG_DISABLED)
         _oidSurveyDevotion = AddTextOption("Survey Devotion", "Open readout", OPTION_FLAG_NONE)
         _oidExportReport = AddTextOption("Export Devotion Report", "Write file", OPTION_FLAG_NONE)
 
@@ -1905,7 +2026,7 @@ Function BuildPlayerPage()
             AddHeaderOption("Moon-paths", OPTION_FLAG_NONE)
             Int khajiitFocus = 1
             while khajiitFocus <= 5
-                AddTextOption(PDV_Manager.GetKhajiitFocusLabel(khajiitFocus), PDV_Manager.GetKhajiitFocusStandingLine(khajiitFocus), OPTION_FLAG_DISABLED)
+                AddTextOption(PDV_Manager.OriginRuntime.GetKhajiitFocusLabel(khajiitFocus), PDV_Manager.OriginRuntime.GetKhajiitFocusStandingLine(khajiitFocus), OPTION_FLAG_DISABLED)
                 khajiitFocus += 1
             endWhile
         endIf
@@ -1946,7 +2067,7 @@ String Function GetPlayerPageSummaryLine()
         return "Startup pending"
     endIf
 
-    return PDV_Manager.GetPlayerMcmPatronLine() + " | " + PDV_Manager.GetPlayerMcmStandingLine()
+    return PDV_Manager.Prisma.GetPlayerMcmPatronLine() + " | " + PDV_Manager.Prisma.GetPlayerMcmStandingLine()
 EndFunction
 
 String Function GetPlayerPageStartupLine()
@@ -1972,7 +2093,7 @@ Function BuildDeveloperLockedPage(String pageName)
     SetCursorPosition(0)
     AddHeaderOption(pageName, OPTION_FLAG_NONE)
     AddTextOption("Developer Options", "Locked", OPTION_FLAG_DISABLED)
-    AddTextOption("Access", "Enable Developer Options on the Player page to view this page.", OPTION_FLAG_DISABLED)
+    AddTextOption("Access", "In console: set PDV_GLO_DebugLevel to 1 (or higher), then reopen this menu.", OPTION_FLAG_DISABLED)
 
     SetCursorPosition(1)
     AddHeaderOption("Player", OPTION_FLAG_NONE)
@@ -2020,9 +2141,9 @@ Function BuildCompatPage()
 
     AddHeaderOption("NPC Recognition", OPTION_FLAG_NONE)
     if PDV_Manager
-        _oidNpcRecognition = AddTextOption("Religious recognition", OnOffLabel(PDV_Manager.NpcReligiousRecognitionEnabled()), OPTION_FLAG_NONE)
-        _oidNpcHostileRecognition = AddTextOption("Hard-rival reactions", OnOffLabel(PDV_Manager.NpcHostileRecognitionEnabled()), OPTION_FLAG_NONE)
-        AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
+        _oidNpcRecognition = AddTextOption("Religious recognition", OnOffLabel(PDV_Manager.RecognitionRuntime.NpcReligiousRecognitionEnabled()), OPTION_FLAG_NONE)
+        _oidNpcHostileRecognition = AddTextOption("Hard-rival reactions", OnOffLabel(PDV_Manager.RecognitionRuntime.NpcHostileRecognitionEnabled()), OPTION_FLAG_NONE)
+        AddTextOption("Current", PDV_Manager.RecognitionRuntime.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)
     else
         AddTextOption("Religious recognition", "Unavailable", OPTION_FLAG_DISABLED)
         AddTextOption("Hard-rival reactions", "Unavailable", OPTION_FLAG_DISABLED)
@@ -2092,7 +2213,7 @@ String Function OnOffLabel(Bool isOn)
 EndFunction
 
 String Function ToastSizeLabel()
-    if PDV_Manager && PDV_Manager.PrismaToastLargeEnabled()
+    if PDV_Manager && PDV_Manager.Prisma.PrismaToastLargeEnabled()
         return "Large"
     endIf
     return "Normal"
@@ -2156,7 +2277,7 @@ String Function GetCompatRaceReadout()
     if StorageUtil.GetIntValue(None, "PDV.CustomRaceResolved") == 1
         Int resolvedIndex = StorageUtil.GetIntValue(None, "PDV.CustomRaceResolvedIndex")
         if PDV_Manager
-            return "Custom race -> " + PDV_Manager.GetOriginRaceLabel(resolvedIndex) + " (mapped)"
+            return "Custom race -> " + PDV_Manager.OriginRuntime.GetOriginRaceLabel(resolvedIndex) + " (mapped)"
         endIf
         return "Custom race mapped"
     elseIf StorageUtil.GetIntValue(None, "PDV.CustomRaceFallback") == 1
@@ -2168,7 +2289,7 @@ EndFunction
 
 String Function GetCompatSurvivalReadout()
     if PDV_Manager
-        return PDV_Manager.GetSurvivalContextStatusLine()
+        return PDV_Manager.Prisma.GetSurvivalContextStatusLine()
     endIf
 
     return "Unknown"
@@ -2176,7 +2297,7 @@ EndFunction
 
 String Function GetCompatCCReadout()
     if PDV_Manager
-        return PDV_Manager.GetCCContentStatusLine()
+        return PDV_Manager.Prisma.GetCCContentStatusLine()
     endIf
 
     return "Unknown"
@@ -2212,24 +2333,32 @@ Function BuildStatusPage()
         return
     endIf
 
+    ; Column budget: the SkyUI list buffer dies past ~54 rows in one column
+    ; (index ~108), so cap the roster render and summarize the tail.
+    Int maxRosterRows = 48
+    Int rosterRowsShown = 0
     Int i = 0
-    while i < deityCount
-        PDV_DeityBase deity = PDV_Manager.GetDeityAtListIndex(i)
+    while i < deityCount && rosterRowsShown < maxRosterRows
+        PDV_DeityBase deity = PDV_Manager.LedgerRuntime.GetDeityAtListIndex(i)
         if deity
-            String rowValue = TierToLabel(PDV_Manager.GetTier(deity)) + " | " + FormatFloat(PDV_Manager.GetPiety(deity)) + " (+" + FormatFloat(PDV_Manager.GetPietyToday(deity)) + ")"
+            String rowValue = TierToLabel(PDV_Manager.LedgerRuntime.GetTier(deity)) + " | " + FormatFloat(PDV_Manager.LedgerRuntime.GetPiety(deity)) + " (+" + FormatFloat(PDV_Manager.LedgerRuntime.GetPietyToday(deity)) + ")"
             if deity.DeityIndex == activeDeityIndex
                 rowValue = rowValue + " | active"
             endIf
             AddTextOption(deity.DeityName, rowValue, OPTION_FLAG_DISABLED)
+            rosterRowsShown += 1
         endIf
         i += 1
     endWhile
+    if i < deityCount
+        AddTextOption("... and " + (deityCount - i) + " more", "Book of Days has the full roster", OPTION_FLAG_DISABLED)
+    endIf
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
 
 String Function DiegeticD1Label()
-    if PDV_Manager && PDV_Manager.DebugGetDiegeticD1Enabled()
+    if PDV_Manager && PDV_Manager.DebugRuntime.DebugGetDiegeticD1Enabled()
         return "On"
     endIf
     return "Off"
@@ -2347,7 +2476,9 @@ Function BuildDaedricPage()
     endIf
     SetCursorFillMode(TOP_TO_BOTTOM)
 
-    ; --- Left column: Daedric display proof + Hircine + Curse ---
+    ; Column budget: the SkyUI list buffer dies past ~54 rows in one column
+    ; (index ~108), so keep each column comfortably under that.
+    ; --- Left column: Daedric display proof + Hircine + Curse + neglect/decay ---
     SetCursorPosition(0)
     AddHeaderOption("Daedric display proof", OPTION_FLAG_NONE)
     _oidDaedricSelectedPath = AddTextOption("Selected Prince", GetSelectedDaedricPathLabel(), OPTION_FLAG_NONE)
@@ -2378,7 +2509,19 @@ Function BuildDaedricPage()
     _oidForceCurseWerewolf = AddTextOption("Curse werewolf", "Backend force", OPTION_FLAG_NONE)
     _oidForceCurseVampire = AddTextOption("Curse vampire", "Backend force", OPTION_FLAG_NONE)
 
-    ; --- Right column: race signals + neglect/decay + commitment ---
+    AddEmptyOption()
+    AddHeaderOption("Neglect & decay", OPTION_FLAG_NONE)
+    _oidForceSelectedPatron = AddTextOption("Force selected patron", "Focused", OPTION_FLAG_NONE)
+    _oidPrimeNeglectEligible = AddTextOption("Prime neglect eligible", "Active + piety 0", OPTION_FLAG_NONE)
+    _oidNeglectRunPass = AddTextOption("Run neglect pass", "Targeted", OPTION_FLAG_NONE)
+    _oidPrimeRaceLaneNeglect = AddTextOption("Prime race-lane neglect", "Backdate source", OPTION_FLAG_NONE)
+    _oidDecayPrimeGrace = AddTextOption("Prime decay grace", "Proof", OPTION_FLAG_NONE)
+    _oidDecayPrimeEligible = AddTextOption("Prime decay eligible", "Proof", OPTION_FLAG_NONE)
+    _oidDecayRunPass = AddTextOption("Run decay pass", "Targeted", OPTION_FLAG_NONE)
+    _oidDecayRunProofDays = AddTextOption("Run decay proof days", "Compressed", OPTION_FLAG_NONE)
+    _oidShowDecaySummary = AddTextOption("Show decay summary", "Selected deity", OPTION_FLAG_NONE)
+
+    ; --- Right column: race signals + commitment + consent ---
     SetCursorPosition(1)
     AddHeaderOption("Race signals", OPTION_FLAG_NONE)
     _oidConcordatDefiance = AddTextOption("Concordat defiance", "EventBus route", OPTION_FLAG_NONE)
@@ -2408,18 +2551,6 @@ Function BuildDaedricPage()
     _oidBoethiahHonorableDuel = AddTextOption("Boethiah honorable duel", "Brawl win", OPTION_FLAG_NONE)
 
     AddEmptyOption()
-    AddHeaderOption("Neglect & decay", OPTION_FLAG_NONE)
-    _oidForceSelectedPatron = AddTextOption("Force selected patron", "Focused", OPTION_FLAG_NONE)
-    _oidPrimeNeglectEligible = AddTextOption("Prime neglect eligible", "Active + piety 0", OPTION_FLAG_NONE)
-    _oidNeglectRunPass = AddTextOption("Run neglect pass", "Targeted", OPTION_FLAG_NONE)
-    _oidPrimeRaceLaneNeglect = AddTextOption("Prime race-lane neglect", "Backdate source", OPTION_FLAG_NONE)
-    _oidDecayPrimeGrace = AddTextOption("Prime decay grace", "Proof", OPTION_FLAG_NONE)
-    _oidDecayPrimeEligible = AddTextOption("Prime decay eligible", "Proof", OPTION_FLAG_NONE)
-    _oidDecayRunPass = AddTextOption("Run decay pass", "Targeted", OPTION_FLAG_NONE)
-    _oidDecayRunProofDays = AddTextOption("Run decay proof days", "Compressed", OPTION_FLAG_NONE)
-    _oidShowDecaySummary = AddTextOption("Show decay summary", "Selected deity", OPTION_FLAG_NONE)
-
-    AddEmptyOption()
     AddHeaderOption("Commitment offers", OPTION_FLAG_NONE)
     _oidEvaluateCommitmentOffer = AddTextOption("Evaluate commitment", "Dawn-equivalent", OPTION_FLAG_NONE)
     _oidCommitmentSeedSignals = AddTextOption("Seed commitment signals", "2-day window", OPTION_FLAG_NONE)
@@ -2427,6 +2558,18 @@ Function BuildDaedricPage()
     _oidAcceptCommitmentOffer = AddTextOption("Accept commitment", "Preserve piety", OPTION_FLAG_NONE)
     _oidDeclineCommitmentOffer = AddTextOption("Decline commitment", "Postpone", OPTION_FLAG_NONE)
     _oidRefuseCommitmentOffer = AddTextOption("Refuse commitment", "Cooldown", OPTION_FLAG_NONE)
+
+    AddEmptyOption()
+    AddHeaderOption("Daedric pact consent (Sanguine)", OPTION_FLAG_NONE)
+    _oidConsentSeedSanguine = AddTextOption("[Consent] Seed Sanguine to offer-ready", "Devoted, no consent", OPTION_FLAG_NONE)
+    _oidConsentEvaluate = AddTextOption("[Consent] Evaluate offer now", "Report pending", OPTION_FLAG_NONE)
+    _oidConsentAccept = AddTextOption("[Consent] Accept pending", "Consent + pact", OPTION_FLAG_NONE)
+    _oidConsentNotYet = AddTextOption("[Consent] Not-yet pending", "Postpone", OPTION_FLAG_NONE)
+    _oidConsentRefuse = AddTextOption("[Consent] Refuse pending", "Rupture/cooldown", OPTION_FLAG_NONE)
+    _oidConsentDivineThenRaise = AddTextOption("[UNSAFE] Divine patron then raise Sanguine", "Self-cleans; invalidates proof", OPTION_FLAG_NONE)
+    _oidConsentAlcoholTwice = AddTextOption("[Consent] Fire sanguine_alcohol x2", "2nd hit capped", OPTION_FLAG_NONE)
+    _oidConsentForceMigrate = AddTextOption("[Consent] Force un-consented pact + migrate", "Piety preserved", OPTION_FLAG_NONE)
+    _oidConsentReadback = AddTextOption("[Consent] Readback", "State summary", OPTION_FLAG_NONE)
 
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
@@ -2545,7 +2688,7 @@ Function DebugApplySubstratePacingOrigin()
         return
     endIf
     Int originValue = GetSelectedSubstratePacingOriginValue()
-    if PDV_Manager.DebugSetCurseProofOriginRace(originValue)
+    if PDV_Manager.DebugRuntime.DebugSetCurseProofOriginRace(originValue)
         ShowMessage("Test origin applied: " + GetSubstratePacingOriginLabel() + ". Use only on this throwaway pacing save.", False, "$OK", "")
     else
         ShowMessage("Test origin was not changed. Clear the forced curse state, then try again.", False, "$OK", "")
@@ -2588,123 +2731,123 @@ EndFunction
 
 Function DebugShowSubstratePacingSummary()
     if EnsureManagerBinding("pacing_substrate_summary")
-        ShowMessage(PDV_Manager.DebugGetSubstratePacingSummary(GetSelectedSubstratePacingOriginValue()), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugGetSubstratePacingSummary(GetSelectedSubstratePacingOriginValue()), False, "$OK", "")
     endIf
 EndFunction
 
 Function DebugTriggerSubstratePacingSource()
     if EnsureManagerBinding("pacing_substrate_trigger")
-        ShowMessage(PDV_Manager.DebugTriggerSubstratePacingSource(GetSelectedSubstratePacingOriginValue(), _selectedSubstratePacingSource), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugTriggerSubstratePacingSource(GetSelectedSubstratePacingOriginValue(), _selectedSubstratePacingSource), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugSeedSubstratePacing(Float targetMetric)
     if EnsureManagerBinding("pacing_substrate_seed")
-        ShowMessage(PDV_Manager.DebugSeedSubstrateMetric(GetSelectedSubstratePacingOriginValue(), targetMetric), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugSeedSubstrateMetric(GetSelectedSubstratePacingOriginValue(), targetMetric), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugResetSubstratePacing()
     if EnsureManagerBinding("pacing_substrate_reset")
-        ShowMessage(PDV_Manager.DebugResetSubstratePacing(GetSelectedSubstratePacingOriginValue()), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugResetSubstratePacing(GetSelectedSubstratePacingOriginValue()), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugShowBroadPantheonSummary()
     if EnsureManagerBinding("pacing_broad_summary")
-        ShowMessage(PDV_Manager.DebugGetBroadPantheonSummary(_selectedBroadPantheonPool), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugGetBroadPantheonSummary(_selectedBroadPantheonPool), False, "$OK", "")
     endIf
 EndFunction
 
 Function DebugSeedBroadPantheonPool(Float targetStanding)
     if EnsureManagerBinding("pacing_broad_seed")
-        ShowMessage(PDV_Manager.DebugSeedBroadPantheonPool(_selectedBroadPantheonPool, targetStanding), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugSeedBroadPantheonPool(_selectedBroadPantheonPool, targetStanding), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugResetBroadPantheonPool()
     if EnsureManagerBinding("pacing_broad_reset")
-        ShowMessage(PDV_Manager.DebugResetBroadPantheonPool(_selectedBroadPantheonPool), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugResetBroadPantheonPool(_selectedBroadPantheonPool), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugRunBroadPantheonFanoutTest()
     if EnsureManagerBinding("pacing_broad_fanout")
-        ShowMessage(PDV_Manager.DebugRunBroadPantheonFanoutTest(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugRunBroadPantheonFanoutTest(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugPrimeBroadPantheonScratch(Float scratchValue)
     if EnsureManagerBinding("pacing_broad_scratch")
-        ShowMessage(PDV_Manager.DebugPrimeBroadPantheonScratch(_selectedBroadPantheonPool, scratchValue), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugPrimeBroadPantheonScratch(_selectedBroadPantheonPool, scratchValue), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugRunBroadPantheonCatchupForPacing()
     if EnsureManagerBinding("pacing_broad_catchup")
-        ShowMessage(PDV_Manager.DebugRunBroadPantheonCatchupForPacing(_selectedBroadPantheonPool), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugRunBroadPantheonCatchupForPacing(_selectedBroadPantheonPool), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugApplyNordBaselineForPacing()
     if EnsureManagerBinding("pacing_nord_baseline")
-        ShowMessage(PDV_Manager.DebugSetNordBaselineForPacing(_selectedNordBaselineForPacing), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugSetNordBaselineForPacing(_selectedNordBaselineForPacing), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugShowPatronOfferRecoverySummary()
     if EnsureManagerBinding("pacing_patron_summary")
-        ShowMessage(PDV_Manager.DebugOfferAcceptRecoverySummary(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugOfferAcceptRecoverySummary(), False, "$OK", "")
     endIf
 EndFunction
 
 Function DebugSetBroadWorshipForPacing()
     if EnsureManagerBinding("pacing_set_broad")
-        ShowMessage(PDV_Manager.DebugSetBroadWorshipForPacing(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugSetBroadWorshipForPacing(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugRunPatronOfferForPacing()
     if EnsureManagerBinding("pacing_patron_offer")
-        ShowMessage(PDV_Manager.DebugRunPatronOfferForPacing(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugRunPatronOfferForPacing(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugAcceptPatronForPacing()
     if EnsureManagerBinding("pacing_patron_accept")
-        ShowMessage(PDV_Manager.DebugAcceptPatronForPacing(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugAcceptPatronForPacing(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugLapsePatronForPacing()
     if EnsureManagerBinding("pacing_patron_lapse")
-        ShowMessage(PDV_Manager.DebugLapsePatronForPacing(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugLapsePatronForPacing(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugRecoverPatronForPacing()
     if EnsureManagerBinding("pacing_patron_recover")
-        ShowMessage(PDV_Manager.DebugRecoverPatronForPacing(), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugRecoverPatronForPacing(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugSetImperialVampireForPacing(Bool vampireOnset)
     if EnsureManagerBinding("pacing_imperial_vampire")
-        ShowMessage(PDV_Manager.DebugSetImperialVampireForPacing(vampireOnset), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugSetImperialVampireForPacing(vampireOnset), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
@@ -2771,7 +2914,7 @@ EndFunction
 Function CycleSignalFloorScenario()
     Int count = 1
     if PDV_Manager
-        count = PDV_Manager.DebugGetSignalFloorSmokeScenarioCount() + 1
+        count = PDV_Manager.DebugRuntime.DebugGetSignalFloorSmokeScenarioCount() + 1
     endIf
 
     _selectedSignalFloorScenario += 1
@@ -2782,7 +2925,7 @@ EndFunction
 
 String Function GetSignalFloorScenarioLabel()
     if PDV_Manager
-        return PDV_Manager.DebugGetSignalFloorSmokeLabel(_selectedSignalFloorScenario)
+        return PDV_Manager.DebugRuntime.DebugGetSignalFloorSmokeLabel(_selectedSignalFloorScenario)
     endIf
     return "Unavailable"
 EndFunction
@@ -2793,16 +2936,16 @@ Function RunSignalFloorSmokeScenario()
         return
     endIf
 
-    String label = PDV_Manager.DebugGetSignalFloorSmokeLabel(_selectedSignalFloorScenario)
+    String label = PDV_Manager.DebugRuntime.DebugGetSignalFloorSmokeLabel(_selectedSignalFloorScenario)
     if ShowMessage("Run controlled signal-floor smoke scenario: " + label + "? Capture Prisma and Book of Days separately. Organic quest-stage delivery remains open.", True, "$Yes", "$No")
-        ShowMessage(PDV_Manager.DebugRunSignalFloorSmokeScenario(_selectedSignalFloorScenario), False, "$OK", "")
+        ShowMessage(PDV_Manager.DebugRuntime.DebugRunSignalFloorSmokeScenario(_selectedSignalFloorScenario), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
 
 String Function GetQuestReactionQueueStatusLabel()
-    if PDV_Manager
-        return PDV_Manager.GetQuestReactionQueueStatus()
+    if PDV_QuestReactionRuntimeService
+        return PDV_QuestReactionRuntimeService.GetStatusLine()
     endIf
     return "Unavailable"
 EndFunction
@@ -2812,8 +2955,12 @@ Function RunQuestReactionPerformanceSweep()
         ShowMessage("Devotion is still starting up.", False, "$OK", "")
         return
     endIf
+    if !PDV_QuestReactionRuntimeService
+        ShowMessage("Quest Reaction runtime is unavailable.", False, "$OK", "")
+        return
+    endIf
     if ShowMessage("Queue the controlled Quest Reaction Performance Sweep? It changes piety/state on this save. Capture Prisma and Book of Days separately; reopen Book of Days after completion if it was already open.", True, "$Yes", "$No")
-        ShowMessage(PDV_Manager.DebugQueueQuestReactionPerformanceSweep(), False, "$OK", "")
+        ShowMessage(PDV_QuestReactionRuntimeService.DebugQueuePerformanceSweep(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
@@ -2824,16 +2971,19 @@ Function DebugOverridePatron()
         ShowMessage("No selected deity is available.", False, "$OK", "")
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Debug patron override")
+        return
+    endIf
 
     if ShowMessage("Apply a debug patron override to " + deity.DeityName + "?", True, "$Yes", "$No")
-        PDV_Manager.ForceSetActiveDeityByIndex(deity.DeityIndex)
+        PDV_Manager.LedgerRuntime.ForceSetActiveDeityByIndex(deity.DeityIndex)
         ForcePageReset()
     endIf
 EndFunction
 
 Function DebugClearPatron()
     if ShowMessage("Clear the current debug patron override?", True, "$Yes", "$No")
-        PDV_Manager.DebugClearActiveDeity()
+        PDV_Manager.DebugRuntime.DebugClearActiveDeity()
         ForcePageReset()
     endIf
 EndFunction
@@ -2846,7 +2996,7 @@ Function DebugResetSelectedDeity()
     endIf
 
     if ShowMessage("Reset " + deity.DeityName + " to zero piety and tier 0?", True, "$Yes", "$No")
-        PDV_Manager.DebugResetDeityByIndex(deity.DeityIndex)
+        PDV_Manager.DebugRuntime.DebugResetDeityByIndex(deity.DeityIndex)
         ForcePageReset()
     endIf
 EndFunction
@@ -2857,9 +3007,12 @@ Function DebugApplySelectedPiety()
         ShowMessage("No selected deity is available.", False, "$OK", "")
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Apply selected piety")
+        return
+    endIf
 
     if ShowMessage("Force " + deity.DeityName + " piety to " + FormatFloat(_pendingPiety) + "?", True, "$Yes", "$No")
-        PDV_Manager.DebugForceSetPietyByIndex(deity.DeityIndex, _pendingPiety)
+        PDV_Manager.DebugRuntime.DebugForceSetPietyByIndex(deity.DeityIndex, _pendingPiety)
         ForcePageReset()
     endIf
 EndFunction
@@ -2870,9 +3023,12 @@ Function DebugApplySelectedPietyToday()
         ShowMessage("No selected deity is available.", False, "$OK", "")
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Apply selected scratch piety")
+        return
+    endIf
 
     if ShowMessage("Force " + deity.DeityName + " scratch piety to " + FormatFloat(_pendingPietyToday) + "?", True, "$Yes", "$No")
-        PDV_Manager.DebugForceSetPietyTodayByIndex(deity.DeityIndex, _pendingPietyToday)
+        PDV_Manager.DebugRuntime.DebugForceSetPietyTodayByIndex(deity.DeityIndex, _pendingPietyToday)
         ForcePageReset()
     endIf
 EndFunction
@@ -2883,9 +3039,12 @@ Function DebugApplyCuratedSignal()
         ShowMessage("No selected deity is available.", False, "$OK", "")
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Apply curated signal")
+        return
+    endIf
 
     if ShowMessage("Apply curated signal " + _pendingSignalType + " to " + deity.DeityName + "?", True, "$Yes", "$No")
-        PDV_Manager.DebugAwardCuratedSignalByIndex(deity.DeityIndex, _pendingSignalType)
+        PDV_Manager.DebugRuntime.DebugAwardCuratedSignalByIndex(deity.DeityIndex, _pendingSignalType)
         ForcePageReset()
     endIf
 EndFunction
@@ -2899,10 +3058,13 @@ Function DebugFireSelectedDislike()
     if !PDV_Manager
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Fire selected dislike")
+        return
+    endIf
 
     if ShowMessage("Fire dislike event " + _pendingDisfavorEventId + " vs " + deity.DeityName + "? Set Target piety >= 25 first (or make it your patron) so the disfavor standing gate passes; below standing it applies the piety loss only.", True, "$Yes", "$No")
-        PDV_Manager.DebugFireDislike(deity, _pendingDisfavorEventId)
-        ShowMessage(PDV_Manager.GetActiveDisfavorSummary(), False, "$OK", "")
+        PDV_Manager.DebugRuntime.DebugFireDislike(deity, _pendingDisfavorEventId)
+        ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         ForcePageReset()
     endIf
 EndFunction
@@ -2911,12 +3073,12 @@ String Function GetFireDislikeLabel()
     if !PDV_Manager
         return "event " + _pendingDisfavorEventId
     endIf
-    return PDV_Manager.DebugDislikeSummaryLine(GetSelectedDeity(), _pendingDisfavorEventId)
+    return PDV_Manager.DebugRuntime.DebugDislikeSummaryLine(GetSelectedDeity(), _pendingDisfavorEventId)
 EndFunction
 
 String Function GetDisfavorDomainCycleLabel()
     if PDV_Manager
-        return _pendingDisfavorDomain + " " + PDV_Manager.GetDisfavorDomainLabel(_pendingDisfavorDomain)
+        return _pendingDisfavorDomain + " " + PDV_Manager.LedgerRuntime.GetDisfavorDomainLabel(_pendingDisfavorDomain)
     endIf
     return "Domain " + _pendingDisfavorDomain
 EndFunction
@@ -2963,12 +3125,23 @@ PDV_DeityBase Function GetSelectedDeity()
     if _selectedListIndex < 0
         return None
     endIf
-    return PDV_Manager.GetDeityAtListIndex(_selectedListIndex)
+    return PDV_Manager.LedgerRuntime.GetDeityAtListIndex(_selectedListIndex)
+EndFunction
+
+Bool Function RequireEligibleDebugDeity(PDV_DeityBase deity, String actionName)
+    if !PDV_Manager || !deity
+        return False
+    endIf
+    if PDV_Manager.IsDebugDeityTargetEligible(deity, actionName)
+        return True
+    endIf
+    ShowMessage(deity.DeityName + " is not reachable for the current origin. Switch to an eligible origin before using this control.", False, "$OK", "")
+    return False
 EndFunction
 
 Int Function GetDeityCount()
     if PDV_Manager
-        return PDV_Manager.GetDeityCount()
+        return PDV_Manager.LedgerRuntime.GetDeityCount()
     endIf
     if PDV_FLST_AllDeities
         return PDV_FLST_AllDeities.GetSize()
@@ -3073,12 +3246,12 @@ Function DebugForceSelectedDaedricTier(Int tierValue)
             path.DebugSeatChampionSilently()
             TraceMcm(1, "Daedric Champion forced for " + path.DeityName + "; authored offer queued for after menu close.")
             if manager
-                manager.QueueDaedricMilestoneMcmReplay(path, 2, 3, "mcm_force_" + tierLabel)
+                manager.DaedricRuntime.QueueDaedricMilestoneMcmReplay(path, 2, 3, "mcm_force_" + tierLabel)
             endIf
         else
             Int oldTier = path.GetStoredTier()
             if manager && tierValue > 0
-                manager.QueueDaedricMilestonePresentation(path, oldTier, tierValue, "mcm_force_" + tierLabel)
+                manager.DaedricRuntime.QueueDaedricMilestonePresentation(path, oldTier, tierValue, "mcm_force_" + tierLabel)
             endIf
             if tierValue > 0
                 path.DebugForceCommitmentSignals(path.CommitmentSignalsRequired, "mcm_daedric_force_" + tierLabel)
@@ -3227,7 +3400,7 @@ String Function GetActivePatronLabel()
         return "None"
     endIf
 
-    PDV_DeityBase deity = PDV_Manager.GetDeityByIndex(activeDeityIndex)
+    PDV_DeityBase deity = PDV_Manager.LedgerRuntime.GetDeityByIndex(activeDeityIndex)
     if deity
         return deity.DeityName + " [" + deity.DeityIndex + "]"
     endIf
@@ -3237,7 +3410,7 @@ EndFunction
 
 String Function GetPatronStateLabel()
     if PDV_Manager
-        return PDV_Manager.GetPatronStateLabel()
+        return PDV_Manager.LedgerRuntime.GetPatronStateLabel()
     endIf
 
     return "Unknown"
@@ -3245,7 +3418,7 @@ EndFunction
 
 String Function GetOriginDiagnosticLabel()
     if PDV_Manager
-        return PDV_Manager.DebugGetOriginDiagnostic()
+        return PDV_Manager.DebugRuntime.DebugGetOriginDiagnostic()
     endIf
 
     return "Unknown"
@@ -3253,7 +3426,7 @@ EndFunction
 
 String Function GetConcordatRawLabel()
     if PDV_Manager
-        return "" + PDV_Manager.DebugGetConcordatRawValue()
+        return "" + PDV_Manager.DebugRuntime.DebugGetConcordatRawValue()
     endIf
 
     return "Unknown"
@@ -3261,7 +3434,7 @@ EndFunction
 
 String Function GetConcordatStateLabel()
     if PDV_Manager
-        return PDV_Manager.DebugGetConcordatStateLabel()
+        return PDV_Manager.DebugRuntime.DebugGetConcordatStateLabel()
     endIf
 
     return "Unknown"
@@ -3269,7 +3442,7 @@ EndFunction
 
 String Function GetConcordatPendingStateLabel()
     if PDV_Manager
-        return PDV_Manager.DebugGetConcordatPendingStateLabel()
+        return PDV_Manager.DebugRuntime.DebugGetConcordatPendingStateLabel()
     endIf
 
     return "Unknown"
@@ -3277,7 +3450,7 @@ EndFunction
 
 String Function GetConcordatGateLabel()
     if PDV_Manager
-        return PDV_Manager.DebugGetConcordatGateLabel()
+        return PDV_Manager.DebugRuntime.DebugGetConcordatGateLabel()
     endIf
 
     return "Unknown"
@@ -3285,7 +3458,7 @@ EndFunction
 
 String Function GetTalosGainMultiplierLabel()
     if PDV_Manager
-        return FormatFloat(PDV_Manager.GetTalosEffectiveGainMultiplier()) + " (track " + FormatFloat(PDV_Manager.GetTalosTrackGainMultiplier()) + ")"
+        return FormatFloat(PDV_Manager.OriginRuntime.GetTalosEffectiveGainMultiplier()) + " (track " + FormatFloat(PDV_Manager.OriginRuntime.GetTalosTrackGainMultiplier()) + ")"
     endIf
 
     return "Unknown"
@@ -3355,7 +3528,7 @@ EndFunction
 Float Function GetSelectedDeityPiety()
     PDV_DeityBase deity = GetSelectedDeity()
     if deity && PDV_Manager
-        return PDV_Manager.GetPiety(deity)
+        return PDV_Manager.LedgerRuntime.GetPiety(deity)
     endIf
     return 0.0
 EndFunction
@@ -3363,7 +3536,7 @@ EndFunction
 Float Function GetSelectedDeityPietyToday()
     PDV_DeityBase deity = GetSelectedDeity()
     if deity && PDV_Manager
-        return PDV_Manager.GetPietyToday(deity)
+        return PDV_Manager.LedgerRuntime.GetPietyToday(deity)
     endIf
     return 0.0
 EndFunction
@@ -3396,210 +3569,191 @@ Function RunPatternAction(String promptText, Int actionId)
             PDV_EventBusService.RouteConcordatPressure(True)
         endIf
     elseIf actionId == 3
-        manager.DebugUnlockConcordatWalkback()
+        manager.DebugRuntime.DebugUnlockConcordatWalkback()
     elseIf actionId == 4
-        manager.DebugSetBosmerPathState(manager.BOSMER_PATH_OLD_CONTRACT)
+        manager.DebugRuntime.DebugSetBosmerPathState(manager.BOSMER_PATH_OLD_CONTRACT)
     elseIf actionId == 5
-        manager.DebugSetBosmerPathState(manager.BOSMER_PATH_BANDIT_ROAD)
+        manager.DebugRuntime.DebugSetBosmerPathState(manager.BOSMER_PATH_BANDIT_ROAD)
     elseIf actionId == 6
         if PDV_EventBusService
             PDV_EventBusService.RouteGreenPactViolation()
         else
-            manager.DebugTriggerGreenPactViolation()
+            manager.DebugRuntime.DebugTriggerGreenPactViolation()
         endIf
     elseIf actionId == 19
         if PDV_EventBusService
             PDV_EventBusService.RouteBosmerLivingStory()
         else
-            manager.DebugRecordBosmerLivingStorySignal()
+            manager.DebugRuntime.DebugRecordBosmerLivingStorySignal()
         endIf
     elseIf actionId == 20
         if PDV_EventBusService
             PDV_EventBusService.RouteBosmerExchange()
         else
-            manager.DebugRecordBosmerExchangeSignal()
+            manager.DebugRuntime.DebugRecordBosmerExchangeSignal()
         endIf
     elseIf actionId == 21
         if PDV_EventBusService
             PDV_EventBusService.RouteBosmerBanditRoad()
         else
-            manager.DebugRecordBosmerBanditRoadSignal()
+            manager.DebugRuntime.DebugRecordBosmerBanditRoadSignal()
         endIf
     elseIf actionId == 22
         if PDV_EventBusService
             PDV_EventBusService.RouteBosmerPactPositive()
         else
-            manager.DebugRecordBosmerPactPositiveSignal()
+            manager.DebugRuntime.DebugRecordBosmerPactPositiveSignal()
         endIf
     elseIf actionId == 23
         if PDV_EventBusService
             PDV_EventBusService.RouteStateTransitionConfirmationRite()
         else
-            manager.DebugConfirmStateTransitionRite()
+            manager.DebugRuntime.DebugConfirmStateTransitionRite()
         endIf
     elseIf actionId == 7
         if PDV_EventBusService
             PDV_EventBusService.RouteDunmerPortableShrinePrayer()
         else
-            manager.DebugRecordDunmerAncestorPrayer()
+            manager.DebugRuntime.DebugRecordDunmerAncestorPrayer()
         endIf
     elseIf actionId == 8
         if PDV_EventBusService
             PDV_EventBusService.RouteDunmerPlayerHomeBonus()
         else
-            manager.DebugRecordDunmerAncestorHomeBonus()
+            manager.DebugRuntime.DebugRecordDunmerAncestorHomeBonus()
         endIf
     elseIf actionId == 9
         if PDV_EventBusService
             PDV_EventBusService.RouteKhajiitMoonObservance(0)
         else
-            manager.DebugRecordKhajiitMoonObservance()
+            manager.DebugRuntime.DebugRecordKhajiitMoonObservance()
         endIf
     elseIf actionId == 10
         if PDV_EventBusService
             PDV_EventBusService.RouteKhajiitRoadHome()
         else
-            manager.DebugRecordKhajiitRoadHome()
+            manager.DebugRuntime.DebugRecordKhajiitRoadHome()
         endIf
     elseIf actionId == 11
-        manager.DebugSetBroadWorship()
+        manager.DebugRuntime.DebugSetBroadWorship()
     elseIf actionId == 12
-        manager.DebugEvaluateCommitmentOffer()
+        manager.DebugRuntime.DebugEvaluateCommitmentOffer()
     elseIf actionId == 13
-        manager.DebugAcceptPendingCommitment()
+        manager.DebugRuntime.DebugAcceptPendingCommitment()
     elseIf actionId == 14
-        manager.DebugDeclinePendingCommitment()
+        manager.DebugRuntime.DebugDeclinePendingCommitment()
     elseIf actionId == 15
-        manager.DebugRefusePendingCommitment()
+        manager.DebugRuntime.DebugRefusePendingCommitment()
     elseIf actionId == 16
         if PDV_EventBusService
             PDV_EventBusService.RouteHircineHuntRite()
         else
-            manager.DebugRecordHircineHuntRite()
+            manager.DebugRuntime.DebugRecordHircineHuntRite()
         endIf
     elseIf actionId == 17
-        manager.DebugRenounceHircinePath()
+        manager.DebugRuntime.DebugRenounceHircinePath()
     elseIf actionId == 18
         if PDV_EventBusService
             PDV_EventBusService.RouteTalosShrineDefiance()
         else
-            manager.DebugRecordTalosShrineDefiance()
+            manager.DebugRuntime.DebugRecordTalosShrineDefiance()
         endIf
     elseIf actionId == 60
         if PDV_EventBusService
             PDV_EventBusService.RouteKhajiitKhenarthiCaravanAid("mcm")
         else
-            manager.DebugRecordKhajiitCaravanAid()
+            manager.DebugRuntime.DebugRecordKhajiitCaravanAid()
         endIf
     elseIf actionId == 61
         if PDV_EventBusService
             PDV_EventBusService.RouteKhajiitRajhinLegendMade("mcm")
         else
-            manager.DebugRecordKhajiitLegendMade()
+            manager.DebugRuntime.DebugRecordKhajiitLegendMade()
         endIf
     elseIf actionId == 62
         if PDV_EventBusService
             PDV_EventBusService.RouteMephalaWebWoven("mcm")
         else
-            manager.DebugRecordMephalaWebWoven()
+            manager.DebugRuntime.DebugRecordMephalaWebWoven()
         endIf
     elseIf actionId == 63
         if PDV_EventBusService
             PDV_EventBusService.RouteBoethiahHonorableDuel("mcm")
         else
-            manager.DebugRecordBoethiahHonorableDuel()
+            manager.DebugRuntime.DebugRecordBoethiahHonorableDuel()
         endIf
     elseIf actionId == 58
-        manager.DebugApplyTalosBetrayalCompliance()
+        manager.DebugRuntime.DebugApplyTalosBetrayalCompliance()
     elseIf actionId == 59
-        manager.DebugApplyTalosBetrayalMajor()
+        manager.DebugRuntime.DebugApplyTalosBetrayalMajor()
     elseIf actionId == 24
-        manager.DebugSetNordPantheonBaseline(manager.NORD_BASELINE_OLD_WAYS)
+        manager.DebugRuntime.DebugSetNordPantheonBaseline(manager.NORD_BASELINE_OLD_WAYS)
     elseIf actionId == 25
-        manager.DebugSetNordPantheonBaseline(manager.NORD_BASELINE_NINE_DIVINES)
+        manager.DebugRuntime.DebugSetNordPantheonBaseline(manager.NORD_BASELINE_NINE_DIVINES)
     elseIf actionId == 26
-        manager.DebugCycleContextualFavorLane()
+        manager.DebugRuntime.DebugCycleContextualFavorLane()
     elseIf actionId == 27
-        manager.DebugCycleContextualFavorFamily()
+        manager.DebugRuntime.DebugCycleContextualFavorFamily()
     elseIf actionId == 28
-        manager.DebugTriggerSelectedContextualFavor()
+        manager.DebugRuntime.DebugTriggerSelectedContextualFavor()
     elseIf actionId == 29
-        manager.DebugExpireActiveFavor()
+        manager.DebugRuntime.DebugExpireActiveFavor()
     elseIf actionId == 30
-        manager.DebugResetHircinePath()
+        manager.DebugRuntime.DebugResetHircinePath()
     elseIf actionId == 31
-        manager.DebugForceCurseNone()
+        manager.DebugRuntime.DebugForceCurseNone()
     elseIf actionId == 32
-        manager.DebugForceCurseWerewolf()
+        manager.DebugRuntime.DebugForceCurseWerewolf()
     elseIf actionId == 33
-        manager.DebugForceCurseVampire()
+        manager.DebugRuntime.DebugForceCurseVampire()
     elseIf actionId == 34
         PDV_DeityBase selectedDeity = GetSelectedDeity()
         if selectedDeity
-            manager.DebugSeedCommitmentSignalDaysByIndex(selectedDeity.DeityIndex)
+            manager.DebugRuntime.DebugSeedCommitmentSignalDaysByIndex(selectedDeity.DeityIndex)
         endIf
     elseIf actionId == 35
         PDV_DeityBase selectedDeity = GetSelectedDeity()
         if selectedDeity
-            manager.DebugResetCommitmentStateByIndex(selectedDeity.DeityIndex)
+            manager.DebugRuntime.DebugResetCommitmentStateByIndex(selectedDeity.DeityIndex)
         endIf
     elseIf actionId == 36
-        manager.DebugRefreshCurseFromPlayerState()
+        manager.DebugRuntime.DebugRefreshCurseFromPlayerState()
     elseIf actionId == 37
-        if manager.DebugSetCurseProofOriginRace(_selectedCurseProofOrigin)
+        if manager.DebugRuntime.DebugSetCurseProofOriginRace(_selectedCurseProofOrigin)
             Debug.Notification("PDV: curse proof race set to " + GetCurseProofOriginLabel() + ".")
         else
             Debug.Notification("PDV: curse proof race was not changed.")
         endIf
-    elseIf actionId == 38
-        manager.DebugRunNeglectPass()
-    elseIf actionId == 39
-        PDV_DeityBase selectedDeity = GetSelectedDeity()
-        if selectedDeity
-            manager.DebugPrimeDecayGraceByIndex(selectedDeity.DeityIndex)
-        endIf
-    elseIf actionId == 40
-        PDV_DeityBase selectedDeity = GetSelectedDeity()
-        if selectedDeity
-            manager.DebugPrimeDecayEligibleByIndex(selectedDeity.DeityIndex)
-        endIf
-    elseIf actionId == 41
-        manager.DebugRunDecayPass()
-    elseIf actionId == 42
-        PDV_DeityBase selectedDeity = GetSelectedDeity()
-        if selectedDeity
-            manager.DebugRunDecayProofDaysByIndex(selectedDeity.DeityIndex)
-        endIf
     elseIf actionId == 43
-        manager.DebugSetKhajiitFocus(manager.KHAJIIT_FOCUS_BAANDAR)
+        manager.DebugRuntime.DebugSetKhajiitFocus(manager.KHAJIIT_FOCUS_BAANDAR)
     elseIf actionId == 44
-        manager.DebugSetKhajiitFocus(manager.KHAJIIT_FOCUS_RAJHIN)
+        manager.DebugRuntime.DebugSetKhajiitFocus(manager.KHAJIIT_FOCUS_RAJHIN)
     elseIf actionId == 45
-        manager.DebugSetKhajiitFocus(manager.KHAJIIT_FOCUS_ALKOSH)
+        manager.DebugRuntime.DebugSetKhajiitFocus(manager.KHAJIIT_FOCUS_ALKOSH)
     elseIf actionId == 46
-        manager.DebugSetBretonTradition(manager.BRETON_TRADITION_KNIGHTS_ROAD)
+        manager.DebugRuntime.DebugSetBretonTradition(manager.BRETON_TRADITION_KNIGHTS_ROAD)
     elseIf actionId == 47
-        manager.DebugSetBretonTradition(manager.BRETON_TRADITION_HIDDEN_ART)
+        manager.DebugRuntime.DebugSetBretonTradition(manager.BRETON_TRADITION_HIDDEN_ART)
     elseIf actionId == 48
-        manager.DebugSetBretonTradition(manager.BRETON_TRADITION_GREEN_WAY)
+        manager.DebugRuntime.DebugSetBretonTradition(manager.BRETON_TRADITION_GREEN_WAY)
     elseIf actionId == 49
-        manager.DebugSetOrcLifeMode(manager.ORC_LIFE_MODE_CITY)
+        manager.DebugRuntime.DebugSetOrcLifeMode(manager.ORC_LIFE_MODE_CITY)
     elseIf actionId == 50
-        manager.DebugSetOrcLifeMode(manager.ORC_LIFE_MODE_STRONGHOLD)
+        manager.DebugRuntime.DebugSetOrcLifeMode(manager.ORC_LIFE_MODE_STRONGHOLD)
     elseIf actionId == 51
-        manager.DebugSetOrcLifeMode(manager.ORC_LIFE_MODE_LEGION_EXILE)
+        manager.DebugRuntime.DebugSetOrcLifeMode(manager.ORC_LIFE_MODE_LEGION_EXILE)
     elseIf actionId == 52
-        manager.DebugSetArgonianFocus(manager.ARGONIAN_FOCUS_PEOPLE)
+        manager.DebugRuntime.DebugSetArgonianFocus(manager.ARGONIAN_FOCUS_PEOPLE)
     elseIf actionId == 53
-        manager.DebugSetArgonianFocus(manager.ARGONIAN_FOCUS_VOID)
+        manager.DebugRuntime.DebugSetArgonianFocus(manager.ARGONIAN_FOCUS_VOID)
     elseIf actionId == 54
-        manager.DebugSetBosmerPathState(manager.BOSMER_PATH_LIVING_STORY)
+        manager.DebugRuntime.DebugSetBosmerPathState(manager.BOSMER_PATH_LIVING_STORY)
     elseIf actionId == 55
-        manager.DebugSetBosmerPathState(manager.BOSMER_PATH_EXCHANGE)
+        manager.DebugRuntime.DebugSetBosmerPathState(manager.BOSMER_PATH_EXCHANGE)
     elseIf actionId == 56
-        manager.DebugSeedBosmerVariety()
+        manager.DebugRuntime.DebugSeedBosmerVariety()
     elseIf actionId == 57
-        manager.DebugCycleKhajiitLunarPosture()
+        manager.DebugRuntime.DebugCycleKhajiitLunarPosture()
     endIf
 
     ShowPatternSummaryBrief()
@@ -3614,12 +3768,12 @@ Function ShowPatternSummaryBrief()
         return
     endIf
 
-    Int raceSection = manager.DebugGetPatternSummaryRaceSection(manager.GetPlayerOriginRaceIndex())
+    Int raceSection = manager.DebugRuntime.DebugGetPatternSummaryRaceSection(manager.GetPlayerOriginRaceIndex())
     if raceSection < 0
         raceSection = 0
     endIf
 
-    ShowMessage(manager.DebugGetPatternSummarySection(raceSection), False, "$OK", "")
+    ShowMessage(manager.DebugRuntime.DebugGetPatternSummarySection(raceSection), False, "$OK", "")
 EndFunction
 
 Function ShowSelectedDecaySummary()
@@ -3629,13 +3783,13 @@ Function ShowSelectedDecaySummary()
         return
     endIf
 
-    ShowMessage(PDV_Manager.DebugGetDecaySummaryByIndex(deity.DeityIndex), False, "$OK", "")
+    ShowMessage(PDV_Manager.DebugRuntime.DebugGetDecaySummaryByIndex(deity.DeityIndex), False, "$OK", "")
 EndFunction
 
 String Function GetFavorLaneOptionLabel()
     PDV__ManagerQuest manager = GetManagerService()
     if manager
-        return manager.GetSelectedContextualFavorLaneLabel()
+        return manager.FavorRuntime.GetSelectedContextualFavorLaneLabel()
     endIf
 
     return "Unavailable"
@@ -3644,7 +3798,7 @@ EndFunction
 String Function GetFavorFamilyOptionLabel()
     PDV__ManagerQuest manager = GetManagerService()
     if manager
-        return manager.GetSelectedContextualFavorFamilyLabel()
+        return manager.FavorRuntime.GetSelectedContextualFavorFamilyLabel()
     endIf
 
     return "Unavailable"
@@ -3653,7 +3807,7 @@ EndFunction
 String Function GetPatternSummaryString()
     PDV__ManagerQuest manager = GetManagerService()
     if manager
-        return manager.DebugGetPatternProvingSummary() + "; SelectedCommitment=" + GetSelectedCommitmentSummary(manager)
+        return manager.DebugRuntime.DebugGetPatternProvingSummary() + "; SelectedCommitment=" + GetSelectedCommitmentSummary(manager)
     endIf
 
     return "Pattern proving summary unavailable."
@@ -3669,8 +3823,8 @@ Function ShowPatternSummaryPaged()
         return
     endIf
 
-    Int total = manager.DebugGetPatternSummarySectionCount()
-    Int raceSection = manager.DebugGetPatternSummaryRaceSection(manager.GetPlayerOriginRaceIndex())
+    Int total = manager.DebugRuntime.DebugGetPatternSummarySectionCount()
+    Int raceSection = manager.DebugRuntime.DebugGetPatternSummaryRaceSection(manager.GetPlayerOriginRaceIndex())
     Int shown = 0
 
     if raceSection >= 0
@@ -3695,7 +3849,7 @@ EndFunction
 ; Shows one summary section. Returns True to keep paging, False to stop (Close
 ; pressed or last screen reached).
 Bool Function ShowSummaryScreen(PDV__ManagerQuest manager, Int sectionIndex, Int position, Int total)
-    String body = "(" + position + "/" + total + ")  " + manager.DebugGetPatternSummarySection(sectionIndex)
+    String body = "(" + position + "/" + total + ")  " + manager.DebugRuntime.DebugGetPatternSummarySection(sectionIndex)
     if position < total
         return ShowMessage(body, True, "Next", "Close")
     endIf
@@ -3711,26 +3865,26 @@ String Function GetSelectedCommitmentSummary(PDV__ManagerQuest manager)
     endIf
 
     Int usesFormal = 0
-    if manager.UsesFormalCommitmentOffersForDeity(selectedDeity)
+    if manager.LedgerRuntime.UsesFormalCommitmentOffersForDeity(selectedDeity)
         usesFormal = 1
     endIf
 
     Int ready = 0
-    if manager.HasRecentCommitmentSignalDays(selectedDeity, 2, 7)
+    if manager.LedgerRuntime.HasRecentCommitmentSignalDays(selectedDeity, 2, 7)
         ready = 1
     endIf
 
     Int offered = 0
-    if manager.IsCommitmentOffered(selectedDeity)
+    if manager.LedgerRuntime.IsCommitmentOffered(selectedDeity)
         offered = 1
     endIf
 
     Int refused = 0
-    if manager.IsCommitmentRefused(selectedDeity)
+    if manager.LedgerRuntime.IsCommitmentRefused(selectedDeity)
         refused = 1
     endIf
 
-    return "selected=" + selectedDeity.DeityName + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.GetPiety(selectedDeity)) + ";offered=" + offered + ";refused=" + refused
+    return "selected=" + selectedDeity.DeityName + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.LedgerRuntime.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.LedgerRuntime.GetPiety(selectedDeity)) + ";offered=" + offered + ";refused=" + refused
 EndFunction
 
 PDV__ManagerQuest Function GetManagerService()
@@ -3917,7 +4071,7 @@ String Function RunCurseStateSmoke()
     ; rather than routing the restore through the transition handler: the state has been put
     ; back where it started, so nothing should re-fire a curse-onset surface for it.
     if PDV_Manager
-        PDV_Manager.ResyncCurseStateMirror("mcm_scaffold_restore")
+        PDV_Manager.LedgerRuntime.ResyncCurseStateMirror("mcm_scaffold_restore")
     endIf
     Debug.Trace("[PDV] MCM ScaffoldSmoke: curse " + oldState + " -> " + adjustedState + " -> " + PDV_CurseStateService.GetCurseState())
     return "Curse ok"
@@ -4170,6 +4324,15 @@ Function ResetAllOptionIds()
     _oidQuestReactionQueueStatus = -1
     _oidReDetectOrigin = -1
     _oidRefuseCommitmentOffer = -1
+    _oidConsentSeedSanguine = -1
+    _oidConsentEvaluate = -1
+    _oidConsentAccept = -1
+    _oidConsentNotYet = -1
+    _oidConsentRefuse = -1
+    _oidConsentDivineThenRaise = -1
+    _oidConsentAlcoholTwice = -1
+    _oidConsentForceMigrate = -1
+    _oidConsentReadback = -1
     _oidReloadQuestMatrix = -1
     _oidRepairStats = -1
     _oidResetBretonPractice = -1

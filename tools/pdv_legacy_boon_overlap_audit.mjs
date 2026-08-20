@@ -2,7 +2,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const DEVOTION_SOURCE = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
+import { devotionSource } from "./lib/pdv_paths.mjs";
+
+const DEVOTION_SOURCE = devotionSource();
 const REPO_ROOT = process.cwd();
 const REPO_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source");
 

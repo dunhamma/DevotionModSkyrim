@@ -29,6 +29,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_signal_floor_audit" });
@@ -176,7 +177,10 @@ for (const row of espLedgerRows) {
   espPopByProp.set(row.property, { itemCount: Number.isFinite(n) ? n : null, verdict: row.verdict || "" });
 }
 const playerEventsText = existsSync(PATHS.playerEvents) ? readFileSync(PATHS.playerEvents, "utf8") : "";
-const managerQuestText = existsSync(PATHS.managerQuest) ? readFileSync(PATHS.managerQuest, "utf8") : "";
+// Resolver-aware: read the whole decomposition family, not just the manager. Strictly
+// additive -- manager text still leads, verbatim. Without this the renewable-evidence
+// scan silently reports UNDER-FLOOR for signals whose handlers merely moved modules.
+const managerQuestText = familySourceText(REPO, dirname(PATHS.managerQuest));
 
 const routedFaucetKeys = new Set();
 for (const match of playerEventsText.matchAll(/RouteQuestReactionFaucet\("([^"]+)"/g)) {

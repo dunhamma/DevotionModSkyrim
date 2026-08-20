@@ -4,7 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 const read = (relative) => fs.readFileSync(path.join(ROOT, relative), "utf8");
 const readJson = (relative) => JSON.parse(read(relative));
 
@@ -15,7 +18,10 @@ function functionBody(source, name) {
   return source.slice(match.index, end < 0 ? source.length : end + 12);
 }
 
-const manager = read("live-source/Scripts/Source/PDV__ManagerQuest.psc");
+// Resolver-aware: search the manager's decomposition family, not the manager alone.
+// As Breton functions move into extracted modules a manager-only read goes blind --
+// positive needles fail and negated needles pass vacuously. Strictly additive.
+const manager = familySourceText(ROOT, SOURCE_DIR);
 const mcm = read("live-source/Scripts/Source/PDV_MCM.psc");
 const daedricBase = read("live-source/Scripts/Source/PDV_DaedricPathBase.psc");
 const compiler = read("tools/pdv_compile.mjs");

@@ -8,6 +8,7 @@
  */
 
 import { acceptedDeityNames } from "./lib/pdv_matrix_vocab.mjs";
+import { validatePapyrusUtilCatalogWire } from "./lib/pdv_quest_reaction_catalog_v2.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,10 +21,10 @@ const PROFILE_NAME = getArg("--profile") ?? readSelectedProfile(MO2_ROOT);
 const PROFILE_DIR = PROFILE_NAME ? path.join(MO2_ROOT, "profiles", PROFILE_NAME) : null;
 const JSON_OUTPUT = args.includes("--json");
 const CORE_ONLY = args.includes("--core-only");
-const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "157", 10);
-const EXPECTED_CHANNELS = Number.parseInt(getArg("--expected-channels") ?? "0", 10);
+const EXPECTED_CORE_WATCHED = Number.parseInt(getArg("--expected-core") ?? "353", 10);
+const EXPECTED_OFFICIAL_SOURCES = Number.parseInt(getArg("--expected-official-sources") ?? "79", 10);
 const CORE_MOD = getArg("--core-mod") ?? "Devotion";
-const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Quest Mod PatchHub";
+const COMPAT_MOD = getArg("--compat-mod") ?? "Devotion - Quest Reaction Compatibility";
 const COMPAT_PLUGIN = getArg("--compat-plugin");
 const PAPYRUS_LOG = normalizePath(getArg("--log") ?? "C:/Users/Admin/Documents/My Games/Skyrim Special Edition/Logs/Script/Papyrus.0.log");
 
@@ -31,7 +32,7 @@ const findings = [];
 
 function validateArgs(argv) {
   const valued = new Set([
-    "--mo2", "--profile", "--expected-core", "--expected-channels",
+    "--mo2", "--profile", "--expected-core", "--expected-official-sources",
     "--core-mod", "--compat-mod", "--compat-plugin", "--log",
   ]);
   const flags = new Set(["--json", "--core-only", "--name-resolution-only"]);
@@ -99,12 +100,12 @@ function checkMatrixNameResolution() {
 
   // TWO families carry deity cells, and for a long time only the first was checked:
   //   references/authoring/PDV_QuestReactionMatrix*.csv  -- core tranches + Full.csv
-  //   references/authoring/patches/PDV_QRM_*.csv         -- the per-mod FOMOD channels
-  // The channels matched on NEITHER count -- wrong directory AND wrong prefix -- so all 44
+  //   references/authoring/patches/PDV_QRM_*.csv         -- third-party source inputs
+  // The patch inputs matched on NEITHER count -- wrong directory AND wrong prefix -- so all 44
   // shipped ones went unchecked by the gate whose own header names the "Clavicus" failure.
   // A bad name there compiles clean and ApplyDeityReaction drops the cell in silence, which
   // is indistinguishable from the mod simply not reacting. Found 2026-08-09 while scoping the
-  // JoJ tranche; the channels are the lane ALL third-party quest coverage ships through, so
+  // JoJ tranche; these inputs are the lane ALL third-party quest coverage compiles from, so
   // this was the larger half of the surface, not an edge.
   const matrixFiles = [];
   for (const f of fs.readdirSync(authoringDir)) {
@@ -113,12 +114,12 @@ function checkMatrixNameResolution() {
     }
   }
   const patchesDir = path.join(authoringDir, "patches");
-  let patchChannelsChecked = 0;
+  let patchCsvFilesChecked = 0;
   if (exists(patchesDir)) {
     for (const f of fs.readdirSync(patchesDir)) {
       if (/^PDV_QRM_.*\.csv$/i.test(f)) {
         matrixFiles.push({ label: `patches/${f}`, fullPath: path.join(patchesDir, f) });
-        patchChannelsChecked += 1;
+        patchCsvFilesChecked += 1;
       }
     }
   }
@@ -164,7 +165,7 @@ function checkMatrixNameResolution() {
     status: ok ? "PASS" : "FAIL",
     acceptedNames: accepted.size,
     files: matrixFiles.length,
-    patchChannelsChecked,
+    patchCsvFilesChecked,
     auxiliaryFilesChecked,
     cellsChecked,
     unknownNames: distinctUnknown,
@@ -177,7 +178,7 @@ function main() {
   const enabledMods = checkModlist();
   checkPluginOrder();
   checkKnownMatrixFiles(enabledMods);
-  checkChannelFiles(enabledMods);
+  checkOfficialCatalog(enabledMods);
   checkSourceConstants(enabledMods);
   checkPexFiles(enabledMods);
   checkPapyrusLog();
@@ -290,7 +291,7 @@ function checkPluginOrder() {
 
 function checkKnownMatrixFiles(enabledMods) {
   const relativeFiles = [
-    path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionMatrix.json"),
+    path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionCore.v2.json"),
   ];
 
   for (const relativeFile of relativeFiles) {
@@ -325,31 +326,37 @@ function checkProfilePluginOrderConsistency(activePlugins) {
   }
 }
 
-function checkChannelFiles(enabledMods) {
-  if (CORE_ONLY || EXPECTED_CHANNELS <= 0) return;
-  const relativeDir = path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "Channels");
-  const compatDir = path.join(MO2_ROOT, "mods", COMPAT_MOD, relativeDir);
-  if (!exists(compatDir)) {
-    fail("Quest reaction channels", `Channels directory is missing from ${COMPAT_MOD}.`, compatDir);
+function checkOfficialCatalog(enabledMods) {
+  if (CORE_ONLY) return;
+  const relativeFile = path.join("SKSE", "Plugins", "StorageUtilData", "PlayerDevotion", "PDV_QuestReactionPatches.v2.json");
+  const packaged = path.join(MO2_ROOT, "mods", COMPAT_MOD, relativeFile);
+  if (!exists(packaged)) {
+    fail("Official Quest Reaction catalog", `Required v2 catalog is missing from ${COMPAT_MOD}.`, packaged);
     return;
   }
-  const files = fs.readdirSync(compatDir).filter((name) => /^PDV_QRM_.*\.json$/i.test(name)).sort();
-  const invalid = [];
-  const losing = [];
-  for (const name of files) {
-    const packaged = path.join(compatDir, name);
-    try { readJson(packaged); } catch (error) { invalid.push(`${name}: ${error.message}`); }
-    const winner = resolveWinningModFile(path.join(relativeDir, name), enabledMods);
-    if (!winner || path.resolve(winner) !== path.resolve(packaged)) losing.push(name);
+  let catalog;
+  try {
+    catalog = readJson(packaged);
+  } catch (error) {
+    fail("Official Quest Reaction catalog", error.message, packaged);
+    return;
   }
-  if (files.length !== EXPECTED_CHANNELS) {
-    fail("Quest reaction channels", `${files.length} packaged channel(s); expected ${EXPECTED_CHANNELS}.`, compatDir);
-  } else if (invalid.length > 0) {
-    fail("Quest reaction channels", `${invalid.length} invalid JSON channel(s): ${invalid.join("; ")}`, compatDir);
-  } else if (losing.length > 0) {
-    fail("Quest reaction channels", `${losing.length} channel(s) lose MO2 precedence: ${losing.join(", ")}`, compatDir);
+  const winner = resolveWinningModFile(relativeFile, enabledMods);
+  let wireError = null;
+  try {
+    validatePapyrusUtilCatalogWire(catalog, { requirePatchDelta: true });
+  } catch (error) {
+    wireError = error.message;
+  }
+  const sourceCount = catalog?.stringList?.sourceids?.length ?? 0;
+  if (wireError) {
+    fail("Official Quest Reaction catalog", `Catalog is not Papyrus-addressable: ${wireError}`, packaged);
+  } else if (sourceCount !== EXPECTED_OFFICIAL_SOURCES) {
+    fail("Official Quest Reaction catalog", `${sourceCount} catalog-backed sources; expected ${EXPECTED_OFFICIAL_SOURCES}.`, packaged);
+  } else if (!winner || path.resolve(winner) !== path.resolve(packaged)) {
+    fail("Official Quest Reaction catalog", "Required v2 catalog does not win MO2 file precedence.", packaged);
   } else {
-    pass("Quest reaction channels", `${files.length} valid channel(s) are present and win MO2 precedence.`, compatDir);
+    pass("Official Quest Reaction catalog", `${sourceCount} catalog-backed sources are valid and the required v2 catalog wins MO2 precedence.`, packaged);
   }
 }
 
@@ -367,6 +374,14 @@ function checkMatrixJson(filePath, active) {
   const shape = json.string && json.float && json.int && json.stringList ? "typed" : "flat-or-invalid";
   const hash = hashText(filePath).slice(0, 12);
   const detail = `${name} ${shape}, watched=${count}, sha256=${hash}`;
+  let wireError = null;
+  if (json?.string?.schema === "pdv.quest-reaction.catalog.v2") {
+    try {
+      validatePapyrusUtilCatalogWire(json, { requirePatchDelta: json.string.catalogkind !== "core" });
+    } catch (error) {
+      wireError = error.message;
+    }
+  }
 
   if (!active && count > 0) {
     info("Inactive matrix JSON", detail, filePath);
@@ -374,6 +389,10 @@ function checkMatrixJson(filePath, active) {
   }
   if (shape !== "typed") {
     fail("Matrix JSON shape", `${detail}; expected PapyrusUtil typed buckets.`, filePath);
+    return;
+  }
+  if (wireError) {
+    fail("Matrix JSON Papyrus wire", `${detail}; ${wireError}`, filePath);
     return;
   }
   if (count !== expected) {
@@ -384,7 +403,7 @@ function checkMatrixJson(filePath, active) {
 }
 
 function checkSourceConstants(enabledMods) {
-  for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc"]) {
+  for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc", "PDV_QuestReactionRuntime.psc"]) {
     checkQuestMatrixSourcePath(resolveWinningModFile(path.join("Scripts", "Source", script), enabledMods), "Active source path");
   }
   checkShrinePrayerRouteSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_EventSignalActivator.psc"), enabledMods), "Active shrine route source");
@@ -394,7 +413,7 @@ function checkSourceConstants(enabledMods) {
   checkBookOfDaysMcmSource(resolveWinningModFile(path.join("Scripts", "Source", "PDV_MCM.psc"), enabledMods), "Active Book of Days MCM source");
 
   const repoSourceDir = path.join(process.cwd(), "live-source", "Scripts", "Source");
-  for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc"]) {
+  for (const script of ["PDV__ManagerQuest.psc", "PDV_PlayerEvents.psc", "PDV_QuestReactionRuntime.psc"]) {
     if (exists(path.join(repoSourceDir, script))) {
       checkQuestMatrixSourcePath(path.join(repoSourceDir, script), "Repo mirror source path", "WARN");
     }
@@ -424,17 +443,22 @@ function checkQuestMatrixSourcePath(filePath, checkName, staleStatus = "FAIL") {
   const text = fs.readFileSync(filePath, "utf8");
   const unsafe = [
     "\"PlayerDevotion/PDV_QuestReactionMatrix\"",
-  ].filter((needle) => text.includes(needle));
-  const expected = [
     "\"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\"",
+    "\"../StorageUtilData/PlayerDevotion/Channels\"",
+    "\"../StorageUtilData/PlayerDevotion/QuestStageAdapters\"",
   ].filter((needle) => text.includes(needle));
+  const script = path.basename(filePath).toLowerCase();
+  const expected = script === "pdv_questreactionruntime.psc"
+    ? ["PDV_QuestReactionCore.v2", "PDV_QuestReactionPatches.v2"]
+    : ["PDV_QuestReactionCore.v2"];
+  const missing = expected.filter((needle) => !text.includes(needle));
 
   if (unsafe.length > 0) {
-    add(staleStatus, checkName, `Unsafe short PapyrusUtil matrix path present: ${unsafe.join(", ")}.`, filePath);
-  } else if (expected.length > 0) {
-    pass(checkName, `Native-safe StorageUtilData path present (${expected.length} constants).`, filePath);
+    add(staleStatus, checkName, `Retired V1 Quest Reaction path present: ${unsafe.join(", ")}.`, filePath);
+  } else if (missing.length === 0) {
+    pass(checkName, `V2 Quest Reaction catalog path present (${expected.length} constants).`, filePath);
   } else {
-    warn(checkName, "No quest matrix path constants found.", filePath);
+    add(staleStatus, checkName, `V2 Quest Reaction catalog path missing: ${missing.join(", ")}.`, filePath);
   }
 }
 
@@ -522,7 +546,7 @@ function checkBookOfDaysMcmSource(filePath, checkName, staleStatus = "FAIL") {
 }
 
 function checkPexFiles(enabledMods) {
-  for (const script of ["PDV__ManagerQuest.pex", "PDV_MCM.pex", "PDV_PlayerEvents.pex", "PDV_EventSignalActivator.pex", "PDV_EventBus.pex"]) {
+  for (const script of ["PDV__ManagerQuest.pex", "PDV_MCM.pex", "PDV_PlayerEvents.pex", "PDV_QuestReactionRuntime.pex", "PDV_EventSignalActivator.pex", "PDV_EventBus.pex"]) {
     const filePath = resolveWinningModFile(path.join("Scripts", script), enabledMods);
     if (!exists(filePath)) {
       fail("PEX present", `${script} is missing.`, filePath);
@@ -606,6 +630,12 @@ function requireInactivePlugin(activePlugins, pluginName, pluginsPath) {
 }
 
 function matrixWatchCount(json) {
+  if (Array.isArray(json?.stringList?.questkeys)) {
+    return new Set(json.stringList.questkeys.map((key) => String(key).split("|").slice(0, 2).join("|")).filter(Boolean)).size;
+  }
+  if (Array.isArray(json?.stringList?.questKeys)) {
+    return new Set(json.stringList.questKeys.map((key) => String(key).split("|").slice(0, 2).join("|")).filter(Boolean)).size;
+  }
   if (Array.isArray(json?.stringList?.questWatchFormIds)) return json.stringList.questWatchFormIds.length;
   if (Array.isArray(json?.stringList?.questwatchformids)) return json.stringList.questwatchformids.length;
   if (typeof json?.string?.questWatchFormIdsCsv === "string") return json.string.questWatchFormIdsCsv.split(",").filter(Boolean).length;

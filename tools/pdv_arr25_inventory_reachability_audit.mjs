@@ -18,7 +18,10 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
+
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
+const SOURCE_ROOT = join(REPO, "live-source", "Scripts", "Source");
 const DEFAULT_INVENTORY = join(
   REPO,
   "references",
@@ -180,7 +183,9 @@ function canonicalDeities() {
 }
 
 function parseRuntimeRosters() {
-  const source = readFileSync(MANAGER, "utf8");
+  // Resolver-aware: search the manager's decomposition family, not the manager alone,
+  // so the roster parse tracks IsDashboardDeityInOriginRoster into an extracted module.
+  const source = familySourceText(REPO, SOURCE_ROOT);
   const match = source.match(/Bool Function IsDashboardDeityInOriginRoster[\s\S]*?\nEndFunction/i);
   if (!match) throw new Error("Could not find IsDashboardDeityInOriginRoster in manager source");
   const rosters = Object.fromEntries(ALL_RACES.map((race) => [race, new Set()]));

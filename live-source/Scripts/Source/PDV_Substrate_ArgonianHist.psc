@@ -139,12 +139,8 @@ Function EnsureHistMaintenanceStampEncoding()
         return
     endIf
 
-    ; Legacy saves stored a raw devotional day, where zero was ambiguous. A
-    ; nonzero event time proves that the raw day was an actual maintenance act.
-    if StorageUtil.GetFloatValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastHistEvent") > 0.0
-        Int legacyDay = StorageUtil.GetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceDay")
-        StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.LastMaintenanceStamp", legacyDay + 2)
-    endIf
+    ; Legacy raw-day +1 fixup removed (not-save-safe: a fresh save only ever carries the +2
+    ; stamp scheme). The version-stamp guard above + the stamp write below stay.
     StorageUtil.SetIntValue(GetSubstrateForm(), "PDV.Substrate.ArgonianHist.MaintenanceStampVersion", 1)
 EndFunction
 

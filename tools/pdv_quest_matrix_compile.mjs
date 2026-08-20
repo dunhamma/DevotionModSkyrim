@@ -17,22 +17,24 @@ import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 // flags are included deliberately: rejecting one would break a published command, and a
 // guard is the wrong place to discover that the doc and the code disagree.
 const KNOWN_FLAGS = new Set(["--check", "--json", "--matrix", "--output", "--papyrusutil-check", "--stdout"]);
-assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_matrix_compile" });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
+const INVOKED_AS_CLI = path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url);
+if (INVOKED_AS_CLI) {
+  assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_quest_matrix_compile" });
+}
 const DEFAULT_OUTPUT = "D:/Wabbajack/modlists/Anvil/mods/Devotion/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix.json";
 
 const DEFAULT_MATRIX_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_Full.csv");
-const PATCH_HUB_ROOT = path.join(PROJECT_ROOT, "dist", "PDV_QuestModPatches_FOMOD");
-const PATCH_HUB_MANIFEST = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestPatchHub.manifest.json");
+const COMPATIBILITY_MANIFEST = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionCompatibility.manifest.json");
 const FAUCET_CSV = path.join(PROJECT_ROOT, "references", "authoring", "PDV_QuestReactionMatrix_PartD_ThinGodFaucets.csv");
 const QUEST_READBACK_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv");
 const CORE_QUEST_WORKLIST_CSV = path.join(PROJECT_ROOT, "references", "vanilla-gameplay", "compatibility", "PDV_CoreQuestAuditWorklist.csv");
 const STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_StanceMatrix.csv");
 const DAEDRIC_STANCE_CSV = path.join(PROJECT_ROOT, "references", "phase4", "PDV_DaedricRacePrinceMatrix.csv");
 
-const args = process.argv.slice(2);
+const args = INVOKED_AS_CLI ? process.argv.slice(2) : [];
 const outputPath = getArg("--output") ?? DEFAULT_OUTPUT;
 const checkOnly = args.includes("--check");
 const jsonOutput = args.includes("--json");
@@ -254,7 +256,9 @@ const MANUAL_QUEST_FORMIDS = {
   T03: "Skyrim.esm:01C48E",
 };
 
-function main() {
+export function compileQuestMatrix(options = {}) {
+  const matrixCsv = options.matrixCsv ?? MATRIX_CSV;
+  const targetOutputPath = options.outputPath ?? outputPath;
   // The historical readback is a narrow candidate set. The exhaustive audit
   // worklist supplies canonical FormIDs for newly approved official-content
   // quests without growing MANUAL_QUEST_FORMIDS one quest at a time.
@@ -264,7 +268,7 @@ function main() {
     ...readCsv(QUEST_READBACK_CSV),
     ...canonicalWorklistRows,
   ]);
-  const matrixRows = readCsv(MATRIX_CSV);
+  const matrixRows = readCsv(matrixCsv);
   const faucetRows = readCsv(FAUCET_CSV);
   const stanceRows = readCsv(STANCE_CSV);
   const daedricRows = readCsv(DAEDRIC_STANCE_CSV);
@@ -289,7 +293,7 @@ function main() {
     ...VALUE_TABLE,
   };
 
-  const sourceMod = resolvePatchSourceMod(outputPath);
+  const sourceMod = options.sourceMod ?? resolvePatchSourceMod(matrixCsv);
   if (sourceMod) {
     out.sourceMod = sourceMod;
   }
@@ -452,30 +456,14 @@ function main() {
   const papyrusUtilJson = toPapyrusUtilJson(out);
   validatePapyrusUtilJson(papyrusUtilJson, out);
   let papyrusUtilFileCheck = "generated";
-  if (papyrusUtilCheck && checkOnly && exists(outputPath)) {
-    validatePapyrusUtilJson(readJson(outputPath), out, outputPath);
+  if (papyrusUtilCheck && checkOnly && exists(targetOutputPath)) {
+    validatePapyrusUtilJson(readJson(targetOutputPath), out, targetOutputPath);
     papyrusUtilFileCheck = "file";
-  }
-
-  if (emitStdout) {
-    // Emit the full compiled object to stdout (no file write). Consumed by
-    // tools/pdv_quest_matrix_selftest.mjs so the runtime JSON can be validated
-    // without touching the Windows StorageUtilData output path.
-    process.stdout.write(`${JSON.stringify(out, null, 2)}\n`);
-    return;
-  }
-  if (!checkOnly) {
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-    fs.writeFileSync(outputPath, `${JSON.stringify(papyrusUtilJson, null, 2)}\n`, "utf8");
-    if (papyrusUtilCheck) {
-      validatePapyrusUtilJson(readJson(outputPath), out, outputPath);
-      papyrusUtilFileCheck = "file";
-    }
   }
 
   const report = {
     status: "PASS",
-    outputPath: checkOnly ? null : path.resolve(outputPath),
+    outputPath: checkOnly ? null : path.resolve(targetOutputPath),
     papyrusUtilContract: "PASS",
     papyrusUtilFileCheck,
     questCells: matrixRows.length,
@@ -483,6 +471,28 @@ function main() {
     watchedQuests: new Set(out.questFormIds).size,
     faucetActs: out.faucetKeys.length,
   };
+
+  if (options.library) {
+    return { flat: out, runtime: papyrusUtilJson, report };
+  }
+
+  if (emitStdout) {
+    // Emit the full compiled object to stdout (no file write). Consumed by
+    // tools/pdv_quest_matrix_selftest.mjs so the runtime JSON can be validated
+    // without touching the Windows StorageUtilData output path.
+    process.stdout.write(`${JSON.stringify(out, null, 2)}\n`);
+    return { flat: out, runtime: papyrusUtilJson, report };
+  }
+  if (!checkOnly) {
+    fs.mkdirSync(path.dirname(targetOutputPath), { recursive: true });
+    fs.writeFileSync(targetOutputPath, `${JSON.stringify(papyrusUtilJson, null, 2)}\n`, "utf8");
+    if (papyrusUtilCheck) {
+      validatePapyrusUtilJson(readJson(targetOutputPath), out, targetOutputPath);
+      papyrusUtilFileCheck = "file";
+    }
+  }
+
+  report.papyrusUtilFileCheck = papyrusUtilFileCheck;
   if (jsonOutput) {
     console.log(JSON.stringify(report, null, 2));
   } else {
@@ -494,37 +504,23 @@ function main() {
     console.log(`  PapyrusUtil contract: ${report.papyrusUtilContract} (${report.papyrusUtilFileCheck})`);
     if (report.outputPath) console.log(`  output: ${report.outputPath}`);
   }
+  return { flat: out, runtime: papyrusUtilJson, report };
 }
 
-function resolvePatchSourceMod(targetPath) {
-  const target = path.resolve(targetPath);
-  const relativeToHub = path.relative(PATCH_HUB_ROOT, target);
-  const isPatchChannel =
-    relativeToHub !== "" &&
-    !relativeToHub.startsWith(`..${path.sep}`) &&
-    !path.isAbsolute(relativeToHub) &&
-    target.split(path.sep).some((segment) => segment.toLowerCase() === "channels") &&
-    /^PDV_QRM_[A-Za-z0-9_]+\.json$/i.test(path.basename(target));
-  if (!isPatchChannel) return "";
+function resolvePatchSourceMod(matrixPath) {
+  const matrix = path.resolve(matrixPath);
+  const coreMatrix = path.resolve(DEFAULT_MATRIX_CSV);
+  if (matrix === coreMatrix) return "";
 
-  const manifest = readJson(PATCH_HUB_MANIFEST);
-  for (const option of manifest.options ?? []) {
-    for (const folder of option.folders ?? []) {
-      const optionRoot = path.resolve(PATCH_HUB_ROOT, folder.replaceAll("\\", path.sep));
-      const relativeToOption = path.relative(optionRoot, target);
-      if (
-        relativeToOption !== "" &&
-        !relativeToOption.startsWith(`..${path.sep}`) &&
-        !path.isAbsolute(relativeToOption)
-      ) {
-        if (!option.name || typeof option.name !== "string") {
-          throw new Error(`Patch channel option has no player-facing name: ${folder}`);
-        }
-        return option.name;
-      }
-    }
+  const manifest = readJson(COMPATIBILITY_MANIFEST);
+  const source = (manifest.sources ?? []).find((entry) => entry.csv && path.resolve(PROJECT_ROOT, entry.csv) === matrix);
+  if (!source) {
+    throw new Error(`Quest-reaction CSV is not owned by the compatibility manifest: ${matrix}`);
   }
-  throw new Error(`Patch channel output is not owned by a PatchHub manifest option: ${target}`);
+  if (!source.displayName || typeof source.displayName !== "string") {
+    throw new Error(`Compatibility source has no player-facing name: ${source.sourceId ?? matrix}`);
+  }
+  return source.displayName;
 }
 
 function validate(out) {
@@ -861,4 +857,6 @@ function getArg(name) {
   return match ? match.slice(prefix.length) : null;
 }
 
-main();
+if (INVOKED_AS_CLI) {
+  compileQuestMatrix();
+}

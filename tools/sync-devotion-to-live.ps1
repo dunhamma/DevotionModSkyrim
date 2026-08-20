@@ -21,9 +21,14 @@
     Directory where non-dry-run syncs create a timestamped copy of the live
     Devotion artifacts before writing. Defaults to generated/live-devotion-backups.
 
+.PARAMETER Only
+    Optional exact source or destination paths from the sync map. Limits a sync
+    to the named files while retaining the normal health check and full backup.
+
 .EXAMPLE
     .\tools\sync-devotion-to-live.ps1
     .\tools\sync-devotion-to-live.ps1 -DryRun
+    .\tools\sync-devotion-to-live.ps1 -Only "Scripts\Source\PDV_MCM.psc"
     .\tools\sync-devotion-to-live.ps1 -DevotionRoot "E:\Games\Devotion"
 #>
 
@@ -31,6 +36,7 @@
 param(
     [string]$DevotionRoot = "D:\Wabbajack\modlists\Anvil\mods\Devotion",
     [string]$BackupRoot = "",
+    [string[]]$Only = @(),
     [switch]$DryRun
 )
 
@@ -61,12 +67,30 @@ $Map = @(
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2"; Dst = "PrismaUI\views\Devotion\fonts\IMFellEnglish-Regular.woff2" },
     @{ Src = "native\DevotionPrismaBridge\mod\PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt"; Dst = "PrismaUI\views\Devotion\fonts\OFL-IMFellEnglish.txt" },
     @{ Src = "live-source\Scripts\Source\PDV__ManagerQuest.psc";             Dst = "Scripts\Source\PDV__ManagerQuest.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_DevotionLedger.psc";            Dst = "Scripts\Source\PDV_DevotionLedger.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_RecognitionRuntime.psc";        Dst = "Scripts\Source\PDV_RecognitionRuntime.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_PrismaPresenter.psc";          Dst = "Scripts\Source\PDV_PrismaPresenter.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_DebugRuntime.psc";           Dst = "Scripts\Source\PDV_DebugRuntime.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_ContextualFavorRuntime.psc";   Dst = "Scripts\Source\PDV_ContextualFavorRuntime.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_DaedricRuntime.psc";          Dst = "Scripts\Source\PDV_DaedricRuntime.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_SurveyDevotionEffect.psc";    Dst = "Scripts\Source\PDV_SurveyDevotionEffect.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntimeBase.psc";          Dst = "Scripts\Source\PDV_OriginRuntimeBase.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Altmer.psc";       Dst = "Scripts\Source\PDV_OriginRuntime_Altmer.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Argonian.psc";     Dst = "Scripts\Source\PDV_OriginRuntime_Argonian.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Bosmer.psc";       Dst = "Scripts\Source\PDV_OriginRuntime_Bosmer.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Breton.psc";       Dst = "Scripts\Source\PDV_OriginRuntime_Breton.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Dunmer.psc";       Dst = "Scripts\Source\PDV_OriginRuntime_Dunmer.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Imperial.psc";     Dst = "Scripts\Source\PDV_OriginRuntime_Imperial.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Khajiit.psc";      Dst = "Scripts\Source\PDV_OriginRuntime_Khajiit.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Nord.psc";         Dst = "Scripts\Source\PDV_OriginRuntime_Nord.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Orc.psc";          Dst = "Scripts\Source\PDV_OriginRuntime_Orc.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_OriginRuntime_Redguard.psc";     Dst = "Scripts\Source\PDV_OriginRuntime_Redguard.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_AltmerPracticeFocus.psc";       Dst = "Scripts\Source\PDV_AltmerPracticeFocus.psc"; Required = $true },
     @{ Src = "live-source\Scripts\Source\PDV_T3DailyLowHealthSaveEffect.psc"; Dst = "Scripts\Source\PDV_T3DailyLowHealthSaveEffect.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitAzurahPortentEffect.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc"; Dst = "Scripts\Source\PDV_KhajiitBaanDarRescueEffect.psc" },
     @{ Src = "live-source\Scripts\Source\TempleBlessingScript.psc";          Dst = "Scripts\Source\TempleBlessingScript.psc"; Required = $true },
-    @{ Src = "live-source\Scripts\Source\PDV_QuestReactionWorker.psc";       Dst = "Scripts\Source\PDV_QuestReactionWorker.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_QuestReactionRuntime.psc";      Dst = "Scripts\Source\PDV_QuestReactionRuntime.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_Deity_AuriEl.psc";              Dst = "Scripts\Source\PDV_Deity_AuriEl.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_DaedricPathBase.psc";          Dst = "Scripts\Source\PDV_DaedricPathBase.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_MCM.psc";                       Dst = "Scripts\Source\PDV_MCM.psc" },
@@ -85,10 +109,8 @@ $Map = @(
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json";       Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_TemporaryRaceMap.json" },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_RaceMap_README.txt" },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionMatrix.json"; Required = $true },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften02.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften02.json"; Required = $true },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften03.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_FreeformRiften03.json"; Required = $true },
-    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_Staada.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\QuestStageAdapters\PDV_QSA_Core_Staada.json"; Required = $true },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionCore.v2.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionCore.v2.json"; Required = $true },
+    @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionPatches.v2.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_QuestReactionPatches.v2.json"; Required = $true },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_AltmerPracticeLines.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_AltmerPracticeLines.json"; Required = $true },
     @{ Src = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json"; Dst = "SKSE\Plugins\StorageUtilData\PlayerDevotion\PDV_KhajiitMoonObservations.json" }
 )
@@ -210,6 +232,23 @@ function New-LiveDevotionBackup {
 
 $DevotionRoot = Assert-LiveDevotionRootHealthy $DevotionRoot
 Assert-SyncMap $Map $RepoRoot $DevotionRoot
+
+if ($Only.Count -gt 0) {
+    $requested = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($path in $Only) {
+        [void]$requested.Add($path)
+    }
+    $Map = @($Map | Where-Object { $requested.Contains($_.Src) -or $requested.Contains($_.Dst) })
+    if ($Map.Count -ne $requested.Count) {
+        $matched = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+        foreach ($entry in $Map) {
+            if ($requested.Contains($entry.Src)) { [void]$matched.Add($entry.Src) }
+            if ($requested.Contains($entry.Dst)) { [void]$matched.Add($entry.Dst) }
+        }
+        $unknown = @($requested | Where-Object { -not $matched.Contains($_) })
+        Fail-Sync ("Unknown -Only sync-map path(s): " + ($unknown -join ", "))
+    }
+}
 
 if (-not $DryRun) {
     $backupPath = New-LiveDevotionBackup $DevotionRoot $BackupRoot

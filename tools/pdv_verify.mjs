@@ -14,19 +14,36 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
 import { recordActorValueFor } from "./lib/pdv_actor_value_aliases.mjs";
+import { resolveDevotionRoot, devotionSource, devotionPex, devotionEsp } from "./lib/pdv_paths.mjs";
+import { callTokenPattern, decompositionFamily, familySourceText, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
+
+function reEscape(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Build a { needle, pattern } entry for checkSourceMatches. `pattern` matches a
+// call to `name` with an OPTIONAL owning-script qualifier (resolver-driven, so
+// it tracks the symbol's extraction into its deep module) followed by the
+// literal `argsTail`; `needle` is the bare call text shown in the check output.
+function callNeedle(name, argsTail) {
+  return {
+    needle: `${name}(${argsTail}`,
+    pattern: new RegExp(callTokenPattern(name, PROJECT_ROOT).source + reEscape(argsTail)),
+  };
+}
 const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
-const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
-const DEVOTION_SOURCE = path.join(DEVOTION_MOD, "Scripts", "Source");
-const DEVOTION_PEX = path.join(DEVOTION_MOD, "Scripts");
+const DEVOTION_MOD = resolveDevotionRoot();
+const DEVOTION_SOURCE = devotionSource();
+const DEVOTION_PEX = devotionPex();
 const CUSTOM_RACE_DATA_DIR = path.join(DEVOTION_MOD, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion");
 const REPO_CUSTOM_RACE_DATA_DIR = path.join(PROJECT_ROOT, "SKSE", "Plugins", "StorageUtilData", "PlayerDevotion");
 const CUSTOM_RACE_MAP = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_RaceMap.json");
 const CUSTOM_TEMPORARY_RACE_MAP = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_TemporaryRaceMap.json");
 const CUSTOM_RACE_README = path.join(REPO_CUSTOM_RACE_DATA_DIR, "PDV_RaceMap_README.txt");
-const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
+const PDV_ESP = devotionEsp();
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
   "plugins",
@@ -348,10 +365,13 @@ const PHASE18_RECORDS = {
 };
 
 const PHASE18_MANAGER_PROPERTIES = {
-  PDV_SPEL_SurveyDevotion: "PDV_SPEL_SurveyDevotion",
   PDV_Msg_Nord_CurseState_WerewolfOnset: "PDV_Msg_Nord_CurseState_WerewolfOnset",
   PDV_Msg_Nord_CurseState_VampireOnset: "PDV_Msg_Nord_CurseState_VampireOnset",
   PDV_Msg_Nord_CurseState_VampireCured: "PDV_Msg_Nord_CurseState_VampireCured",
+};
+
+const PHASE18_PRISMA_PROPERTIES = {
+  PDV_SPEL_SurveyDevotion: "PDV_SPEL_SurveyDevotion",
 };
 
 const PHASE18_EFFECT_PROPERTIES = {
@@ -744,6 +764,17 @@ const COMPILED_SCRIPTS = {
 };
 
 const MANAGER_PROPERTIES = {
+  PDV_QuestReactionRuntimeService: "PDV_QuestReactionRuntime",
+  FavorRuntime: "PDV_ContextualFavorRuntime",
+  LedgerRuntime: "PDV_DevotionLedger",
+  DaedricRuntime: "PDV_DaedricRuntime",
+  PDV_FLST_OriginAdapters: "PDV_FLST_OriginAdapters",
+  RecognitionRuntime: "PDV_RecognitionRuntime",
+  Prisma: "PDV_PrismaPresenter",
+  DebugRuntime: "PDV_DebugRuntime",
+};
+
+const LEDGER_PROPERTIES = {
   PDV_GLO_ActivePiety: "PDV_GLO_ActivePiety",
   PDV_GLO_ActiveTier: "PDV_GLO_ActiveTier",
   PDV_GLO_ActiveDeityIndex: "PDV_GLO_ActiveDeityIndex",
@@ -752,7 +783,7 @@ const MANAGER_PROPERTIES = {
   PDV_FLST_AllDeities: "PDV_FLST_AllDeities",
 };
 
-const MANAGER_PREFLIGHT_PROPERTIES = {
+const LEDGER_PREFLIGHT_PROPERTIES = {
   PDV_GLO_PatronState: "PDV_GLO_PatronState",
 };
 
@@ -1453,7 +1484,7 @@ class Verifier {
       // Bounded quest-reaction delivery, including the direct-fan-out registry
       // (tools/pdv_qr_direct_fanout.json). Default-on with no opt-in flag, per the
       // 2026-07-07 declaration-gate ruling: an opt-in flag nobody passes is how a
-      // whole class hides. This gate is why a synchronous burst outside the worker
+      // whole class hides. This gate is why a synchronous burst outside the Runtime
       // queue can no longer pass review unregistered.
       ["Quest-reaction performance contract", "pdv_quest_reaction_performance_audit.mjs"],
     ];
@@ -2827,7 +2858,7 @@ class Verifier {
 
     this.checkSourceContains("Phase 14 source", "PDV_MCM", [
       "AddTextOption(\"Evaluate commitment\", \"Dawn-equivalent\", OPTION_FLAG_NONE)",
-      "AddTextOption(\"Accept commitment\", \"Carry-over\", OPTION_FLAG_NONE)",
+      "AddTextOption(\"Accept commitment\", \"Preserve piety\", OPTION_FLAG_NONE)",
       "AddTextOption(\"Decline commitment\", \"Postpone\", OPTION_FLAG_NONE)",
       "AddTextOption(\"Refuse commitment\", \"Cooldown\", OPTION_FLAG_NONE)",
       "manager.DebugEvaluateCommitmentOffer()",
@@ -2845,7 +2876,7 @@ class Verifier {
       "Int activeCount = ApplyGenericNeglectFlags()",
       "Int Function ApplyGenericNeglectFlags()",
       "Bool Function IsEligibleForNeglectSelection(PDV_DeityBase deity)",
-      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)",
+      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && GetActiveDeity() == PDV_Kyne)",
       "SyncNordPatronNeglectSpells()",
     ], this.phase16Gap.bind(this));
   }
@@ -2861,7 +2892,7 @@ class Verifier {
       "Float Property ORC_RATE_MULT_CITY = 0.75 AutoReadOnly",
       "Function RunDawnApplyDecay()",
       "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
-      "if GetPatronState() == PATRON_STATE_ACTIVE && deity == _activeDeity",
+      "if GetPatronState() == PATRON_STATE_ACTIVE && deity == GetActiveDeity()",
       "StorageUtil.GetIntValue(deityForm, \"PDV.LastDecayAppliedDay\") == currentDay",
       "deity.GetEffectiveDecayMultiplier()",
       "GetCurseGainMultiplier(deity)",
@@ -2974,7 +3005,6 @@ class Verifier {
       "Developer Options",
       "Survey Devotion",
       "Enable Developer Options on the Player page to view this page.",
-      "PDV.UI.DeveloperOptions",
     ], this.phase18Gap.bind(this));
   }
 
@@ -3001,6 +3031,13 @@ class Verifier {
       return;
     }
     this.checkObjectProperties("Phase 18 manager property", propertyMap(script), PHASE18_MANAGER_PROPERTIES);
+    const prismaDetail = this.recordDetails.get("PDV_PrismaPresenter");
+    const prismaScript = prismaDetail ? findScript(prismaDetail.fields || {}, "PDV_PrismaPresenter") : null;
+    if (!prismaScript) {
+      this.phase18Gap("Phase 18 Prisma property", "PDV_PrismaPresenter script readback is missing.", PDV_ESP);
+    } else {
+      this.checkObjectProperties("Phase 18 Prisma property", propertyMap(prismaScript), PHASE18_PRISMA_PROPERTIES);
+    }
   }
 
   checkPhase18SurveyEffectRecord() {
@@ -4289,7 +4326,6 @@ class Verifier {
       "Function ConsumeBretonPracticePointBudget(Int requestedPoints)",
       "PDV.Dunmer.ReclamationFocusCount",
       "PDV.Signal.DunmerTwilight.",
-      "PDV.Imperial.CivicServiceCount",
       "PDV.Nord.HircineArkayEdgeCount",
     ], this.phase20RaceCostingGap.bind(this));
 
@@ -4305,8 +4341,8 @@ class Verifier {
       "Event OnItemHarvested(Form akProduce)",
       "Event OnWeatherChange(Weather akOldWeather, Weather akNewWeather)",
       "Event OnQuestStageChange(Quest akQuest, Int aiNewStage)",
-      "Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind)",
-      "Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage)",
+      "Function RouteP2ImmersiveSource(Form sourceForm, String sourceKind, String parentLogicalEventId = \"\")",
+      "Function RouteP2ImmersiveQuestStage(Quest sourceQuest, Int newStage, String parentLogicalEventId = \"\")",
       "Function ShouldRouteP2Source(FormList sourceList, Form sourceForm, String routeKey, String sourceKind)",
       "Function ShouldRouteP2QuestStage(FormList sourceList, Quest sourceQuest, Int expectedFormId, Int approvedStage, String routeKey, Int newStage)",
       "Function MarkP2SourceRoute(Form sourceForm, String routeKey, String sourceKind)",
@@ -4330,7 +4366,7 @@ class Verifier {
   checkRestoreBoundaryRecoverySourceScaffold() {
     this.checkSourceContains("Restore boundary book notice source", "PDV__ManagerQuest", [
       "Bool Function IsP2BookNoticeReason(String reason)",
-      "return StringContainsToken(reason, \"po3_book\")",
+      "StringContainsToken(reason, \"po3_book\")",
     ], this.phase20RaceCostingGap.bind(this));
 
     this.checkSourceContains("Restore boundary startup confirm source", "PDV__ManagerQuest", [
@@ -4351,7 +4387,11 @@ class Verifier {
       "Function HandleOrcStrongholdPresence(Int holdId, String reason)",
       "Function HandleOrcBloodKinCrisis(String reason)",
       "Int Function GetOrcStrongholdHoldId(Location newLocation)",
-      "return StringContainsToken(reason, \"orc_bloodkin_crisis\") || StringContainsToken(reason, \"orc_cursed_tribe_resolved\") || StringContainsToken(reason, \"orc_major_gate\")",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceMatches("Restore boundary Orc organic source", "PDV__ManagerQuest", [
+      callNeedle("StringContainsToken", "reason, \"orc_bloodkin_crisis\")"),
+      callNeedle("StringContainsToken", "reason, \"orc_cursed_tribe_resolved\")"),
+      callNeedle("StringContainsToken", "reason, \"orc_major_gate\")"),
     ], this.phase20RaceCostingGap.bind(this));
     this.checkSourceContains("Restore boundary Orc organic router source", "PDV_ActionRouter", [
       "PDV_Manager.HandleOrcLocationChange(akNewLocation)",
@@ -4372,7 +4412,7 @@ class Verifier {
     ], this.phase20RaceCostingGap.bind(this));
 
     this.checkSourceContains("Restore boundary Breton Hidden Art notice source", "PDV__ManagerQuest", [
-      "ShowP2BookNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))",
+      "SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))",
       "String Function GetBretonHiddenArtNoticeTitle(String reason)",
       "String Function GetBretonHiddenArtNoticeText(String reason)",
     ], this.phase20RaceCostingGap.bind(this));
@@ -4384,19 +4424,20 @@ class Verifier {
     this.checkSourceContains("Restore boundary Argonian move-home source", "PDV__ManagerQuest", [
       "Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, String reason)",
       "StorageUtil.SetIntValue(None, \"PDV.ArgBed.CandidateFormID\", sleepCellId)",
-      "SetArgonianHome(playerRef, sleepCellId, today, reason)",
-      "Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int today, String reason)",
+      "SetArgonianHome(playerRef, sleepCellId, todayStamp, reason)",
+      "Function SetArgonianHome(Actor playerRef, Int sleepCellId, Int devotionalDayStamp, String reason)",
       "Function ClearArgonianAdaptation(Actor playerRef)",
       "StorageUtil.SetIntValue(None, \"PDV.Adapt.DueDay\", today + Utility.RandomInt(10, 14) + 1)",
     ], this.phase20RaceCostingGap.bind(this));
 
     this.checkSourceContains("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
       "String Function BuildJournalPayloadJson()",
-      "String pathInfo = GetOriginRaceLabel(GetPlayerOriginRaceIndex())",
-      "pathInfo = pathInfo + \" | \" + GetPlayerMcmModeLine()",
-      "j = j + \",\\\"survey\\\":\\\"\" + JsonSafeString(pathInfo) + \"\\\"\"",
+      "String pathInfo = BuildBookOfDaysPathInfo(originRace)",
       "String Function GetPlayerMcmModeLine()",
       "return GetRedguardSectLabel()",
+    ], this.phase20RaceCostingGap.bind(this));
+    this.checkSourceMatches("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
+      callNeedle("JsonSafeString", "pathInfo)"),
     ], this.phase20RaceCostingGap.bind(this));
     this.checkSourceNotContains("Restore boundary Book of Days payload source", "PDV__ManagerQuest", [
       "pathInfo = pathInfo + \" | \" + GetPlayerMcmSummaryLine()",
@@ -4409,7 +4450,7 @@ class Verifier {
       "StorageUtil.SetIntValue(None, \"PDV.Diegetic.Journal.Open\", 0)",
       "PDV_Manager.ClosePrismaJournal()",
       "PDV_Manager.SendPrismaJournalPayload(True)",
-      "_oidJournalHotkey = AddKeyMapOption(\"Open Book of Days\", currentJournalKey, OPTION_FLAG_NONE)",
+      "_oidJournalHotkey = AddKeyMapOption(\"Book of Days key\", currentJournalKey, OPTION_FLAG_NONE)",
     ], this.phase20RaceCostingGap.bind(this));
   }
 
@@ -6236,7 +6277,7 @@ class Verifier {
       "PDV_Magnus.SIGNAL_ANCESTOR_SPINE",
     ]);
     this.checkSourceContains("Nord spine location router source", "PDV_ActionRouter", [
-      "PDV_Manager.HandleNordLocationChange(akNewLocation)",
+      "PDV_Manager.OriginRuntime.HandleLocationChange(akNewLocation)",
     ]);
 
     const substrateRecord = this.recordsByEdid.get("PDV_Substrate_NordAncestor");
@@ -8201,16 +8242,25 @@ class Verifier {
     const props = propertyMap(script);
     this.checkObjectProperties("Manager property", props, MANAGER_PROPERTIES);
 
+    const ledgerDetail = this.recordDetails.get("PDV_DevotionLedger");
+    const ledgerScript = ledgerDetail ? findScript(ledgerDetail.fields || {}, "PDV_DevotionLedger") : null;
+    if (!ledgerScript) {
+      this.fail("Ledger script", "PDV_DevotionLedger script readback is missing.", PDV_ESP);
+    } else {
+      this.pass("Ledger script", "PDV_DevotionLedger script is attached to its module host.", PDV_ESP);
+      const ledgerProps = propertyMap(ledgerScript);
+      this.checkObjectProperties("Ledger property", ledgerProps, LEDGER_PROPERTIES);
+      if (this.recordsByEdid.has("PDV_GLO_PatronState")) {
+        this.checkObjectProperties("Ledger preflight property", ledgerProps, LEDGER_PREFLIGHT_PROPERTIES);
+      } else {
+        this.preflightGap("Ledger preflight property", "PDV_GLO_PatronState is script-ready but CK/global wiring is pending.", PDV_ESP);
+      }
+    }
+
     if (props.has("PDV_Faction_Hunted_Vigilant")) {
       this.fail("Retired manager property", "PDV_Faction_Hunted_Vigilant remains serialized in the manager VMAD after its Papyrus declaration was retired.", PDV_ESP);
     } else {
       this.pass("Retired manager property", "PDV_Faction_Hunted_Vigilant is absent from the manager VMAD.", PDV_ESP);
-    }
-
-    if (this.recordsByEdid.has("PDV_GLO_PatronState")) {
-      this.checkObjectProperties("Manager preflight property", props, MANAGER_PREFLIGHT_PROPERTIES);
-    } else {
-      this.preflightGap("Manager preflight property", "PDV_GLO_PatronState is script-ready but CK/global wiring is pending.", PDV_ESP);
     }
 
     const vmad = fields.VirtualMachineAdapter || {};
@@ -8921,7 +8971,7 @@ class Verifier {
     ], this.todo.bind(this));
 
     this.checkSourceContains("Generic faucet PO3 source", "PDV_PlayerEvents", [
-      "RouteGenericBookRead(akBook, firstRead)",
+      "RouteGenericBookRead(akBook, firstRead, logicalEventId)",
       "RouteGenericAction(EVT_HARVEST_INGREDIENT",
       "RouteGenericAction(EVT_ACCEPT_DAEDRIC_ARTIFACT",
       "RouteGenericAction(EVT_RAISE_UNDEAD",
@@ -9207,40 +9257,34 @@ class Verifier {
   // matrix path must carry the "../StorageUtilData/..." prefix. Without it the file silently never
   // loads -- no error, no log line -- and every reaction row inside it quietly stops firing.
   //
-  // 2026-08-07: this used to pin a single hardcoded second channel, QUEST_REACTION_MATRIX_FILE_ARR.
-  // That channel was replaced by a folder seam: PDV_PlayerEvents scans
-  // QUEST_REACTION_CHANNEL_FOLDER, registers every JSON it finds, and caches the paths in
-  // PDV.QR.ChannelFiles for the manager's resolver. Mod-specific rows now ship WITH their patch
-  // rather than inside core, which is why the ARR names are absent from the core matrix.
-  //
-  // The guard MOVES with the mechanism rather than dying with the constant: 39 channel files
-  // (~4.3 MB) ship in the ARR patch hub today, and all of them depend on that "../" resolving.
-  // Note the asymmetry -- the folder constant lives in PDV_PlayerEvents ONLY (the manager consumes
-  // the cached StringList instead), so asserting it in both scripts would fail immediately.
+  // V3 Slice 1C-B replaces V1 channel discovery with fixed core/official catalogs and one sorted
+  // extension folder owned by PDV_QuestReactionRuntime. Manager and PlayerEvents retain only the
+  // core path for shared stance/value/faucet policy; patch/extension data stays private to Runtime.
   checkQuestMatrixPapyrusUtilPaths() {
-    const expectedCore = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const unsafeCore = "String Property QUEST_REACTION_MATRIX_FILE = \"PlayerDevotion/PDV_QuestReactionMatrix\" AutoReadOnly";
-    const expectedChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"../StorageUtilData/PlayerDevotion/Channels\" AutoReadOnly";
-    const unsafeChannelFolder = "String Property QUEST_REACTION_CHANNEL_FOLDER = \"PlayerDevotion/Channels\" AutoReadOnly";
+    const expectedCoreConsumer = "String Property QUEST_REACTION_MATRIX_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2\" AutoReadOnly";
+    const expectedRuntimeCore = "String Property QUEST_REACTION_CORE_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionCore.v2\" AutoReadOnly";
+    const expectedRuntimePatches = "String Property QUEST_REACTION_PATCH_FILE = \"../StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2\" AutoReadOnly";
+    const expectedExtensionFolder = "String Property QUEST_REACTION_EXTENSION_FOLDER = \"../StorageUtilData/PlayerDevotion/QuestReactionExtensions\" AutoReadOnly";
+    const retiredV1 = "../StorageUtilData/PlayerDevotion/PDV_QuestReactionMatrix";
 
-    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [
-      expectedCore,
-      // The manager's half of the seam: it must still read the registered channel list, or every
-      // per-mod channel resolves to nothing while core keeps working and the loss stays invisible.
-      "PDV.QR.ChannelFiles",
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV__ManagerQuest", [expectedCoreConsumer]);
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [expectedCoreConsumer]);
+    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_QuestReactionRuntime", [
+      expectedRuntimeCore,
+      expectedRuntimePatches,
+      expectedExtensionFolder,
+      "Function RefreshCatalogSources()",
+      "SortCatalogNames(JsonUtil.JsonInFolder(QUEST_REACTION_EXTENSION_FOLDER))",
+      "PDV.V3.QR.CellCatalog.",
+      "PDV.V3.QR.SemanticCatalog.",
+      "PO3_Events_Alias.RegisterForQuestStage(_questStageReceiver, sourceQuest)",
     ]);
-    this.checkSourceContains("Quest matrix PapyrusUtil path", "PDV_PlayerEvents", [
-      expectedCore,
-      expectedChannelFolder,
-      "RegisterQuestReactionChannelFolder",
-    ]);
-    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [
-      unsafeCore,
-      unsafeChannelFolder,
-    ]);
-    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [
-      unsafeCore,
-      unsafeChannelFolder,
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV__ManagerQuest", [retiredV1, "QuestReactionPatches.v2", "QuestReactionExtensions"]);
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_PlayerEvents", [retiredV1, "QuestReactionPatches.v2", "QuestReactionExtensions"]);
+    this.checkSourceNotContains("Quest matrix unsafe PapyrusUtil path", "PDV_QuestReactionRuntime", [
+      retiredV1,
+      "QuestReaction/Channels",
+      "QuestStageAdapters",
     ]);
   }
 
@@ -9589,7 +9633,7 @@ class Verifier {
       "ShouldSuppressDuplicateShoutAttack()",
       "Function HandleTalosShrineDefiance(String reason)",
       "Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)",
-      "ApplyConcordatPressure(-15, \"talos_shrine_\" + reason)",
+      "HandleContextualSignal(\"hidden_talos_shrine\", \"talos_shrine_\" + reason)",
       "AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)",
     ]);
     this.checkSourceContains("Phase 7 source", "PDV_EventSignalActivator", [
@@ -9640,7 +9684,6 @@ class Verifier {
     ], this.phase9Gap.bind(this));
     this.checkSourceContains("Phase 9 source", "PDV__ManagerQuest", [
       "Function EnsureBosmerRuntimeWiring()",
-      "Function EnsureBosmerSetupChoice()",
       "Function ApplyBosmerInitialChoice(Int pathState, String reason)",
       "Function EnterBosmerOldContract(Bool isStartupChoice, String reason)",
       "Function ExitBosmerOldContract(Bool countLapse, String reason)",
@@ -9763,13 +9806,12 @@ class Verifier {
       "GlobalVariable Property PDV_GLO_KhajiitFocusedEmphasis Auto",
       "KHAJIIT_FOCUS_KHENARTHI = 1",
       "KHAJIIT_FOCUS_AZURAH = 2",
-      "KHAJIIT_FOCUS_THRESHOLD = 50.0",
+      "KHAJIIT_FOCUS_THRESHOLD = 25.0",
       "KHAJIIT_FOCUS_LEAD_REQUIRED = 15.0",
-      "Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason)",
+      "Function AdjustKhajiitFocusedEmphasis(Int focusValue, Float amount, String reason, Bool evaluateNow = True)",
       "Function EvaluateKhajiitFocusedEmphasis()",
       "Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)",
       "PDV_GLO_KhajiitFocusedEmphasis.SetValue(focusValue as Float)",
-      "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_AZURAH",
       "AdjustKhajiitFocusedEmphasis(KHAJIIT_FOCUS_KHENARTHI",
       "focus=",
     ], this.khajiitGap.bind(this));
@@ -9784,13 +9826,12 @@ class Verifier {
   checkCommitmentSourceContracts() {
     this.checkSourceContains("Commitment source", "PDV__ManagerQuest", [
       "Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly",
-      "Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 0.7 AutoReadOnly",
+      "Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 1.0 AutoReadOnly",
       "Function EvaluateKyneCommitmentOffer()",
       "HasRecentCommitmentSignalDays(PDV_Kyne, 2, 7)",
       "Function DebugAcceptPendingCommitment()",
       "Function DebugDeclinePendingCommitment()",
       "Function DebugRefusePendingCommitment()",
-      "StorageUtil.SetFloatValue(None, \"PDV.Commitment.LastCarryover\", carryAmount)",
       "return originRace == ORIGIN_KHAJIIT || originRace == ORIGIN_BOSMER",
     ], this.commitmentGap.bind(this));
     this.checkSourceContains("Commitment source", "PDV_MCM", [
@@ -9802,12 +9843,8 @@ class Verifier {
   }
 
   checkNeglectDecaySourceContracts() {
-    this.checkSourceContains("Neglect/decay source", "PDV__ManagerQuest", [
-      "Spell Property PDV_SPEL_Neglect_Kyne Auto",
-      "Spell Property PDV_SPEL_Neglect_Shor Auto",
-      "Spell Property PDV_SPEL_Neglect_Tsun Auto",
-      "Spell Property PDV_SPEL_Neglect_Stuhn Auto",
-      "Spell Property PDV_SPEL_Neglect_Talos Auto",
+    this.checkSourceContains("Neglect/decay all-race isolation", "PDV__ManagerQuest", [
+      "FormList Property PDV_FLST_OriginAdapters Auto",
       "Float Property NEGLECT_LAPSE_GRACE_DAYS = 3.0 AutoReadOnly",
       "Function RunDawnApplyDecay()",
       "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
@@ -9816,21 +9853,36 @@ class Verifier {
       "StorageUtil.SetFloatValue(None, \"PDV.Devotion.LastActTime\", Utility.GetCurrentGameTime())",
       "Function RunDawnApplySpellAndNeglectLayers()",
       "GetPatronState() != PATRON_STATE_ACTIVE",
-      "Bool nordBroadLapsed = IsBroadLaneLapsed() && GetPlayerOriginRaceIndex() == ORIGIN_NORD",
-      "SyncKyneNeglectSpell(nordBroadLapsed)",
-      "SyncNordPatronNeglectSpells()",
-      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && _activeDeity == PDV_Kyne)",
-      "Function SyncKyneNeglectSpell(Bool shouldBeActive)",
-      "playerRef.AddSpell(PDV_SPEL_Neglect_Kyne, False)",
-      "playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)",
-      "PDV.Neglect.KyneSpellActive",
+      "Function SyncFirstTierRaceRewardRuntime()",
+      "while adapterIndex < PDV_FLST_OriginAdapters.GetSize()",
+      "PDV_OriginRuntimeBase laneAdapter = PDV_FLST_OriginAdapters.GetAt(adapterIndex) as PDV_OriginRuntimeBase",
+      "laneAdapter.SyncRaceRewards()",
+      "laneAdapter.SyncNeglectSpells()",
       "Bool Function IsPatronLapsed(PDV_DeityBase deity)",
       "Bool Function IsBroadLaneLapsed()",
       "Function SyncOnePatronNeglectSpell(Actor playerRef, Spell neglectSpell, Bool shouldBeActive)",
       "playerRef.AddSpell(neglectSpell, False)",
       "playerRef.RemoveSpell(neglectSpell)",
-      "Function SyncNordPatronNeglectSpells()",
       "String Function GetNeglectSummary()",
+    ], this.neglectDecayGap.bind(this));
+    // Kyne remains the oldest concrete regression fixture. These checks prove its
+    // packet still obeys the all-race isolation seam above; they do not define the
+    // scope of the neglect invariant.
+    this.checkSourceContains("Neglect/decay Kyne regression fixture", "PDV__ManagerQuest", [
+      "Spell Property PDV_SPEL_Neglect_Kyne Auto",
+      "Spell Property PDV_SPEL_Neglect_Shor Auto",
+      "Spell Property PDV_SPEL_Neglect_Tsun Auto",
+      "Spell Property PDV_SPEL_Neglect_Stuhn Auto",
+      "Spell Property PDV_SPEL_Neglect_Talos Auto",
+      "Bool nordBroadLapsed = IsBroadLaneLapsed() && GetPlayerOriginRaceIndex() == ORIGIN_NORD",
+      "SyncKyneNeglectSpell(nordBroadLapsed)",
+      "SyncNordPatronNeglectSpells()",
+      "SyncKyneNeglectSpell(IsNeglectFlagActive(PDV_Kyne) && GetActiveDeity() == PDV_Kyne)",
+      "Function SyncKyneNeglectSpell(Bool shouldBeActive)",
+      "playerRef.AddSpell(PDV_SPEL_Neglect_Kyne, False)",
+      "playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)",
+      "PDV.Neglect.KyneSpellActive",
+      "Function SyncNordPatronNeglectSpells()",
     ], this.neglectDecayGap.bind(this));
   }
 
@@ -9865,9 +9917,29 @@ class Verifier {
     }
 
     const text = fs.readFileSync(source, "utf8");
+    // Resolver-aware fallback: as functions move out of PDV__ManagerQuest.psc into
+    // deep modules, a needle pinned to the manager may now live in a decomposition
+    // module (or pick up a Manager./LedgerRuntime. qualifier). If the exact check on
+    // the named script fails, retry across the decomposition family with qualifier-
+    // stripped matching so the needle tracks the extraction instead of being hand-
+    // patched per move. Additive: the exact check runs first, so a currently-passing
+    // needle can never be turned into a failure by this fallback.
+    let _familyText = null;
+    const familyContains = (snippet) => {
+      if (_familyText === null) {
+        const fam = decompositionFamily(PROJECT_ROOT);
+        _familyText = stripQualifiers(text);
+        if (fam.includes(scriptName)) {
+          _familyText += "\n" + familySourceText(PROJECT_ROOT, DEVOTION_SOURCE);
+        }
+      }
+      return _familyText.length > 0 && _familyText.includes(stripQualifiers(snippet));
+    };
     for (const snippet of snippets) {
       if (text.includes(snippet)) {
         this.pass(checkName, `${scriptName}.psc contains ${snippet}.`, source);
+      } else if (familyContains(snippet)) {
+        this.pass(checkName, `${scriptName} decomposition family contains ${snippet} (resolver-aware).`, source);
       } else {
         reportGap(checkName, `${scriptName}.psc is missing ${snippet}.`, source);
       }
@@ -9888,6 +9960,24 @@ class Verifier {
         reportGap(checkName, `${scriptName}.psc still contains ${snippet}.`, source);
       } else {
         this.pass(checkName, `${scriptName}.psc does not contain ${snippet}.`, source);
+      }
+    }
+  }
+
+  checkSourceMatches(checkName, scriptName, entries, gapFn = null) {
+    const reportGap = gapFn || this.fail.bind(this);
+    const source = path.join(DEVOTION_SOURCE, `${scriptName}.psc`);
+    if (!exists(source)) {
+      reportGap(checkName, `${scriptName}.psc is missing.`, source);
+      return;
+    }
+
+    const text = fs.readFileSync(source, "utf8");
+    for (const { needle, pattern } of entries) {
+      if (pattern.test(text)) {
+        this.pass(checkName, `${scriptName}.psc contains ${needle}.`, source);
+      } else {
+        reportGap(checkName, `${scriptName}.psc is missing ${needle}.`, source);
       }
     }
   }
@@ -9930,8 +10020,6 @@ class Verifier {
     ], gap);
     this.checkSourceContains("Experience Mode MCM source", "PDV_MCM", [
       "PDV_ModePreset Property PDV_ModePresetRef Auto",
-      "String Property PAGE_MODE = \"Experience Mode\" AutoReadOnly",
-      "Function BuildModePage()",
       "AddTextOption(\"Path\", GetExperienceModeLabel(), OPTION_FLAG_DISABLED)",
       "Function ToggleExperienceMode()",
     ], gap);
@@ -9982,7 +10070,7 @@ class Verifier {
       return;
     }
 
-    const sourceText = fs.readFileSync(managerSource, "utf8");
+    const sourceText = familySourceText(PROJECT_ROOT, DEVOTION_SOURCE);
     const deityGenerated = buildLikesDislikesFunction(DEITY_LIKES_DISLIKES_CSV, {
       functionName: "LoadRowsForDeity",
       argumentType: "PDV_DeityBase",
@@ -10233,7 +10321,7 @@ class Verifier {
     for (const [source, label, snippet] of checks) {
       if (!source.exists) {
         this.fail(checkName, `${source.scriptName}.psc is missing for ${label}.`, source.path);
-      } else if (source.text.includes(snippet)) {
+      } else if (stripQualifiers(source.text).includes(stripQualifiers(snippet))) {
         this.pass(checkName, label, source.path);
       } else {
         this.fail(checkName, `${source.scriptName}.psc is missing ${snippet}.`, source.path);

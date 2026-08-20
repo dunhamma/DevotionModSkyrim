@@ -132,8 +132,8 @@ Function EnsureOriginInventoryTokens()
         return
     endIf
 
-    PDV_Manager.EnsureDunmerAncestralUrn()
-    PDV_Manager.EnsureArgonianHistSapToken()
+    PDV_Manager.OriginRuntime.EnsureDunmerAncestralUrn()
+    PDV_Manager.OriginRuntime.EnsureArgonianHistSapToken()
 EndFunction
 
 Bool Function ShouldDeferProvisionalNordCapture(Int raceIndex, Actor playerActor)
@@ -469,7 +469,7 @@ Function SeedDeity(PDV_DeityBase deity, Float startPiety, Bool isRecapture = fal
     StorageUtil.SetFloatValue(deityForm, "PDV.LastTierChange", 0.0)
 
     if PDV_Manager
-        PDV_Manager.RecomputeTier(deity, False)
+        PDV_Manager.LedgerRuntime.RecomputeTier(deity, False)
     endIf
 
     Trace(1, deity.DeityName + " seeded to " + startPiety + " piety.")
@@ -515,3 +515,5 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] Origin: " + traceText)
     endIf
 EndFunction
+
+

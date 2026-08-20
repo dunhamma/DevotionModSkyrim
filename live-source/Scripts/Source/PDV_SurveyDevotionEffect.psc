@@ -32,7 +32,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
     endIf
 
     Trace(1, "Survey readout displayed.")
-    Debug.MessageBox(PDV_Manager.GetSurveyDevotionText())
+    Debug.MessageBox(PDV_Manager.Prisma.GetSurveyDevotionText())
 EndEvent
 
 Actor Function GetPlayerActor()

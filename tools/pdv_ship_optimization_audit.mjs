@@ -15,6 +15,12 @@ const MOD_ROOT = process.env.PDV_MOD_PATH || "D:\\Wabbajack\\modlists\\Anvil\\mo
 const SOURCE_ROOT = path.join(MOD_ROOT, "Scripts", "Source");
 const PEX_ROOT = path.join(MOD_ROOT, "Scripts");
 const CANDIDATE_SOURCE_ROOT = path.join(REPO_ROOT, "live-source", "Scripts", "Source");
+const RELEASE_MANIFEST = path.join(
+  REPO_ROOT,
+  "references",
+  "authoring",
+  "PDV_ReleasePayload.manifest.json",
+);
 const NATIVE_ROOT = path.join(REPO_ROOT, "native", "DevotionPrismaBridge");
 const PRISMA_ROOT = path.join(NATIVE_ROOT, "mod", "PrismaUI", "views", "Devotion");
 const DEFAULT_LOG =
@@ -82,6 +88,21 @@ function scriptNames() {
     .sort();
 }
 
+function releaseManifest() {
+  if (!fs.existsSync(RELEASE_MANIFEST)) fail(`Release manifest is missing: ${RELEASE_MANIFEST}`);
+  const manifest = JSON.parse(fs.readFileSync(RELEASE_MANIFEST, "utf8"));
+  if (!Array.isArray(manifest.sourceScripts) || manifest.sourceScripts.length === 0) {
+    fail("Release manifest sourceScripts must be a non-empty array.");
+  }
+  if (manifest.scriptPairCount !== manifest.sourceScripts.length) {
+    fail(
+      `Release manifest scriptPairCount ${manifest.scriptPairCount} does not match ` +
+        `${manifest.sourceScripts.length} sourceScripts.`,
+    );
+  }
+  return manifest;
+}
+
 function eventNames(source) {
   return [...source.matchAll(/^\s*Event\s+([A-Za-z0-9_]+)/gim)].map((match) => match[1]);
 }
@@ -107,6 +128,16 @@ function classifyScript(name, source) {
     if (!bardGuard) return "broken";
     if (!explicitScheduler) return "suboptimal";
     return "clean";
+  }
+  if (name === "PDV_ContextualFavorRuntime") {
+    const snapshotsActiveState =
+      source.includes("IsActiveFavorExpired(activeLane, activeFamily)") &&
+      source.includes("IsActiveFavorStillEligible(activeLane, activeFamily)") &&
+      source.includes("EnsureActiveFavorApplied(activeLane, activeFamily)");
+    const changeOnlyDebugMirror =
+      source.includes("_lastKyneFavorDebugActiveCount") &&
+      source.includes("if activeCount == _lastKyneFavorDebugActiveCount");
+    return snapshotsActiveState && changeOnlyDebugMirror ? "clean" : "suboptimal";
   }
   if (name === "PDV__ManagerQuest") return "suboptimal";
   return "clean";
@@ -197,10 +228,10 @@ function scanScript(name) {
   };
 }
 
-function knownFindings(scripts) {
+function knownFindings(scripts, manifest) {
   const playerEvents = scripts.find((script) => script.script === "PDV_PlayerEvents");
   const manager = scripts.find((script) => script.script === "PDV__ManagerQuest");
-  const worker = scripts.find((script) => script.script === "PDV_QuestReactionWorker");
+  const questReactionRuntime = scripts.find((script) => script.script === "PDV_QuestReactionRuntime");
   const candidatePlayerEvents = fs.readFileSync(
     path.join(CANDIDATE_SOURCE_ROOT, "PDV_PlayerEvents.psc"),
     "utf8",
@@ -209,11 +240,64 @@ function knownFindings(scripts) {
     path.join(CANDIDATE_SOURCE_ROOT, "PDV__ManagerQuest.psc"),
     "utf8",
   );
+  const candidateFavor = fs.readFileSync(
+    path.join(CANDIDATE_SOURCE_ROOT, "PDV_ContextualFavorRuntime.psc"),
+    "utf8",
+  );
+  const candidateDaedric = fs.readFileSync(
+    path.join(CANDIDATE_SOURCE_ROOT, "PDV_DaedricRuntime.psc"),
+    "utf8",
+  );
+  const candidateOrigin = fs.readFileSync(
+    path.join(CANDIDATE_SOURCE_ROOT, "PDV_OriginRuntimeBase.psc"),
+    "utf8",
+  );
+  const candidateLedger = fs.readFileSync(
+    path.join(CANDIDATE_SOURCE_ROOT, "PDV_DevotionLedger.psc"),
+    "utf8",
+  );
   const bardGuarded =
     candidatePlayerEvents.includes('Game.IsPluginInstalled("BecomeABard.esp")') &&
     candidatePlayerEvents.includes('Game.IsPluginInstalled("SkyrimsGotTalent-Bards.esp")');
   const explicitScheduler = candidatePlayerEvents.includes("Function ArmEarliestDeadline");
   const managerInstrumented = candidateManager.includes("[PDV] OPT_PROFILE manager60");
+  const favorSnapshotOptimized =
+    candidateFavor.includes("IsActiveFavorExpired(activeLane, activeFamily)") &&
+    candidateFavor.includes("IsActiveFavorStillEligible(activeLane, activeFamily)") &&
+    candidateFavor.includes("EnsureActiveFavorApplied(activeLane, activeFamily)") &&
+    candidateFavor.includes('ClearActiveFavor("expired")\n        activeLane = FAVOR_LANE_NONE') &&
+    candidateFavor.includes('ClearActiveFavor("no_longer_eligible")\n            activeLane = FAVOR_LANE_NONE') &&
+    candidateFavor.includes("if activeCount == _lastKyneFavorDebugActiveCount");
+  const daedricBatchOptimized =
+    candidateManager.includes("DaedricRuntime.ProcessPendingDaedricWork()") &&
+    !candidateManager.includes("DaedricRuntime.ProcessPendingDaedricActivation()") &&
+    !candidateManager.includes("DaedricRuntime.ProcessPendingDaedricLapse()") &&
+    !candidateManager.includes("DaedricRuntime.ProcessPendingDaedricPrePactNotices()") &&
+    !candidateManager.includes("DaedricRuntime.DrainHircineRenunciationJournal()") &&
+    !candidateManager.includes("DaedricRuntime.ProcessDelayedHircineResiduePrismaToasts()") &&
+    candidateDaedric.includes("Function ProcessPendingDaedricWork()") &&
+    candidateDaedric.includes("ProcessPendingDaedricActivation()\n    ProcessPendingDaedricLapse()\n    ProcessPendingDaedricPrePactNotices()\n    DrainHircineRenunciationJournal()\n    ProcessDelayedHircineResiduePrismaToasts()");
+  const contextBatchOptimized =
+    candidateManager.includes("OriginRuntime.ProcessPeriodicContextProbes()") &&
+    candidateManager.includes("LedgerRuntime.ProcessPeriodicContentProbes()") &&
+    !candidateManager.includes("OriginRuntime.TryArgonianEldergleamInterior()") &&
+    !candidateManager.includes("OriginRuntime.TryArgonianNearWaterMaintenance()") &&
+    !candidateManager.includes("OriginRuntime.TryBosmerEldergleamInterior()") &&
+    !candidateManager.includes("OriginRuntime.TryBosmerGildergreenProximity()") &&
+    !candidateManager.includes("OriginRuntime.TryBosmerYffreTreeStoneProximity()") &&
+    !candidateManager.includes("LedgerRuntime.TryCCSaintsRecognition()") &&
+    !candidateManager.includes("LedgerRuntime.TryCCFishingDevotion()") &&
+    candidateOrigin.includes("Function ProcessPeriodicContextProbes()") &&
+    candidateLedger.includes("Function ProcessPeriodicContentProbes()");
+  const startupChoiceCacheOptimized =
+    candidateManager.includes("Bool _unifiedStartupChoiceCacheInitialized = False") &&
+    candidateManager.includes("Bool _unifiedStartupChoiceComplete = False") &&
+    candidateManager.includes("if _unifiedStartupChoiceComplete") &&
+    candidateManager.includes("if !_unifiedStartupChoiceCacheInitialized") &&
+    candidateManager.includes(
+      '_unifiedStartupChoiceComplete = StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") == 1',
+    ) &&
+    [...candidateManager.matchAll(/_unifiedStartupChoiceComplete = True/g)].length === 3;
   return [
     {
       id: "PDV-OPT-PAP-001",
@@ -268,17 +352,87 @@ function knownFindings(scripts) {
     {
       id: "PDV-OPT-PAP-004",
       classification: "clean",
-      scope: "PDV_QuestReactionWorker bounded queue",
+      scope: "PDV_QuestReactionRuntime bounded queue",
       trigger: "queued quest-reaction jobs",
       frequency: "0.1-second worker only while runnable work is pending",
-      externalCallCost: `${worker?.externalCallCost.estimatedStaticCallSites ?? 0} static cross/native-style call sites`,
-      evidence: "Static performance audit passes; no current runtime FIFO markers exist in the inspected log.",
+      externalCallCost: `${questReactionRuntime?.externalCallCost.estimatedStaticCallSites ?? 0} static cross/native-style call sites`,
+      evidence: "The V3 static architecture audit and deterministic characterization pass; fresh-game FIFO markers remain open.",
       fix:
-        "Keep the bounded worker. Compact no-op/unreachable cells at ingress only if controlled runtime jobs exceed two seconds or delivery is incomplete.",
-      releaseLane: "retain in 1.0.4; redesign only on runtime failure",
+        "Keep the bounded runtime and its single scheduler. Revisit native implementation only after measured Papyrus failure.",
+      releaseLane: "V3 Slice 1B; fresh-game runtime proof open",
       requiredProof:
         "Four controlled jobs complete FIFO with matching toast/Book entries, no toast later than two seconds, then organic MQ106 routing.",
-      status: "static clean; runtime proof open",
+      status: "V3 runtime extracted; fresh-game proof open",
+    },
+    {
+      id: "PDV-OPT-PAP-005",
+      classification: favorSnapshotOptimized ? "clean" : "suboptimal",
+      scope: "PDV_ContextualFavorRuntime permanent one-second reconciliation",
+      trigger: "manager OnUpdate calls UpdateContextualFavorRuntime",
+      frequency: "once per second while the manager is running",
+      externalCallCost:
+        "active lane/family/expiry StorageUtil reads, eligibility calls, spell reconciliation, and a debug-mirror StorageUtil write",
+      evidence:
+        "The inactive steady state previously performed four targeted StorageUtil operations per tick " +
+        "(three lane reads plus one unconditional mirror write); the snapshot/change-only form performs one, a 75% reduction.",
+      fix:
+        "Snapshot active lane/family once, thread the snapshot through eligibility/spell helpers, and write the debug mirror only when its derived value changes.",
+      releaseLane: "2.0 post-module optimization",
+      requiredProof:
+        "Clean compile and static contract gate now; deterministic idle/active profiler comparison remains a separate runtime bucket.",
+      status: favorSnapshotOptimized
+        ? "implemented; static reduction proven; runtime profiler comparison open"
+        : "implementation pending",
+    },
+    {
+      id: "PDV-OPT-PAP-006",
+      classification: daedricBatchOptimized ? "clean" : "suboptimal",
+      scope: "manager-to-DAEDRIC permanent pending-work fan-out",
+      trigger: "manager OnUpdate pending-work drain",
+      frequency: "once per second while the manager is running",
+      externalCallCost: "five manager-to-module calls before each set of early-outs",
+      evidence:
+        "The DAEDRIC-owned batch entry point preserves the five-call order and reduces manager cross-script calls from five to one (80%).",
+      fix: "Drain the five existing functions through ProcessPendingDaedricWork.",
+      releaseLane: "2.0 post-module optimization",
+      requiredProof:
+        "Source-order contract, clean compile, module audit, and deterministic active Daedric presentation regression.",
+      status: daedricBatchOptimized
+        ? "implemented; static reduction proven; runtime presentation proof open"
+        : "implementation pending",
+    },
+    {
+      id: "PDV-OPT-PAP-007",
+      classification: contextBatchOptimized ? "clean" : "suboptimal",
+      scope: "manager-to-ORIGIN/LEDGER three-second context-probe fan-out",
+      trigger: "manager every-third-tick context probe block",
+      frequency: "once every three seconds while the manager is running",
+      externalCallCost: "seven manager-to-module calls before origin/content early-outs",
+      evidence:
+        "ORIGIN and LEDGER batch entry points preserve probe order and reduce manager cross-script calls from seven to two (71%).",
+      fix: "Let ORIGIN own its five probes and LEDGER own its two content probes.",
+      releaseLane: "2.0 post-module optimization",
+      requiredProof:
+        "Source-order contract, clean compile, module audit, and deterministic location/content-probe regression.",
+      status: contextBatchOptimized
+        ? "implemented; static reduction proven; runtime location proof open"
+        : "implementation pending",
+    },
+    {
+      id: "PDV-OPT-PAP-008",
+      classification: startupChoiceCacheOptimized ? "clean" : "suboptimal",
+      scope: "completed unified-startup check on the permanent manager lane",
+      trigger: "EnsureUnifiedStartupChoice from manager OnUpdate",
+      frequency: "once per second after startup as well as before it",
+      externalCallCost: "one StorageUtil read per tick after the one-shot choice is permanently complete",
+      evidence:
+        "Persistent authority is now reconciled once, all three completion paths set the script cache, and the completed steady state performs zero StorageUtil calls (100% reduction).",
+      fix: "Cache the irreversible completion state after one persistent read per load/script update.",
+      releaseLane: "2.0 post-module optimization",
+      requiredProof: "Clean compile plus fresh-start and already-complete load regression.",
+      status: startupChoiceCacheOptimized
+        ? "implemented; static reduction proven; fresh-start/load proof open"
+        : "implementation pending",
     },
     {
       id: "PDV-OPT-PKG-001",
@@ -287,7 +441,9 @@ function knownFindings(scripts) {
       trigger: "release preflight/package/verify",
       frequency: "every release candidate",
       externalCallCost: "filesystem hashes, timestamps, archive reopen, ANAM checker, and hash-bound houseCARL proof",
-      evidence: "Exact 233-entry manifest and 100 PSC/PEX pair gate are implemented.",
+      evidence:
+        `Exact ${manifest.expectedEntryCount}-entry manifest and ` +
+        `${manifest.scriptPairCount} PSC/PEX pair gate are implemented.`,
       fix: "Fail on missing or unexpected payload entries and any stale compiled/native/UI dependency.",
       releaseLane: "1.0.3 tooling",
       requiredProof: "Preflight passes, archive reopens, exact manifest comparison passes, checksum published.",
@@ -301,7 +457,7 @@ function knownFindings(scripts) {
       frequency: "record/load dependent",
       externalCallCost: "not a performance cost by itself; unbound object properties can silently no-op",
       evidence:
-        "Direct houseCARL validation scanned 183 scripted records: 552 unbound Auto properties, 0 bound-but-null, 0 unverifiable attachments.",
+        "VMAD ownership is validated by the dedicated current-source/readback gate; this optimization inventory does not infer binding correctness from historical counts.",
       fix:
         "Triage each unbound property as intentionally runtime-filled/inherited/optional or defective. Do not mass-bind, remove scripts, or reduce VMAD in 1.0.x.",
       releaseLane: "audit now; verified defects in 1.0.4; structural retirement in 1.1",
@@ -440,7 +596,8 @@ function candidateSourceEvidence(names) {
     sourceRoot: CANDIDATE_SOURCE_ROOT,
     changedScriptCount: changed.length,
     changedScripts: changed,
-    deployment: "not copied into the live 1.0.3 smoke mod",
+    deployment:
+      "comparison against tracked candidate source; changed entries are live/repo drift, not a runtime-proof claim",
   };
 }
 
@@ -552,8 +709,18 @@ function markdown(ledger) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const scripts = scriptNames().map(scanScript);
-if (scripts.length !== 99) fail(`Expected 99 live PDV-prefixed scripts, found ${scripts.length}.`);
+const manifest = releaseManifest();
+const expectedPdvScripts = manifest.sourceScripts.filter((name) => /^PDV_/i.test(name)).sort();
+const actualPdvScripts = scriptNames();
+const missingPdvScripts = expectedPdvScripts.filter((name) => !actualPdvScripts.includes(name));
+const unexpectedPdvScripts = actualPdvScripts.filter((name) => !expectedPdvScripts.includes(name));
+if (missingPdvScripts.length || unexpectedPdvScripts.length) {
+  fail(
+    `Live PDV source inventory differs from the release manifest; ` +
+      `missing=[${missingPdvScripts.join(", ")}], unexpected=[${unexpectedPdvScripts.join(", ")}].`,
+  );
+}
+const scripts = actualPdvScripts.map(scanScript);
 const stale = scripts.filter((script) => !script.artifact.pex.fresh);
 const ledger = {
   schemaVersion: 1,
@@ -562,18 +729,23 @@ const ledger = {
     "1.0.3": "release tooling and evidence only while smoke packet is open",
     "1.0.4": "low-risk, save-compatible runtime optimizations",
     "1.1": "script removal, decomposition, VMAD reduction, and migration-sensitive work",
+    "2.0": "post-module extraction integration, optimization, and proof-bucket closure",
   },
   summary: {
     scriptCount: scripts.length,
     staleScriptPairCount: stale.length,
-    sourceAvailabilityPromise: "all 100 PSC files (99 PDV-prefixed plus TempleBlessingScript) remain in the player archive",
+    sourceAvailabilityPromise:
+      `all ${manifest.scriptPairCount} PSC files ` +
+      `(${expectedPdvScripts.length} PDV-prefixed plus ${
+        manifest.scriptPairCount - expectedPdvScripts.length
+      } non-PDV source) remain in the player archive`,
   },
   archive: archiveEvidence(args.archive),
   candidate: candidateSourceEvidence(scripts.map((script) => script.script)),
   log: logEvidence(args.log),
   native: nativeEvidence(),
   ui: uiEvidence(),
-  findings: knownFindings(scripts),
+  findings: knownFindings(scripts, manifest),
   scripts,
   proofDebt: [
     "Controlled ten-minute idle PapyrusProfiler or stack-profile call counts.",
@@ -585,6 +757,21 @@ const ledger = {
     "Full save/load, MCM, shrine, piety, Book of Days, Prisma, and uninstall-preparation regression.",
   ],
 };
+
+const acceptedOptimizationRegressions = ledger.findings.filter(
+  (finding) =>
+    ["PDV-OPT-PAP-005", "PDV-OPT-PAP-006", "PDV-OPT-PAP-007", "PDV-OPT-PAP-008"].includes(
+      finding.id,
+    ) &&
+    finding.classification !== "clean",
+);
+if (acceptedOptimizationRegressions.length) {
+  fail(
+    `Accepted V3 optimization contract regressed: ${acceptedOptimizationRegressions
+      .map((finding) => finding.id)
+      .join(", ")}.`,
+  );
+}
 
 if (args.write) {
   writeTextWithEol(LEDGER_JSON, `${JSON.stringify(ledger, null, 2)}\n`, "lf");

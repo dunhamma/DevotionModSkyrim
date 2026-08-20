@@ -61,13 +61,7 @@
         "tier2": { "name": "The Divines' Regard - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0, "effectName": "Poison Resistance" }, { "actorValue": "DiseaseResist", "magnitude": 10.0, "effectName": "Disease Resistance" }] },
         "tier3": null
       },
-      "rejectedInputs": ["generic civic standing", "generic sleep", "locked Talos piety", "civic service count"],
-      "migration": {
-        "versionKey": "PDV.BroadPantheon.Version",
-        "source": "PDV.Imperial.CivicServiceCount",
-        "formula": "clamp(oldCount * 50 / 6, 0, 50)",
-        "afterMigration": "Old count is frozen as telemetry and never gates rewards."
-      }
+      "rejectedInputs": ["generic civic standing", "generic sleep", "locked Talos piety", "civic service count"]
     },
     {
       "id": "NordOldWays",
@@ -78,12 +72,6 @@
         "tier1": { "name": "Old Ways - Observant", "effects": "Preserve the shipped Stamina effect packet; child MGEF FULL is Fortify Stamina." },
         "tier2": { "name": "Old Ways - Faithful", "effects": "Preserve the shipped Stamina plus Frost Resistance effect packet." },
         "tier3": null
-      },
-      "migration": {
-        "versionKey": "PDV.BroadPantheon.Version",
-        "source": "existing Old Ways broad count",
-        "formula": "clamp(oldCount * 50 / 6, 0, 50)",
-        "afterMigration": "Old count is frozen as telemetry and never gates rewards."
       }
     },
     {
@@ -96,12 +84,6 @@
         "tier2": { "name": "Faith of the Holds - Faithful", "effects": [{ "actorValue": "PoisonResist", "magnitude": 10.0, "effectName": "Poison Resistance" }, { "actorValue": "DiseaseResist", "magnitude": 10.0, "effectName": "Disease Resistance" }] },
         "tier3": null,
         "recordPolicy": "Use distinct Nord records; never reuse the Imperial SPEL or MGEF records."
-      },
-      "migration": {
-        "versionKey": "PDV.BroadPantheon.Version",
-        "source": "highest eligible Nine Divines deity piety",
-        "formula": "clamp(maxEligibleDeityPiety, 0, 50)",
-        "neverSumGods": true
       }
     }
   ],

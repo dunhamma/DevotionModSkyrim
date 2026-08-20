@@ -17,6 +17,7 @@
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -56,7 +57,7 @@ function main() {
   const manifest = JSON.parse(fs.readFileSync(MANIFEST_PATH, "utf8").replace(/^\uFEFF/, ""));
   const playerEventsText = fs.readFileSync(PLAYER_EVENTS_PATH, "utf8");
   const eventBusText = fs.readFileSync(EVENT_BUS_PATH, "utf8");
-  const managerText = fs.readFileSync(MANAGER_PATH, "utf8");
+  const managerText = familySourceText(ROOT, SOURCE_DIR);
 
   const eventBusFunctions = buildFunctionMap(eventBusText);
   const managerFunctions = buildFunctionMap(managerText);
@@ -625,7 +626,10 @@ function collectRouteHandlers(route, eventBusFunctions, seen = new Set()) {
   const body = eventBusFunctions.get(route);
   if (!body) return [];
 
-  const handlers = [...body.matchAll(/\bPDV_Manager\.(Handle[A-Za-z0-9_]+)\s*\(/g)].map((match) => match[1]);
+  // Qualifier-agnostic hop: a handler extracted into a 2.0 deep module is now called
+  // as PDV_Manager.<Module>.HandleX( instead of PDV_Manager.HandleX(. Still an
+  // assertion that the route calls a manager-family Handle*, just not pinned to a path.
+  const handlers = [...body.matchAll(/\bPDV_Manager\.(?:[A-Za-z_]\w*\.)*(Handle[A-Za-z0-9_]+)\s*\(/g)].map((match) => match[1]);
   for (const match of body.matchAll(/\b(Route[A-Za-z0-9_]+)\s*\(/g)) {
     const nextRoute = match[1];
     if (nextRoute !== route && eventBusFunctions.has(nextRoute)) {
@@ -787,7 +791,10 @@ function evaluateCuratedSignalParity(managerText) {
   const files = fs.readdirSync(SOURCE_DIR).filter((f) => /\.psc$/i.test(f));
   const refs = [];
   const byIndex = [];
-  const awardRe = /\bAwardCuratedSignal(?:Scaled)?\s*\(\s*(PDV_[A-Za-z0-9_]+)\s*,\s*(PDV_[A-Za-z0-9_]+)\.(SIGNAL_[A-Za-z0-9_]+)/g;
+  // Qualifier-agnostic: a dispatch that moved into a 2.0 deep module calls
+  // Manager.PDV_X / Manager.LedgerRuntime.PDV_X where it used to call PDV_X.
+  // Same assertion; it just stops pinning the routing path.
+  const awardRe = /\bAwardCuratedSignal(?:Scaled)?\s*\(\s*(?:[A-Za-z_]\w*\.)*(PDV_[A-Za-z0-9_]+)\s*,\s*(?:[A-Za-z_]\w*\.)*(PDV_[A-Za-z0-9_]+)\.(SIGNAL_[A-Za-z0-9_]+)/g;
   const byIndexRe = /\bAwardCuratedSignalByIndex\s*\(/g;
   for (const file of files) {
     const text = fs.readFileSync(`${SOURCE_DIR}/${file}`, "utf8");
@@ -910,7 +917,10 @@ function evaluateCuratedSignalDispatchCoverage() {
   //    is exactly what let completeness_audit mark BLOOD_KIN as "sent". AwardCuratedSignalByIndex
   //    is dynamic/debug seeding and deliberately does NOT count as coverage.
   const allFiles = fs.readdirSync(SOURCE_DIR).filter((f) => /\.psc$/i.test(f));
-  const awardRe = /\bAwardCuratedSignal(?:Scaled)?\s*\(\s*(PDV_[A-Za-z0-9_]+)\s*,\s*(PDV_[A-Za-z0-9_]+)\.(SIGNAL_[A-Za-z0-9_]+)/g;
+  // Qualifier-agnostic: a dispatch that moved into a 2.0 deep module calls
+  // Manager.PDV_X / Manager.LedgerRuntime.PDV_X where it used to call PDV_X.
+  // Same assertion; it just stops pinning the routing path.
+  const awardRe = /\bAwardCuratedSignal(?:Scaled)?\s*\(\s*(?:[A-Za-z_]\w*\.)*(PDV_[A-Za-z0-9_]+)\s*,\s*(?:[A-Za-z_]\w*\.)*(PDV_[A-Za-z0-9_]+)\.(SIGNAL_[A-Za-z0-9_]+)/g;
   const DISPLAY_FNS = /^(HumanizeCuratedSignalReason|CuratedSignalDriverReason)$/;
   const dispatched = new Set();
   for (const file of allFiles) {
@@ -1013,7 +1023,7 @@ function evaluateEventEmissionCoverage() {
       if (Number.isFinite(id) && id > 0) dataConsumedIds.add(id);
     }
   }
-  const managerLive = stripPapyrusComments(fs.readFileSync(MANAGER_PATH, "utf8"));
+  const managerLive = stripPapyrusComments(familySourceText(ROOT, SOURCE_DIR));
   for (const m of managerLive.matchAll(/\bWriteP?LD\s*\(\s*[A-Za-z_][A-Za-z0-9_]*\s*,\s*(\d+)\b/g)) {
     dataConsumedIds.add(Number(m[1]));
   }
@@ -1107,7 +1117,10 @@ function evaluateRouteReachability() {
   for (const m of (liveByFile.get("PDV_EventBus.psc") || "").matchAll(/^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+(Route[A-Za-z0-9_]+)\s*\(/gim)) {
     targets.push({ name: m[1], kind: "route", key: `PDV_EventBus.${m[1]}` });
   }
-  for (const m of (liveByFile.get("PDV__ManagerQuest.psc") || "").matchAll(/^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+(Handle[A-Za-z0-9_]+)\s*\(/gim)) {
+  // Handle* targets are enumerated across the manager's whole decomposition family,
+  // so a handler extracted into a 2.0 deep module is still a reachability target.
+  const managerFamilyLive = stripPapyrusComments(familySourceText(ROOT, SOURCE_DIR));
+  for (const m of managerFamilyLive.matchAll(/^\s*(?:[A-Za-z_][\w\[\]]*\s+)?Function\s+(Handle[A-Za-z0-9_]+)\s*\(/gim)) {
     targets.push({ name: m[1], kind: "handle", key: `PDV__ManagerQuest.${m[1]}` });
   }
 
@@ -1256,7 +1269,7 @@ function evaluateCsvCodegenFreshness() {
   const deityCsvIds = readCsvIds(LIKES_CSV_PATH);
   const princeCsvIds = readCsvIds(PRINCE_LIKES_CSV_PATH);
 
-  const managerLive = stripPapyrusComments(fs.readFileSync(MANAGER_PATH, "utf8"));
+  const managerLive = stripPapyrusComments(familySourceText(ROOT, SOURCE_DIR));
   const collectIds = (re) => {
     const ids = new Set();
     for (const m of managerLive.matchAll(re)) ids.add(Number(m[1]));

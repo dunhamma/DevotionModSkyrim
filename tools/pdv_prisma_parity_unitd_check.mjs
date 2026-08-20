@@ -10,10 +10,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { devotionSource } from "./lib/pdv_paths.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
-const DEFAULT_MANAGER = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV__ManagerQuest.psc";
-const DEFAULT_DIRECTOR = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source/PDV_DiegeticDirector.psc";
+const DEFAULT_MANAGER = path.join(devotionSource(), "PDV__ManagerQuest.psc");
+const DEFAULT_DIRECTOR = path.join(devotionSource(), "PDV_DiegeticDirector.psc");
 const DAEDRIC_CONTRACT = path.join(PROJECT_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
 
 main(process.argv.slice(2));

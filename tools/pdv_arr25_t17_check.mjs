@@ -48,13 +48,13 @@ function validateCsv(label, file, expectedRows, expectedKeys, plugin) {
   return rows;
 }
 
-function validateJson(label, file, cells, keys) {
-  const data = JSON.parse(read(file));
-  const questKeys = data.stringList?.questKeys ?? [];
+function validateJson(label, data, plugin, cells, keys) {
+  const questKeys = data.stringList?.questkeys ?? [];
+  const sourceKeys = questKeys.filter((key) => key.startsWith(`${plugin}|`));
   const cellCount = Object.entries(data.stringList ?? {})
-    .filter(([key]) => /^quest\..+\.deities$/.test(key))
+    .filter(([key]) => sourceKeys.some((sourceKey) => key === `quest.${sourceKey}.deities`.toLowerCase()))
     .reduce((sum, [, values]) => sum + values.length, 0);
-  requireEqual(`${label} compiled key count`, questKeys.length, keys);
+  requireEqual(`${label} compiled key count`, sourceKeys.length, keys);
   requireEqual(`${label} compiled cell count`, cellCount, cells);
 }
 
@@ -68,9 +68,12 @@ const wyrm = parseCsv(read(at("references/authoring/patches/PDV_QRM_Wyrmstooth.c
 requireEqual("Wyrmstooth cumulative row count", wyrm.length, 76);
 requireEqual("Wyrmstooth T17 key set", [...new Set(wyrm.filter((r) => wyrmNewKeys.includes(`${r.editor_id}|${r.outcome_stage}`)).map((r) => `${r.editor_id}|${r.outcome_stage}`))].sort(), [...wyrmNewKeys].sort());
 
-validateJson("LOTD", at("dist/PDV_QuestModPatches_FOMOD/common/LegacyOfTheDragonborn/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_LegacyOfTheDragonborn.json"), 19, 3);
-validateJson("Bruma", at("dist/PDV_QuestModPatches_FOMOD/common/BeyondSkyrimBruma/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_BeyondSkyrimBruma.json"), 54, 8);
-validateJson("Wyrmstooth", at("dist/PDV_QuestModPatches_FOMOD/common/Wyrmstooth/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_Wyrmstooth.json"), 76, 12);
+const catalog = JSON.parse(read(at("SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json")));
+const packagedCatalog = JSON.parse(read(at("dist/PDV_QuestModPatches_FOMOD/required/SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json")));
+requireEqual("official and packaged catalogs match", JSON.stringify(packagedCatalog), JSON.stringify(catalog));
+validateJson("LOTD", catalog, "LegacyoftheDragonborn.esm", 19, 3);
+validateJson("Bruma", catalog, "BSHeartland.esm", 54, 8);
+validateJson("Wyrmstooth", catalog, "Wyrmstooth.esp", 76, 12);
 
 const ledger = JSON.parse(read(at("references/authoring/PDV_ARR25_T17_RuntimeEvidenceLedger.json")));
 requireEqual("T17 ledger case count", ledger.cases?.length, 22);
@@ -84,13 +87,19 @@ for (const [prefix, candidates, conflicts] of [["T17LOTD", 20, 0], ["T17Bruma", 
 }
 
 const xml = read(at("dist/PDV_QuestModPatches_FOMOD/fomod/ModuleConfig.xml"));
-for (const token of ["common\\LegacyOfTheDragonborn", "common\\BeyondSkyrimBruma", "LegacyoftheDragonborn.esm", "BSHeartland.esm", "all thirty-four data channels"]) {
+for (const token of ["source=\"required\"", "Detected Adapter Plugins"]) {
   if (xml.includes(token)) passes.push(`FOMOD contains ${token}`); else failures.push(`FOMOD missing ${token}`);
 }
-const receipt = JSON.parse(read(at("references/authoring/PDV_QuestModPatches_FOMOD_Validation.json")));
-requireEqual("package receipt PASS", receipt.status, "PASS");
-requireEqual("package channel count", receipt.optionCounts?.channelFiles, 34);
-requireEqual("package individual count", receipt.optionCounts?.individualContentOptions, 34);
+for (const token of ["LegacyoftheDragonborn.esm", "BSHeartland.esm", "Wyrmstooth.esp"]) {
+  if (!xml.includes(token)) passes.push(`data-only ${token} is catalog-backed`); else failures.push(`FOMOD still exposes data-only source ${token}`);
+}
+for (const forbidden of ["Channels", "QuestStageAdapters"]) {
+  if (!xml.includes(forbidden)) passes.push(`FOMOD omits ${forbidden}`); else failures.push(`FOMOD still contains ${forbidden}`);
+}
+const receipt = JSON.parse(read(at("references/authoring/PDV_QuestReactionPackageV3.receipt.json")));
+requireEqual("package receipt schema", receipt.schema, "pdv.quest-reaction.package-receipt.v3");
+requireEqual("package required catalog", receipt.requiredCatalog, "SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_QuestReactionPatches.v2.json");
+requireEqual("package adapter option count", receipt.adapterOptions?.length, 5);
 
 console.log(JSON.stringify({
   status: failures.length ? "FAIL" : "PASS",

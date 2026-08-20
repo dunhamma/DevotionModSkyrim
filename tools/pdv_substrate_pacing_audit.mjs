@@ -14,6 +14,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -81,11 +82,14 @@ function hasNumber(source, label, expected) {
 }
 
 function bodyFor(source, functionName) {
-  const start = source.search(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "i"));
-  if (start < 0) return "";
-  const tail = source.slice(start);
-  const end = tail.search(/\n\s*EndFunction\b/i);
-  return end >= 0 ? tail.slice(0, end + 12) : tail;
+  const starts = [...source.matchAll(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "ig"))];
+  const bodies = [];
+  for (const match of starts) {
+    const tail = source.slice(match.index);
+    const end = tail.search(/\n\s*EndFunction\b/i);
+    bodies.push(end >= 0 ? tail.slice(0, end + 12) : tail);
+  }
+  return bodies.join("\n");
 }
 
 function playerFacingSpineValues(value, here = "$") {
@@ -295,7 +299,7 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
     && /HandlePlayerSleepStop\s*\([^\r\n]*hadSleepStartContext[^\r\n]*sleepStartedOutside/i.test(sleepRoute), "source.khajiit-sleep-context-route", "the player alias must capture exterior state at sleep start and carry it through the event bus");
   add(/hadSleepStartContext/i.test(sleepManager)
     && /sleepStartedOutside/i.test(sleepManager)
-    && /HandleKhajiitRoadHome\s*\(/i.test(sleepManager)
+    && /HandleKhajiitRoadHome\s*\(|HandleContextualSignal\s*\(\s*"outdoor-rest"/i.test(sleepManager)
     && !/GetParentCell|IsInterior/i.test(sleepManager), "source.khajiit-sleep-start-authority", "Khajiit road-home classification must use captured sleep-start context rather than re-sampling the wake cell");
   add(/PDV\.Khajiit\.RoadHome\.PresentationDay/i.test(roadHome)
     && /ReadZeroReservedDevotionalDayStamp/i.test(roadHome)
@@ -312,15 +316,13 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   add(/HistDawnDecay\s*\*\s*decayDays/i.test(histDecay) && /graceEndDay/i.test(histDecay), "source.argonian-relation-decay-catchup", "the separate Hist relation ledger must catch up every elapsed post-grace decay day");
   const histMaintenance = bodyFor(argonianSource, "RecordHistMaintenanceScaled");
   const histMaintenanceStamp = bodyFor(argonianSource, "StampHistMaintenance");
-  const histStampMigration = bodyFor(argonianSource, "EnsureHistMaintenanceStampEncoding");
   const histNeglect = bodyFor(managerSource, "IsArgonianHistNeglected");
   add(/StampHistMaintenance\s*\(/i.test(histMaintenance)
     && /LastMaintenanceStamp[^\r\n]*GetDevotionalDay\(\)\s*\+\s*2/i.test(histMaintenanceStamp)
     && /MaintenanceStampVersion[^\r\n]*1/i.test(histMaintenanceStamp)
-    && /legacyDay\s*\+\s*2/i.test(histStampMigration)
     && /HasHistMaintenance/i.test(histNeglect)
     && /GetLastHistMaintenanceDevotionalDay/i.test(histNeglect)
-    && !/LastHistSourceTime/i.test(histNeglect), "source.argonian-maintenance-clock", "all Hist neglect timing must use the substrate-owned +2 maintenance stamp, including one-time legacy migration");
+    && !/LastHistSourceTime/i.test(histNeglect), "source.argonian-maintenance-clock", "all Hist neglect timing must use the substrate-owned +2 maintenance stamp (legacy +1 migration removed on the not-save-safe V3 sweep)");
 
   const bedSleep = bodyFor(managerSource, "TryArgonianBedOfChoiceSleep");
   add(/rootedRestStamp\s*=\s*GetDevotionalDay\(\)\s*\+\s*2/i.test(bedSleep)
@@ -364,18 +366,15 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   const dunmerHome = bodyFor(managerSource, "HandleDunmerPlayerHomeBonus");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(nearWater) && /WriteZeroReservedDevotionalDayStamp/i.test(nearWater) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(nearWater), "source.day-zero.argonian-water", "Argonian water credit must use the zero-reserved +2 devotional-day stamp");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(moonRite) && /WriteZeroReservedDevotionalDayStamp/i.test(moonRite) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(moonRite), "source.day-zero.khajiit-moon-piety", "Khajiit moon piety must use the zero-reserved +2 devotional-day stamp");
-  add(/observationToken\s*=\s*PDV_Manager\.BeginKhajiitMoonObservation\s*\(\s*(?:akTarget|playerActor)\s*\)/i.test(observeMoonsSource)
+  add(/observationToken\s*=\s*(?:(?:[A-Za-z_]\w*\.)*BeginKhajiitMoonObservation\s*\(\s*(?:akTarget|playerActor)\s*\)|(?:[A-Za-z_]\w*\.)*HandleContextualQuery\s*\(\s*"moon-observation-begin"[^\r\n]*(?:akTarget|playerActor)\s*\))/i.test(observeMoonsSource)
     && /observationToken\s*>\s*0[\s\S]*Utility\.Wait\s*\(\s*2\.0\s*\)[\s\S]*ProcessPendingKhajiitMoonObservation\s*\(\s*observationToken\s*\)/i.test(observeMoonsSource)
     && /_khajiitMoonObservationGeneration\s*\+=\s*1/i.test(moonBegin)
     && /observationToken\s*!=\s*_khajiitMoonObservationGeneration/i.test(moonComplete)
     && /_khajiitMoonObservationPending\s*=\s*False/i.test(moonComplete)
     && /<\s*2\.0/i.test(moonComplete), "source.khajiit-moon-token", "Observe the Moons must complete exactly one two-second delayed generation token and reject stale completions");
-  add(/PDV\.Khajiit\.ObserveMoons\.PowerSlotVersion/i.test(moonPower)
-    && /PowerSlotVersion"\)\s*<\s*3/i.test(moonPower)
-    && /PowerSlotVersion"\s*,\s*3\s*\)/i.test(moonPower)
-    && /UnequipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*0\s*\)/i.test(moonPower)
-    && /UnequipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*1\s*\)/i.test(moonPower)
-    && !/\bEquipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons\s*,\s*2\s*\)/i.test(moonPower), "source.khajiit-moon-power-slot", "Observe the Moons must clear stale hand equips without changing the player's selected lesser power");
+  add(/AddSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower)
+    && /RemoveSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower)
+    && !/\bEquipSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower), "source.khajiit-moon-power-slot", "Observe the Moons must be granted and removed by origin without ever selecting the player's lesser power through EquipSpell");
   add(/AddSpell\s*\(\s*PDV_Power_Khajiit_ObserveMoons/i.test(moonPower)
     && /AddSpell\s*\(\s*PDV_SPEL_SurveyDevotion/i.test(surveyPower)
     && !/\bEquipSpell\s*\(/i.test(moonPower)
@@ -391,8 +390,8 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
     && /StampHistMaintenance\s*\(\s*"sleeping_tree_sap"\s*\)/i.test(sapVision), "source.argonian-hist-contact-clock", "sacred water and Sleeping Tree Sap must both refresh the shared Hist-maintenance clock without adding the routine +5 relation pulse");
 
   const substrateProgressCalls = managerSource.split(/\r?\n/).filter((line) => /SendPrismaSubstrateProgress\s*\(/i.test(line) && !/Function\s+SendPrismaSubstrateProgress/i.test(line));
-  add(substrateProgressCalls.length >= 19 && substrateProgressCalls.every((line) => /(?:[A-Za-z0-9_]+\.)?GetMetric\(\)\s*-\s*metricBefore|metricAfter\s*-\s*metricBefore|grantedMetric/i.test(line))
-    && /Float\s+grantedMetric\s*=\s*PDV_KhajiitLunarSubstrate\.GetMetric\(\)\s*-\s*metricBefore/i.test(roadHome), "source.actual-substrate-delta", "every substrate progress producer must report the actual post-award metric delta, including a same-day zero, rather than its requested multiplier");
+  add(substrateProgressCalls.length >= 19 && substrateProgressCalls.every((line) => /(?:[A-Za-z0-9_]+\.)?GetMetric\(\)\s*-\s*[A-Za-z0-9_]*metricBefore|metricAfter\s*-\s*metricBefore|grantedMetric/i.test(line))
+    && /Float\s+grantedMetric\s*=\s*PDV_KhajiitLunarSubstrate\.GetMetric\(\)\s*-\s*[A-Za-z0-9_]*metricBefore/i.test(roadHome), "source.actual-substrate-delta", "every substrate progress producer must report the actual post-award metric delta, including a same-day zero, rather than its requested multiplier");
 
   const pacingTrigger = bodyFor(managerSource, "DebugTriggerSubstratePacingSource");
   const genuineHandlers = [
@@ -493,7 +492,9 @@ function main() {
   const result = evaluate({
     contract,
     baseSource: fs.existsSync(BASE_PATH) ? read(BASE_PATH) : "",
-    managerSource: fs.existsSync(MANAGER_PATH) ? read(MANAGER_PATH) : "",
+    // Resolver-aware: read the whole decomposition family, not just the manager.
+    // Strictly additive -- manager text still leads, verbatim.
+    managerSource: familySourceText(ROOT, SOURCE_ROOT),
     concreteSources,
     playerEventsSource: fs.existsSync(PLAYER_EVENTS_PATH) ? read(PLAYER_EVENTS_PATH) : "",
     eventBusSource: fs.existsSync(EVENT_BUS_PATH) ? read(EVENT_BUS_PATH) : "",

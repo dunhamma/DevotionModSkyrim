@@ -11,9 +11,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { devotionSource } from "./lib/pdv_paths.mjs";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const LIVE_SOURCE = "D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source";
+const LIVE_SOURCE = devotionSource();
 const MANIFEST = path.join(ROOT, "references", "authoring", "PDV_Phase20_P2ImmersiveReceivers.manifest.json");
 
 main(process.argv.slice(2));
@@ -131,11 +133,13 @@ function verifySharedFallback(manager, filePath, pass, fail) {
   }
   const required = [
     "PDV_PrismaBridge.IsAvailable()",
-    "PDV_PrismaBridge.SendOverlayJson(payload)",
     "ShowToastFallbackNotification(fallbackTitle, fallbackMessage)",
     "return sent"
   ];
-  if (includesAll(block, required)) {
+  const sanctionedSend =
+    block.includes("PDV_PrismaBridge.SendOverlayJson(payload)") ||
+    block.includes("PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(payload))");
+  if (includesAll(block, required) && sanctionedSend) {
     pass("Shared toast fallback helper", "Helper tries Prisma overlay first and falls back to top-left only through the shared fallback.", filePath);
   } else {
     fail("Shared toast fallback helper", "Helper must use IsAvailable, SendOverlayJson, shared fallback, and return the send result.", filePath);
@@ -323,7 +327,7 @@ function runSelfTests(pass, fail) {
   const minimalManager = [
     "Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTitle, String fallbackMessage, Bool allowFallback = True)",
     "if PDV_PrismaBridge.IsAvailable()",
-    "sent = PDV_PrismaBridge.SendOverlayJson(payload)",
+    "sent = PDV_PrismaBridge.SendOverlayJson(WithPrismaToastSize(payload))",
     "endIf",
     "if !sent && allowFallback",
     "ShowToastFallbackNotification(fallbackTitle, fallbackMessage)",

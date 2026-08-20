@@ -1,0 +1,40 @@
+{
+  "schema": "pdv.quest-reaction.characterization.v1",
+  "id": "queue-ceiling-overflow",
+  "config": {
+    "maxPending": 128,
+    "workItemsPerTick": 2,
+    "duplicateWindowDays": 0.02
+  },
+  "initialState": {
+    "pendingCount": 128,
+    "pendingKeyPrefix": "Skyrim.esm|00FILL|"
+  },
+  "steps": [
+    {
+      "type": "submit-quest-stage",
+      "key": "Skyrim.esm|00OVER|129",
+      "logicalEventId": "case.overflow",
+      "gameDay": 60.0,
+      "rows": [
+        { "deityId": "Mara", "valence": "+", "intensity": "small", "magnitude": "small", "tag": "overflow", "appliedAmount": 0.4 }
+      ],
+      "metaRows": []
+    }
+  ],
+  "expected": {
+    "submissions": [
+      { "key": "Skyrim.esm|00OVER|129", "status": "overflow" }
+    ],
+    "applied": [],
+    "startedJobIds": [],
+    "finalizations": [],
+    "slices": [],
+    "rejections": [
+      { "key": "Skyrim.esm|00OVER|129", "reason": "overflow" }
+    ],
+    "cleanedJobIds": [],
+    "resumeCount": 0,
+    "queueDepth": 128
+  }
+}

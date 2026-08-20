@@ -10,15 +10,5 @@
     "reason": "Orphan route (found 2026-07-06): forwards to HandleOrcStrongholdPresence but nothing calls it. Phase 4 verdict pending -- check whether the handler is reached via another path, then wire or remove.",
     "deferredBy": "dead-wiring burndown plan",
     "date": "2026-07-07"
-  },
-  "PDV__ManagerQuest.HandleNordAncestorSpine": {
-    "reason": "Orphan handler (gate find 2026-07-07): zero call sites. Phase 4 verdict pending -- likely superseded by AwardNordRouteFamilySignal ancestor-spine lanes; confirm then remove or wire.",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
-  },
-  "PDV__ManagerQuest.HandleDunmerClumsyCrime": {
-    "reason": "Orphan handler (gate find 2026-07-07): zero call sites. Phase 4 verdict pending -- check the Dunmer deviation-price route family for the intended caller, then wire or remove.",
-    "deferredBy": "dead-wiring burndown plan",
-    "date": "2026-07-07"
   }
 }

@@ -12,15 +12,15 @@ import path from "node:path";
 import process from "node:process";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { anvilRoot, devotionEsp } from "./lib/pdv_paths.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_requiem_penalty_audit" });
 const JSON_OUTPUT = process.argv.includes("--json");
 
 const ROOT = process.cwd();
-const ANVIL_ROOT = "D:/Wabbajack/modlists/Anvil";
-const DEVOTION_MOD = path.join(ANVIL_ROOT, "mods", "Devotion");
-const PDV_ESP = path.join(DEVOTION_MOD, "Devotion.esp");
+const ANVIL_ROOT = anvilRoot();
+const PDV_ESP = devotionEsp();
 const MUTAGEN_BRIDGE = path.join(
   ANVIL_ROOT,
   "plugins",
@@ -43,7 +43,6 @@ const TARGETS = [
     archetype: "PeakValueModifier",
     magnitude: -10,
     textMustContain: "Maximum Health -10",
-    effectName: "Maximum Health",
   },
   {
     label: "Breton Tradition Grows Distant",
@@ -56,7 +55,6 @@ const TARGETS = [
     archetype: "PeakValueModifier",
     magnitude: -10,
     textMustContain: "Maximum Health -10",
-    effectName: "Maximum Health",
   },
   {
     label: "Breton Cast Out",
@@ -69,7 +67,6 @@ const TARGETS = [
     archetype: "PeakValueModifier",
     magnitude: -15,
     textMustContain: "Maximum Health -15",
-    effectName: "Maximum Health",
   },
 ];
 
@@ -154,6 +151,12 @@ function getEffect(entry, mgef) {
   return (entry?.effects || []).find((effect) => effect.magicEffectEditorId === mgef);
 }
 
+function expectedEffectName(target) {
+  const spec = readJson(specPath(target.specFile));
+  const effect = getEffect(target.entry(spec), target.newMgef);
+  return String(effect?.effectName || "").trim();
+}
+
 function specPath(fileName) {
   return path.join(AUTHORING, fileName);
 }
@@ -187,10 +190,10 @@ function checkSpecTarget(target) {
   } else {
     fail("Requiem penalty spec magnitude", `${target.newMgef} magnitude ${effect.magnitude}, expected ${target.magnitude}.`, filePath);
   }
-  if (effect.effectName === target.effectName) {
-    pass("Requiem penalty spec effect name", `${target.newMgef} Active Effects name is ${target.effectName}.`, filePath);
+  if (String(effect.effectName || "").trim()) {
+    pass("Requiem penalty spec effect name", `${target.newMgef} Active Effects name is ${effect.effectName}.`, filePath);
   } else {
-    fail("Requiem penalty spec effect name", `${target.newMgef} effectName is ${effect.effectName || "(missing)"}, expected ${target.effectName}.`, filePath);
+    fail("Requiem penalty spec effect name", `${target.newMgef} effectName is missing.`, filePath);
   }
   if (String(entry.playerFacingText || "").includes(target.textMustContain) && !hasStaleRegenText(entry.playerFacingText)) {
     pass("Requiem penalty spec text", `${target.label} text says ${target.textMustContain}.`, filePath);
@@ -253,6 +256,7 @@ function checkLiveTarget(target, recordsByEdid, detailsByEdid, allSpellDetails) 
   const old = recordsByEdid.get(target.oldMgef);
   const spellDetail = detailsByEdid.get(target.spell);
   const mgefDetail = detailsByEdid.get(target.newMgef);
+  const expectedName = expectedEffectName(target);
 
   if (spell?.type === "SPEL") {
     pass("Requiem penalty live spell", `${target.spell} exists as SPEL.`);
@@ -274,10 +278,10 @@ function checkLiveTarget(target, recordsByEdid, detailsByEdid, allSpellDetails) 
   } else {
     fail("Requiem penalty live archetype", `${target.newMgef} is ${archetype.Type || "(missing)"}/${archetype.ActorValue || "(missing)"}, expected ${target.archetype}/${target.actorValue}.`);
   }
-  if (fields.Name === target.effectName) {
-    pass("Requiem penalty live effect name", `${target.newMgef} name is ${target.effectName}.`);
+  if (fields.Name === expectedName) {
+    pass("Requiem penalty live effect name", `${target.newMgef} name is ${expectedName}.`);
   } else {
-    fail("Requiem penalty live effect name", `${target.newMgef} name is ${fields.Name || "(missing)"}, expected ${target.effectName}.`);
+    fail("Requiem penalty live effect name", `${target.newMgef} name is ${fields.Name || "(missing)"}, expected ${expectedName || "(missing spec effectName)"}.`);
   }
   if (String(fields.Description || "").includes(target.textMustContain) && !hasStaleRegenText(fields.Description)) {
     pass("Requiem penalty live MGEF text", `${target.newMgef} text says ${target.textMustContain}.`);

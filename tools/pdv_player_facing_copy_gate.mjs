@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // Gate: no development or proof status on ANY player-facing surface.
 //
-// Owner ruling 2026-08-08. Covers the quest-patch installer (option list AND the info
+// Owner ruling 2026-08-08. Covers the Quest Reaction installer (option list AND the info
 // page), every shipped readme, the release meta text, the Nexus/player guides, the
 // PrismaUI dashboard, and the config-folder readmes that ship inside SKSE data. The
 // surface list and the pattern live in tools/lib/pdv_player_facing_copy.mjs so the
-// FOMOD generator, the FOMOD validator and this gate cannot drift apart.
+// V3 package builder, release archive builder and this gate cannot drift apart.
 //
 // Verdict is the EXIT CODE. Papyrus findings are advisory and never change it -- see
 // papyrusPlayerFacingAdvisories() for why they cannot be failed automatically.

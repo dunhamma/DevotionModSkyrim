@@ -26,6 +26,7 @@ import process from "node:process";
 import { normalizeActorValue } from "./lib/pdv_actor_value_aliases.mjs";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -37,7 +38,14 @@ const ROOT = process.cwd();
 const AUTH = path.join(ROOT, "references", "authoring");
 const SPEC = path.join(AUTH, "PDV_DislikeConsequenceRecords.spec.json");
 const DEITY_CSV = path.join(AUTH, "PDV_DeityLikesDislikes.csv");
-const MANAGER = path.join(ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
+const MANAGER = path.join(SOURCE_DIR, "PDV__ManagerQuest.psc");
+// The 2.0 rebuild moves manager functions into deep modules. Searching only the
+// manager file goes blind the moment a body moves: the positive needles below
+// would FAIL about code that is present and correct, just in another family
+// script. familySourceText() is strictly additive -- manager text first and
+// verbatim, then each extracted module with qualifiers stripped.
+const managerFamilyText = () => familySourceText(ROOT, SOURCE_DIR);
 const ROUTER = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_ActionRouter.psc");
 const EVENT_BUS = path.join(ROOT, "live-source", "Scripts", "Source", "PDV_EventBus.psc");
 // Deployed-ESP readback. The retired pdv-dislike-consequence-author helper is gone;
@@ -192,8 +200,8 @@ function validateCsvThresholds(spec) {
   pass("threshold split", `${eligible} rows eligible for stings; ${cutoff} rows at <=0.5 remain piety-only.`, DEITY_CSV);
 }
 
-function requireSourceContains(file, check, patterns) {
-  const text = read(file);
+function requireSourceContains(file, check, patterns, textOverride) {
+  const text = textOverride ?? read(file);
   for (const pattern of patterns) {
     const ok = pattern instanceof RegExp ? pattern.test(text) : text.includes(pattern);
     if (ok) pass(check, `Found ${pattern}.`, file);
@@ -211,12 +219,12 @@ function validateSourceGates(spec) {
     "Function UpdateDisfavorStingRuntime()",
     "_pendingLikesDislikesEventType",
     "DISFAVOR_MAX_ACTIVE_DOMAINS = 3",
-  ]);
+  ], managerFamilyText());
   requireSourceContains(ROUTER, "router dispatch", ["AwardPietyFromLikesDislikes(deity, delta, eventType"]);
   requireSourceContains(EVENT_BUS, "event bus dispatch", ["AwardPietyFromLikesDislikes(deity, delta, eventType"]);
-  requireSourceContains(MANAGER, "shout dispatch", ["AwardPietyFromLikesDislikes(deity, delta * multiplier, eventType, reason)"]);
+  requireSourceContains(MANAGER, "shout dispatch", ["AwardPietyFromLikesDislikes(deity, delta * multiplier, eventType, reason)"], managerFamilyText());
 
-  const manager = read(MANAGER);
+  const manager = managerFamilyText();
   for (const domain of spec.domains ?? []) {
     for (const band of ["light", "sharp"]) {
       const propertyName = domain[band]?.propertyName;

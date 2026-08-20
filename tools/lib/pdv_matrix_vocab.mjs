@@ -14,6 +14,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { familySourceText } from "./pdv_symbol_home.mjs";
 
 // Every requested-name ApplyDeityReaction will actually match. A name outside this set is not
 // an error at runtime -- the cell is dropped in silence, which is indistinguishable from the
@@ -23,7 +24,9 @@ export function acceptedDeityNames(repoRoot) {
   if (!fs.existsSync(managerPath)) {
     return { names: new Set(), issues: [`manager source missing: ${managerPath}`] };
   }
-  const text = fs.readFileSync(managerPath, "utf8");
+  // Resolver-aware: the name model's RepairDeityRuntimeName call sites largely moved
+  // into PDV_DevotionLedger, so a manager-only read parses a fraction of the names.
+  const text = familySourceText(repoRoot, path.dirname(managerPath));
   const names = new Set();
   for (const m of text.matchAll(/RepairDeityRuntimeName\(\s*PDV_[A-Za-z0-9_]+\s*,\s*"([^"]+)"\s*\)/g)) {
     names.add(m[1]);

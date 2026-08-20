@@ -1,17 +1,17 @@
 {
   "schema": "pdv-quest-patch-fomod-validation.v1",
-  "generatedAt": "2026-08-11T23:38:48.300Z",
+  "generatedAt": "2026-08-14T12:14:32.543Z",
   "status": "PASS",
   "proofBoundary": "Package structure and bytes only. This does not prove runtime routing, player surfaces, semantic correctness, or support status.",
   "packageRoot": "dist/PDV_QuestModPatches_FOMOD",
   "optionCounts": {
-    "modularOptions": 77,
-    "channelFiles": 75
+    "modularOptions": 80,
+    "channelFiles": 78
   },
   "simulations": [
     {
       "name": "all-options",
-      "installedFiles": 113,
+      "installedFiles": 116,
       "identicalCollisions": []
     },
     {
@@ -232,6 +232,11 @@
       "identicalCollisions": []
     },
     {
+      "name": "individual:House of Horrors - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
       "name": "individual:Ill Met by Moonlight - Dialogue Expansion",
       "installedFiles": 1,
       "identicalCollisions": []
@@ -277,7 +282,17 @@
       "identicalCollisions": []
     },
     {
+      "name": "individual:The Cursed Tribe - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
       "name": "individual:The Heart of Dibella - Quest Expansion",
+      "installedFiles": 1,
+      "identicalCollisions": []
+    },
+    {
+      "name": "individual:The Only Cure - Quest Expansion",
       "installedFiles": 1,
       "identicalCollisions": []
     },
@@ -408,8 +423,8 @@
     }
   ],
   "manifest": {
-    "fileCount": 122,
-    "treeSha256": "96E229EED4506358442CBC11B26F4D651EB8432AEE021BBEC2CEA43AA8C04CEC",
+    "fileCount": 125,
+    "treeSha256": "25D332D594F6E4754F312B0FBC5452291E3415527796D9BDCC9FA63A9944C8CD",
     "files": [
       {
         "path": "common/_Fragments/OnceWeWereHere/Scripts/PDV_TIF_OWWH_S60.pex",
@@ -508,18 +523,18 @@
       },
       {
         "path": "common/AFDI/PDV_Patch_AFDI.esp",
-        "size": 502,
-        "sha256": "84EC8E38576C91D6992E1E6880F0245190DE7D9BE391D85414D79E8F07FCA3AA"
+        "size": 382,
+        "sha256": "25CE7E1680A18E623A7576A7BAC3A21D6ED3DFB270E4C9F92C61A0FE79F7634A"
       },
       {
         "path": "common/AFDI/Scripts/PDV_AFDIObserver.pex",
-        "size": 8035,
-        "sha256": "4837560F8ABC1EB71B71D629F7BB40E170B08934720DF74802AD23EFE23D8A7F"
+        "size": 6630,
+        "sha256": "DC793F66971D76EC1DFA076DD2CB70CCC70616A8474BDBE879F1B56C66852329"
       },
       {
         "path": "common/AFDI/Scripts/Source/PDV_AFDIObserver.psc",
-        "size": 9325,
-        "sha256": "BBE9D952077116C13D7441F28B90FD6CF7C59249A4DCF825684C5301CABFCF69"
+        "size": 7113,
+        "sha256": "7B7600DD732C787770E63F3B85952F73EDDCB2FE4C3816183C2001B36A303692"
       },
       {
         "path": "common/AFDI/SEQ/PDV_Patch_AFDI.seq",
@@ -590,6 +605,11 @@
         "path": "common/CollegeQuestExpansion/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CollegeQuestExpansion.json",
         "size": 120507,
         "sha256": "96EC5A1EC68BE0854F116693185584A0C02C95D29D3F10A3BCF5F85428B56760"
+      },
+      {
+        "path": "common/CursedTribeQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_CursedTribeQE.json",
+        "size": 104373,
+        "sha256": "6EA11446577117160E3A1E3E874FC800D42994DD31B6872AEF89B38E85203A50"
       },
       {
         "path": "common/DAc0da/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_DAc0da.json",
@@ -675,6 +695,11 @@
         "path": "common/HeartOfTheReach/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_HeartOfTheReach.json",
         "size": 107047,
         "sha256": "D47BF20653AED20A19447194668402D87DDA386ED70816B0C81789891E2DFD74"
+      },
+      {
+        "path": "common/HouseOfHorrorsQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_HouseOfHorrorsQE.json",
+        "size": 104604,
+        "sha256": "06B851278FADBBF893389F218B25E58B1D8A7A7E45C6570656CF18AA14A54BD6"
       },
       {
         "path": "common/HuntForSpectre/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_HuntForSpectre.json",
@@ -775,6 +800,11 @@
         "path": "common/OnceWeWereHere/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_OnceWeWereHere.json",
         "size": 106831,
         "sha256": "F236CE3B94288368BB16B381C38D3F04599976BD157A5731A8FD9C769E8D466D"
+      },
+      {
+        "path": "common/OnlyCureQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_OnlyCureQE.json",
+        "size": 105763,
+        "sha256": "38BB4F2D7F407314D2C6C836795525A599DB34D25147D5BF4645B2D7C0D95BFE"
       },
       {
         "path": "common/PaarthurnaxQE/SKSE/Plugins/StorageUtilData/PlayerDevotion/Channels/PDV_QRM_PaarthurnaxQE.json",
@@ -968,23 +998,23 @@
       },
       {
         "path": "fomod/ModuleConfig.xml",
-        "size": 73294,
-        "sha256": "43D299074B7577C232C901E7DF2BF890CCE8A68B183F929DF16A92AD493ED381"
+        "size": 76172,
+        "sha256": "56A62997C961EF69028FB845A2523523CB7F15D157CAB4E157438241D824F4FD"
       },
       {
         "path": "plugins/individual/AFDI/PDV_Patch_AFDI.esp",
-        "size": 502,
-        "sha256": "84EC8E38576C91D6992E1E6880F0245190DE7D9BE391D85414D79E8F07FCA3AA"
+        "size": 382,
+        "sha256": "25CE7E1680A18E623A7576A7BAC3A21D6ED3DFB270E4C9F92C61A0FE79F7634A"
       },
       {
         "path": "plugins/individual/AFDI/Scripts/PDV_AFDIObserver.pex",
-        "size": 8035,
-        "sha256": "4837560F8ABC1EB71B71D629F7BB40E170B08934720DF74802AD23EFE23D8A7F"
+        "size": 6630,
+        "sha256": "DC793F66971D76EC1DFA076DD2CB70CCC70616A8474BDBE879F1B56C66852329"
       },
       {
         "path": "plugins/individual/AFDI/Scripts/Source/PDV_AFDIObserver.psc",
-        "size": 9325,
-        "sha256": "BBE9D952077116C13D7441F28B90FD6CF7C59249A4DCF825684C5301CABFCF69"
+        "size": 7113,
+        "sha256": "7B7600DD732C787770E63F3B85952F73EDDCB2FE4C3816183C2001B36A303692"
       },
       {
         "path": "plugins/individual/AFDI/Seq/PDV_Patch_AFDI.seq",
@@ -1023,15 +1053,7 @@
       }
     ]
   },
-  "archive": {
-    "path": "dist/PDV-QuestModPatchHub-20260812.zip",
-    "entries": 122,
-    "size": 987283,
-    "sha256": "C9D39F9321BC3045C48A9C771CC318F8CB768C6ED557F15124C99B90D15D6D5F",
-    "missing": [],
-    "extra": [],
-    "checksumMismatches": []
-  },
+  "archive": null,
   "warnings": [],
   "failures": []
 }

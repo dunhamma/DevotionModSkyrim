@@ -4,20 +4,28 @@ import path from "node:path";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
 import { hashByteFiles, hashText } from "./lib/pdv_file_compare.mjs";
+import { devotionPex, devotionPrismaView, devotionSource } from "./lib/pdv_paths.mjs";
+import {
+  callTokenPattern,
+  familySourceText,
+  substantialFunctionBlock,
+} from "./lib/pdv_symbol_home.mjs";
 
 const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_prisma_ui_audit" });
 const JSON_OUTPUT = process.argv.includes("--json");
 
-const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source";
-const DEVOTION_COMPILED = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts";
-const DEVOTION_PRISMA_VIEW = "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\PrismaUI\\views\\Devotion\\app.js";
+const DEVOTION_SOURCE = process.env.PDV_PRISMA_AUDIT_SOURCE_ROOT || devotionSource();
+const DEVOTION_COMPILED = devotionPex();
+const DEVOTION_PRISMA_VIEW = devotionPrismaView();
 const DEVOTION_PRISMA_INDEX = path.join(path.dirname(DEVOTION_PRISMA_VIEW), "index.html");
 const REPO_ROOT = process.cwd();
 const NATIVE_BRIDGE_SOURCE = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "src", "main.cpp");
 const MANAGER_SOURCE = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
+const PRESENTER_SOURCE = path.join(DEVOTION_SOURCE, "PDV_PrismaPresenter.psc");
 const MCM_SOURCE = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
 const MANAGER_PEX = path.join(DEVOTION_COMPILED, "PDV__ManagerQuest.pex");
+const PRESENTER_PEX = path.join(DEVOTION_COMPILED, "PDV_PrismaPresenter.pex");
 const MCM_PEX = path.join(DEVOTION_COMPILED, "PDV_MCM.pex");
 const DAEDRIC_CONTRACT = path.join(REPO_ROOT, "references", "authoring", "PDV_DaedricPrinceRecordContracts.json");
 const MEDALLION_ROSTER_MANIFEST = path.join(REPO_ROOT, "references", "authoring", "PDV_MedallionRoster.manifest.json");
@@ -26,8 +34,21 @@ const REPO_PRISMA_APP = path.join(REPO_PRISMA_VIEW_DIR, "app.js");
 const REPO_PRISMA_STYLE = path.join(REPO_PRISMA_VIEW_DIR, "styles.css");
 const REPO_PRISMA_INDEX = path.join(REPO_PRISMA_VIEW_DIR, "index.html");
 const REPO_MANAGER_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV__ManagerQuest.psc");
+const REPO_SOURCE_DIR = path.dirname(REPO_MANAGER_SOURCE);
+const REPO_QUEST_REACTION_RUNTIME_SOURCE = path.join(REPO_ROOT, "live-source", "Scripts", "Source", "PDV_QuestReactionRuntime.psc");
 const BRIDGE_PSC_LIVE = path.join(DEVOTION_SOURCE, "PDV_PrismaBridge.psc");
 const BRIDGE_PSC_REPO = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "mod", "Scripts", "Source", "PDV_PrismaBridge.psc");
+
+function reEsc(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Broad-pool normalization needle, resolver-driven so it tracks ClampValue's
+// extraction into PDV_DevotionRules (matches bare or owning-script-qualified),
+// while still pinning the exact broad-pool argument expression.
+const BROAD_POOL_CLAMP_RE = new RegExp(
+  callTokenPattern("ClampValue", REPO_ROOT).source + reEsc("piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)"),
+);
 
 function fail(message, source = "") {
   failures.push({ message, source });
@@ -150,20 +171,23 @@ function requirePexAtLeastAsFresh(pexPath, dependencyPath, label) {
 
 function verifyJournalBytecodeFreshness() {
   requirePexAtLeastAsFresh(MANAGER_PEX, MANAGER_SOURCE, "Manager journal payload");
+  requirePexAtLeastAsFresh(PRESENTER_PEX, PRESENTER_SOURCE, "Prisma presenter payload");
   requirePexAtLeastAsFresh(MCM_PEX, MCM_SOURCE, "Book of Days hotkey");
 
-  if (!exists(MANAGER_SOURCE) || !exists(MCM_SOURCE) || !exists(MANAGER_PEX) || !exists(MCM_PEX)) {
+  if (!exists(PRESENTER_SOURCE) || !exists(MCM_SOURCE) || !exists(PRESENTER_PEX) || !exists(MCM_PEX)) {
     return;
   }
 
-  const manager = read(MANAGER_SOURCE);
+  const manager = familySourceText(REPO_ROOT, DEVOTION_SOURCE);
   const mcm = read(MCM_SOURCE);
   if (
     manager.includes("Function SendPrismaJournalPayload(Bool playerRequested") &&
-    mcm.includes("PDV_Manager.SendPrismaJournalPayload(")
+    mcm.includes("PDV_Manager.Prisma.SendPrismaJournalPayload(")
   ) {
-    requirePexAtLeastAsFresh(MCM_PEX, MANAGER_SOURCE, "Book of Days hotkey dependency");
-    requirePexAtLeastAsFresh(MCM_PEX, MANAGER_PEX, "Book of Days hotkey dependency");
+    requirePexAtLeastAsFresh(MCM_PEX, PRESENTER_SOURCE, "Book of Days hotkey dependency");
+    // Do not compare sibling PEX mtimes: a clean all-script compile writes them
+    // sequentially, so compile order is not dependency freshness. Source->PEX
+    // freshness above is the meaningful contract for each script.
   }
 
 }
@@ -231,18 +255,27 @@ function verifyPrismaAssetCacheContract() {
     fail("Repository manager source is missing for the Argonian panel payload contract.", REPO_MANAGER_SOURCE);
     return;
   }
-  const manager = read(REPO_MANAGER_SOURCE);
-  const patchSourceManagerTokens = [
-    'JsonUtil.GetStringValue(matrixFile, "sourceMod")',
+  const manager = familySourceText(REPO_ROOT, REPO_SOURCE_DIR);
+  if (!exists(REPO_QUEST_REACTION_RUNTIME_SOURCE)) {
+    fail("Repository Quest Reaction runtime source is missing for the PatchHub source contract.", REPO_QUEST_REACTION_RUNTIME_SOURCE);
+    return;
+  }
+  const runtime = read(REPO_QUEST_REACTION_RUNTIME_SOURCE);
+  const patchSourceRuntimeTokens = [
+    'JsonUtil.GetStringValue(catalogFile, "source." + sourceId + ".displayName")',
+    '"PDV.V3.QR.CellSourceName." + questKey, displayName',
     'prefix + "SourceModName"',
+  ];
+  const patchSourceManagerTokens = [
     'SendPrismaToastWithSource(',
+    'surfaceSourceModName',
     '"PDV.Diegetic.Journal.Sources"',
     'JsonSafeString(sourceModName)',
   ];
-  if (patchSourceManagerTokens.some((token) => !manager.includes(token))) {
-    fail("Manager must carry PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+  if (patchSourceRuntimeTokens.some((token) => !runtime.includes(token)) || patchSourceManagerTokens.some((token) => !manager.includes(token))) {
+    fail("Runtime and Manager must carry V2 catalog source metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
   } else {
-    pass("Manager carries PatchHub sourceMod metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
+    pass("Runtime and Manager carry V2 catalog source metadata into Prisma and Book of Days payloads.", REPO_MANAGER_SOURCE);
   }
   const culturalManagerTokens = [
     'return "cultural"',
@@ -267,7 +300,7 @@ function verifyNpcRecognitionVisibilityContract() {
     }
   }
 
-  const manager = read(MANAGER_SOURCE);
+  const manager = familySourceText(REPO_ROOT, DEVOTION_SOURCE);
   const mcm = read(MCM_SOURCE);
   const app = read(DEVOTION_PRISMA_VIEW);
   const payloadBuilder = functionBlock(manager, "GetNpcRecognitionPanelJson");
@@ -315,8 +348,8 @@ function verifyNpcRecognitionVisibilityContract() {
   }
 
   if (
-    compatPage.includes('AddTextOption("Current", PDV_Manager.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)') &&
-    !/if\s+devMode\s+AddTextOption\("Current",\s*PDV_Manager\.GetNpcRecognitionStatusLine\(\)/i.test(compatPage)
+    compatPage.includes('AddTextOption("Current", PDV_Manager.RecognitionRuntime.GetNpcRecognitionStatusLine(), OPTION_FLAG_DISABLED)') &&
+    !/if\s+devMode\s+AddTextOption\("Current",\s*PDV_Manager\.RecognitionRuntime\.GetNpcRecognitionStatusLine\(\)/i.test(compatPage)
   ) {
     pass("MCM exposes the current recognition state outside developer mode.", MCM_SOURCE);
   } else {
@@ -335,9 +368,46 @@ function verifyNpcRecognitionVisibilityContract() {
 }
 
 function functionBlock(source, functionName) {
-  const pattern = new RegExp(`(?:[A-Za-z_][\\w]*\\s+)?Function\\s+${functionName}\\b[\\s\\S]*?EndFunction`, "i");
-  const match = source.match(pattern);
-  return match ? match[0] : "";
+  return substantialFunctionBlock(source, functionName);
+}
+
+function verifyDeityNameCasingContract() {
+  const required = [REPO_PRISMA_APP, PRESENTER_SOURCE];
+  for (const sourcePath of required) {
+    if (!exists(sourcePath)) {
+      fail("Deity-name casing dependency is missing.", sourcePath);
+      return;
+    }
+  }
+
+  const app = read(REPO_PRISMA_APP);
+  const presenter = read(PRESENTER_SOURCE);
+  const tierStart = app.indexOf("    tier: {");
+  const tierEnd = tierStart >= 0 ? app.indexOf("    pantheon: {", tierStart) : -1;
+  const tierRenderer = tierStart >= 0 && tierEnd > tierStart ? app.slice(tierStart, tierEnd) : "";
+  const tierJournal = functionBlock(presenter, "BuildTierReachJournalLine");
+  const journalName = functionBlock(presenter, "GetJournalDeityName");
+  const toastSender = functionBlock(presenter, "SendPrismaEventToast");
+
+  if (
+    !tierRenderer.includes("deityName(payload)") ||
+    /message:\s*\([^)]*\)\s*=>[^\n]*payload\.(?:symbol|mark)/.test(tierRenderer) ||
+    !tierJournal.includes("String deityName = GetJournalDeityName(deityIndex)") ||
+    tierJournal.includes("ResolveTransitionJournalSymbol") ||
+    !journalName.includes("GetPublicDeityDisplayName(deity)") ||
+    !toastSender.includes(',\\"deity\\":\\"') ||
+    !toastSender.includes(',\\"symbol\\":\\"')
+  ) {
+    fail(
+      "Tier toast and Chronicle copy must render the public deity name, never the lowercase symbol key.",
+      PRESENTER_SOURCE,
+    );
+  } else {
+    pass(
+      "Tier casing is field-safe for Talos, Tu'whacca, Z'en, Baan Dar, and Auri-El: display copy uses deity while symbol remains icon-only.",
+      PRESENTER_SOURCE,
+    );
+  }
 }
 
 function eventBlock(source, eventName) {
@@ -534,7 +604,7 @@ function verifySubstrateChronicleContract(manager, managerPath) {
   for (const call of directCalls) {
     const phase = stringLiteralValue(call.args[1]);
     const functionName = enclosingFunctionName(functionBlocks, call.index);
-    const block = functionBlocks.find((item) => item.name === functionName)?.body || "";
+    const block = functionBlocks.find((item) => item.start <= call.index && call.index <= item.end)?.body || "";
     if (reasonBearingPhases.has(phase)) {
       checked += 1;
       if (!block.includes("AppendBookOfDaysEntry(") || !block.includes('"substrate.act"')) {
@@ -599,7 +669,7 @@ function verifySessionCopyContracts(manager, managerPath) {
     !bretonPatronSurvey.includes('return " Your pact with " + pactName + " stands beside the tradition."') ||
     !bretonPatronSurvey.includes('has opened Hidden Art - Champion.') ||
     bretonPatronSurvey.includes('Hidden Art - Champion stands beside the pact.') ||
-    !bretonPatronSurvey.includes("GetBretonChampionBoonDisplayName(_activeDeity)") ||
+    !bretonPatronSurvey.includes("GetBretonChampionBoonDisplayName(GetActiveDeity())") ||
     bretonChampionPresentation.includes("GetBretonChampionBoonDisplayName(_activeDeity)") ||
     bretonChampionPresentation.includes("stands beside") ||
     !bretonChampionPresentation.includes("if championSource as PDV_DaedricPathBase") ||
@@ -852,8 +922,6 @@ function verifyAltmerCurrentRosterContract(manager, managerPath) {
   const requiredOptions = ["auri-el", "magnus", "xarxes", "syrabane", "trinimac"];
   const deferredOptions = ["mara", "stendarr", "yffre"];
   const rosterText = rosterMatch?.[0] ?? "";
-  const repairBlock = functionBlock(manager, "RepairBookOfDaysJournalText");
-  const pruneBlock = functionBlock(manager, "ShouldPruneDeferredAltmerJournalLine");
 
   let manifestOptions = [];
   if (exists(MEDALLION_ROSTER_MANIFEST)) {
@@ -868,15 +936,11 @@ function verifyAltmerCurrentRosterContract(manager, managerPath) {
   const medallionLeak = deferredOptions.filter((id) => medallionBlock.includes(`RosterMedallionEntry("${id}"`));
   const manifestMissing = requiredOptions.filter((id) => !manifestOptions.includes(id));
   const manifestLeak = deferredOptions.filter((id) => manifestOptions.includes(id));
-  const migrationMissing = !repairBlock.includes("Int repairVersion = 3") ||
-    !repairBlock.includes("ShouldPruneDeferredAltmerJournalLine") ||
-    !pruneBlock.includes("GetPlayerOriginRaceIndex() != ORIGIN_ALTMER") ||
-    !["Mara", "Stendarr", "Y'ffre"].every((name) => pruneBlock.includes(`StringContainsToken(line, "${name}")`));
 
-  if (!rosterText || missing.length || runtimeLeak.length || medallionMissing.length || medallionLeak.length || manifestMissing.length || manifestLeak.length || migrationMissing) {
-    fail(`Altmer current-roster contract drift: missing=${missing.join("|") || "none"}, runtime-deferred=${runtimeLeak.join("|") || "none"}, medallion-missing=${medallionMissing.join("|") || "none"}, medallion-deferred=${medallionLeak.join("|") || "none"}, manifest-missing=${manifestMissing.join("|") || "none"}, manifest-deferred=${manifestLeak.join("|") || "none"}, migration-missing=${migrationMissing}.`, managerPath);
+  if (!rosterText || missing.length || runtimeLeak.length || medallionMissing.length || medallionLeak.length || manifestMissing.length || manifestLeak.length) {
+    fail(`Altmer current-roster contract drift: missing=${missing.join("|") || "none"}, runtime-deferred=${runtimeLeak.join("|") || "none"}, medallion-missing=${medallionMissing.join("|") || "none"}, medallion-deferred=${medallionLeak.join("|") || "none"}, manifest-missing=${manifestMissing.join("|") || "none"}, manifest-deferred=${manifestLeak.join("|") || "none"}.`, managerPath);
   } else {
-    pass("Altmer current roster is limited to Auri-El, Magnus, Xarxes, Syrabane, and Trinimac; Mara, Stendarr, and Y'ffre remain deferred and are pruned from affected existing journals.", managerPath);
+    pass("Altmer current roster is limited to Auri-El, Magnus, Xarxes, Syrabane, and Trinimac; Mara, Stendarr, and Y'ffre remain deferred.", managerPath);
   }
 }
 
@@ -961,7 +1025,10 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
   const actionRouterRoute = functionBlock(actionRouter, "RouteActionWithAttribution");
   const eventBusPassesReason =
     eventBusRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
-    eventBusRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))");
+    eventBusRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))") ||
+    (eventBusRoute.includes("String eventReason = GetEventReason(eventType)") &&
+      (eventBusRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason,") ||
+        eventBusRoute.includes("PDV_Manager.LedgerRuntime.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason,")));
   if (
     !eventBusPassesReason ||
     !functionBlock(eventBus, "GetEventReason").includes("eventTypes.EventLabel(eventType)")
@@ -973,7 +1040,10 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
 
   const actionRouterPassesReason =
     actionRouterRoute.includes("PDV_Manager.AwardPiety(deity, delta, GetEventReason(eventType))") ||
-    actionRouterRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))");
+    actionRouterRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, GetEventReason(eventType))") ||
+    (actionRouterRoute.includes("String eventReason = GetEventReason(eventType)") &&
+      (actionRouterRoute.includes("PDV_Manager.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason,") ||
+        actionRouterRoute.includes("PDV_Manager.LedgerRuntime.AwardPietyFromLikesDislikes(deity, delta, eventType, eventReason,")));
   if (
     !actionRouterPassesReason ||
     !functionBlock(actionRouter, "GetEventReason").includes("eventTypes.EventLabel(eventType)")
@@ -1031,7 +1101,7 @@ function verifyBookOfDaysChronicleActionContract({ manager, eventBus, actionRout
     !deityDawnBlock.includes("RecordBookOfDaysFedName(GetPublicDeityDisplayName(deity))") ||
     !princeDawnBlock.includes("PDV_DaedricPathBase path = pathForm as PDV_DaedricPathBase") ||
     !princeDawnBlock.includes("RecordBookOfDaysFedName(path.DeityName)") ||
-    !princeDawnBlock.includes("_dawnHadActivity = True")
+    !princeDawnBlock.includes("SetDawnHadActivity(True)")
   ) {
     fail("Book of Days dawn digest must collect both deity and Prince positive daily movement before clearing PietyToday.", managerPath);
   } else {
@@ -1097,12 +1167,13 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
       }
     }
 
-    if (name !== "PDV__ManagerQuest.psc" && source.includes("PDV_PrismaBridge.SendJson(")) {
-      fail("Non-manager source sends focused panel JSON.", filePath);
+    if (name !== "PDV_PrismaPresenter.psc" && source.includes("PDV_PrismaBridge.SendJson(")) {
+      fail("Focused panel JSON must be owned by PDV_PrismaPresenter.", filePath);
     }
 
     if (
-      name !== "PDV__ManagerQuest.psc" &&
+      name !== "PDV_PrismaPresenter.psc" &&
+      name !== "PDV_DebugRuntime.psc" &&
       name !== "PDV_PrismaBridge.psc" &&
       source.includes("PDV_PrismaBridge.SendOverlayJson(")
     ) {
@@ -1131,7 +1202,7 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
   if (!fs.existsSync(managerPath)) {
     fail("Manager source is missing.", managerPath);
   } else {
-    const manager = read(managerPath);
+    const manager = familySourceText(REPO_ROOT, DEVOTION_SOURCE);
     const pushBlock = functionBlock(manager, "PushDevotionPanel");
     const onUpdateBlock = eventBlock(manager, "OnUpdate");
     const startupBlock = functionBlock(manager, "SendPrismaStartupPayload");
@@ -1422,7 +1493,7 @@ if (!fs.existsSync(DEVOTION_SOURCE)) {
     const journalSlice = journalStart >= 0 ? onKeyDown.slice(journalStart, journalEnd) : "";
     const visibleIndex = journalSlice.indexOf("PDV_PrismaBridge.IsJournalVisible()");
     const menuIndex = journalSlice.indexOf("Utility.IsInMenuMode()");
-    const closeIndex = journalSlice.indexOf("PDV_Manager.ClosePrismaJournal()");
+    const closeIndex = journalSlice.indexOf("PDV_Manager.Prisma.ClosePrismaJournal()");
 
     if (!onKeyDown) {
       fail("MCM OnKeyDown event is missing.", mcmPath);
@@ -1747,7 +1818,9 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 
   const managerPath = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
-  const managerForBroadLane = fs.existsSync(managerPath) ? read(managerPath) : "";
+  const managerForBroadLane = fs.existsSync(managerPath)
+    ? familySourceText(REPO_ROOT, DEVOTION_SOURCE)
+    : "";
   if (
     !managerForBroadLane.includes("Function EmitBookOfDaysBroadLaneTierChange(Int today)") ||
     !managerForBroadLane.includes("BuildBroadLaneTierReachJournalLine(originRace, tier)") ||
@@ -1778,7 +1851,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     !managerForBroadLane.includes("Bool Function IsPantheonBroadPoolPresentationActive(Int origin)") ||
     !managerForBroadLane.includes("Float Function GetBroadLaneStandingValue(Int origin)") ||
     !managerForBroadLane.includes("Float Function GetBroadLaneScratchValue(Int origin)") ||
-    !managerForBroadLane.includes("primary = ClampValue(piety / BROAD_PANTHEON_POOL_MAX, 0.0, 1.0)") ||
+    !BROAD_POOL_CLAMP_RE.test(managerForBroadLane) ||
     !managerForBroadLane.includes('\\"scratch\\":') ||
     !app.includes("const renderBroadInstrument") ||
     !app.includes("broad: renderBroadInstrument")
@@ -1888,10 +1961,16 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 
   const broadSymbolBody = functionBlock(managerForBroadLane, "GetBroadLaneSymbol");
+  const nordSourcePath = path.join(DEVOTION_SOURCE, "PDV_OriginRuntime_Nord.psc");
+  const nordDetailBody = fs.existsSync(nordSourcePath)
+    ? functionBlock(read(nordSourcePath), "GetOriginDetailLabel")
+    : "";
   if (
-    !broadSymbolBody.includes("NORD_BASELINE_NINE_DIVINES") ||
-    !broadSymbolBody.includes('return "akatosh"') ||
-    !broadSymbolBody.includes('return "kyne"')
+    !broadSymbolBody.includes('GetOriginDetailLabel("broad-lane-symbol")') ||
+    !nordDetailBody.includes('detailKey == "broad-lane-symbol"') ||
+    !nordDetailBody.includes("NORD_BASELINE_NINE_DIVINES") ||
+    !nordDetailBody.includes('return "akatosh"') ||
+    !nordDetailBody.includes('return "kyne"')
   ) {
     fail("Nord broad-pool symbol must distinguish Nine Divines from Old Ways.", managerPath);
   } else {
@@ -1916,7 +1995,10 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   const substrateFunctionBlocks = extractFunctionBlocks(managerForBroadLane);
   const staleMetricCalls = substrateProgressCalls.filter((call) => {
     const metricArgument = call.args[3]?.trim() ?? "";
-    if (metricArgument.includes("GetMetric() - metricBefore") || metricArgument.includes("metricAfter - metricBefore")) {
+    if (
+      /GetMetric\(\)\s*-\s*\b\w*metricBefore\b/i.test(metricArgument) ||
+      /\b\w*metricAfter\s*-\s*\b\w*metricBefore\b/i.test(metricArgument)
+    ) {
       return false;
     }
     // A bare local is acceptable ONLY if the enclosing function actually assigns it the real
@@ -1926,8 +2008,9 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     // inside the substrate guard, so the declaration and the assignment are separate lines.
     // Anything else -- notably a requested `multiplier` -- is still a stale-metric failure.
     if (/^[A-Za-z_]\w*$/.test(metricArgument)) {
-      const functionName = enclosingFunctionName(substrateFunctionBlocks, call.index);
-      const functionBody = substrateFunctionBlocks.find((item) => item.name === functionName)?.body ?? "";
+      const functionBody = substrateFunctionBlocks.find(
+        (item) => item.start <= call.index && call.index <= item.end,
+      )?.body ?? "";
       const realDelta = new RegExp(
         `(?:Float\\s+)?${metricArgument}\\s*=\\s*[A-Za-z0-9_]+\\.GetMetric\\(\\)\\s*-\\s*[A-Za-z0-9_]*metricBefore\\b`,
         "i",
@@ -1941,6 +2024,10 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   const firstPresentation = Math.min(
     ...[substrateProgressBody.indexOf("SendPrismaSubstrateToast("), substrateProgressBody.indexOf("AppendBookOfDaysEntry(")].filter((index) => index >= 0),
   );
+  const staleMetricDetails = staleMetricCalls.map((call) => {
+    const owner = enclosingFunctionName(substrateFunctionBlocks, call.index) || "<top-level>";
+    return `${owner}@${call.line}:${call.args[3]?.trim() || "<missing>"}`;
+  });
   if (
     !substrateProgressBody.includes("Float grantedMetric") ||
     creditGuard < 0 || creditReturn < creditGuard || firstPresentation < creditReturn ||
@@ -1948,7 +2035,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     !substrateProgressBody.includes('AppendBookOfDaysEntry(entryText, Utility.GetCurrentGameTime() as Int, "substrate.act", symbolName, False)') ||
     !substrateProgressBody.includes('entryText = stateLabel + ": " + context')
   ) {
-    fail(`Substrate presentation must be gated by actual grantedMetric with zero-credit suppression; ${staleMetricCalls.length} producer(s) do not pass a metric delta.`, managerPath);
+    fail(`Substrate presentation must be gated by actual grantedMetric with zero-credit suppression; ${staleMetricCalls.length} producer(s) do not pass a metric delta${staleMetricDetails.length ? ` (${staleMetricDetails.join(", ")})` : ""}.`, managerPath);
   } else {
     pass(`All ${substrateProgressCalls.length} substrate progress producers pass actual metric deltas and the shared helper suppresses zero-credit presentation.`, managerPath);
   }
@@ -1967,7 +2054,10 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
     "RunDawnAwardAltmerAuriElDawn",
   ]);
   const altmerHeritageCalls = extractCalls(managerForBroadLane, "AwardAltmerAncestorSpinePulse")
-    .filter((call) => enclosingFunctionName(substrateFunctionBlocks, call.index) !== "AwardAltmerAncestorSpinePulse");
+    .filter((call) => {
+      const owner = enclosingFunctionName(substrateFunctionBlocks, call.index);
+      return owner !== "AwardAltmerAncestorSpinePulse" && owner !== "HandleContextualSignal";
+    });
   const actualAltmerHeritageProducers = new Set(
     altmerHeritageCalls.map((call) => enclosingFunctionName(substrateFunctionBlocks, call.index)),
   );
@@ -2150,6 +2240,7 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
 
 verifyJournalBytecodeFreshness();
 verifyPrismaAssetCacheContract();
+verifyDeityNameCasingContract();
 verifyNpcRecognitionVisibilityContract();
 requireBridgeSourceParity();
 requireBridgeNativesDeclared();

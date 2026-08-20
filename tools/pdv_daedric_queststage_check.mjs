@@ -24,6 +24,7 @@ import path from "node:path";
 import process from "node:process";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { devotionSource } from "./lib/pdv_paths.mjs";
 
 // The flags this file reads, plus any the repo documents for it. Documented-but-unread
 // flags are included deliberately: rejecting one would break a published command, and a
@@ -32,8 +33,7 @@ const KNOWN_FLAGS = new Set(["--json"]);
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_daedric_queststage_check" });
 
 const ROOT = process.cwd();
-const PLAYER_EVENTS =
-  "D:\\Wabbajack\\modlists\\Anvil\\mods\\Devotion\\Scripts\\Source\\PDV_PlayerEvents.psc";
+const PLAYER_EVENTS = path.join(devotionSource(), "PDV_PlayerEvents.psc");
 const STAGE_CSV = path.join(
   ROOT, "references", "vanilla-gameplay", "extracted", "vanilla-quest-stage-readback.csv"
 );

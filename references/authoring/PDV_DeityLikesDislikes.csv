@@ -61,7 +61,7 @@ Shor,313,rest-under-open-sky,+,small,0.25,3,0,,,,the old Nord king kept the roug
 Shor,304,murder-defenseless,-,large,-1.5,1,1.0,,,,honorless killing bars the door to Sovngarde
 Shor,300,kill-undead,+,small,0.5,3,0,,ActorTypeUndead,,the restless dead deny the honored hall
 Shor,365,raise-undead,-,medium,-1.0,2,0.5,,ActorTypeUndead,,binding the dead mocks the hall of valor
-Shor,342,honor-the-ancestor-cairn,+,small,0.25,3,0,,,Nord,keeping the old names and cairn-stories in memory is Nord ancestor duty
+Shor,342,read-lore-book,+,small,0.25,3,0,,,Nord,sagas and lore-books keep the road to Sovngarde in living memory
 Tsun,2,kill-hostile-humanoid,+,medium,0.75,2,0.5,,,,the shield-thane proves the warrior at honorable arms
 Tsun,343,learn-word-of-power,+,small,0.25,3,0,,,,Tsun stands where trials are met
 Tsun,304,murder-defenseless,-,large,-1.5,1,1.0,,,,the guardian of trials despises a coward's kill

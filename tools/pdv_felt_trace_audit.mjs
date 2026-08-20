@@ -26,6 +26,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertKnownFlags } from "./lib/pdv_cli.mjs";
+import { familySourceText } from "./lib/pdv_symbol_home.mjs";
 
 // Derived from this file's own flag literals. An unknown flag is a usage error (exit 2),
 // not a silent no-op: this tool has a --self-test, and ignoring a typo meant printing PASS
@@ -219,7 +220,13 @@ function selfTest() {
 function main() {
   const registry = JSON.parse(fs.readFileSync(REGISTRY, "utf8"));
   const corpus = loadCorpus(LIVE_SOURCE_DIR);
-  const manager = fs.readFileSync(path.join(LIVE_SOURCE_DIR, "PDV__ManagerQuest.psc"), "utf8");
+  // Parsed, not hashed or rewritten. LoadRowsForDeity moved into
+  // PDV_DevotionLedger.psc in the 2.0 rebuild while LoadPrinceRowsForPath stayed
+  // in the manager -- reading only the manager silently lost every generated
+  // deity branch and reported the whole CSV as unwired. familySourceText() is
+  // strictly additive: manager text first and verbatim, then each extracted
+  // module with qualifiers stripped.
+  const manager = familySourceText(ROOT, LIVE_SOURCE_DIR);
   const tables = parseGeneratedRows(manager);
   const esp = bridgeScan();
   const rows = traceEffects(registry, corpus, tables, esp);

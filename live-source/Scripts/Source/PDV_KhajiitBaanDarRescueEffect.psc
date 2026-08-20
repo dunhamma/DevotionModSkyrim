@@ -9,7 +9,7 @@ PDV__ManagerQuest Property PDV_Manager Auto
 
 Bool Function HasRuntimeEligibility()
     Actor playerRef = Game.GetPlayer()
-    return PDV_Manager && playerRef && PDV_Manager.CanExecuteKhajiitBaanDarRescue(playerRef)
+    return PDV_Manager && playerRef && PDV_Manager.OriginRuntime.HandleContextualQuery("baandar-rescue-eligible", "baan-dar-rescue", playerRef) == 1
 EndFunction
 
 Float Function GetRestoreTargetPercent()
