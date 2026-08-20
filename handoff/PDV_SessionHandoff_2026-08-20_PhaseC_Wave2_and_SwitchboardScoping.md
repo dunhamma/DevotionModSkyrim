@@ -1,17 +1,20 @@
-# Session handoff -- 2026-08-20: Phase C wave 2 done + switchboard pass scoped
+# Session handoff -- 2026-08-20: Phase C wave 2 + reward/neglect switchboard lane done
 
 Resume pointer for the 2.0 rebuild, continuing from
 `PDV_SessionHandoff_2026-08-20_PhaseC_Wave1_Validated.md`. All work committed on
-**`feature/v3-origin-extraction`** (nothing pushed). HEAD is `5538a907`.
+**`feature/v3-origin-extraction`** (nothing pushed). HEAD is `1fe0ff28`.
 
-## What shipped this session (2 gated commits)
+## What shipped this session (5 gated commits)
 
-| Commit | Wave | Emptied | Gate |
+| Commit | Step | Change | Gate |
 |---|---|---|---|
-| `85b69aa5` | 2a | 21 provably-safe base duplicate bodies | isolated compile 0/0 · parity changed=21, removed=0 |
-| `5538a907` | 2b | 3 read-only base duplicate bodies | isolated compile 0/0 · parity changed=3, removed=0 |
+| `85b69aa5` | 2a | 21 provably-safe base bodies emptied | compile 0/0 · parity changed=21, removed=0 |
+| `5538a907` | 2b | 3 read-only base bodies emptied | compile 0/0 · parity changed=3, removed=0 |
+| `6d7d46d2` | docs | wave-2 + switchboard scoping handoff | -- |
+| `f50a743f` | switchboard slice 1 | reward/neglect per-cycle loop (ledger+manager) | ledger + manager compile 0/0 |
+| `1fe0ff28` | switchboard slice 2 | removed 27 dead reward/neglect base decls (-490 lines) | base+Altmer compile 0/0 · parity removed=27, changed=0 |
 
-**Phase C tally: 239 of 605 neutralized** (73 deleted + 142 wave-1 + 24 wave-2).
+**Phase C tally: 266 of 605 neutralized** (100 deleted [73 wave-1 + 27 slice-2] + 166 emptied [142 wave-1 + 24 wave-2]).
 
 Per-change gates (kept in separate buckets): isolated compile of `PDV_OriginRuntimeBase`
 against the WORKTREE source into a scratch output = `0 error(s), 0 warning(s), succeeded`
@@ -44,41 +47,41 @@ side-effecting will mostly be the same. Conclusion: **empty-body is near its cei
 C-tier; the remaining ~300 declarations are load-bearing and only removable by the switchboard
 pass.** (memory: [[phase-c-empty-body-ceiling]])
 
-## Switchboard pass -- SCOPED, blocked on ONE owner decision
+## Switchboard pass -- reward/neglect lane MIGRATED (owner chose "keep it in")
 
-Owner chose the switchboard/virtual-routing pass as the next step. Scoping result:
+Owner ruling: cleanliness is the priority this round, so the reward/neglect lane was
+migrated (not left as residue). Done in two gated slices (`f50a743f`, `1fe0ff28`):
 
-**It is partly BUILT.** The base already declares a generic dispatch surface and adapters
-already override it: `IsRaceLaneNeglected`, `SyncRaceRewards`, `SyncNeglectSpells`,
-`IsOfferEligibleDeity`, `GetFormalCommitmentOfferMessage`, `ShowOriginNotification`,
-`HandleContextualSignal(signalId,...)`, `HandleContextualQuery`, `GetOriginDetailLabel(key)`,
-`GetOriginStateValue`, `GetSurveyFragment`, etc. Base defaults are inert (False/0/""/None).
-The generic overrides cleanly delegate to the per-lane methods (e.g. Altmer
-`SyncNeglectSpells()` -> `SyncAltmerNeglectSpell(IsAltmerCoherenceNeglected())`).
+- **Slice 1:** `SyncFirstTierRaceRewardRuntime` (+ the stray `DebugSeedArgonian` caller) now
+  loop over `PDV_FLST_OriginAdapters` calling the generic `SyncRaceRewards()` +
+  `SyncNeglectSpells()` per adapter, replacing 20 hardcoded per-lane calls. The bound (player)
+  adapter grants its lane; every other adapter's Sync runs the isX=false path and STRIPS its
+  lane -- preserving the one-race-active invariant every cycle, as before.
+- **Slice 2:** removed the 27 now-dead per-lane base declarations (9 rewards + 9 neglect +
+  9 `IsXNeglected`). `SyncKhajiitEmphasisRewards` EXCLUDED -- still called by base
+  `SyncKhajiitRuntimeState`. The impl lives on in each adapter.
 
-Coverage is non-uniform but INTENTIONAL where checked: `SyncRaceRewards`/`SyncNeglectSpells`
-= all 10; `IsRaceLaneNeglected` = all but Nord; `IsOfferEligibleDeity` = only the 6 offer
-races (Argonian/Bosmer/Khajiit/Orc legitimately have no per-lane offer method -> base False
-is correct).
+Why it stays behavior-preserving (the foreign strip is re-routed through the adapters, not lost):
+- Non-bound adapters ARE Manager-wired -- houseCARL ESP readback of Altmer `071797` + Nord
+  `071794` both show `Manager -> 00C325` filled -- so `foreignAdapter.SyncRaceRewards()` runs.
+- Adapter `SyncAltmerRewards` is byte-identical to the base and computes `isAltmer` dynamically,
+  so the foreign-strip path is identical to today's base-dispatch strip.
+- Nord edge: its `SyncNeglectSpells()` re-affirms Kyne/patron neglect already set at dawn
+  (`RunDawnApplySpellAndNeglectLayers`); `IsKyneNeglectActive() == IsNeglectFlagActive(Kyne)`
+  and the helpers are idempotent/self-clearing, so the extra per-cycle sync converges the same.
 
-**The blocker (found by reading the actual caller):** `SyncFirstTierRaceRewardRuntime`
-(PDV_DevotionLedger.psc:3557) is NOT a race switch -- it calls EVERY race's
-`SyncXRewards(playerRef)` + `SyncXNeglectSpell(IsXNeglected())` UNCONDITIONALLY. Those base
-methods do NOT self-gate by race (`SyncAltmerRewards` only guards `!playerRef`); internally
-they compute `isAltmer` and, for a NON-owner, `ClearSubstrateBoons()` + strip every T1/T2/T3
-spell (SyncRaceRewardSpell with isActive=False). So the unconditional cross-race calls are
-LOAD-BEARING defensive cleanup: keep exactly one race's rewards active and all others stripped
-every sync cycle.
+The base still declares the generic dispatch surface (`IsRaceLaneNeglected`, `SyncRaceRewards`,
+`SyncNeglectSpells`, `IsOfferEligibleDeity`, `HandleContextualSignal`, `GetOriginDetailLabel`,
+`GetSurveyFragment`, ...); base defaults inert. Coverage is non-uniform but INTENTIONAL:
+`SyncRaceRewards`/`SyncNeglectSpells` = all 10; `IsRaceLaneNeglected` = all but Nord;
+`IsOfferEligibleDeity` = only the 6 offer races (Argonian/Bosmer/Khajiit/Orc have no per-lane
+offer method -> base False is correct).
 
-Therefore the generic `SyncRaceRewards()` (player-lane only) is NOT a drop-in replacement --
-collapsing to it drops the foreign-reward stripping (observable on race-change / save
-migration / console-granted edge cases). Same for the neglect-spell lane.
-
-**Owner decision required before executing this lane:** should the cross-race defensive strip
-(a) move to a dedicated race-change / one-shot `StripForeignRaceRewards` hook so
-`SyncFirstTierRaceRewardRuntime` can call the player-only generics, or (b) stay as-is (then
-this lane's per-lane declarations CANNOT be removed and stay until a different design)? This
-is an architecture call, not a mechanical refactor.
+**PENDING -- race-change runtime test (owner-gated):** become race A, gain a blessing, `setrace`
+B, confirm A's blessings drop and B's appear. This is the real gate for the reward lane; the
+same sitting can spot-check waves 2a/2b. `Devotion-V3Dev` is stale vs HEAD -- redeploy first.
+Dead helper subtrees left behind (`SyncAltmerRewardFamily`, `SyncAltmerAncestorSubstrate`, ...)
+are a follow-up dead-code sweep.
 
 ## Also required for ANY declaration removal (the general rule)
 
@@ -88,15 +91,16 @@ generic (not just one). Example: `IsNordOfferEligibleDeity` has 5 callers
 IsQuestReactionDeityReachable, DebugSetNordPantheonBaseline x2), not 1. Removal is the parity
 REMOVED category -- run with `--allow-removed` and treat each as an intentional retire.
 
-## Suggested next slices (once the strip decision is made)
+## Next slices
 
-1. **IsOfferEligibleDeity lane** (cleanest, lowest churn): migrate the ~handful of callers of
-   the 6 per-lane `IsXOfferEligibleDeity` to the generic `OriginRuntime.IsOfferEligibleDeity(deity)`,
-   then remove the 6 base declarations (bodies already emptied in wave 2a). Verify every caller
-   first (Nord has 5).
+1. **IsOfferEligibleDeity lane** (IN PROGRESS -- next): migrate the callers of the 6 per-lane
+   `IsXOfferEligibleDeity` to the generic `OriginRuntime.IsOfferEligibleDeity(deity)`, then remove
+   the 6 base declarations (bodies already emptied in wave 2a). Verify every caller first --
+   `IsNordOfferEligibleDeity` has 5 (UsesFormalCommitmentOffersForDeity,
+   IsGenericLikesDislikesDeityReachable, IsQuestReactionDeityReachable, DebugSetNordPantheonBaseline x2).
 2. **Presentation lane** (`ShowOriginNotification`/`ShowOriginMessage`, `GetSurveyFragment`,
    `GetOriginDetailLabel/Value`) -- generics exist; check caller counts.
-3. **Reward/neglect lane** -- ONLY after the strip decision above.
+3. ~~Reward/neglect lane~~ -- DONE (`f50a743f`, `1fe0ff28`).
 
 ## Open bugs / debt (carried from wave-1 handoff, still open)
 
