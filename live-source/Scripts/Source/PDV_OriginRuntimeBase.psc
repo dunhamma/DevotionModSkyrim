@@ -180,14 +180,8 @@ Function EnsureBosmerBaanDarRuntimeIdentity()
 EndFunction
 
 Int Function GetBosmerPathEvidenceDays()
-    if !Manager.PDV_BosmerPathTrack
-        return 0
-    endIf
-    Int currentPath = Manager.PDV_BosmerPathTrack.GetCurrentState()
-    if currentPath <= 0
-        return 0
-    endIf
-    return Manager.PDV_BosmerPathTrack.GetRecentEvidenceDayCount(currentPath, 7)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return 0
 EndFunction
 
 Function RemoveAltmerDisciplineSpells(Actor playerRef)
@@ -1991,15 +1985,8 @@ String Function GetBosmerPathDisplayLabelAt(Int pathState)
 EndFunction
 
 String Function GetBosmerPathLabel()
-    if Manager.PDV_BosmerPathTrack
-        Int pathState = Manager.PDV_BosmerPathTrack.GetCurrentState()
-        if pathState < Manager.BOSMER_PATH_OLD_CONTRACT || pathState > Manager.BOSMER_PATH_BANDIT_ROAD
-            return "Unsettled"
-        endIf
-        return GetBosmerPathDisplayLabelAt(pathState)
-    endIf
-
-    return "Unsettled"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return ""
 EndFunction
 
 String Function GetBosmerComplianceBand()
@@ -6286,20 +6273,8 @@ String Function GetDunmerSurveyText()
 EndFunction
 
 String Function GetDunmerAncestorLayerLabel()
-    if !Manager.PDV_DunmerAncestorSubstrate
-        return "unreadable"
-    endIf
-
-    Int tierValue = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-    if tierValue >= 3
-        return "strong"
-    elseIf tierValue == 2
-        return "steady"
-    elseIf tierValue == 1
-        return "beginning"
-    endIf
-
-    return "quiet"
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return ""
 EndFunction
 
 String Function GetDunmerReclamationFocusLabel(Int focusValue)
