@@ -280,6 +280,13 @@ Function OnConfigInit()
     ApplyInGameEffectsPreference()
 EndFunction
 
+; SkyUI only rebuilds Pages on load (OnGameReload); a mid-session console unlock of the
+; dev tabs (raise PDV_GLO_DebugLevel) was therefore invisible until a save/reload. Rebuild
+; on every menu open so the owner-only Debug tabs surface immediately on the next open.
+Function OnConfigOpen()
+    InitializePages()
+EndFunction
+
 Function ApplyInGameEffectsPreference()
     ; Re-assert the player's In-Game Effects choice on load so the D1 diegetic layer
     ; matches the saved preference (default on) regardless of the baked ESP flag.
@@ -2082,7 +2089,7 @@ Function BuildDeveloperLockedPage(String pageName)
     SetCursorPosition(0)
     AddHeaderOption(pageName, OPTION_FLAG_NONE)
     AddTextOption("Developer Options", "Locked", OPTION_FLAG_DISABLED)
-    AddTextOption("Access", "Enable Developer Options on the Player page to view this page.", OPTION_FLAG_DISABLED)
+    AddTextOption("Access", "In console: set PDV_GLO_DebugLevel to 1 (or higher), then reopen this menu.", OPTION_FLAG_DISABLED)
 
     SetCursorPosition(1)
     AddHeaderOption("Player", OPTION_FLAG_NONE)
