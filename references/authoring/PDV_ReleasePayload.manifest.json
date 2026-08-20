@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
-  "expectedEntryCount": 273,
-  "scriptPairCount": 118,
+  "expectedEntryCount": 275,
+  "scriptPairCount": 119,
   "releaseMetadata": [
     "CHANGELOG.txt",
     "README.txt"
@@ -63,6 +63,7 @@
     "Scripts/PDV_DaedricPath_Vaermina.pex",
     "Scripts/PDV_DaedricPath_Vile.pex",
     "Scripts/PDV_DaedricRuntime.pex",
+    "Scripts/PDV_DebugRuntime.pex",
     "Scripts/PDV_DeityBase.pex",
     "Scripts/PDV_Deity_Akatosh.pex",
     "Scripts/PDV_Deity_Alkosh.pex",
@@ -186,6 +187,7 @@
     "PDV_DaedricPath_Vaermina",
     "PDV_DaedricPath_Vile",
     "PDV_DaedricRuntime",
+    "PDV_DebugRuntime",
     "PDV_DeityBase",
     "PDV_Deity_Akatosh",
     "PDV_Deity_Alkosh",

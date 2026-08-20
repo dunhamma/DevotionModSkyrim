@@ -2279,7 +2279,7 @@ EndFunction
 Function RunDawnNotify()
     Manager.Prisma.SendPrismaEventToast("dawn", None, "", "", "", Manager.GetDawnHadActivity())
     Manager.Prisma.RefreshDiegeticMedallion("dawn")
-    Manager.Trace(2, "Pattern summary: " + Manager.DebugGetPatternProvingSummary())
+    Manager.Trace(2, "Pattern summary: " + Manager.DebugRuntime.DebugGetPatternProvingSummary())
 EndFunction
 
 Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)
@@ -2411,7 +2411,7 @@ Function ClearUnsafeFaultInjection()
     StorageUtil.UnsetIntValue(None, "PDV.Debug.UnsafeFaultInjectionActive")
     StorageUtil.UnsetStringValue(None, "PDV.Debug.UnsafeFaultInjectionReason")
     StorageUtil.UnsetFormValue(None, "PDV.Debug.UnsafeFaultInjectionDeity")
-    Manager.DebugClosePrismaSurfaces()
+    Manager.DebugRuntime.DebugClosePrismaSurfaces()
     Manager.Prisma.RequestPanelRefresh()
     Debug.Trace("[PDV][UNSAFE_FAULT_INJECTION] Cleared injected state; PDV.Debug.UnsafeFaultInjectionEver remains set and this run does not count as gameplay proof.")
 EndFunction
@@ -3944,11 +3944,11 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
     StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 1)
     Int choice = offerMessage.Show()
     if choice == 0
-        Manager.DebugAcceptPendingCommitment()
+        Manager.DebugRuntime.DebugAcceptPendingCommitment()
     elseIf choice == 1
-        Manager.DebugDeclinePendingCommitment()
+        Manager.DebugRuntime.DebugDeclinePendingCommitment()
     elseIf choice == 2
-        Manager.DebugRefusePendingCommitment()
+        Manager.DebugRuntime.DebugRefusePendingCommitment()
     endIf
 EndFunction
 

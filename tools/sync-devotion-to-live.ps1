@@ -70,6 +70,7 @@ $Map = @(
     @{ Src = "live-source\Scripts\Source\PDV_DevotionLedger.psc";            Dst = "Scripts\Source\PDV_DevotionLedger.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_RecognitionRuntime.psc";        Dst = "Scripts\Source\PDV_RecognitionRuntime.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_PrismaPresenter.psc";          Dst = "Scripts\Source\PDV_PrismaPresenter.psc" },
+    @{ Src = "live-source\Scripts\Source\PDV_DebugRuntime.psc";           Dst = "Scripts\Source\PDV_DebugRuntime.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_ContextualFavorRuntime.psc";   Dst = "Scripts\Source\PDV_ContextualFavorRuntime.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_DaedricRuntime.psc";          Dst = "Scripts\Source\PDV_DaedricRuntime.psc" },
     @{ Src = "live-source\Scripts\Source\PDV_SurveyDevotionEffect.psc";    Dst = "Scripts\Source\PDV_SurveyDevotionEffect.psc" },

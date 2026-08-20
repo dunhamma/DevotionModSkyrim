@@ -2647,7 +2647,7 @@ String Function ExportDevotionReport()
     report = report + nl + "-- Environment --"
     report = report + nl + "Experience Mode: " + GetExperienceModeLabelForReport()
     report = report + nl + "Custom race mapping: " + OnOffForReport(StorageUtil.GetIntValue(None, "PDV.Compat.CustomRaceMapping", 1))
-    report = report + nl + "Origin detect: " + Manager.DebugGetOriginDiagnostic()
+    report = report + nl + "Origin detect: " + Manager.DebugRuntime.DebugGetOriginDiagnostic()
     report = report + nl + "Survival integration: " + OnOffForReport(StorageUtil.GetIntValue(None, "PDV.Compat.SurvivalContextEnabled", 1))
     report = report + nl + "CC integration: " + OnOffForReport(StorageUtil.GetIntValue(None, "PDV.Compat.CCContentEnabled", 1))
     report = report + nl

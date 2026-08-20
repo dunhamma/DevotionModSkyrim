@@ -67,8 +67,8 @@ Phase 20 / Phase 21 status is unchanged by the release: 1.0.4 is a defect-and-co
 not a content build, so the open Phase 20 runtime/placement lane and the Phase 21
 Authoria-first compatibility lane below still stand as written.
 
-Current V3 module-decomposition addendum (2026-08-20): **ORIGIN and RECOGNITION are
-extracted at the static/compile/readback boundary.** `PDV_OriginRuntimeBase` is the polymorphic
+Current V3 module-decomposition addendum (2026-08-20): **ORIGIN, RECOGNITION, PRISMA, and DEBUG
+are extracted at the static/compile/readback boundary.** `PDV_OriginRuntimeBase` is the polymorphic
 interface/shared implementation and ten `PDV_OriginRuntime_<Race>` quests own the race
 lanes. `PDV__ManagerQuest.ResolveOriginRuntime` deliberately fills the unbound
 `OriginRuntime` property at runtime from `PDV_FLST_OriginAdapters`, reselecting when the
@@ -99,7 +99,19 @@ proof remains open for claim/release/state events, MCM toggles, faction reaction
 recognition-off silence, panel JSON, and save/load persistence. The full verifier currently
 has 37 known decomposition-era gate failures (primarily ORIGIN call-home/readback drift),
 which are triaged for the post-module integration sweep rather than churned per module.
-Next extraction order is PRISMA, then DEBUG/MCM.
+`PDV_PrismaPresenter` owns all 114 mapped presentation functions (48 public, 66 private) and
+dispatches the eight load-bearing race-content choices through typed ORIGIN presentation
+virtuals; host QUST `0717A0`, manager/presenter references, and the 57-entry SEQ are directly
+read back. `PDV_DebugRuntime` owns all 136 `Debug*` bodies (111 public, 25 module-internal), while
+the manager retains `RunDebugCommand` and its four scratch registers. MCM uses the typed
+`manager.DebugRuntime.Debug*` path; no debug function is Global or user-console reachable.
+Host QUST `0717A1`, its seven stable references, manager property 515, and the 58-entry SEQ are
+directly read back. DEBUG's `OriginRuntime` mirror is runtime-filled from the manager's selected
+adapter rather than statically pinned. The PRISMA and DEBUG extraction gates pass 37/37 and
+27/27 respectively, VMAD passes 207/207 attachments with zero unwaived findings, affected
+scripts compile 0/0, and the full verifier remains at the same 37 known integration failures.
+Next work is the post-module integration sweep and then fresh-game/player-surface proof; the
+tester-only console shim remains outside the user payload and awaits an exact driver-set ruling.
 
 Current v3.100 addendum: the 2026-07-14 bug-report cluster is adjudicated and its
 fix pass EXECUTED (authority: Part D of

@@ -3764,6 +3764,799 @@
       ],
       "privateCount": 22
     },
+    "DEBUG": {
+      "targetScript": "PDV_DebugRuntime",
+      "callForm": "DebugRuntime.<fn> (instance; MCM reaches PDV_Manager.DebugRuntime)",
+      "public": [
+        {
+          "name": "DebugGetDiegeticD1Enabled",
+          "signature": "Bool Function DebugGetDiegeticD1Enabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetDiegeticD1Enabled",
+          "signature": "Function DebugSetDiegeticD1Enabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetSignalFloorSmokeScenarioCount",
+          "signature": "Int Function DebugGetSignalFloorSmokeScenarioCount()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetSignalFloorSmokeLabel",
+          "signature": "String Function DebugGetSignalFloorSmokeLabel(Int scenarioIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunSignalFloorSmokeScenario",
+          "signature": "String Function DebugRunSignalFloorSmokeScenario(Int scenarioIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedArgonian",
+          "signature": "Function DebugSeedArgonian(Float histValue, Float peopleValue, Float voidValue)",
+          "calledByModules": [
+            "MANAGER"
+          ]
+        },
+        {
+          "name": "DebugSeedBosmerVariety",
+          "signature": "Function DebugSeedBosmerVariety()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetKhajiitLunarMetric",
+          "signature": "String Function DebugSetKhajiitLunarMetric(Float metricTarget)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetKhajiitLunarSubstrate",
+          "signature": "String Function DebugResetKhajiitLunarSubstrate()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetKhajiitLunarBudgetSummary",
+          "signature": "String Function DebugGetKhajiitLunarBudgetSummary()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugCycleKhajiitLunarPosture",
+          "signature": "Function DebugCycleKhajiitLunarPosture()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugClosePrismaSurfaces",
+          "signature": "Function DebugClosePrismaSurfaces()",
+          "calledByModules": [
+            "MANAGER",
+            "PDV_DevotionLedger"
+          ]
+        },
+        {
+          "name": "DebugSyncRewardsOnly",
+          "signature": "Function DebugSyncRewardsOnly()",
+          "calledByModules": [
+            "MANAGER"
+          ]
+        },
+        {
+          "name": "DebugForceSetPietyByIndex",
+          "signature": "Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceSetPietyTodayByIndex",
+          "signature": "Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeDecayGraceByIndex",
+          "signature": "Function DebugPrimeDecayGraceByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeDecayEligibleByIndex",
+          "signature": "Function DebugPrimeDecayEligibleByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunDecayPass",
+          "signature": "Function DebugRunDecayPass()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunDecayProofDaysByIndex",
+          "signature": "Function DebugRunDecayProofDaysByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugAwardCuratedSignalByIndex",
+          "signature": "Function DebugAwardCuratedSignalByIndex(Int deityIndex, Int signalType)",
+          "calledByModules": [
+            "MANAGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPietyMapString",
+          "signature": "String Function DebugGetPietyMapString()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugClearActiveDeity",
+          "signature": "Function DebugClearActiveDeity()",
+          "calledByModules": [
+            "MANAGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBroadWorship",
+          "signature": "Function DebugSetBroadWorship()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedBroadLane",
+          "signature": "Function DebugSeedBroadLane()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetBretonPracticeSummary",
+          "signature": "String Function DebugGetBretonPracticeSummary()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBretonPracticePoints",
+          "signature": "String Function DebugSetBretonPracticePoints(Int practicePoints)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugAddBretonPracticePoints",
+          "signature": "String Function DebugAddBretonPracticePoints(Int requestedPoints)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetBretonPracticePoints",
+          "signature": "String Function DebugResetBretonPracticePoints()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetOriginDiagnostic",
+          "signature": "String Function DebugGetOriginDiagnostic()",
+          "calledByModules": [
+            "MCM",
+            "PDV_PrismaPresenter"
+          ]
+        },
+        {
+          "name": "DebugResetDeityByIndex",
+          "signature": "Function DebugResetDeityByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MANAGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugFireDislike",
+          "signature": "Function DebugFireDislike(PDV_DeityBase deity, Int eventType)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugApplyDomainSting",
+          "signature": "Function DebugApplyDomainSting(Int domainValue, Bool sharp)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugBurstAntiStack",
+          "signature": "Function DebugBurstAntiStack()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugDislikeSummaryLine",
+          "signature": "String Function DebugDislikeSummaryLine(PDV_DeityBase deity, Int eventType)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugApplyTalosBetrayalCompliance",
+          "signature": "Function DebugApplyTalosBetrayalCompliance()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugApplyTalosBetrayalMajor",
+          "signature": "Function DebugApplyTalosBetrayalMajor()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugUnlockConcordatWalkback",
+          "signature": "Function DebugUnlockConcordatWalkback()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBosmerPathState",
+          "signature": "Function DebugSetBosmerPathState(Int stateValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugTriggerGreenPactViolation",
+          "signature": "Function DebugTriggerGreenPactViolation()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerLivingStorySignal",
+          "signature": "Function DebugRecordBosmerLivingStorySignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerExchangeSignal",
+          "signature": "Function DebugRecordBosmerExchangeSignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerBanditRoadSignal",
+          "signature": "Function DebugRecordBosmerBanditRoadSignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerPactPositiveSignal",
+          "signature": "Function DebugRecordBosmerPactPositiveSignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugConfirmStateTransitionRite",
+          "signature": "Function DebugConfirmStateTransitionRite()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordDunmerAncestorPrayer",
+          "signature": "Function DebugRecordDunmerAncestorPrayer()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordDunmerAncestorHomeBonus",
+          "signature": "Function DebugRecordDunmerAncestorHomeBonus()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitMoonObservance",
+          "signature": "Function DebugRecordKhajiitMoonObservance()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitRoadHome",
+          "signature": "Function DebugRecordKhajiitRoadHome()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitCaravanAid",
+          "signature": "Function DebugRecordKhajiitCaravanAid()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitLegendMade",
+          "signature": "Function DebugRecordKhajiitLegendMade()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordMephalaWebWoven",
+          "signature": "Function DebugRecordMephalaWebWoven()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBoethiahHonorableDuel",
+          "signature": "Function DebugRecordBoethiahHonorableDuel()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordTalosShrineDefiance",
+          "signature": "Function DebugRecordTalosShrineDefiance()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetNordPantheonBaseline",
+          "signature": "Function DebugSetNordPantheonBaseline(Int stateValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetSubstratePacingSummary",
+          "signature": "String Function DebugGetSubstratePacingSummary(Int originValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugTriggerSubstratePacingSource",
+          "signature": "String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceIndex = 0)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedSubstrateMetric",
+          "signature": "String Function DebugSeedSubstrateMetric(Int originValue, Float metricValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetSubstratePacing",
+          "signature": "String Function DebugResetSubstratePacing(Int originValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetBroadPantheonSummary",
+          "signature": "String Function DebugGetBroadPantheonSummary(Int poolIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedBroadPantheonPool",
+          "signature": "String Function DebugSeedBroadPantheonPool(Int poolIndex, Float standingValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetBroadPantheonPool",
+          "signature": "String Function DebugResetBroadPantheonPool(Int poolIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunBroadPantheonFanoutTest",
+          "signature": "String Function DebugRunBroadPantheonFanoutTest()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeBroadPantheonScratch",
+          "signature": "String Function DebugPrimeBroadPantheonScratch(Int poolIndex, Float scratchValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunBroadPantheonCatchupForPacing",
+          "signature": "String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetNordBaselineForPacing",
+          "signature": "String Function DebugSetNordBaselineForPacing(Int baselineValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugOfferAcceptRecoverySummary",
+          "signature": "String Function DebugOfferAcceptRecoverySummary()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBroadWorshipForPacing",
+          "signature": "String Function DebugSetBroadWorshipForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunPatronOfferForPacing",
+          "signature": "String Function DebugRunPatronOfferForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugAcceptPatronForPacing",
+          "signature": "String Function DebugAcceptPatronForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugLapsePatronForPacing",
+          "signature": "String Function DebugLapsePatronForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecoverPatronForPacing",
+          "signature": "String Function DebugRecoverPatronForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetImperialVampireForPacing",
+          "signature": "String Function DebugSetImperialVampireForPacing(Bool vampireActive)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetKhajiitFocus",
+          "signature": "Function DebugSetKhajiitFocus(Int focusValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBretonTradition",
+          "signature": "Function DebugSetBretonTradition(Int traditionValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetOrcLifeMode",
+          "signature": "Function DebugSetOrcLifeMode(Int modeValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetArgonianFocus",
+          "signature": "Function DebugSetArgonianFocus(Int focusValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugCycleContextualFavorLane",
+          "signature": "Function DebugCycleContextualFavorLane()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugCycleContextualFavorFamily",
+          "signature": "Function DebugCycleContextualFavorFamily()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugTriggerSelectedContextualFavor",
+          "signature": "Function DebugTriggerSelectedContextualFavor()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugExpireActiveFavor",
+          "signature": "Function DebugExpireActiveFavor()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeRaceLaneNeglect",
+          "signature": "Function DebugPrimeRaceLaneNeglect()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordHircineHuntRite",
+          "signature": "Function DebugRecordHircineHuntRite()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetHircinePath",
+          "signature": "Function DebugResetHircinePath()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRenounceHircinePath",
+          "signature": "Function DebugRenounceHircinePath()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceCurseNone",
+          "signature": "Function DebugForceCurseNone()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceCurseWerewolf",
+          "signature": "Function DebugForceCurseWerewolf()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceCurseVampire",
+          "signature": "Function DebugForceCurseVampire()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRefreshCurseFromPlayerState",
+          "signature": "Function DebugRefreshCurseFromPlayerState()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetCurseProofOriginRace",
+          "signature": "Bool Function DebugSetCurseProofOriginRace(Int originRace)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugEvaluateCommitmentOffer",
+          "signature": "Function DebugEvaluateCommitmentOffer()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedCommitmentSignalDaysByIndex",
+          "signature": "Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetCommitmentStateByIndex",
+          "signature": "Function DebugResetCommitmentStateByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugAcceptPendingCommitment",
+          "signature": "Function DebugAcceptPendingCommitment()",
+          "calledByModules": [
+            "MCM",
+            "PDV_DevotionLedger"
+          ]
+        },
+        {
+          "name": "DebugDeclinePendingCommitment",
+          "signature": "Function DebugDeclinePendingCommitment()",
+          "calledByModules": [
+            "MCM",
+            "PDV_DevotionLedger"
+          ]
+        },
+        {
+          "name": "DebugRefusePendingCommitment",
+          "signature": "Function DebugRefusePendingCommitment()",
+          "calledByModules": [
+            "MCM",
+            "PDV_DevotionLedger"
+          ]
+        },
+        {
+          "name": "DebugRunNeglectPass",
+          "signature": "Function DebugRunNeglectPass()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSanguineConsentReadback",
+          "signature": "String Function DebugSanguineConsentReadback()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedSanguineOfferReady",
+          "signature": "String Function DebugSeedSanguineOfferReady()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugEvaluateConsentOfferReport",
+          "signature": "String Function DebugEvaluateConsentOfferReport()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugConsentDivinePatronThenRaiseSanguine",
+          "signature": "String Function DebugConsentDivinePatronThenRaiseSanguine()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugFireSanguineAlcoholTwice",
+          "signature": "String Function DebugFireSanguineAlcoholTwice()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceUnconsentedPactThenMigrate",
+          "signature": "String Function DebugForceUnconsentedPactThenMigrate()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPatternProvingSummary",
+          "signature": "String Function DebugGetPatternProvingSummary()",
+          "calledByModules": [
+            "MCM",
+            "PDV_DevotionLedger"
+          ]
+        },
+        {
+          "name": "DebugGetPatternSummarySection",
+          "signature": "String Function DebugGetPatternSummarySection(Int sectionIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPatternSummarySectionCount",
+          "signature": "Int Function DebugGetPatternSummarySectionCount()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPatternSummaryRaceSection",
+          "signature": "Int Function DebugGetPatternSummaryRaceSection(Int originRace)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetConcordatRawValue",
+          "signature": "Int Function DebugGetConcordatRawValue()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetConcordatStateLabel",
+          "signature": "String Function DebugGetConcordatStateLabel()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetConcordatPendingStateLabel",
+          "signature": "String Function DebugGetConcordatPendingStateLabel()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetConcordatGateLabel",
+          "signature": "String Function DebugGetConcordatGateLabel()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetDecaySummaryByIndex",
+          "signature": "String Function DebugGetDecaySummaryByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        }
+      ],
+      "privateCount": 25
+    },
     "MANAGER": {
       "targetScript": "PDV__ManagerQuest",
       "callForm": "manager-internal / Manager.<fn> via backref",

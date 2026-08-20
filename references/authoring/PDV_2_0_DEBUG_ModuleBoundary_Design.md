@@ -1,9 +1,14 @@
 # PDV 2.0 -- Debug Module Boundary (design gate D2)
 
-Status: DRAFT for owner review. The console-access question in Section 3 is an explicit owner
-decision, not a foregone conclusion. This document does not freeze an interface.
+Status: IMPLEMENTED at the static/compile/readback boundary on 2026-08-20. The tester-only
+console shim remains deferred until its exact driver set is chosen; it is not in the user payload.
 
-Scope: design only. No source, manifest, region-map, or ESP edits accompany this document.
+Implementation checkpoint: 136 `Debug*` bodies reside in `PDV_DebugRuntime`; the manager retains
+`RunDebugCommand` plus four scratch registers; the MCM double-hop, 111-public/25-private contract,
+region map, release manifest, sync map, host QUST `0717A1`, manager property 515, and 58-entry SEQ
+are landed. `tools/pdv_v3_debug_extraction_audit.mjs` passes 27/27, five affected scripts compile
+0/0, direct houseCARL readback confirms the host and stable references, and VMAD passes 207/207
+attachments with zero unwaived findings. Runtime/player-surface proof remains open.
 
 Grounding read this session (facts re-derived from the current tree):
 

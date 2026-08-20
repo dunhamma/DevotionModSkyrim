@@ -23,6 +23,13 @@
       "evidence": "PDV__ManagerQuest.psc:739-745 declares the runtime-filled property and adapter FormList; ResolveOriginRuntime at :855-886 selects list[raceIndex], assigns OriginRuntime, and tracks _boundOriginRace. Direct houseCARL readback 2026-08-20 confirms the ten adapter quests 071794-07179D and PDV_FLST_OriginAdapters 07179E are present; validate_scripts reports OriginRuntime absent as designed."
     },
     {
+      "script": "PDV_DebugRuntime",
+      "formids": ["0717A1:Devotion.esp"],
+      "properties": ["OriginRuntime"],
+      "reason": "Runtime switchboard mirror. DEBUG must target the same race adapter currently selected by the manager, so ResolveOriginRuntime assigns DebugRuntime.OriginRuntime whenever it binds or rebinds the manager output. A static VMAD binding would make debug behavior disagree with the player's captured origin.",
+      "evidence": "PDV__ManagerQuest.psc:848-882 validates the race-indexed adapter, assigns OriginRuntime, then assigns DebugRuntime.OriginRuntime from the same picked reference. OnInit and OnUpdate call ResolveOriginRuntime so delayed capture and later origin changes reconcile the mirror."
+    },
+    {
       "script": "PDV_DaedricPath_Azura",
       "formids": ["071280:Devotion.esp"],
       "properties": ["Msg_Response_Dunmer"],

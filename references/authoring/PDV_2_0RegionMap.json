@@ -1,6 +1,6 @@
 {
   "generatedFrom": "live-source/Scripts/Source/*.psc @ worktree feature/v3-origin-extraction. Phase A2 rebuild to current source reality: ORIGIN split across PDV_OriginRuntimeBase + 10 PDV_OriginRuntime_<Race> adapters (single-adapter duplicates routed to their adapter, base-only and multi-adapter-shared interface fns to base); DAEDRIC in PDV_DaedricRuntime; PDV_GainModifierProvider added (GAINPROVIDER module). Supersedes the 1351-fn golden-derived v2.",
-  "note": "EXHAUSTIVE over the manager-decomposition family (PDV__ManagerQuest + every module targetScript + the 10 ORIGIN adapters + PDV_GainModifierProvider): every unique Function/Event decl name in those files maps to exactly one entry, and every entry resolves via pdv_symbol_home.definitionFile (targetScript file, else manager fallback). Routing rule for ORIGIN: name in exactly one adapter -> that adapter (the authoritative post-dedup definer); name in multiple adapters (shared per-race interface) or base-only -> ORIGIN base. GetProviderGainMultiplier is homed to GAINPROVIDER (PDV_GainModifierProvider) though also implemented in base/Imperial/Orc/Daedric. QUESTREACTION carries both the extracted PDV_QuestReactionRuntime fns and the still-in-manager planned dispatch fns; PRISMA/RECOGNITION remain manager-resident (target scripts not yet extracted) and resolve via the manager fallback. Debug*/wiring/backref-accessor manager fns stay in MANAGER until Phase F.",
+  "note": "EXHAUSTIVE over the manager-decomposition family: every unique Function/Event declaration name maps to exactly one module target. ORIGIN includes its base plus ten adapters; RECOGNITION, PRISMA, and DEBUG are extracted target scripts. Debug registers and RunDebugCommand remain MANAGER-owned while all 136 Debug* bodies reside in DEBUG. Line ranges are target-script-local for refreshed DEBUG entries; older untouched module ranges remain historical and name-authoritative.",
   "modules": {
     "RULES": {
       "targetScript": "PDV_DevotionRules",
@@ -10927,6 +10927,939 @@
         }
       ]
     },
+    "DEBUG": {
+      "targetScript": "PDV_DebugRuntime",
+      "functions": [
+        {
+          "name": "DebugGetDiegeticD1Enabled",
+          "startLine": 14,
+          "endLine": 19,
+          "loc": 6,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetDiegeticD1Enabled",
+          "startLine": 21,
+          "endLine": 25,
+          "loc": 5,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugReloadQuestMatrix",
+          "startLine": 27,
+          "endLine": 32,
+          "loc": 6
+        },
+        {
+          "name": "DebugGetSignalFloorSmokeScenarioCount",
+          "startLine": 34,
+          "endLine": 36,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetSignalFloorSmokeLabel",
+          "startLine": 38,
+          "endLine": 73,
+          "loc": 36,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRunSignalFloorSmokeScenario",
+          "startLine": 75,
+          "endLine": 118,
+          "loc": 44,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRouteSignalFloorQuest",
+          "startLine": 120,
+          "endLine": 125,
+          "loc": 6
+        },
+        {
+          "name": "DebugQueueQuestReactionPerformanceSweep",
+          "startLine": 127,
+          "endLine": 132,
+          "loc": 6
+        },
+        {
+          "name": "DebugRouteSignalFloorCryptClear",
+          "startLine": 134,
+          "endLine": 147,
+          "loc": 14
+        },
+        {
+          "name": "DebugRouteSignalFloorLikesDislikes",
+          "startLine": 149,
+          "endLine": 156,
+          "loc": 8
+        },
+        {
+          "name": "DebugRouteSignalFloorGreenWay",
+          "startLine": 158,
+          "endLine": 167,
+          "loc": 10
+        },
+        {
+          "name": "DebugRouteSignalFloorPaarthurnaxKill",
+          "startLine": 169,
+          "endLine": 176,
+          "loc": 8
+        },
+        {
+          "name": "DebugRouteSignalFloorPaarthurnaxSpare",
+          "startLine": 178,
+          "endLine": 185,
+          "loc": 8
+        },
+        {
+          "name": "DebugSeedArgonian",
+          "startLine": 187,
+          "endLine": 213,
+          "loc": 27,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedBosmer",
+          "startLine": 215,
+          "endLine": 224,
+          "loc": 10
+        },
+        {
+          "name": "DebugSeedBosmerVariety",
+          "startLine": 226,
+          "endLine": 236,
+          "loc": 11,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetKhajiitLunarMetric",
+          "startLine": 238,
+          "endLine": 252,
+          "loc": 15,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugResetKhajiitLunarSubstrate",
+          "startLine": 254,
+          "endLine": 264,
+          "loc": 11,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetKhajiitLunarBudgetSummary",
+          "startLine": 266,
+          "endLine": 281,
+          "loc": 16,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceKhajiitLunarPosture",
+          "startLine": 283,
+          "endLine": 303,
+          "loc": 21
+        },
+        {
+          "name": "DebugCycleKhajiitLunarPosture",
+          "startLine": 305,
+          "endLine": 312,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugAssertAltmerRejectedSurface",
+          "startLine": 314,
+          "endLine": 316,
+          "loc": 3
+        },
+        {
+          "name": "DebugClosePrismaSurfaces",
+          "startLine": 318,
+          "endLine": 327,
+          "loc": 10,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugSyncRewardsOnly",
+          "startLine": 329,
+          "endLine": 336,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceSetPietyByIndex",
+          "startLine": 338,
+          "endLine": 364,
+          "loc": 27,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceSetPietyTodayByIndex",
+          "startLine": 366,
+          "endLine": 379,
+          "loc": 14,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugPrimeDecayGraceByIndex",
+          "startLine": 381,
+          "endLine": 402,
+          "loc": 22,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugPrimeDecayEligibleByIndex",
+          "startLine": 404,
+          "endLine": 425,
+          "loc": 22,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRunDecayPass",
+          "startLine": 427,
+          "endLine": 430,
+          "loc": 4,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRunDecayProofDaysByIndex",
+          "startLine": 432,
+          "endLine": 467,
+          "loc": 36,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugAwardCuratedSignalByIndex",
+          "startLine": 469,
+          "endLine": 475,
+          "loc": 7,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugGetPietyMapString",
+          "startLine": 477,
+          "endLine": 513,
+          "loc": 37,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugClearActiveDeity",
+          "startLine": 515,
+          "endLine": 525,
+          "loc": 11,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugSetBroadWorship",
+          "startLine": 527,
+          "endLine": 529,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedBroadLane",
+          "startLine": 531,
+          "endLine": 549,
+          "loc": 19,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetBretonPracticeSummary",
+          "startLine": 551,
+          "endLine": 567,
+          "loc": 17,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetBretonPracticePoints",
+          "startLine": 569,
+          "endLine": 582,
+          "loc": 14,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugAddBretonPracticePoints",
+          "startLine": 584,
+          "endLine": 599,
+          "loc": 16,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugResetBretonPracticePoints",
+          "startLine": 601,
+          "endLine": 607,
+          "loc": 7,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetOriginDiagnostic",
+          "startLine": 609,
+          "endLine": 615,
+          "loc": 7,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugResetDeityByIndex",
+          "startLine": 617,
+          "endLine": 643,
+          "loc": 27,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugFireDislike",
+          "startLine": 645,
+          "endLine": 669,
+          "loc": 25,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugApplyDomainSting",
+          "startLine": 671,
+          "endLine": 673,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugBurstAntiStack",
+          "startLine": 675,
+          "endLine": 682,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugDislikeSummaryLine",
+          "startLine": 684,
+          "endLine": 696,
+          "loc": 13,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugApplyTalosBetrayalCompliance",
+          "startLine": 698,
+          "endLine": 702,
+          "loc": 5,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugApplyTalosBetrayalMajor",
+          "startLine": 704,
+          "endLine": 708,
+          "loc": 5,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugUnlockConcordatWalkback",
+          "startLine": 710,
+          "endLine": 714,
+          "loc": 5,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetBosmerPathState",
+          "startLine": 716,
+          "endLine": 741,
+          "loc": 26,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugTriggerGreenPactViolation",
+          "startLine": 743,
+          "endLine": 745,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordBosmerLivingStorySignal",
+          "startLine": 747,
+          "endLine": 749,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordBosmerExchangeSignal",
+          "startLine": 751,
+          "endLine": 753,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordBosmerBanditRoadSignal",
+          "startLine": 755,
+          "endLine": 757,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordBosmerPactPositiveSignal",
+          "startLine": 759,
+          "endLine": 761,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugConfirmStateTransitionRite",
+          "startLine": 763,
+          "endLine": 765,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordDunmerAncestorPrayer",
+          "startLine": 767,
+          "endLine": 769,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordDunmerAncestorHomeBonus",
+          "startLine": 771,
+          "endLine": 773,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordKhajiitMoonObservance",
+          "startLine": 775,
+          "endLine": 784,
+          "loc": 10,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordKhajiitRoadHome",
+          "startLine": 786,
+          "endLine": 788,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordKhajiitCaravanAid",
+          "startLine": 790,
+          "endLine": 792,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordKhajiitLegendMade",
+          "startLine": 794,
+          "endLine": 796,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordMephalaWebWoven",
+          "startLine": 798,
+          "endLine": 800,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordBoethiahHonorableDuel",
+          "startLine": 802,
+          "endLine": 804,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordArgonianHistMaintenance",
+          "startLine": 806,
+          "endLine": 808,
+          "loc": 3
+        },
+        {
+          "name": "DebugRecordArgonianPeopleSupport",
+          "startLine": 810,
+          "endLine": 812,
+          "loc": 3
+        },
+        {
+          "name": "DebugRecordArgonianBedOfChoiceReturn",
+          "startLine": 814,
+          "endLine": 816,
+          "loc": 3
+        },
+        {
+          "name": "DebugRecordArgonianVoidSignal",
+          "startLine": 818,
+          "endLine": 820,
+          "loc": 3
+        },
+        {
+          "name": "DebugRecordTalosShrineDefiance",
+          "startLine": 822,
+          "endLine": 824,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecordAltmerDawnSteadiness",
+          "startLine": 826,
+          "endLine": 828,
+          "loc": 3
+        },
+        {
+          "name": "DebugRecordAltmerOrthodoxCostlyEnforcement",
+          "startLine": 830,
+          "endLine": 832,
+          "loc": 3
+        },
+        {
+          "name": "DebugRecordAltmerDragonbornCrisis",
+          "startLine": 834,
+          "endLine": 836,
+          "loc": 3
+        },
+        {
+          "name": "DebugRecordAltmerLorkhanPressure",
+          "startLine": 838,
+          "endLine": 840,
+          "loc": 3
+        },
+        {
+          "name": "DebugSetNordPantheonBaseline",
+          "startLine": 842,
+          "endLine": 857,
+          "loc": 16,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetSubstratePacingSummary",
+          "startLine": 859,
+          "endLine": 869,
+          "loc": 11,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugTriggerSubstratePacingSource",
+          "startLine": 871,
+          "endLine": 932,
+          "loc": 62,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedSubstrateMetric",
+          "startLine": 934,
+          "endLine": 942,
+          "loc": 9,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugResetSubstratePacing",
+          "startLine": 944,
+          "endLine": 951,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetBroadPantheonSummary",
+          "startLine": 953,
+          "endLine": 962,
+          "loc": 10,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedBroadPantheonPool",
+          "startLine": 964,
+          "endLine": 969,
+          "loc": 6,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugResetBroadPantheonPool",
+          "startLine": 971,
+          "endLine": 975,
+          "loc": 5,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRunBroadPantheonFanoutTest",
+          "startLine": 977,
+          "endLine": 1009,
+          "loc": 33,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugPrimeBroadPantheonScratch",
+          "startLine": 1011,
+          "endLine": 1021,
+          "loc": 11,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRunBroadPantheonCatchupForPacing",
+          "startLine": 1023,
+          "endLine": 1061,
+          "loc": 39,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetNordBaselineForPacing",
+          "startLine": 1063,
+          "endLine": 1066,
+          "loc": 4,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugOfferAcceptRecoverySummary",
+          "startLine": 1068,
+          "endLine": 1091,
+          "loc": 24,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetBroadWorshipForPacing",
+          "startLine": 1093,
+          "endLine": 1100,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRunPatronOfferForPacing",
+          "startLine": 1102,
+          "endLine": 1126,
+          "loc": 25,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugAcceptPatronForPacing",
+          "startLine": 1128,
+          "endLine": 1131,
+          "loc": 4,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugLapsePatronForPacing",
+          "startLine": 1133,
+          "endLine": 1141,
+          "loc": 9,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRecoverPatronForPacing",
+          "startLine": 1143,
+          "endLine": 1151,
+          "loc": 9,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetImperialVampireForPacing",
+          "startLine": 1153,
+          "endLine": 1160,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetKhajiitFocus",
+          "startLine": 1162,
+          "endLine": 1179,
+          "loc": 18,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetBretonTradition",
+          "startLine": 1181,
+          "endLine": 1204,
+          "loc": 24,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedBretonDruidicFrayTest",
+          "startLine": 1206,
+          "endLine": 1214,
+          "loc": 9
+        },
+        {
+          "name": "DebugSetOrcLifeMode",
+          "startLine": 1216,
+          "endLine": 1222,
+          "loc": 7,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetArgonianFocus",
+          "startLine": 1224,
+          "endLine": 1231,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugCycleContextualFavorLane",
+          "startLine": 1233,
+          "endLine": 1240,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugCycleContextualFavorFamily",
+          "startLine": 1242,
+          "endLine": 1246,
+          "loc": 5,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugTriggerSelectedContextualFavor",
+          "startLine": 1248,
+          "endLine": 1250,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugExpireActiveFavor",
+          "startLine": 1252,
+          "endLine": 1254,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugPrimeRaceLaneNeglect",
+          "startLine": 1256,
+          "endLine": 1289,
+          "loc": 34,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugCycleKyneFavorMask",
+          "startLine": 1291,
+          "endLine": 1302,
+          "loc": 12
+        },
+        {
+          "name": "DebugRecordHircineHuntRite",
+          "startLine": 1304,
+          "endLine": 1306,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugResetHircinePath",
+          "startLine": 1308,
+          "endLine": 1320,
+          "loc": 13,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugRenounceHircinePath",
+          "startLine": 1322,
+          "endLine": 1328,
+          "loc": 7,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceCurseNone",
+          "startLine": 1330,
+          "endLine": 1332,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceCurseWerewolf",
+          "startLine": 1334,
+          "endLine": 1336,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceCurseVampire",
+          "startLine": 1338,
+          "endLine": 1340,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceCurseState",
+          "startLine": 1342,
+          "endLine": 1357,
+          "loc": 16
+        },
+        {
+          "name": "DebugRefreshCurseFromPlayerState",
+          "startLine": 1359,
+          "endLine": 1361,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSetCurseProofOriginRace",
+          "startLine": 1363,
+          "endLine": 1398,
+          "loc": 36,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugEvaluateCommitmentOffer",
+          "startLine": 1400,
+          "endLine": 1405,
+          "loc": 6,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedCommitmentSignalDaysByIndex",
+          "startLine": 1407,
+          "endLine": 1422,
+          "loc": 16,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedCommitmentSignalDaysForDeity",
+          "startLine": 1424,
+          "endLine": 1434,
+          "loc": 11
+        },
+        {
+          "name": "DebugResetCommitmentStateByIndex",
+          "startLine": 1436,
+          "endLine": 1454,
+          "loc": 19,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugAcceptPendingCommitment",
+          "startLine": 1456,
+          "endLine": 1494,
+          "loc": 39,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugDeclinePendingCommitment",
+          "startLine": 1496,
+          "endLine": 1506,
+          "loc": 11,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugRefusePendingCommitment",
+          "startLine": 1508,
+          "endLine": 1525,
+          "loc": 18,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugRunNeglectPass",
+          "startLine": 1527,
+          "endLine": 1529,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugYesNo",
+          "startLine": 1531,
+          "endLine": 1536,
+          "loc": 6
+        },
+        {
+          "name": "DebugSeedSanguineOfferReadyCore",
+          "startLine": 1538,
+          "endLine": 1553,
+          "loc": 16
+        },
+        {
+          "name": "DebugSanguineConsentReadback",
+          "startLine": 1555,
+          "endLine": 1562,
+          "loc": 8,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugSeedSanguineOfferReady",
+          "startLine": 1564,
+          "endLine": 1570,
+          "loc": 7,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugEvaluateConsentOfferReport",
+          "startLine": 1572,
+          "endLine": 1585,
+          "loc": 14,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugConsentDivinePatronThenRaiseSanguine",
+          "startLine": 1587,
+          "endLine": 1625,
+          "loc": 39,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugFireSanguineAlcoholTwice",
+          "startLine": 1627,
+          "endLine": 1638,
+          "loc": 12,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugForceUnconsentedPactThenMigrate",
+          "startLine": 1640,
+          "endLine": 1656,
+          "loc": 17,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetPatternProvingSummary",
+          "startLine": 1658,
+          "endLine": 1674,
+          "loc": 17,
+          "callerCount": 2
+        },
+        {
+          "name": "DebugGetPatternSummarySection",
+          "startLine": 1676,
+          "endLine": 1708,
+          "loc": 33,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetPatternSummarySectionCount",
+          "startLine": 1710,
+          "endLine": 1712,
+          "loc": 3,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetPatternSummaryRaceSection",
+          "startLine": 1714,
+          "endLine": 1732,
+          "loc": 19,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetConcordatRawValue",
+          "startLine": 1734,
+          "endLine": 1740,
+          "loc": 7,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetConcordatStateLabel",
+          "startLine": 1742,
+          "endLine": 1748,
+          "loc": 7,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetConcordatPendingStateLabel",
+          "startLine": 1750,
+          "endLine": 1756,
+          "loc": 7,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetConcordatGateLabel",
+          "startLine": 1758,
+          "endLine": 1768,
+          "loc": 11,
+          "callerCount": 1
+        },
+        {
+          "name": "DebugGetDecaySummaryByIndex",
+          "startLine": 1770,
+          "endLine": 1786,
+          "loc": 17,
+          "callerCount": 1
+        }
+      ],
+      "properties": []
+    },
     "MANAGER": {
       "targetScript": "PDV__ManagerQuest",
       "functions": [
@@ -10996,19 +11929,6 @@
           "callerCount": 11
         },
         {
-          "name": "DebugGetDiegeticD1Enabled",
-          "startLine": 3192,
-          "endLine": 3197,
-          "loc": 6,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugSetDiegeticD1Enabled",
-          "startLine": 3199,
-          "endLine": 3203,
-          "loc": 5
-        },
-        {
           "name": "InGameEffectsEnabled",
           "startLine": 3209,
           "endLine": 3211,
@@ -11041,145 +11961,10 @@
           "loc": 7
         },
         {
-          "name": "DebugReloadQuestMatrix",
-          "startLine": 4515,
-          "endLine": 4520,
-          "loc": 6,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetSignalFloorSmokeScenarioCount",
-          "startLine": 4522,
-          "endLine": 4524,
-          "loc": 3,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetSignalFloorSmokeLabel",
-          "startLine": 4526,
-          "endLine": 4561,
-          "loc": 36,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugRunSignalFloorSmokeScenario",
-          "startLine": 4563,
-          "endLine": 4606,
-          "loc": 44,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugRouteSignalFloorQuest",
-          "startLine": 4608,
-          "endLine": 4613,
-          "loc": 6,
-          "callerCount": 10
-        },
-        {
-          "name": "DebugQueueQuestReactionPerformanceSweep",
-          "startLine": 4615,
-          "endLine": 4620,
-          "loc": 6,
-          "callerCount": 0
-        },
-        {
-          "name": "DebugRouteSignalFloorCryptClear",
-          "startLine": 4622,
-          "endLine": 4635,
-          "loc": 14,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugRouteSignalFloorLikesDislikes",
-          "startLine": 4637,
-          "endLine": 4644,
-          "loc": 8,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugRouteSignalFloorGreenWay",
-          "startLine": 4646,
-          "endLine": 4655,
-          "loc": 10,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugRouteSignalFloorPaarthurnaxKill",
-          "startLine": 4657,
-          "endLine": 4664,
-          "loc": 8,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugRouteSignalFloorPaarthurnaxSpare",
-          "startLine": 4666,
-          "endLine": 4673,
-          "loc": 8,
-          "callerCount": 1
-        },
-        {
           "name": "SetDebugLevel",
           "startLine": 5121,
           "endLine": 5125,
           "loc": 5
-        },
-        {
-          "name": "DebugSeedArgonian",
-          "startLine": 6384,
-          "endLine": 6410,
-          "loc": 27
-        },
-        {
-          "name": "DebugSeedBosmer",
-          "startLine": 7122,
-          "endLine": 7131,
-          "loc": 10
-        },
-        {
-          "name": "DebugSeedBosmerVariety",
-          "startLine": 7137,
-          "endLine": 7147,
-          "loc": 11
-        },
-        {
-          "name": "DebugSetKhajiitLunarMetric",
-          "startLine": 7971,
-          "endLine": 7985,
-          "loc": 15,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugResetKhajiitLunarSubstrate",
-          "startLine": 7987,
-          "endLine": 7997,
-          "loc": 11,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetKhajiitLunarBudgetSummary",
-          "startLine": 7999,
-          "endLine": 8014,
-          "loc": 16,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugForceKhajiitLunarPosture",
-          "startLine": 8633,
-          "endLine": 8653,
-          "loc": 21
-        },
-        {
-          "name": "DebugCycleKhajiitLunarPosture",
-          "startLine": 8658,
-          "endLine": 8665,
-          "loc": 8
-        },
-        {
-          "name": "DebugAssertAltmerRejectedSurface",
-          "startLine": 11470,
-          "endLine": 11472,
-          "loc": 3,
-          "callerCount": 0
         },
         {
           "name": "RegisterManagerShoutSignals",
@@ -11207,151 +11992,6 @@
           "loc": 29
         },
         {
-          "name": "DebugClosePrismaSurfaces",
-          "startLine": 13603,
-          "endLine": 13612,
-          "loc": 10
-        },
-        {
-          "name": "DebugSyncRewardsOnly",
-          "startLine": 13614,
-          "endLine": 13621,
-          "loc": 8
-        },
-        {
-          "name": "DebugForceSetPietyByIndex",
-          "startLine": 13667,
-          "endLine": 13690,
-          "loc": 24
-        },
-        {
-          "name": "DebugForceSetPietyTodayByIndex",
-          "startLine": 13692,
-          "endLine": 13702,
-          "loc": 11
-        },
-        {
-          "name": "DebugPrimeDecayGraceByIndex",
-          "startLine": 13704,
-          "endLine": 13722,
-          "loc": 19
-        },
-        {
-          "name": "DebugPrimeDecayEligibleByIndex",
-          "startLine": 13724,
-          "endLine": 13742,
-          "loc": 19
-        },
-        {
-          "name": "DebugRunDecayPass",
-          "startLine": 13744,
-          "endLine": 13747,
-          "loc": 4
-        },
-        {
-          "name": "DebugRunDecayProofDaysByIndex",
-          "startLine": 13749,
-          "endLine": 13781,
-          "loc": 33
-        },
-        {
-          "name": "DebugAwardCuratedSignalByIndex",
-          "startLine": 13783,
-          "endLine": 13785,
-          "loc": 3
-        },
-        {
-          "name": "DebugGetPietyMapString",
-          "startLine": 13787,
-          "endLine": 13823,
-          "loc": 37,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugClearActiveDeity",
-          "startLine": 13825,
-          "endLine": 13830,
-          "loc": 6
-        },
-        {
-          "name": "DebugSetBroadWorship",
-          "startLine": 13832,
-          "endLine": 13834,
-          "loc": 3
-        },
-        {
-          "name": "DebugSeedBroadLane",
-          "startLine": 13840,
-          "endLine": 13858,
-          "loc": 19
-        },
-        {
-          "name": "DebugGetBretonPracticeSummary",
-          "startLine": 13860,
-          "endLine": 13876,
-          "loc": 17,
-          "callerCount": 4
-        },
-        {
-          "name": "DebugSetBretonPracticePoints",
-          "startLine": 13878,
-          "endLine": 13891,
-          "loc": 14,
-          "callerCount": 4
-        },
-        {
-          "name": "DebugAddBretonPracticePoints",
-          "startLine": 13893,
-          "endLine": 13908,
-          "loc": 16,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugResetBretonPracticePoints",
-          "startLine": 13910,
-          "endLine": 13916,
-          "loc": 7,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetOriginDiagnostic",
-          "startLine": 13918,
-          "endLine": 13924,
-          "loc": 7,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugResetDeityByIndex",
-          "startLine": 13926,
-          "endLine": 13952,
-          "loc": 27
-        },
-        {
-          "name": "DebugFireDislike",
-          "startLine": 14866,
-          "endLine": 14890,
-          "loc": 25
-        },
-        {
-          "name": "DebugApplyDomainSting",
-          "startLine": 14895,
-          "endLine": 14897,
-          "loc": 3
-        },
-        {
-          "name": "DebugBurstAntiStack",
-          "startLine": 14933,
-          "endLine": 14940,
-          "loc": 8
-        },
-        {
-          "name": "DebugDislikeSummaryLine",
-          "startLine": 14986,
-          "endLine": 14998,
-          "loc": 13,
-          "callerCount": 1
-        },
-        {
           "name": "PrepareForUninstall",
           "startLine": 17942,
           "endLine": 17972,
@@ -11374,463 +12014,6 @@
           "startLine": 18003,
           "endLine": 18245,
           "loc": 243
-        },
-        {
-          "name": "DebugApplyTalosBetrayalCompliance",
-          "startLine": 18879,
-          "endLine": 18883,
-          "loc": 5
-        },
-        {
-          "name": "DebugApplyTalosBetrayalMajor",
-          "startLine": 18885,
-          "endLine": 18889,
-          "loc": 5
-        },
-        {
-          "name": "DebugUnlockConcordatWalkback",
-          "startLine": 18891,
-          "endLine": 18895,
-          "loc": 5
-        },
-        {
-          "name": "DebugSetBosmerPathState",
-          "startLine": 18897,
-          "endLine": 18922,
-          "loc": 26
-        },
-        {
-          "name": "DebugTriggerGreenPactViolation",
-          "startLine": 18924,
-          "endLine": 18926,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordBosmerLivingStorySignal",
-          "startLine": 18928,
-          "endLine": 18930,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordBosmerExchangeSignal",
-          "startLine": 18932,
-          "endLine": 18934,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordBosmerBanditRoadSignal",
-          "startLine": 18936,
-          "endLine": 18938,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordBosmerPactPositiveSignal",
-          "startLine": 18940,
-          "endLine": 18942,
-          "loc": 3
-        },
-        {
-          "name": "DebugConfirmStateTransitionRite",
-          "startLine": 18944,
-          "endLine": 18946,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordDunmerAncestorPrayer",
-          "startLine": 18948,
-          "endLine": 18950,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordDunmerAncestorHomeBonus",
-          "startLine": 18952,
-          "endLine": 18954,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordKhajiitMoonObservance",
-          "startLine": 18956,
-          "endLine": 18965,
-          "loc": 10
-        },
-        {
-          "name": "DebugRecordKhajiitRoadHome",
-          "startLine": 18967,
-          "endLine": 18969,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordKhajiitCaravanAid",
-          "startLine": 18971,
-          "endLine": 18973,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordKhajiitLegendMade",
-          "startLine": 18975,
-          "endLine": 18977,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordMephalaWebWoven",
-          "startLine": 18979,
-          "endLine": 18981,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordBoethiahHonorableDuel",
-          "startLine": 18983,
-          "endLine": 18985,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordArgonianHistMaintenance",
-          "startLine": 18987,
-          "endLine": 18989,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordArgonianPeopleSupport",
-          "startLine": 18991,
-          "endLine": 18993,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordArgonianBedOfChoiceReturn",
-          "startLine": 18995,
-          "endLine": 18997,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordArgonianVoidSignal",
-          "startLine": 18999,
-          "endLine": 19001,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordTalosShrineDefiance",
-          "startLine": 19003,
-          "endLine": 19005,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordAltmerDawnSteadiness",
-          "startLine": 19007,
-          "endLine": 19009,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordAltmerOrthodoxCostlyEnforcement",
-          "startLine": 19011,
-          "endLine": 19013,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordAltmerDragonbornCrisis",
-          "startLine": 19015,
-          "endLine": 19017,
-          "loc": 3
-        },
-        {
-          "name": "DebugRecordAltmerLorkhanPressure",
-          "startLine": 19019,
-          "endLine": 19021,
-          "loc": 3
-        },
-        {
-          "name": "DebugSetNordPantheonBaseline",
-          "startLine": 19023,
-          "endLine": 19038,
-          "loc": 16
-        },
-        {
-          "name": "DebugGetSubstratePacingSummary",
-          "startLine": 19057,
-          "endLine": 19067,
-          "loc": 11,
-          "callerCount": 5
-        },
-        {
-          "name": "DebugTriggerSubstratePacingSource",
-          "startLine": 19078,
-          "endLine": 19139,
-          "loc": 62,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugSeedSubstrateMetric",
-          "startLine": 19141,
-          "endLine": 19149,
-          "loc": 9,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugResetSubstratePacing",
-          "startLine": 19151,
-          "endLine": 19158,
-          "loc": 8,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugGetBroadPantheonSummary",
-          "startLine": 19205,
-          "endLine": 19214,
-          "loc": 10,
-          "callerCount": 7
-        },
-        {
-          "name": "DebugSeedBroadPantheonPool",
-          "startLine": 19228,
-          "endLine": 19233,
-          "loc": 6,
-          "callerCount": 6
-        },
-        {
-          "name": "DebugResetBroadPantheonPool",
-          "startLine": 19235,
-          "endLine": 19239,
-          "loc": 5,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugRunBroadPantheonFanoutTest",
-          "startLine": 19241,
-          "endLine": 19273,
-          "loc": 33,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugPrimeBroadPantheonScratch",
-          "startLine": 19275,
-          "endLine": 19285,
-          "loc": 11,
-          "callerCount": 4
-        },
-        {
-          "name": "DebugRunBroadPantheonCatchupForPacing",
-          "startLine": 19287,
-          "endLine": 19325,
-          "loc": 39,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugSetNordBaselineForPacing",
-          "startLine": 19327,
-          "endLine": 19330,
-          "loc": 4,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugOfferAcceptRecoverySummary",
-          "startLine": 19332,
-          "endLine": 19355,
-          "loc": 24,
-          "callerCount": 6
-        },
-        {
-          "name": "DebugSetBroadWorshipForPacing",
-          "startLine": 19357,
-          "endLine": 19364,
-          "loc": 8,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugRunPatronOfferForPacing",
-          "startLine": 19366,
-          "endLine": 19390,
-          "loc": 25,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugAcceptPatronForPacing",
-          "startLine": 19405,
-          "endLine": 19408,
-          "loc": 4,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugLapsePatronForPacing",
-          "startLine": 19410,
-          "endLine": 19418,
-          "loc": 9,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugRecoverPatronForPacing",
-          "startLine": 19420,
-          "endLine": 19428,
-          "loc": 9,
-          "callerCount": 3
-        },
-        {
-          "name": "DebugSetImperialVampireForPacing",
-          "startLine": 19430,
-          "endLine": 19437,
-          "loc": 8,
-          "callerCount": 4
-        },
-        {
-          "name": "DebugSetKhajiitFocus",
-          "startLine": 19445,
-          "endLine": 19462,
-          "loc": 18
-        },
-        {
-          "name": "DebugSetBretonTradition",
-          "startLine": 19465,
-          "endLine": 19488,
-          "loc": 24
-        },
-        {
-          "name": "DebugSeedBretonDruidicFrayTest",
-          "startLine": 19493,
-          "endLine": 19501,
-          "loc": 9
-        },
-        {
-          "name": "DebugSetOrcLifeMode",
-          "startLine": 19504,
-          "endLine": 19510,
-          "loc": 7
-        },
-        {
-          "name": "DebugSetArgonianFocus",
-          "startLine": 19514,
-          "endLine": 19521,
-          "loc": 8
-        },
-        {
-          "name": "DebugCycleContextualFavorLane",
-          "startLine": 19592,
-          "endLine": 19599,
-          "loc": 8
-        },
-        {
-          "name": "DebugCycleContextualFavorFamily",
-          "startLine": 19601,
-          "endLine": 19605,
-          "loc": 5
-        },
-        {
-          "name": "DebugTriggerSelectedContextualFavor",
-          "startLine": 19607,
-          "endLine": 19609,
-          "loc": 3
-        },
-        {
-          "name": "DebugExpireActiveFavor",
-          "startLine": 19611,
-          "endLine": 19613,
-          "loc": 3
-        },
-        {
-          "name": "DebugPrimeRaceLaneNeglect",
-          "startLine": 19623,
-          "endLine": 19656,
-          "loc": 34
-        },
-        {
-          "name": "DebugCycleKyneFavorMask",
-          "startLine": 19666,
-          "endLine": 19677,
-          "loc": 12
-        },
-        {
-          "name": "DebugRecordHircineHuntRite",
-          "startLine": 19679,
-          "endLine": 19681,
-          "loc": 3
-        },
-        {
-          "name": "DebugResetHircinePath",
-          "startLine": 19683,
-          "endLine": 19695,
-          "loc": 13
-        },
-        {
-          "name": "DebugRenounceHircinePath",
-          "startLine": 19697,
-          "endLine": 19703,
-          "loc": 7
-        },
-        {
-          "name": "DebugForceCurseNone",
-          "startLine": 19705,
-          "endLine": 19707,
-          "loc": 3
-        },
-        {
-          "name": "DebugForceCurseWerewolf",
-          "startLine": 19709,
-          "endLine": 19711,
-          "loc": 3
-        },
-        {
-          "name": "DebugForceCurseVampire",
-          "startLine": 19713,
-          "endLine": 19715,
-          "loc": 3
-        },
-        {
-          "name": "DebugForceCurseState",
-          "startLine": 19717,
-          "endLine": 19732,
-          "loc": 16
-        },
-        {
-          "name": "DebugRefreshCurseFromPlayerState",
-          "startLine": 19734,
-          "endLine": 19736,
-          "loc": 3
-        },
-        {
-          "name": "DebugSetCurseProofOriginRace",
-          "startLine": 19738,
-          "endLine": 19772,
-          "loc": 35,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugEvaluateCommitmentOffer",
-          "startLine": 19774,
-          "endLine": 19779,
-          "loc": 6
-        },
-        {
-          "name": "DebugSeedCommitmentSignalDaysByIndex",
-          "startLine": 19781,
-          "endLine": 19796,
-          "loc": 16
-        },
-        {
-          "name": "DebugResetCommitmentStateByIndex",
-          "startLine": 19798,
-          "endLine": 19816,
-          "loc": 19
-        },
-        {
-          "name": "DebugAcceptPendingCommitment",
-          "startLine": 20026,
-          "endLine": 20049,
-          "loc": 24
-        },
-        {
-          "name": "DebugDeclinePendingCommitment",
-          "startLine": 20301,
-          "endLine": 20311,
-          "loc": 11
-        },
-        {
-          "name": "DebugRefusePendingCommitment",
-          "startLine": 20313,
-          "endLine": 20330,
-          "loc": 18
-        },
-        {
-          "name": "DebugRunNeglectPass",
-          "startLine": 20332,
-          "endLine": 20334,
-          "loc": 3
         },
         {
           "name": "EnsureUnifiedStartupChoice",
@@ -11975,69 +12158,6 @@
           "callerCount": 4
         },
         {
-          "name": "DebugGetPatternProvingSummary",
-          "startLine": 26397,
-          "endLine": 26413,
-          "loc": 17,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugGetPatternSummarySection",
-          "startLine": 26417,
-          "endLine": 26449,
-          "loc": 33,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugGetPatternSummarySectionCount",
-          "startLine": 26452,
-          "endLine": 26454,
-          "loc": 3,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetPatternSummaryRaceSection",
-          "startLine": 26458,
-          "endLine": 26476,
-          "loc": 19,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugGetConcordatRawValue",
-          "startLine": 26491,
-          "endLine": 26497,
-          "loc": 7,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetConcordatStateLabel",
-          "startLine": 26499,
-          "endLine": 26505,
-          "loc": 7,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetConcordatPendingStateLabel",
-          "startLine": 26507,
-          "endLine": 26513,
-          "loc": 7,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetConcordatGateLabel",
-          "startLine": 26515,
-          "endLine": 26525,
-          "loc": 11,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugGetDecaySummaryByIndex",
-          "startLine": 26670,
-          "endLine": 26686,
-          "loc": 17,
-          "callerCount": 4
-        },
-        {
           "name": "Trace",
           "startLine": 27045,
           "endLine": 27049,
@@ -12155,69 +12275,6 @@
           "endLine": 26906,
           "loc": 6,
           "callerCount": 11
-        },
-        {
-          "name": "DebugConsentDivinePatronThenRaiseSanguine",
-          "startLine": 7098,
-          "endLine": 7121,
-          "loc": 24,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugEvaluateConsentOfferReport",
-          "startLine": 7083,
-          "endLine": 7096,
-          "loc": 14,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugFireSanguineAlcoholTwice",
-          "startLine": 7123,
-          "endLine": 7134,
-          "loc": 12,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugForceUnconsentedPactThenMigrate",
-          "startLine": 7136,
-          "endLine": 7152,
-          "loc": 17,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugSanguineConsentReadback",
-          "startLine": 7066,
-          "endLine": 7073,
-          "loc": 8,
-          "callerCount": 5
-        },
-        {
-          "name": "DebugSeedCommitmentSignalDaysForDeity",
-          "startLine": 6862,
-          "endLine": 6872,
-          "loc": 11,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugSeedSanguineOfferReady",
-          "startLine": 7075,
-          "endLine": 7081,
-          "loc": 7,
-          "callerCount": 1
-        },
-        {
-          "name": "DebugSeedSanguineOfferReadyCore",
-          "startLine": 7049,
-          "endLine": 7064,
-          "loc": 16,
-          "callerCount": 2
-        },
-        {
-          "name": "DebugYesNo",
-          "startLine": 7039,
-          "endLine": 7044,
-          "loc": 6,
-          "callerCount": 4
         },
         {
           "name": "GetActiveDeity",
