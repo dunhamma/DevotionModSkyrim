@@ -3906,17 +3906,17 @@ Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)
 
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_NORD
-        return Manager.OriginRuntime.GetNordFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_IMPERIAL
-        return Manager.OriginRuntime.GetImperialFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_DUNMER
-        return Manager.OriginRuntime.GetDunmerFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_ALTMER
-        return Manager.OriginRuntime.GetAltmerFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_BRETON
-        return Manager.OriginRuntime.GetBretonFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetFormalCommitmentOfferMessage(deity)
     elseIf originRace == Manager.ORIGIN_REDGUARD
-        return Manager.OriginRuntime.GetRedguardFormalCommitmentOfferMessage(deity)
+        return Manager.OriginRuntime.GetFormalCommitmentOfferMessage(deity)
     endIf
 
     return None

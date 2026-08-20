@@ -8333,7 +8333,7 @@ String Function GetSurveyDevotionText()
     ; Hidden Art is a layered Breton tradition: its Survey owns the base practice and
     ; exposure readout, then appends its integrated Prince through the patron sentence.
     if originRace == ORIGIN_BRETON
-        return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetBretonSurveyText())
+        return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
     endIf
 
     ; Prince-wins for races without a layered pact tradition. The tier>0 guard inside
@@ -8345,27 +8345,27 @@ String Function GetSurveyDevotionText()
 
     if originRace != ORIGIN_NORD
         if originRace == ORIGIN_ALTMER
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetAltmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         elseIf originRace == ORIGIN_KHAJIIT
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetKhajiitSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         elseIf originRace == ORIGIN_BOSMER
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetBosmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         elseIf originRace == ORIGIN_ARGONIAN
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetArgonianSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         elseIf originRace == ORIGIN_ORC
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetOrcSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         elseIf originRace == ORIGIN_REDGUARD
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetRedguardSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         elseIf originRace == ORIGIN_IMPERIAL
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetImperialSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         elseIf originRace == ORIGIN_DUNMER
-            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetDunmerSurveyText())
+            return LedgerRuntime.AppendRecentDevotionEvents(OriginRuntime.GetSurveyFragment())
         endIf
 
         return LedgerRuntime.AppendRecentDevotionEvents("Your devotion is watched. Standing: " + GetCurrentStandingBand() + ".")
     endIf
 
-    String text = OriginRuntime.GetNordSurveyBaseText()
+    String text = OriginRuntime.GetSurveyFragment()
     String scarText = OriginRuntime.GetNordScarLabel()
     if scarText != ""
         text = text + "\n\n" + scarText

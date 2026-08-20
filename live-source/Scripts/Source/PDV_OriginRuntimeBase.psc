@@ -1560,10 +1560,6 @@ Int Function GetBosmerFavorSignalCount()
     return StorageUtil.GetIntValue(None, "PDV.Bosmer.Favor.SignalCount")
 EndFunction
 
-Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
@@ -1828,10 +1824,6 @@ String Function GetAltmerCurseSummary()
     return "none"
 EndFunction
 
-String Function GetAltmerSurveyText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 String Function GetAltmerHeritageTierName()
     if !Manager.PDV_AltmerAncestorSubstrate
         return "Heritage quiet"
@@ -1876,10 +1868,6 @@ String Function GetAltmerAlignmentSurveyBaseText()
     endIf
 
     return "You remain uncommitted in the Thalmor question, holding Auri-El's foundation while the path sharpens. Standing: " + band + "."
-EndFunction
-
-String Function GetBosmerSurveyText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetBosmerPathDisplayLabelAt(Int pathState)
@@ -3509,10 +3497,6 @@ Function EnsureArgonianHistSapToken()
     endIf
 EndFunction
 
-String Function GetKhajiitSurveyText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 String Function GetKhajiitFocusStandingLine(Int focusValue)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
@@ -3527,10 +3511,6 @@ String Function GetKhajiitLunarTierLabel(Int tierValue)
     endIf
 
     return "quiet"
-EndFunction
-
-String Function GetArgonianSurveyText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetArgonianLayerStrengthLabel(Float value)
@@ -4623,14 +4603,6 @@ Function EmitRedguardDeathDutyAbandonmentMinus(String reason)
     Manager.Trace(2, "Redguard death-duty abandonment routed: " + reason + " multiplier=" + multiplier)
 EndFunction
 
-Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
-Message Function GetRedguardFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity, Int newTier)
     if newTier < Manager.LedgerRuntime.TIER_CHAMPION
         return False
@@ -4951,10 +4923,6 @@ Function HandleBretonGreenWayStanding(String reason)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
-String Function GetRedguardSurveyText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 String Function GetRedguardSurveySectText()
     Int sectValue = Manager.REDGUARD_SECT_FOREBEAR
     if Manager.PDV_RedguardSectTrack
@@ -4977,10 +4945,6 @@ String Function GetRedguardSurveySectText()
     endIf
 
     return "You keep the Forebear way: Redguard identity lived among outsiders. Standing: " + standing + ". The road and the contract are your proving ground."
-EndFunction
-
-String Function GetBretonSurveyText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 String Function GetBretonTraditionLabel()
@@ -5335,14 +5299,6 @@ Int Function GetNordPantheonBaselineState()
     endIf
 
     return stateValue
-EndFunction
-
-Message Function GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
-Message Function GetDunmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
 Bool Function IsKyneCommitmentSignalReady()
@@ -5824,10 +5780,6 @@ Bool Function IsNordVampireSuppressed()
     return False
 EndFunction
 
-String Function GetNordSurveyBaseText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 String Function GetNordContextSurveyText()
     String text = ""
     Int kyneTalosCount = StorageUtil.GetIntValue(None, "PDV.Nord.KyneTalosContextCount")
@@ -5856,10 +5808,6 @@ String Function GetNordAncestorLayerLabel()
 EndFunction
 
 String Function GetNordDevotionModeLabel()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
-String Function GetDunmerSurveyText()
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
@@ -6492,10 +6440,6 @@ Int Function GetImperialConcordatPressureForAction(String actionKey)
     return 0
 EndFunction
 
-Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 Bool Function IsImperialTalosOfferAllowed()
     if !Manager.PDV_ConcordatStandingTrack
         return False
@@ -6656,14 +6600,6 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
 EndFunction
 
 Function HandleImperialPatronCivicFavor(String reason)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
-String Function GetOrcSurveyText()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
-String Function GetImperialSurveyText()
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
