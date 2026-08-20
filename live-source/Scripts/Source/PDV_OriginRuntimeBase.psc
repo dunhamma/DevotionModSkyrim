@@ -1503,23 +1503,6 @@ Function RunDawnAwardAltmerXarxesRecord()
     Manager.Trace(2, "Altmer Xarxes record-kept routed for devotional day " + (dawnDayStamp - 2))
 EndFunction
 
-Function SyncAltmerRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isAltmer = GetPlayerOriginRaceIndex() == Manager.ORIGIN_ALTMER
-    SyncAltmerAncestorSubstrate(playerRef, isAltmer)
-    Bool broadOrthodoxFaithful = isAltmer && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.DawnSteadiness.Count") + StorageUtil.GetIntValue(None, "PDV.Altmer.Favor.OrthodoxCost.Count") >= 6
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Altmer_Orthodox_T2, broadOrthodoxFaithful, "Altmer Orthodox T2")
-
-    SyncAltmerRewardFamily(playerRef, Manager.PDV_AuriEl, Manager.PDV_Bless_Altmer_AuriEl_T1, Manager.PDV_Bless_Altmer_AuriEl_T2, Manager.PDV_Bless_Altmer_AuriEl_T3, "Auri-El")
-    SyncAltmerRewardFamily(playerRef, Manager.PDV_Magnus, Manager.PDV_Bless_Altmer_Magnus_T1, Manager.PDV_Bless_Altmer_Magnus_T2, Manager.PDV_Bless_Altmer_Magnus_T3, "Magnus")
-    SyncAltmerRewardFamily(playerRef, Manager.PDV_Trinimac, Manager.PDV_Bless_Altmer_Trinimac_T1, Manager.PDV_Bless_Altmer_Trinimac_T2, Manager.PDV_Bless_Altmer_Trinimac_T3, "Trinimac")
-    SyncAltmerRewardFamily(playerRef, Manager.PDV_Xarxes, Manager.PDV_Bless_Altmer_Xarxes_T1, Manager.PDV_Bless_Altmer_Xarxes_T2, Manager.PDV_Bless_Altmer_Xarxes_T3, "Xarxes")
-    SyncAltmerRewardFamily(playerRef, Manager.PDV_Syrabane, Manager.PDV_Bless_Altmer_Syrabane_T1, Manager.PDV_Bless_Altmer_Syrabane_T2, Manager.PDV_Bless_Altmer_Syrabane_T3, "Syrabane")
-EndFunction
-
 Function SyncAltmerAncestorSubstrate(Actor playerRef, Bool isAltmer)
     if !playerRef || !Manager.PDV_AltmerAncestorSubstrate
         return
@@ -1545,47 +1528,6 @@ Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, 
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == Manager.LedgerRuntime.TIER_DEVOTED, "Altmer " + label + " T2")
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Altmer " + label + " T3")
     Manager.LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Altmer " + label)
-EndFunction
-
-Bool Function IsAltmerCoherenceNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncAltmerNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Altmer
-        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Altmer)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Altmer, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Altmer)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Altmer)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.AltmerSpellActive", 0)
-    endIf
-EndFunction
-
-Function SyncBosmerRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isBosmer = GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER
-    Int pathState = GetBosmerPathState()
-    Bool broadFaithful = isBosmer && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && GetBosmerFavorSignalCount() >= 6
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Bosmer_Yffre_T2, broadFaithful, "Bosmer Yffre T2")
-
-    SyncBosmerPathRewardFamily(playerRef, Manager.BOSMER_PATH_OLD_CONTRACT, pathState, Manager.PDV_Yffre, Manager.PDV_Bless_Bosmer_OldContract_T1, Manager.PDV_Bless_Bosmer_OldContract_T2, Manager.PDV_Bless_Bosmer_OldContract_T3, "OldContract")
-    SyncBosmerPathRewardFamily(playerRef, Manager.BOSMER_PATH_LIVING_STORY, pathState, Manager.PDV_Yffre, Manager.PDV_Bless_Bosmer_LivingStory_T1, Manager.PDV_Bless_Bosmer_LivingStory_T2, Manager.PDV_Bless_Bosmer_LivingStory_T3, "LivingStory")
-    SyncBosmerPathRewardFamily(playerRef, Manager.BOSMER_PATH_EXCHANGE, pathState, Manager.LedgerRuntime.PDV_Zen, Manager.PDV_Bless_Bosmer_Exchange_T1, Manager.PDV_Bless_Bosmer_Exchange_T2, Manager.PDV_Bless_Bosmer_Exchange_T3, "Exchange")
-    SyncBosmerPathRewardFamily(playerRef, Manager.BOSMER_PATH_BANDIT_ROAD, pathState, Manager.PDV_BaanDar, Manager.PDV_Bless_Bosmer_BanditRoad_T1, Manager.PDV_Bless_Bosmer_BanditRoad_T2, Manager.PDV_Bless_Bosmer_BanditRoad_T3, "BanditRoad")
 EndFunction
 
 Function SyncBosmerPathRewardFamily(Actor playerRef, Int thisPath, Int activePath, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
@@ -1616,31 +1558,6 @@ EndFunction
 
 Int Function GetBosmerFavorSignalCount()
     return StorageUtil.GetIntValue(None, "PDV.Bosmer.Favor.SignalCount")
-EndFunction
-
-Bool Function IsBosmerPathNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncBosmerNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Bosmer
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Bosmer)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Bosmer, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Bosmer)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Bosmer)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BosmerSpellActive", 0)
-    endIf
 EndFunction
 
 Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
@@ -3529,119 +3446,12 @@ Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFoc
     endIf
 EndFunction
 
-Bool Function IsKhajiitLunarNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncKhajiitNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_KhajiitLunar
-        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_KhajiitLunar)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.KhajiitLunarSpellActive", 0)
-    endIf
-EndFunction
-
-Function SyncArgonianRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isArgonian = GetPlayerOriginRaceIndex() == Manager.ORIGIN_ARGONIAN
-    Float histRelation = 0.0
-    Float peopleRelation = 0.0
-    Float voidRelation = 0.0
-    Bool voidActive = False
-    Int activeFocus = Manager.ARGONIAN_FOCUS_NONE
-    if isArgonian && Manager.PDV_ArgonianHistSubstrate
-        histRelation = Manager.PDV_ArgonianHistSubstrate.GetHistRelation()
-        peopleRelation = Manager.PDV_ArgonianHistSubstrate.GetPeopleRelation()
-        voidRelation = Manager.PDV_ArgonianHistSubstrate.GetVoidRelation()
-        voidActive = Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive()
-        activeFocus = GetArgonianActiveFocus(peopleRelation, voidRelation, voidActive)
-    endIf
-
-    ; Hist broad set, HIGHEST TIER ONLY (each tier spell carries the cumulative
-    ; magnitude, so total power is unchanged but only one tier shows at a time).
-    ; Retired Hist Communion boon family: the cultural-practice substrate now
-    ; owns the universal identity boon, while Hist remains a relation ledger.
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Hist_T1, False, "Argonian Hist T1 retired")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Hist_T2, False, "Argonian Hist T2 retired")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Hist_Signature, False, "Argonian Hist Signature retired")
-
-    ; People focused set, highest tier only (active only when People is the focus).
-    Bool peopleActive = isArgonian && activeFocus == Manager.ARGONIAN_FOCUS_PEOPLE
-    Bool wantPeopleT3 = peopleActive && peopleRelation >= Manager.ARGONIAN_REWARD_T3_THRESHOLD
-    Bool wantPeopleT2 = peopleActive && !wantPeopleT3 && peopleRelation >= Manager.ARGONIAN_REWARD_T2_THRESHOLD
-    Bool wantPeopleT1 = peopleActive && !wantPeopleT3 && !wantPeopleT2 && peopleRelation >= Manager.ARGONIAN_REWARD_T1_THRESHOLD
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_People_T1, wantPeopleT1, "Argonian People T1")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_People_T2, wantPeopleT2, "Argonian People T2")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_People_T3, wantPeopleT3, "Argonian People T3")
-
-    ; Sithis tertiary, highest tier only (only when Void is fully active + the focus).
-    Bool sithisActive = isArgonian && voidActive && activeFocus == Manager.ARGONIAN_FOCUS_VOID
-    Bool wantSithisT3 = sithisActive && voidRelation >= Manager.ARGONIAN_REWARD_T3_THRESHOLD
-    Bool wantSithisT2 = sithisActive && !wantSithisT3 && voidRelation >= Manager.ARGONIAN_REWARD_T2_THRESHOLD
-    Bool wantSithisT1 = sithisActive && !wantSithisT3 && !wantSithisT2 && voidRelation >= Manager.ARGONIAN_REWARD_T1_THRESHOLD
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Sithis_T1, wantSithisT1, "Argonian Sithis T1")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Sithis_T2, wantSithisT2, "Argonian Sithis T2")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Argonian_Sithis_T3, wantSithisT3, "Argonian Sithis T3")
-
-    ; Hist Adaptation slot rides the same dawn sync (separate channel from the
-    ; tier rewards above; never touched by SyncRaceRewardSpell).
-    SyncArgonianAdaptation(playerRef, isArgonian)
-
-    ; Existing-save fallback for Waters That Remember: discovery events never
-    ; re-fire for already-known locations, so the dawn sync also offers the
-    ; player's current location to the same one-shot gate.
-    if isArgonian
-        HandleArgonianSacredWaterDiscovery(playerRef.GetCurrentLocation())
-    endIf
-EndFunction
-
 Int Function GetArgonianActiveFocus(Float peopleRelation, Float voidRelation, Bool voidActive)
     if voidActive && voidRelation > peopleRelation
         return Manager.ARGONIAN_FOCUS_VOID
     endIf
 
     return Manager.ARGONIAN_FOCUS_PEOPLE
-EndFunction
-
-Bool Function IsArgonianHistNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncArgonianNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_ArgonianHist
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_ArgonianHist)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_ArgonianHist, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_ArgonianHist)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_ArgonianHist)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ArgonianHistSpellActive", 0)
-    endIf
 EndFunction
 
 String Function GetKhajiitFocusSymbol(Int focusValue)
@@ -4334,39 +4144,6 @@ String Function GetRedguardChampionEntryShownKey(Int sectValue)
     return ""
 EndFunction
 
-Function SyncBretonRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isBreton = GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON
-    SyncBretonAncestorSubstrate(playerRef, isBreton)
-    if isBreton
-        EnsureBretonDruidicForkInitialized()
-    endIf
-
-    Int traditionValue = GetBretonTraditionValue()
-    ; v3 12.5 / race sheet 10.3: Breton has NO generic broad lane. The retired
-    ; generic Tradition_T1/T2 spells are force-removed so a migrated save loses
-    ; them; the broad role now lives in each tradition family's T1/T2 phase, and
-    ; the focused patron unlocks T3.
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Breton_Tradition_T1, False, "Breton Tradition T1 (retired)")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Breton_Tradition_T2, False, "Breton Tradition T2 (retired)")
-
-    ; Unified model (2026-07-13): the tradition family grants T1/T2 practice only.
-    ; The former T3 slots (KnightsRoad_T3 / GreenWay_T3 / HiddenArt_T3) are now
-    ; patron-champion boons owned solely by SyncBretonChampionBoon, so the family
-    ; sync must not touch them (else it would strip a boon the champion sync just
-    ; granted - the reused-spell cross-lane strip, within Breton).
-    SyncBretonTraditionRewardFamily(playerRef, Manager.BRETON_TRADITION_KNIGHTS_ROAD, traditionValue, Manager.PDV_Bless_Breton_KnightsRoad_T1, Manager.PDV_Bless_Breton_KnightsRoad_T2, "KnightsRoad")
-    SyncBretonTraditionRewardFamily(playerRef, Manager.BRETON_TRADITION_HIDDEN_ART, traditionValue, Manager.PDV_Bless_Breton_HiddenArt_T1, Manager.PDV_Bless_Breton_HiddenArt_T2, "HiddenArt")
-    SyncBretonTraditionRewardFamily(playerRef, Manager.BRETON_TRADITION_GREEN_WAY, traditionValue, Manager.PDV_Bless_Breton_GreenWay_T1, Manager.PDV_Bless_Breton_GreenWay_T2, "GreenWay")
-    SyncBretonChampionBoon(playerRef, isBreton, traditionValue)
-    SyncBretonKnightlyVowCreedLossSpells(isBreton && traditionValue == Manager.BRETON_TRADITION_KNIGHTS_ROAD)
-    SyncBretonWitchcraftExposureRuptureSpell(isBreton)
-    SyncBretonDruidicForkBetrayalSpell(isBreton && GetBretonDruidicForkValue() == Manager.BRETON_DRUIDIC_FORK_BETRAYED)
-EndFunction
-
 Function SyncBretonAncestorSubstrate(Actor playerRef, Bool isBreton)
     if !playerRef || !Manager.PDV_BretonAncestorSubstrate
         return
@@ -4755,31 +4532,6 @@ Bool Function IsBretonGreenWayForkEligible()
     return GetBretonDruidicForkValue() == Manager.BRETON_DRUIDIC_FORK_DRUIDIC
 EndFunction
 
-Bool Function IsBretonTraditionNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncBretonNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Breton
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Breton)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Breton, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Breton)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Breton)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.BretonSpellActive", 0)
-    endIf
-EndFunction
-
 Function SyncBretonKnightlyVowCreedLossSpells(Bool isKnightsRoadBreton)
     Int integrityValue = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
     Bool isStrained = isKnightsRoadBreton && integrityValue >= 30 && integrityValue < 70
@@ -4822,32 +4574,6 @@ Function SyncBretonDruidicForkBetrayalSpell(Bool shouldBeActive)
     SyncBretonCreedLossSpell(Manager.PDV_SPEL_CreedLoss_Breton_DruidicForkBetrayal, shouldBeActive, "PDV.CreedLoss.BretonDruidicForkBetrayalActive", "The Green has turned against the broken trust.")
 EndFunction
 
-Function SyncRedguardRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isRedguard = GetPlayerOriginRaceIndex() == Manager.ORIGIN_REDGUARD
-    Int sectValue = GetActiveRedguardSpineSect()
-    SyncRedguardSpineBoon(playerRef, isRedguard, sectValue)
-    ; Option 2 (2026-07-16): the generic ancestor FLOOR (AncestorSpine_T1, "Ancestors' Regard -
-    ; Observant") is descoped -- the sect spine (SyncRedguardSpineBoon) is the always-on ancestor
-    ; layer. Broad progression is KEPT (owner ruling 2026-07-16): AncestorSpine_T2 remains the
-    ; broad-worship Faithful reward, so a broad Redguard at 6+ ancestor-spine sources gains
-    ; "Ancestors' Regard - Faithful" on top of the sect spine. Focused patrons stay broad-state gated
-    ; out of T2, so they carry only their sect spine.
-    Bool broadFaithful = isRedguard && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Redguard.AncestorSpineSourceCount") >= 6
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Redguard_AncestorSpine_T2, broadFaithful, "Redguard AncestorSpine T2")
-
-    SyncRedguardRewardFamily(playerRef, Manager.PDV_Tuwhacca, Manager.PDV_Bless_Redguard_Tuwhacca_T1, Manager.PDV_Bless_Redguard_Tuwhacca_T2, Manager.PDV_Bless_Redguard_Tuwhacca_T3, "Tuwhacca")
-    SyncRedguardRewardFamily(playerRef, Manager.PDV_HoonDing, Manager.PDV_Bless_Redguard_HoonDing_T1, Manager.PDV_Bless_Redguard_HoonDing_T2, Manager.PDV_Bless_Redguard_HoonDing_T3, "HoonDing")
-    SyncRedguardRewardFamily(playerRef, Manager.PDV_Leki, Manager.PDV_Bless_Redguard_Leki_T1, Manager.PDV_Bless_Redguard_Leki_T2, Manager.PDV_Bless_Redguard_Leki_T3, "Leki")
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Redguard_FarShoresToken, isRedguard && StorageUtil.GetFloatValue(None, "PDV.Redguard.FarShoresToken") > 0.0, "Redguard Far Shores Token")
-    if isRedguard && Manager.PDV_RedguardSectTrack
-        MaybeShowRedguardChampionEntry(Manager.PDV_RedguardSectTrack.GetCurrentState())
-    endIf
-EndFunction
-
 Function SyncRedguardSpineBoon(Actor playerRef, Bool isRedguard, Int sectValue)
     if !playerRef
         return
@@ -4883,38 +4609,6 @@ Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == Manager.LedgerRuntime.TIER_DEVOTED, "Redguard " + label + " T2")
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Redguard " + label + " T3")
     Manager.LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Redguard " + label)
-EndFunction
-
-Bool Function IsRedguardAncestorDistanceNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncRedguardNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Redguard
-        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        ; Pass 5 rubric sweep (carried from Pass 2). This asked the engine the same
-        ; question twice in consecutive lines -- wasActive was computed and then the very
-        ; next line re-ran HasSpell on the same spell and the same actor. Reuse the answer.
-        Bool wasActive = playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Redguard)
-        if !wasActive
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Redguard, False)
-        endIf
-        if !wasActive
-            EmitRedguardDeathDutyAbandonmentMinus("redguard_ancestor_distance_neglect")
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Redguard)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Redguard)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.RedguardSpellActive", 0)
-    endIf
 EndFunction
 
 Function EmitRedguardDeathDutyAbandonmentMinus(String reason)
@@ -5606,20 +5300,6 @@ Function SyncNordPatronNeglectSpells()
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
-Function SyncDunmerRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isDunmer = GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER
-    Bool broadReclamationFaithful = isDunmer && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocusCount") >= 6
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Dunmer_Reclamation_T2, broadReclamationFaithful, "Dunmer Reclamation T2")
-
-    SyncDunmerRewardFamily(playerRef, Manager.PDV_Azura, Manager.PDV_Bless_Dunmer_Azura_T1, Manager.PDV_Bless_Dunmer_Azura_T2, Manager.PDV_Bless_Dunmer_Azura_T3, "Azura")
-    SyncDunmerRewardFamily(playerRef, Manager.PDV_Boethiah, Manager.PDV_Bless_Dunmer_Boethiah_T1, Manager.PDV_Bless_Dunmer_Boethiah_T2, Manager.PDV_Bless_Dunmer_Boethiah_T3, "Boethiah")
-    SyncDunmerRewardFamily(playerRef, Manager.PDV_Mephala, Manager.PDV_Bless_Dunmer_Mephala_T1, Manager.PDV_Bless_Dunmer_Mephala_T2, Manager.PDV_Bless_Dunmer_Mephala_T3, "Mephala")
-EndFunction
-
 Function SyncDunmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, Spell t2, Spell t3, String label)
     Bool isActive = GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == deity
     Int activeTier = Manager.LedgerRuntime.TIER_NONE
@@ -5633,70 +5313,6 @@ Function SyncDunmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, 
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == Manager.LedgerRuntime.TIER_DEVOTED, "Dunmer " + label + " T2")
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Dunmer " + label + " T3")
     Manager.LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Dunmer " + label)
-EndFunction
-
-Bool Function IsDunmerAncestorNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncDunmerNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Dunmer
-        StorageUtil.SetIntValue(None, "PDV.Neglect.DunmerSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Dunmer)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Dunmer, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.DunmerSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Dunmer)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Dunmer)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.DunmerSpellActive", 0)
-    endIf
-EndFunction
-
-Function SyncNordRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    EnsureNordOrkeyRewardRuntimeWiring()
-
-    Bool isNord = GetPlayerOriginRaceIndex() == Manager.ORIGIN_NORD
-    Int baselineState = GetNordPantheonBaselineState()
-    SyncNordAncestorSubstrate(playerRef, isNord)
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_OLD_WAYS, Manager.PDV_Kyne, Manager.PDV_Bless_Nord_Kyne_T1, Manager.PDV_Bless_Nord_Kyne_T2, Manager.PDV_Bless_Nord_Kyne_T3, "Kyne")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_OLD_WAYS, Manager.PDV_Shor, Manager.PDV_Bless_Nord_Shor_T1, Manager.PDV_Bless_Nord_Shor_T2, Manager.PDV_Bless_Nord_Shor_T3, "Shor")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_OLD_WAYS, Manager.PDV_Tsun, Manager.PDV_Bless_Nord_Tsun_T1, Manager.PDV_Bless_Nord_Tsun_T2, Manager.PDV_Bless_Nord_Tsun_T3, "Tsun")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_OLD_WAYS, Manager.PDV_Stuhn, Manager.PDV_Bless_Nord_Stuhn_T1, Manager.PDV_Bless_Nord_Stuhn_T2, Manager.PDV_Bless_Nord_Stuhn_T3, "Stuhn")
-    SyncNordRewardFamily(playerRef, -1, Manager.PDV_Talos, Manager.PDV_Bless_Nord_Talos_T1, Manager.PDV_Bless_Nord_Talos_T2, Manager.PDV_Bless_Nord_Talos_T3, "Talos")
-
-    ; Nord Nine Divines gods have no Nord-specific reward records (never authored); reuse the
-    ; existing Imperial Divine reward spells (the canonical Nine Divines rewards), identical to
-    ; the Mara fix. Owner ruling 2026-06-27. NOTE: Akatosh/Julianos/Kynareth Imperial rewards are
-    ; regen-rate (~0 under Requiem) -- a pre-existing Imperial reward-feel gap to convert later.
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_NINE_DIVINES, Manager.LedgerRuntime.PDV_Akatosh, Manager.PDV_Bless_Imperial_Akatosh_T1, Manager.PDV_Bless_Imperial_Akatosh_T2, Manager.PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
-    ; Mara is focusable in BOTH lanes (Old Ways + Nine Divines), like Talos -- baseline -1.
-    ; No Nord-specific Mara reward records exist, so reuse the Imperial Mara spells -- this IS
-    ; the Nine Divines Mara reward (Restoration +5/+13/+23 + wake-mended), identical across lanes.
-    SyncNordRewardFamily(playerRef, -1, Manager.LedgerRuntime.PDV_Mara, Manager.PDV_Bless_Imperial_Mara_T1, Manager.PDV_Bless_Imperial_Mara_T2, Manager.PDV_Bless_Imperial_Mara_T3, "Mara")
-    ; Arkay is focusable in BOTH lanes. Old Ways names him Orkey and uses
-    ; Orkey-facing Nord reward records so Active Effects do not surface Arkay.
-    ; Nine Divines keeps the existing Imperial Arkay rewards.
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_OLD_WAYS, Manager.LedgerRuntime.PDV_Arkay, Manager.PDV_Bless_Nord_Arkay_T1, Manager.PDV_Bless_Nord_Arkay_T2, Manager.PDV_Bless_Nord_Arkay_T3, "Orkey")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_NINE_DIVINES, Manager.LedgerRuntime.PDV_Arkay, Manager.PDV_Bless_Imperial_Arkay_T1, Manager.PDV_Bless_Imperial_Arkay_T2, Manager.PDV_Bless_Imperial_Arkay_T3, "Arkay")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_NINE_DIVINES, Manager.LedgerRuntime.PDV_Stendarr, Manager.PDV_Bless_Imperial_Stendarr_T1, Manager.PDV_Bless_Imperial_Stendarr_T2, Manager.PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_NINE_DIVINES, Manager.LedgerRuntime.PDV_Zenithar, Manager.PDV_Bless_Imperial_Zenithar_T1, Manager.PDV_Bless_Imperial_Zenithar_T2, Manager.PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
-    ; Dibella is focusable in BOTH lanes (owner directive 2026-07-05), like Mara --
-    ; baseline -1, same Imperial reward reuse either way.
-    SyncNordRewardFamily(playerRef, -1, Manager.LedgerRuntime.PDV_Dibella, Manager.PDV_Bless_Imperial_Dibella_T1, Manager.PDV_Bless_Imperial_Dibella_T2, Manager.PDV_Bless_Imperial_Dibella_T3, "Dibella")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_NINE_DIVINES, Manager.LedgerRuntime.PDV_Julianos, Manager.PDV_Bless_Imperial_Julianos_T1, Manager.PDV_Bless_Imperial_Julianos_T2, Manager.PDV_Bless_Imperial_Julianos_T3, "Julianos")
-    SyncNordRewardFamily(playerRef, Manager.NORD_BASELINE_NINE_DIVINES, Manager.LedgerRuntime.PDV_Kynareth, Manager.PDV_Bless_Imperial_Kynareth_T1, Manager.PDV_Bless_Imperial_Kynareth_T2, Manager.PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
 EndFunction
 
 Function SyncNordAncestorSubstrate(Actor playerRef, Bool isNord)
@@ -6774,29 +6390,6 @@ Bool Function IsImperialVampireStateActive()
     return StorageUtil.GetIntValue(None, "PDV.Imperial.VampireHalt") == 1
 EndFunction
 
-Function SyncOrcRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isOrc = GetPlayerOriginRaceIndex() == Manager.ORIGIN_ORC
-    Int activeMode = GetActiveOrcRewardMode()
-    SyncOrcSpineBoon(playerRef, isOrc, activeMode)
-
-    Bool broadFaithful = isOrc && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD && StorageUtil.GetIntValue(None, "PDV.Orc.MalacathSourceCount") >= 6
-    Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, Manager.PDV_Bless_Orc_Malacath_T2, broadFaithful, "Orc Malacath T2")
-
-    Bool focusActive = isOrc && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity() == Manager.PDV_Malacath && Manager.PDV_Malacath
-    Int activeTier = Manager.LedgerRuntime.TIER_NONE
-    if focusActive
-        activeTier = Manager.LedgerRuntime.GetTier(Manager.PDV_Malacath)
-    endIf
-
-    SyncOrcRewardFamily(playerRef, Manager.ORC_LIFE_MODE_STRONGHOLD, activeMode, activeTier, focusActive, Manager.PDV_Bless_Orc_Stronghold_T1, Manager.PDV_Bless_Orc_Stronghold_T2, Manager.PDV_Bless_Orc_Stronghold_T3, "Stronghold")
-    SyncOrcRewardFamily(playerRef, Manager.ORC_LIFE_MODE_CITY, activeMode, activeTier, focusActive, Manager.PDV_Bless_Orc_City_T1, Manager.PDV_Bless_Orc_City_T2, Manager.PDV_Bless_Orc_City_T3, "City")
-    SyncOrcRewardFamily(playerRef, Manager.ORC_LIFE_MODE_LEGION_EXILE, activeMode, activeTier, focusActive, Manager.PDV_Bless_Orc_LegionExile_T1, Manager.PDV_Bless_Orc_LegionExile_T2, Manager.PDV_Bless_Orc_LegionExile_T3, "LegionExile")
-EndFunction
-
 Function SyncOrcSpineBoon(Actor playerRef, Bool isOrc, Int activeMode)
     if !playerRef
         return
@@ -6826,32 +6419,6 @@ Function SyncOrcRewardFamily(Actor playerRef, Int thisMode, Int activeMode, Int 
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activeTier == Manager.LedgerRuntime.TIER_DEVOTED, "Orc " + label + " T2")
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Orc " + label + " T3")
     Manager.LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, Manager.PDV_Malacath, "Orc " + label)
-EndFunction
-
-Bool Function IsOrcCodeNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncOrcNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Orc
-        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Orc)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Orc, False)
-            MaybeShowOrcHearthHeldMissedCadenceNotice()
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Orc)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Orc)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.OrcSpellActive", 0)
-    endIf
 EndFunction
 
 Function EmitMalacathCurseCodeRuptureMinus(String reason)
@@ -6888,38 +6455,6 @@ Function EmitMalacathBrokenFaithKinMinus(String reason)
     Manager.Trace(2, "Malacath broken-faith-kin routed: " + reason + " multiplier=" + multiplier)
 EndFunction
 
-Function SyncImperialRewards(Actor playerRef)
-    if !playerRef
-        return
-    endIf
-
-    Bool isImperial = GetPlayerOriginRaceIndex() == Manager.ORIGIN_IMPERIAL
-    SyncImperialAncestorSubstrate(playerRef, isImperial)
-    ; The Divine reward SPELs below are REUSED by the Nord baseline lanes
-    ; (SyncNordRewardFamily: Mara/Arkay/Dibella + the whole Nine Divines set, owner ruling
-    ; 2026-06-27). SyncNordRewards runs BEFORE this in SyncFirstTierRaceRewardRuntime and
-    ; grants the Nord patron's spell; running the Imperial family here on a non-Imperial save
-    ; (isActive is false because origin != Imperial) would REMOVE that just-granted spell in
-    ; the same pass -- which is why Nord reused-spell rewards never reached Active Effects.
-    ; Only the player's own race lane should manage these records; skip entirely when not
-    ; Imperial. SyncNordRewards runs unconditionally and already owns both grant and cleanup
-    ; for these spells on every non-Imperial save (Civic_T2 above is Imperial-only, so it
-    ; stays before this guard to keep self-clearing).
-    if !isImperial
-        return
-    endIf
-
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Akatosh, Manager.PDV_Bless_Imperial_Akatosh_T1, Manager.PDV_Bless_Imperial_Akatosh_T2, Manager.PDV_Bless_Imperial_Akatosh_T3, "Akatosh")
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Mara, Manager.PDV_Bless_Imperial_Mara_T1, Manager.PDV_Bless_Imperial_Mara_T2, Manager.PDV_Bless_Imperial_Mara_T3, "Mara")
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Arkay, Manager.PDV_Bless_Imperial_Arkay_T1, Manager.PDV_Bless_Imperial_Arkay_T2, Manager.PDV_Bless_Imperial_Arkay_T3, "Arkay")
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Stendarr, Manager.PDV_Bless_Imperial_Stendarr_T1, Manager.PDV_Bless_Imperial_Stendarr_T2, Manager.PDV_Bless_Imperial_Stendarr_T3, "Stendarr")
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Zenithar, Manager.PDV_Bless_Imperial_Zenithar_T1, Manager.PDV_Bless_Imperial_Zenithar_T2, Manager.PDV_Bless_Imperial_Zenithar_T3, "Zenithar")
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Dibella, Manager.PDV_Bless_Imperial_Dibella_T1, Manager.PDV_Bless_Imperial_Dibella_T2, Manager.PDV_Bless_Imperial_Dibella_T3, "Dibella")
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Julianos, Manager.PDV_Bless_Imperial_Julianos_T1, Manager.PDV_Bless_Imperial_Julianos_T2, Manager.PDV_Bless_Imperial_Julianos_T3, "Julianos")
-    SyncImperialRewardFamily(playerRef, Manager.LedgerRuntime.PDV_Kynareth, Manager.PDV_Bless_Imperial_Kynareth_T1, Manager.PDV_Bless_Imperial_Kynareth_T2, Manager.PDV_Bless_Imperial_Kynareth_T3, "Kynareth")
-    SyncImperialRewardFamily(playerRef, Manager.PDV_Talos, Manager.PDV_Bless_Imperial_Talos_T1, Manager.PDV_Bless_Imperial_Talos_T2, Manager.PDV_Bless_Imperial_Talos_T3, "Talos")
-EndFunction
-
 Function SyncImperialAncestorSubstrate(Actor playerRef, Bool isImperial)
     if !playerRef || !Manager.PDV_ImperialAncestorSubstrate
         return
@@ -6944,31 +6479,6 @@ Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t2, isActive && activePiety >= 50.0 && activePiety < 85.0, "Imperial " + label + " T2")
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, wantsChampionSpell, "Imperial " + label + " T3")
     Manager.LedgerRuntime.MaybeShowChampionRewardPresentation(playerRef, t3, hadChampionSpell, wantsChampionSpell, deity, "Imperial " + label)
-EndFunction
-
-Bool Function IsImperialCivicNeglected()
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Function SyncImperialNeglectSpell(Bool shouldBeActive)
-    Actor playerRef = Game.GetPlayer()
-    if !playerRef || !Manager.PDV_SPEL_Neglect_Imperial
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 0)
-        return
-    endIf
-
-    if shouldBeActive
-        if !playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Imperial)
-            playerRef.AddSpell(Manager.PDV_SPEL_Neglect_Imperial, False)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 1)
-    else
-        if playerRef.HasSpell(Manager.PDV_SPEL_Neglect_Imperial)
-            playerRef.RemoveSpell(Manager.PDV_SPEL_Neglect_Imperial)
-        endIf
-        StorageUtil.SetIntValue(None, "PDV.Neglect.ImperialSpellActive", 0)
-    endIf
 EndFunction
 
 Function ApplyConcordatPressure(Int adjustment, String reason)
