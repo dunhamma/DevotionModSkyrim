@@ -9246,6 +9246,13 @@ Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recog
     endIf
 
     StorageUtil.SetIntValue(None, "PDV.Recognition.LastPresentedSignature", presentationSignature)
+    ; Public recognition ships OFF. When neither friendly nor hostile recognition is enabled there
+    ; is nothing to announce, so suppress the transition toast/journal -- a disabled feature must not
+    ; nag on every patron/tier change. The signature above is still recorded, so the first change
+    ; AFTER the owner enables recognition still surfaces cleanly.
+    if !recognitionEnabled && !hostileRecognitionEnabled
+        return
+    endIf
     String identityName = GetRecognitionIdentityDisplayName(identityIndex)
     String bandName = GetPublicTierBand(band)
     String bodyText = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
