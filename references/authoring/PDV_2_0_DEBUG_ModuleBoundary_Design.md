@@ -1,7 +1,8 @@
 # PDV 2.0 -- Debug Module Boundary (design gate D2)
 
-Status: IMPLEMENTED at the static/compile/readback boundary on 2026-08-20. The tester-only
-console shim remains deferred until its exact driver set is chosen; it is not in the user payload.
+Status: IMPLEMENTED at the static/compile/readback boundary on 2026-08-20. The first human
+regression uses the existing MCM driver surface. A tester-only console shim remains an authorized
+contingency only if that run proves a concrete driver gap; it is not in the user payload.
 
 Implementation checkpoint: 136 `Debug*` bodies reside in `PDV_DebugRuntime`; the manager retains
 `RunDebugCommand` plus four scratch registers; the MCM double-hop, 111-public/25-private contract,
@@ -166,11 +167,11 @@ options:
   support surface -- players type console commands and report the results as "bugs," which is
   exactly why the mod is MCM-driven by design.
 
-**Recommendation (owner-confirmed):** the shipped user build is MCM-only (A) -- no console surface
-reaches players. The `PDV_DebugConsole` shim (B) is greenlit as a **tester-build-only** affordance,
-kept out of the shipped FOMOD and hidden from users. Steer away from **(C)**. Its wrappers are thin
-`Global` forwarders (`cqf PDV_DebugConsole <fn>`) into `DebugRuntime`, present in the tester build
-only; they do not change the MCM path and add nothing to what a user can see or invoke.
+**Decision:** the shipped user build is MCM-only (A) -- no console surface reaches players. The
+first human 10-race regression also uses that existing MCM surface. The `PDV_DebugConsole` shim
+(B) remains authorized only as **tester-build-only** contingency tooling if a required test cannot
+be driven through MCM; implement only the demonstrated missing driver and keep it out of the
+shipped FOMOD. Steer away from **(C)**.
 
 ---
 
@@ -194,9 +195,9 @@ modules"), so the dispatcher is on the orchestrator and the 136 bodies are on th
 
 ## 5. Owner decisions (resolved 2026-08-19 -- recommendations adopted)
 
-1. **Console access (Section 3):** RESOLVED -- shipped user build is MCM-only; the
-   `PDV_DebugConsole` shim is greenlit as tester-build-only and hidden from users (not in the
-   shipped FOMOD, not in MCM). Remaining owner input: the exact driver set the shim wraps.
+1. **Console access (Section 3):** RESOLVED -- shipped user build and first human regression are
+   MCM-driven. `PDV_DebugConsole` is a tester-build-only contingency, implemented only if the MCM
+   run proves a concrete missing driver; it remains absent from the shipped FOMOD and MCM.
 2. **MCM property vs double-hop (2c):** RESOLVED -- keep the `PDV_Manager.DebugRuntime.X()`
    double-hop (a single mechanical find/replace, matches the ESP budget, negligible cost for
    user-triggered debug). A direct `PDV_DebugRuntime` MCM property stays available to F2 as an

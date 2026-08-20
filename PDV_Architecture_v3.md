@@ -74,17 +74,20 @@ all ten adapter `Manager` backrefs. Phase C migrated the safe reward/neglect, el
 offer/survey, and presentation switchboards; the notification, state/detail, and stringly
 contextual signal/query families remain explicit deferred seams rather than risky
 late-ORIGIN churn. Ordinary debug deity mutations now share the production current-origin
-roster/formal-offer predicate. This closes the code path that let an Altmer debug run award
-Baan Dar piety and tier surfaces; the common active-deity setter no longer accepts a bypass
+roster/formal-offer predicate. The gate enforces exact race-authorized ordinary rosters for all
+ten races and exact offer sets for all six offer races; Altmer-to-Baan-Dar is one negative
+regression fixture, not the invariant. The common active-deity setter no longer accepts a bypass
 flag. One labelled unsafe consent fixture retains controlled invalid-state injection,
 persists a proof-invalidating marker, self-cleans, and restores the prior patron mode.
-Machine evidence is compile 0/0 for the changed scripts, formal/reachability
-`PASS=435/WARN=0/FAIL=0`, VMAD 207/207 with zero unwaived findings, and repo/live source
-hash equality. Runtime/manual proof remains separate: Altmer/Baan Dar negative surfaces,
-race-change foreign-strip/no-double-dip, MCM open-time tab refresh, recognition-off silence,
+Machine evidence is compile 0/0 for the changed scripts, all-race formal/reachability
+`PASS=412/WARN=0/FAIL=0`, VMAD 207/207 with zero unwaived findings, and repo/live source
+hash equality. Runtime/manual proof remains separate: representative all-race negative surfaces,
+race-change prior-race-strip/no-double-dip, MCM open-time tab refresh, recognition-off silence,
 and final formal-offer wording. The `e739f79f` cast report is a reconciled historical
-baseline; full regeneration is deferred until the remaining modules land to avoid repeated
-authority churn. `PDV_RecognitionRuntime` now owns all 31 NPC-recognition functions, its
+baseline; the source-derived module contract now supersedes it, and the retirement authority
+has zero unresolved adjudications. That contract also checks each adapter's exact neglect helper
+and `PDV_SPEL_Neglect_*` reference family, making cross-race/path leakage the invariant and Kyne
+only a concrete regression fixture. `PDV_RecognitionRuntime` now owns all 31 NPC-recognition functions, its
 three-form cache, mod-event arbitration, identity/band resolution, faction reactions, and
 transition presentation. Manager, ledger, and MCM callers route through the typed module;
 the dedicated StartGameEnabled host QUST (`07179F`) and both Manager backrefs are directly
@@ -109,7 +112,7 @@ scripts compile 0/0. The integration sweep moved location ingress to one typed O
 routed remaining EventBus/moon/Baan-Dar queries through the generic ORIGIN contextual seam,
 and made source gates extraction-aware: complete module-family reads, all matching polymorphic
 override bodies, and an explicit manager VMAD property window. The full verifier is now clean
-at `FAIL=0, WARN=0, TODO=0, PASS=4098, INFO=100`; signal E2E, substrate pacing, broad pantheon,
+at `FAIL=0, WARN=0, TODO=0, PASS=4104, INFO=100`; signal E2E, substrate pacing, broad pantheon,
 and both pantheon readback gates are also green. Manager VMAD cleanup is closed at 455 unique
 properties with no undeclared or duplicate names. `pdv_module_contract_sync.mjs` now derives
 the current module contract from source and RegionMap rather than treating the historical
@@ -118,8 +121,9 @@ the current module contract from source and RegionMap rather than treating the h
 event/call-driven with bounded toast and deferred-overlay lifetimes; no code optimization is
 justified. Its duplicate TTF/WOFF2 payload is deferred until an embedded-browser font-load and
 visual comparison can prove one format removable. Next work is fresh-game/player-surface and
-performance proof; the tester-only console shim remains outside the user payload and awaits an
-exact driver-set ruling.
+performance proof. The first human regression uses the existing MCM driver surface; the
+tester-only console shim remains outside the user payload and is deferred unless that run proves
+a concrete driver gap.
 
 Current v3.100 addendum: the 2026-07-14 bug-report cluster is adjudicated and its
 fix pass EXECUTED (authority: Part D of

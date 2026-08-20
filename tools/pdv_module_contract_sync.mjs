@@ -13,6 +13,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE_DIR = path.join(ROOT, "live-source", "Scripts", "Source");
 const REGION_PATH = path.join(ROOT, "references", "authoring", "PDV_2_0RegionMap.json");
 const CONTRACT_PATH = path.join(ROOT, "references", "authoring", "PDV_2_0ModuleContracts.manifest.json");
+const RETIREMENT_PATH = path.join(ROOT, "references", "authoring", "PDV_2_0Retirement.manifest.json");
 const KNOWN_FLAGS = new Set(["--check", "--write", "--json", "--self-test"]);
 
 assertKnownFlags(process.argv.slice(2), KNOWN_FLAGS, { toolName: "pdv_module_contract_sync" });
@@ -26,6 +27,30 @@ const ALLOWED_MANAGER_BRIDGES = new Map([
   // ORIGIN needs the manager-owned canonical global reader and exposes a local
   // forwarding method so race adapters can call it without learning Manager.
   ["ORIGIN", new Set(["getplayeroriginraceindex"])],
+]);
+const REQUIRED_ORIGIN_ADAPTER_OVERRIDES = ["SyncRaceRewards", "SyncNeglectSpells"];
+const ORIGIN_NEGLECT_CONTRACTS = new Map([
+  ["PDV_OriginRuntime_Altmer", { hooks: ["SyncAltmerNeglectSpell", "IsAltmerCoherenceNeglected"], spells: ["PDV_SPEL_Neglect_Altmer"] }],
+  ["PDV_OriginRuntime_Argonian", { hooks: ["SyncArgonianNeglectSpell", "IsArgonianHistNeglected"], spells: ["PDV_SPEL_Neglect_ArgonianHist"] }],
+  ["PDV_OriginRuntime_Bosmer", { hooks: ["SyncBosmerNeglectSpell", "IsBosmerPathNeglected"], spells: ["PDV_SPEL_Neglect_Bosmer"] }],
+  ["PDV_OriginRuntime_Breton", { hooks: ["SyncBretonNeglectSpell", "IsBretonTraditionNeglected"], spells: ["PDV_SPEL_Neglect_Breton"] }],
+  ["PDV_OriginRuntime_Dunmer", { hooks: ["SyncDunmerNeglectSpell", "IsDunmerAncestorNeglected"], spells: ["PDV_SPEL_Neglect_Dunmer"] }],
+  ["PDV_OriginRuntime_Imperial", { hooks: ["SyncImperialNeglectSpell", "IsImperialCivicNeglected"], spells: ["PDV_SPEL_Neglect_Imperial"] }],
+  ["PDV_OriginRuntime_Khajiit", { hooks: ["SyncKhajiitNeglectSpell", "IsKhajiitLunarNeglected"], spells: ["PDV_SPEL_Neglect_KhajiitLunar"] }],
+  ["PDV_OriginRuntime_Nord", {
+    hooks: ["SyncKyneNeglectSpell", "IsKyneNeglectActive", "SyncNordPatronNeglectSpells"],
+    spells: [
+      "PDV_SPEL_Neglect_Kyne",
+      "PDV_SPEL_Neglect_Shor",
+      "PDV_SPEL_Neglect_Tsun",
+      "PDV_SPEL_Neglect_Stuhn",
+      "PDV_SPEL_Neglect_Talos",
+      "PDV_SPEL_Neglect_Arkay",
+      "PDV_SPEL_Neglect_Dibella",
+    ],
+  }],
+  ["PDV_OriginRuntime_Orc", { hooks: ["SyncOrcNeglectSpell", "IsOrcCodeNeglected"], spells: ["PDV_SPEL_Neglect_Orc"] }],
+  ["PDV_OriginRuntime_Redguard", { hooks: ["SyncRedguardNeglectSpell", "IsRedguardAncestorDistanceNeglected"], spells: ["PDV_SPEL_Neglect_Redguard"] }],
 ]);
 
 function esc(value) {
@@ -119,6 +144,15 @@ export function parsePapyrusDeclarations(source, scriptName = "<fixture>") {
   return declarations;
 }
 
+export function extractPapyrusFunctionBody(source, functionName) {
+  const code = stripPapyrusCode(source);
+  const pattern = new RegExp(
+    `^\\s*(?:(?:[A-Za-z_]\\w*(?:\\[\\])?)\\s+)?Function\\s+${esc(functionName)}\\s*\\([^\\n]*\\)\\s*\\n([\\s\\S]*?)^\\s*EndFunction\\b`,
+    "im",
+  );
+  return code.match(pattern)?.[1] ?? "";
+}
+
 export function discoverQualifiedCalls(source, qualifiers) {
   const code = stripPapyrusCode(source);
   const calls = new Set();
@@ -127,6 +161,33 @@ export function discoverQualifiedCalls(source, qualifiers) {
     for (const match of code.matchAll(pattern)) calls.add(match[1]);
   }
   return calls;
+}
+
+export function auditRetirementRows(rows, liveSymbols) {
+  const unresolved = rows
+    .filter((row) => String(row.adjudication ?? "").trim().toUpperCase() === "NEEDS-REVIEW")
+    .map((row) => row.symbol);
+  const retiredStillDeclared = rows
+    .filter((row) => row.action === "retire" && liveSymbols.has(String(row.symbol).toLowerCase()))
+    .map((row) => ({ symbol: row.symbol, owners: liveSymbols.get(String(row.symbol).toLowerCase()) }));
+  return { rows: rows.length, unresolved, retiredStillDeclared };
+}
+
+export function auditOriginNeglectContract(source, contract) {
+  const body = extractPapyrusFunctionBody(source, "SyncNeglectSpells");
+  const actualHooks = [...new Set(body.match(/\b(?:Sync|Is)[A-Za-z0-9_]*Neglect[A-Za-z0-9_]*\b/g) ?? [])].sort();
+  const expectedHooks = [...contract.hooks].sort();
+  const actualSpells = [...new Set(stripPapyrusCode(source).match(/\bPDV_SPEL_Neglect_[A-Za-z0-9_]+\b/g) ?? [])].sort();
+  const expectedSpells = [...contract.spells].sort();
+  const problems = [];
+  if (!body) problems.push("SyncNeglectSpells body is missing");
+  if (JSON.stringify(actualHooks) !== JSON.stringify(expectedHooks)) {
+    problems.push(`SyncNeglectSpells hooks expected [${expectedHooks.join(", ")}], found [${actualHooks.join(", ")}]`);
+  }
+  if (JSON.stringify(actualSpells) !== JSON.stringify(expectedSpells)) {
+    problems.push(`neglect spells expected [${expectedSpells.join(", ")}], found [${actualSpells.join(", ")}]`);
+  }
+  return { problems, actualHooks, actualSpells };
 }
 
 function runSelfTest() {
@@ -145,7 +206,28 @@ function runSelfTest() {
   assert.equal(declarations.get("realcall")?.signature, "Function RealCall()");
   const stacked = "PDV_Manager.DebugRuntime.DebugRunNeglectPass()";
   assert.deepEqual([...discoverQualifiedCalls(stacked, ["DebugRuntime"])], ["DebugRunNeglectPass"]);
-  console.log("pdv_module_contract_sync self-test: PASS=3 FAIL=0");
+  assert.match(extractPapyrusFunctionBody(fixture, "RealCall"), /LedgerRuntime\.AwardPiety/);
+  const retirement = auditRetirementRows(
+    [
+      { symbol: "OldFunction", action: "retire", adjudication: "reviewed" },
+      { symbol: "PendingFunction", action: "extract", adjudication: "NEEDS-REVIEW" },
+    ],
+    new Map([["oldfunction", [{ script: "PDV_Fixture", kind: "function" }]]]),
+  );
+  assert.deepEqual(retirement.unresolved, ["PendingFunction"]);
+  assert.equal(retirement.retiredStillDeclared[0]?.symbol, "OldFunction");
+  const leakedNeglect = auditOriginNeglectContract(
+    [
+      "Function SyncNeglectSpells()",
+      "    SyncAltmerNeglectSpell(IsAltmerCoherenceNeglected())",
+      "EndFunction",
+      "Spell Property PDV_SPEL_Neglect_Altmer Auto",
+      "Spell Property PDV_SPEL_Neglect_Breton Auto",
+    ].join("\n"),
+    { hooks: ["SyncAltmerNeglectSpell", "IsAltmerCoherenceNeglected"], spells: ["PDV_SPEL_Neglect_Altmer"] },
+  );
+  assert.match(leakedNeglect.problems.join("; "), /PDV_SPEL_Neglect_Breton/);
+  console.log("pdv_module_contract_sync self-test: PASS=7 FAIL=0");
 }
 
 function readJson(filePath) {
@@ -194,12 +276,23 @@ function inheritanceCycle(headers) {
 function buildContract() {
   const existing = readJson(CONTRACT_PATH);
   const region = readJson(REGION_PATH);
+  const retirement = readJson(RETIREMENT_PATH);
   const sourceFiles = fs.readdirSync(SOURCE_DIR).filter((file) => file.toLowerCase().endsWith(".psc")).sort();
   const sources = new Map(sourceFiles.map((file) => [file, fs.readFileSync(path.join(SOURCE_DIR, file), "utf8")]));
   const strippedSources = new Map([...sources].map(([file, source]) => [file, stripPapyrusCode(source)]));
   const declarationsByScript = new Map(
     [...sources].map(([file, source]) => [scriptStem(file), parsePapyrusDeclarations(source, scriptStem(file))]),
   );
+
+  const liveSymbols = new Map();
+  const addLiveSymbol = (symbol, script, kind) => {
+    const key = symbol.toLowerCase();
+    if (!liveSymbols.has(key)) liveSymbols.set(key, []);
+    liveSymbols.get(key).push({ script, kind });
+  };
+  for (const [script, declarations] of declarationsByScript) {
+    for (const declaration of declarations.values()) addLiveSymbol(declaration.name, script, "function-or-event");
+  }
 
   const propertyOwnersByType = new Map();
   const propertyPattern = /^\s*([A-Za-z_]\w*)\s+Property\s+([A-Za-z_]\w*)\s+Auto\b/gim;
@@ -209,6 +302,9 @@ function buildContract() {
       if (!propertyOwnersByType.has(type)) propertyOwnersByType.set(type, new Set());
       propertyOwnersByType.get(type).add(match[2]);
     }
+  }
+  for (const [file, source] of strippedSources) {
+    for (const match of source.matchAll(propertyPattern)) addLiveSymbol(match[2], scriptStem(file), "property");
   }
 
   const moduleScripts = new Map();
@@ -229,6 +325,14 @@ function buildContract() {
 
   const managerDeclarations = declarationsByScript.get("PDV__ManagerQuest") ?? new Map();
   const problems = [];
+  const retirementAudit = auditRetirementRows(retirement.rows ?? [], liveSymbols);
+  if (retirementAudit.unresolved.length) {
+    problems.push(`Retirement authority has unresolved NEEDS-REVIEW rows: ${retirementAudit.unresolved.join(", ")}.`);
+  }
+  for (const row of retirementAudit.retiredStillDeclared) {
+    const owners = row.owners.map((owner) => `${owner.script} (${owner.kind})`).join(", ");
+    problems.push(`Retired symbol ${row.symbol} is still declared by ${owners}.`);
+  }
   const moduleReports = [];
   const generatedModules = {};
 
@@ -290,6 +394,31 @@ function buildContract() {
       problems.push(`${moduleName}: mapped functions still declared by manager: ${managerDuplicates.join(", ")}.`);
     }
 
+    const missingAdapterOverrides = [];
+    const neglectIsolationProblems = [];
+    if (moduleName === "ORIGIN") {
+      for (const script of scripts.filter((name) => name !== oldModule.targetScript)) {
+        const declarations = declarationsByScript.get(script) ?? new Map();
+        for (const functionName of REQUIRED_ORIGIN_ADAPTER_OVERRIDES) {
+          if (!declarations.has(functionName.toLowerCase())) missingAdapterOverrides.push(`${script}.${functionName}`);
+        }
+        const contract = ORIGIN_NEGLECT_CONTRACTS.get(script);
+        const source = strippedSources.get(`${script}.psc`) ?? "";
+        if (!contract) {
+          neglectIsolationProblems.push(`${script} has no reviewed neglect isolation contract`);
+          continue;
+        }
+        const audit = auditOriginNeglectContract(source, contract);
+        neglectIsolationProblems.push(...audit.problems.map((problem) => `${script}.${problem}`));
+      }
+      if (missingAdapterOverrides.length) {
+        problems.push(`ORIGIN: race adapters missing reward/neglect isolation overrides: ${missingAdapterOverrides.join(", ")}.`);
+      }
+      if (neglectIsolationProblems.length) {
+        problems.push(`ORIGIN: cross-race/path neglect isolation drift: ${neglectIsolationProblems.join("; ")}.`);
+      }
+    }
+
     const publicEntries = [...calledBy]
       .filter(([key]) => actual.has(key))
       .map(([key, call]) => ({
@@ -317,6 +446,8 @@ function buildContract() {
       missingRegion,
       managerDuplicates,
       unresolvedCalls: unresolvedCalls.map(([, call]) => call.name),
+      missingAdapterOverrides,
+      neglectIsolationProblems,
       qualifiers: [...qualifiers].sort(),
     });
   }
@@ -334,7 +465,7 @@ function buildContract() {
   const current = fs.readFileSync(CONTRACT_PATH, "utf8").replace(/\r\n/g, "\n");
   const drift = current !== rendered;
   const digest = crypto.createHash("sha256").update(rendered).digest("hex").toUpperCase();
-  return { generated, rendered, drift, digest, problems, moduleReports, inheritanceCycle: cycle };
+  return { generated, rendered, drift, digest, problems, moduleReports, inheritanceCycle: cycle, retirementAudit };
 }
 
 function main() {
@@ -353,6 +484,10 @@ function main() {
     wrote: WRITE && !result.problems.length,
     generatedSha256: result.digest,
     inheritanceCycle: result.inheritanceCycle,
+    retirementAuthority: {
+      path: path.relative(ROOT, RETIREMENT_PATH).replace(/\\/g, "/"),
+      ...result.retirementAudit,
+    },
     problems: result.problems,
     modules: result.moduleReports,
   };
@@ -361,11 +496,16 @@ function main() {
   } else {
     for (const module of report.modules) {
       console.log(
-        `[${module.missingRegion.length || module.managerDuplicates.length || module.unresolvedCalls.length ? "FAIL" : "PASS"}] ` +
+        `[${module.missingRegion.length || module.managerDuplicates.length || module.unresolvedCalls.length || module.missingAdapterOverrides.length || module.neglectIsolationProblems.length ? "FAIL" : "PASS"}] ` +
         `${module.module}: ${module.declarations} declarations = ${module.publicCount} public + ${module.privateCount} private; ` +
         `${module.regionExpected} RegionMap names present.`,
       );
     }
+    console.log(
+      `[${report.retirementAuthority.unresolved.length || report.retirementAuthority.retiredStillDeclared.length ? "FAIL" : "PASS"}] ` +
+      `Retirement authority: ${report.retirementAuthority.rows} rows; ${report.retirementAuthority.unresolved.length} unresolved; ` +
+      `${report.retirementAuthority.retiredStillDeclared.length} retired symbols still declared.`,
+    );
     for (const problem of report.problems) console.error(`[FAIL] ${problem}`);
     if (report.drift && !WRITE) console.error("[FAIL] Module contract manifest differs from the current source call graph. Run with --write after review.");
     if (report.wrote) console.log(`[PASS] Rewrote ${report.contractPath}.`);

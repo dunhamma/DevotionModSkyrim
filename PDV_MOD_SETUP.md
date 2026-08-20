@@ -1264,18 +1264,19 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
-**2026-08-20 AEST - Penalty serialization gate and Kyne correction:**
+**2026-08-20 AEST - All-family penalty serialization gate and first regression correction:**
 Penalty record serialization stays outside the V3 module interfaces: modules decide when a
 penalty spell applies or clears, while `node .\tools\pdv_penalty_serialization_audit.mjs` checks
 the live SPEL/MGEF contract through direct houseCARL. The gate accepts negative magnitude without
 `Detrimental` or positive magnitude with `Detrimental`, requires `Recover`, and fails the two buff-
-producing sign/flag combinations. Its first 81-spell sweep found only Kyne's reused Frost
+producing sign/flag combinations. Its first 81-spell sweep found one concrete fixture, Kyne's reused Frost
 Resistance neglect (`+8`, no `Detrimental`); the existing linked MGEF gained `Detrimental` with no
 FormID, link, actor-value, or magnitude change. Post-write: 79/79 modifier pairs valid; three
 legacy scripted Hircine price effects are reported as non-modifiers. This is readback proof only.
-The umbrella verifier targets this tree when `PDV_DEVOTION_ROOT` is set. The older Requiem penalty
-audit still hardcodes the disabled public `mods\Devotion\Devotion.esp`; do not use its findings as
-evidence about this repair until it adopts the shared path resolver.
+The invariant is every linked Neglect, Disfavor, and Price modifier, not the Kyne record. The
+umbrella verifier targets this tree when `PDV_DEVOTION_ROOT` is set. The Requiem penalty audit now
+uses the same shared resolver and passes 44/44 against both the default public tree and V3Dev;
+the Argonian spec/live visible name is reconciled to `The Hist Silenced`.
 
 **2026-08-20 AEST - V3 post-module integration gate reconciliation:**
 After ORIGIN, RECOGNITION, PRISMA, and DEBUG extraction, the 37 known verifier failures were
@@ -1285,12 +1286,15 @@ events and queries, including moon observation and Baan Dar rescue eligibility, 
 the generic typed seam. Any verifier that follows decomposed behavior must read the complete
 module family, join every matching polymorphic override body, and inspect an explicit VMAD
 property window instead of assuming manager residence, selecting the first override, or using
-a stale tail slice. Full verification is clean at `FAIL=0, WARN=0, TODO=0, PASS=4092, INFO=97`.
-The manager still has duplicate historical Nine Divines T1/T2 and Observe Moons/FormList VMAD
-properties; both copies point to the same correct forms, so deletion is a later supervised
-record-cleanup pass, not part of this source/gate checkpoint. This evidence is static,
-compile, and readback proof only; fresh-game, player-surface, save/load, and package proof remain
-separate.
+a stale tail slice. Supervised VMAD consolidation removed stale fills and duplicate property
+names, and the retirement manifest is now fully adjudicated and guarded against retired live
+declarations. The all-race reachability gate checks exact ordinary rosters and exact reviewed
+formal-offer sets; the all-race neglect gate requires every origin adapter to own reward and
+neglect isolation and checks its exact neglect helper and spell-reference families, with Kyne
+retained only as a concrete regression fixture. Full verification is
+clean at `FAIL=0, WARN=0, TODO=0, PASS=4104, INFO=100`; formal/reachability passes 412/412 and VMAD
+passes 207/207 attachments. This evidence is static, compile, and readback proof only; fresh-game,
+player-surface, save/load, and package proof remain separate.
 
 **2026-08-11 AEST - Daedric effect-model decomposition (balance-neutral):**
 Daedric boon and price composition moved behind
@@ -1512,7 +1516,7 @@ main-quest stages with `setstage` from QASmoke: `MQ106` stage 200 is a shutdown 
 
 **2026-07-13 AEST - Breton architecture audit and Hidden Art layered-pact repair:** Runtime co-test passed Book of Days, the Hidden Art Champion route, Prince boon, price waiver, current-pool preservation, and the controlled Mora Champion offer. Breton same-family Champion records are cumulative absolute totals and replace T2, while a distinct patron boon remains beside the lane reward. Hidden Art waives the integrated Prince price and duplicate stigma; non-Hidden-Art pacts still carry their ordinary price. Mora's tuned Champion boon is `+20 Alteration; +20 Magicka`. The new Magicka effect and all 18 Daedric Health/Magicka/Stamina price effects use `PeakValueModifier` plus `Recover`, so they alter the reversible maximum pool rather than continuously draining the current pool. Survey uses one sentence: `Your pact with Hermaeus Mora has opened Hidden Art - Champion.` The manager suppresses waived price copy, presents the combined boon mechanic, and no longer resends a successful milestone toast after the native bridge has queued it.
 
-**2026-06-30 AEST - Requiem felt-penalty backend closeout:** The Requiem swallowed-regen penalty tail is now backend/readback clean for the active rows that should be felt as max-health penalties. Argonian Hist Distant uses `PDV_MGEF_Neglect_ArgonianHist_Health` (`Health -10`), Breton Tradition Distant uses `PDV_MGEF_Neglect_Breton_Health` (`Health -10`), and Breton Excommunication uses `PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health` (`Health -15`). Imperial civic neglect is intentionally preserved as `PDV_MGEF_Neglect_Imperial_Restoration` / `ResistDisease -5`. New preflight/readback command: `node .\tools\pdv_requiem_penalty_audit.mjs`; latest result `PASS=44`. The live `Devotion.esp` and `Devotion.seq` were refreshed with backups under `Backups\phase20-race-rewards\` and `Seq\`; houseCARL confirmed the converted MGEFs and zero old-regeneration spell refs on `Devotion Dev`. Proof boundary: this is authority/readback/backend smoke only. In-game Requiem Active Effects, `player.getav Health`, HP-bar movement, and manual magnitude feel remain open in `references\authoring\PDV_InGameTestingNeeded_Runbook.md`.
+**2026-06-30 AEST - Requiem felt-penalty backend closeout (resolver refreshed 2026-08-20):** The Requiem swallowed-regen penalty tail is now backend/readback clean for the active rows that should be felt as max-health penalties. Argonian Hist Distant uses `PDV_MGEF_Neglect_ArgonianHist_Health` (`Health -10`, visible effect name `The Hist Silenced`), Breton Tradition Distant uses `PDV_MGEF_Neglect_Breton_Health` (`Health -10`), and Breton Excommunication uses `PDV_SPEL_CreedLoss_Breton_Excommunication_MGEF_Health` (`Health -15`). Imperial civic neglect is intentionally preserved as `PDV_MGEF_Neglect_Imperial_Restoration` / `ResistDisease -5`. Preflight/readback command: `node .\tools\pdv_requiem_penalty_audit.mjs`; it now uses `tools/lib/pdv_paths.mjs`, so `PDV_DEVOTION_ROOT` selects the inspected tree. Current results are `PASS=44` on both the default public tree and V3Dev. The live `Devotion.esp` and `Devotion.seq` were refreshed with backups under `Backups\phase20-race-rewards\` and `Seq\`; houseCARL confirmed the converted MGEFs and zero old-regeneration spell refs on `Devotion Dev`. Proof boundary: this is authority/readback/backend smoke only. In-game Requiem Active Effects, `player.getav Health`, HP-bar movement, and manual magnitude feel remain open in `references\authoring\PDV_InGameTestingNeeded_Runbook.md`.
 
 **2026-06-29 AEST - Prisma-first toast fallback hardening:** Transient gameplay acknowledgements are now Prisma-first through `PDV__ManagerQuest.SendPrismaToastPayloadOrFallback(...)`, which tries `PDV_PrismaBridge.SendOverlayJson(...)` and uses vanilla top-left `Debug.Notification(...)` only as fallback when Prisma is unavailable or the send fails. `ShowP2BookNotice`, shift/substrate/Daedric/event toast helpers, Daedric milestone toasts, and clear gameplay acknowledgement notices now route through that helper; raw top-left calls are limited to explicit seed/debug diagnostics and the shared fallback. `tools\pdv_prisma_toast_fallback_audit.mjs` guards the policy and the P2 book path from `PDV_PlayerEvents.OnBookRead` to `ShowP2BookNotice`, including Nord `Skyrim.esm:0ED161` / `Book1CheapNordsArise`. Proof boundary: source/audit/compile only until fresh in-game Prisma display and fallback-off-modlist tests are recorded.
 

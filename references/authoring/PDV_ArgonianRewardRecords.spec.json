@@ -153,7 +153,7 @@
         "magicEffectEditorId": "PDV_MGEF_Neglect_ArgonianHist_Health",
         "actorValue": "Health",
         "magnitude": -10,
-        "effectName": "Maximum Health",
+        "effectName": "The Hist Silenced",
         "appliesAtPosture": "Silenced or Corrupted"
       }
     ],

@@ -178,7 +178,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_DevotionLedger",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L1682-1684 (loc 3)",
       "notes": ""
     },
@@ -188,7 +188,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_DevotionLedger",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L1686-1707 (loc 22); callers=5",
       "notes": ""
     },
@@ -1148,7 +1148,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_PrismaPresenter",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L3626-3675 (loc 50); callers=1",
       "notes": ""
     },
@@ -4028,7 +4028,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_OriginRuntimeBase",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L9338-9360 (loc 23); callers=1",
       "notes": ""
     },
@@ -6388,7 +6388,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_DevotionLedger",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L14455-14549 (loc 95); callers=18",
       "notes": ""
     },
@@ -6688,7 +6688,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_PrismaPresenter",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L15018-15283 (loc 266); callers=3",
       "notes": ""
     },
@@ -6698,7 +6698,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_PrismaPresenter",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L15285-15551 (loc 267); callers=3",
       "notes": ""
     },
@@ -6748,7 +6748,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_DevotionLedger",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L15613-15630 (loc 18); callers=3",
       "notes": ""
     },
@@ -6756,31 +6756,31 @@
       "symbol": "GetReputationGainMultiplierNoop",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionLedger",
-      "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "targetModule": "(removed)",
+      "action": "retire",
+      "adjudication": "reviewed",
       "evidence": "golden L15632-15634 (loc 3); callers=0",
-      "notes": ""
+      "notes": "Dropped as a dead wrapper of the dead reputation multiplier per the 2026-08-18 gain-pipeline ADR; absent from current live source."
     },
     {
       "symbol": "GetCurseGainMultiplierNoop",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionLedger",
-      "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "targetModule": "(removed)",
+      "action": "retire",
+      "adjudication": "reviewed",
       "evidence": "golden L15636-15638 (loc 3); callers=1",
-      "notes": ""
+      "notes": "Inlined into PDV_OriginRuntimeBase.GetCurseGainMultiplier per the 2026-08-18 gain-pipeline ADR; wrapper absent from current live source."
     },
     {
       "symbol": "GetDaedricStigmaGainMultiplierNoop",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DaedricRuntime",
-      "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "targetModule": "(removed)",
+      "action": "retire",
+      "adjudication": "reviewed",
       "evidence": "golden L15640-15642 (loc 3); callers=1",
-      "notes": ""
+      "notes": "Inlined into PDV_DaedricRuntime.GetDaedricStigmaGainMultiplier per the 2026-08-18 gain-pipeline ADR; wrapper absent from current live source."
     },
     {
       "symbol": "InitSurvivalContext",
@@ -6838,7 +6838,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_DevotionLedger",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L15747-15758 (loc 12); callers=1",
       "notes": ""
     },
@@ -6916,21 +6916,21 @@
       "symbol": "GetReputationGainMultiplier",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionLedger",
-      "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "targetModule": "(removed)",
+      "action": "retire",
+      "adjudication": "reviewed",
       "evidence": "golden L15902-15908 (loc 7); callers=1",
-      "notes": ""
+      "notes": "Dropped as dead because the reputation track factor is already folded into GetEffectiveGainMultiplier; absent from current live source."
     },
     {
       "symbol": "GetCurseGainMultiplier",
       "kind": "function",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "PDV_DevotionLedger",
+      "targetModule": "PDV_OriginRuntimeBase",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L15910-15924 (loc 15); callers=3",
-      "notes": ""
+      "notes": "Moved to the ORIGIN provider PER_EVENT lane per the 2026-08-18 gain-pipeline ADR; present in current PDV_OriginRuntimeBase source."
     },
     {
       "symbol": "GetDaedricStigmaGainMultiplier",
@@ -6938,7 +6938,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_DaedricRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L15926-15940 (loc 15); callers=4",
       "notes": ""
     },
@@ -8458,7 +8458,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_OriginRuntimeBase",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L18807-18877 (loc 71); callers=2",
       "notes": ""
     },
@@ -10078,7 +10078,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_OriginRuntimeBase",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L21679-21689 (loc 11); callers=1",
       "notes": ""
     },
@@ -11088,7 +11088,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_PrismaPresenter",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L23777-23836 (loc 60); callers=4",
       "notes": ""
     },
@@ -11858,7 +11858,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_PrismaPresenter",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L25093-25173 (loc 81); callers=2",
       "notes": ""
     },
@@ -11868,7 +11868,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_PrismaPresenter",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L25175-25223 (loc 49); callers=4",
       "notes": ""
     },
@@ -12618,7 +12618,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_OriginRuntimeBase",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L26527-26533 (loc 7); callers=2",
       "notes": ""
     },
@@ -12628,7 +12628,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_OriginRuntimeBase",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L26535-26541 (loc 7); callers=2",
       "notes": ""
     },
@@ -13018,7 +13018,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_PrismaPresenter",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27051-27215 (loc 165); callers=30",
       "notes": ""
     },
@@ -13078,7 +13078,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27280-27284 (loc 5)",
       "notes": ""
     },
@@ -13088,7 +13088,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27286-27290 (loc 5)",
       "notes": ""
     },
@@ -13138,7 +13138,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27350-27355 (loc 6)",
       "notes": ""
     },
@@ -13178,7 +13178,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27401-27403 (loc 3)",
       "notes": ""
     },
@@ -13208,7 +13208,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27418-27438 (loc 21)",
       "notes": ""
     },
@@ -13218,7 +13218,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27440-27446 (loc 7)",
       "notes": ""
     },
@@ -13228,7 +13228,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27448-27454 (loc 7)",
       "notes": ""
     },
@@ -13238,7 +13238,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27456-27493 (loc 38)",
       "notes": ""
     },
@@ -13248,7 +13248,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27495-27519 (loc 25)",
       "notes": ""
     },
@@ -13258,7 +13258,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27521-27537 (loc 17)",
       "notes": ""
     },
@@ -13268,7 +13268,7 @@
       "currentOwner": "PDV__ManagerQuest",
       "targetModule": "PDV_RecognitionRuntime",
       "action": "extract",
-      "adjudication": "NEEDS-REVIEW",
+      "adjudication": "reviewed",
       "evidence": "golden L27539-27549 (loc 11)",
       "notes": ""
     },
@@ -16926,11 +16926,11 @@
       "symbol": "PDV_Bless_Redguard_AncestorSpine_T1",
       "kind": "property",
       "currentOwner": "PDV__ManagerQuest",
-      "targetModule": "(removed)",
-      "action": "retire",
-      "adjudication": "clear",
+      "targetModule": "PDV__ManagerQuest",
+      "action": "retain",
+      "adjudication": "reviewed",
       "evidence": "live-source L418 (Spell)",
-      "notes": "AncestorSpine_T1 generic-floor reward stripped per migration-sweep (T2 broad progression kept)."
+      "notes": "The obsolete generic-floor grant line was removed, but the property and uninstall teardown are intentionally retained for the authored Redguard broad T1 reward. Reconciled against the migration-sweep plan and current source."
     },
     {
       "symbol": "PDV_Bless_Redguard_AncestorSpine_T2",

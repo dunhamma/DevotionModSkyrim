@@ -9843,12 +9843,8 @@ class Verifier {
   }
 
   checkNeglectDecaySourceContracts() {
-    this.checkSourceContains("Neglect/decay source", "PDV__ManagerQuest", [
-      "Spell Property PDV_SPEL_Neglect_Kyne Auto",
-      "Spell Property PDV_SPEL_Neglect_Shor Auto",
-      "Spell Property PDV_SPEL_Neglect_Tsun Auto",
-      "Spell Property PDV_SPEL_Neglect_Stuhn Auto",
-      "Spell Property PDV_SPEL_Neglect_Talos Auto",
+    this.checkSourceContains("Neglect/decay all-race isolation", "PDV__ManagerQuest", [
+      "FormList Property PDV_FLST_OriginAdapters Auto",
       "Float Property NEGLECT_LAPSE_GRACE_DAYS = 3.0 AutoReadOnly",
       "Function RunDawnApplyDecay()",
       "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
@@ -9857,6 +9853,27 @@ class Verifier {
       "StorageUtil.SetFloatValue(None, \"PDV.Devotion.LastActTime\", Utility.GetCurrentGameTime())",
       "Function RunDawnApplySpellAndNeglectLayers()",
       "GetPatronState() != PATRON_STATE_ACTIVE",
+      "Function SyncFirstTierRaceRewardRuntime()",
+      "while adapterIndex < PDV_FLST_OriginAdapters.GetSize()",
+      "PDV_OriginRuntimeBase laneAdapter = PDV_FLST_OriginAdapters.GetAt(adapterIndex) as PDV_OriginRuntimeBase",
+      "laneAdapter.SyncRaceRewards()",
+      "laneAdapter.SyncNeglectSpells()",
+      "Bool Function IsPatronLapsed(PDV_DeityBase deity)",
+      "Bool Function IsBroadLaneLapsed()",
+      "Function SyncOnePatronNeglectSpell(Actor playerRef, Spell neglectSpell, Bool shouldBeActive)",
+      "playerRef.AddSpell(neglectSpell, False)",
+      "playerRef.RemoveSpell(neglectSpell)",
+      "String Function GetNeglectSummary()",
+    ], this.neglectDecayGap.bind(this));
+    // Kyne remains the oldest concrete regression fixture. These checks prove its
+    // packet still obeys the all-race isolation seam above; they do not define the
+    // scope of the neglect invariant.
+    this.checkSourceContains("Neglect/decay Kyne regression fixture", "PDV__ManagerQuest", [
+      "Spell Property PDV_SPEL_Neglect_Kyne Auto",
+      "Spell Property PDV_SPEL_Neglect_Shor Auto",
+      "Spell Property PDV_SPEL_Neglect_Tsun Auto",
+      "Spell Property PDV_SPEL_Neglect_Stuhn Auto",
+      "Spell Property PDV_SPEL_Neglect_Talos Auto",
       "Bool nordBroadLapsed = IsBroadLaneLapsed() && GetPlayerOriginRaceIndex() == ORIGIN_NORD",
       "SyncKyneNeglectSpell(nordBroadLapsed)",
       "SyncNordPatronNeglectSpells()",
@@ -9865,13 +9882,7 @@ class Verifier {
       "playerRef.AddSpell(PDV_SPEL_Neglect_Kyne, False)",
       "playerRef.RemoveSpell(PDV_SPEL_Neglect_Kyne)",
       "PDV.Neglect.KyneSpellActive",
-      "Bool Function IsPatronLapsed(PDV_DeityBase deity)",
-      "Bool Function IsBroadLaneLapsed()",
-      "Function SyncOnePatronNeglectSpell(Actor playerRef, Spell neglectSpell, Bool shouldBeActive)",
-      "playerRef.AddSpell(neglectSpell, False)",
-      "playerRef.RemoveSpell(neglectSpell)",
       "Function SyncNordPatronNeglectSpells()",
-      "String Function GetNeglectSummary()",
     ], this.neglectDecayGap.bind(this));
   }
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /*
- * Read-only formal deity-offer verifier.
+ * Read-only race-authorized deity reachability and formal-offer verifier.
  *
- * This checks the post-Kyne formal-offer scale-out without owning the writing:
+ * This checks the all-race formal-offer scale-out without owning the writing:
  * - source eligibility and accept/decline/refuse flow in the live manager
  * - explicit no-offer exclusions for emergent/setup races
  * - formal-offer MESG/property readback through the existing record helper
@@ -250,9 +250,9 @@ function verifySpecShape(spec, specPath, pass, fail) {
   ].filter((editorId) => !editorId.startsWith("PDV_Msg_Nord_"));
 
   if (messageRecords.length === 46) {
-    pass("Formal offer spec shape", "Spec declares 46 post-Kyne message records.", specPath);
+    pass("Formal offer spec shape", "Spec declares the 46 reviewed all-race formal-offer message records.", specPath);
   } else {
-    fail("Formal offer spec shape", `Expected 46 post-Kyne message records, found ${messageRecords.length}.`, specPath);
+    fail("Formal offer spec shape", `Expected 46 reviewed all-race formal-offer message records, found ${messageRecords.length}.`, specPath);
   }
 
   for (const editorId of expectedSpecIds) {
@@ -380,7 +380,7 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
   }
 
   const helperExpectations = [
-    ["IsNordOfferEligibleDeity", ["PDV_Kyne"]],
+    ["IsNordOfferEligibleDeity", ["PDV_Kyne", "PDV_Talos", "PDV_Shor", "PDV_Tsun", "PDV_Stuhn", "PDV_Mara", "PDV_Arkay", "PDV_Dibella", "PDV_Akatosh", "PDV_Stendarr", "PDV_Zenithar", "PDV_Julianos", "PDV_Kynareth"]],
     ["IsDunmerOfferEligibleDeity", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala"]],
     ["IsAltmerOfferEligibleDeity", ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Trinimac", "PDV_Syrabane"]],
     ["IsBretonOfferEligibleDeity", ["PDV_Stendarr", "PDV_Akatosh", "PDV_Mara", "PDV_Arkay", "PDV_Julianos", "PDV_Zenithar", "PDV_Kynareth", "PDV_Dibella", "PDV_Magnus", "PDV_Talos", "PDV_Yffre"]],
@@ -393,12 +393,16 @@ function verifySourceContract(sourceText, sourcePath, pass, fail) {
       fail("Formal offer eligibility helper", `${helperName} is missing.`, sourcePath);
       continue;
     }
-    for (const propertyName of deityProperties) {
-      if (body.includes(propertyName)) {
-        pass("Formal offer eligibility helper", `${helperName} references ${propertyName}.`, sourcePath);
-      } else {
-        fail("Formal offer eligibility helper", `${helperName} does not reference ${propertyName}.`, sourcePath);
-      }
+    const expected = [...deityProperties].sort();
+    const referenced = [...new Set(body.match(/\bPDV_[A-Za-z0-9_]+\b/g) || [])]
+      .filter((propertyName) => propertyName !== "PDV_DeityBase")
+      .sort();
+    const missing = expected.filter((propertyName) => !referenced.includes(propertyName));
+    const unexpected = referenced.filter((propertyName) => !expected.includes(propertyName));
+    if (!missing.length && !unexpected.length) {
+      pass("Formal offer eligibility helper", `${helperName} has exactly its reviewed race-authorized deity set (${expected.length}).`, sourcePath);
+    } else {
+      fail("Formal offer eligibility helper", `${helperName} drifted: missing=${missing.join(",") || "none"}; unexpected=${unexpected.join(",") || "none"}.`, sourcePath);
     }
   }
 
@@ -644,27 +648,34 @@ function verifyDebugReachabilityBoundaries(sourceDir, pass, fail) {
     fail("Active deity reachability", "SetActiveDeity is missing the shared current-origin predicate.", activeSetter?.filePath || sourceDir);
   }
 
-  const altmerEligibility = findFunction("IsAltmerOfferEligibleDeity");
-  const expectedAltmer = ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Trinimac", "PDV_Syrabane"];
-  if (!altmerEligibility) {
-    fail("Altmer formal-offer roster", "IsAltmerOfferEligibleDeity is missing.", sourceDir);
-  } else {
-    for (const propertyName of expectedAltmer) {
-      if (altmerEligibility.body.includes(propertyName)) pass("Altmer formal-offer roster", `Altmer eligibility includes ${propertyName}.`, altmerEligibility.filePath);
-      else fail("Altmer formal-offer roster", `Altmer eligibility is missing ${propertyName}.`, altmerEligibility.filePath);
-    }
-    if (altmerEligibility.body.includes("PDV_BaanDar")) fail("Altmer Baan Dar exclusion", "Altmer eligibility references PDV_BaanDar.", altmerEligibility.filePath);
-    else pass("Altmer Baan Dar exclusion", "Altmer eligibility excludes PDV_BaanDar.", altmerEligibility.filePath);
-  }
-
   const dashboardRoster = findFunction("IsDashboardDeityInOriginRoster");
-  const altmerRosterArm = dashboardRoster?.body.match(/elseIf\s+originRace\s*==\s*Manager\.ORIGIN_ALTMER([\s\S]*?)(?=elseIf|endIf)/i)?.[1] || "";
-  if (!altmerRosterArm) {
-    fail("Altmer dashboard roster", "The Altmer dashboard-roster arm is missing.", dashboardRoster?.filePath || sourceDir);
-  } else if (expectedAltmer.every((propertyName) => altmerRosterArm.includes(propertyName)) && !altmerRosterArm.includes("PDV_BaanDar")) {
-    pass("Altmer dashboard roster", "The Altmer dashboard roster contains the five Altmer deities and excludes Baan Dar.", dashboardRoster.filePath);
+  const expectedRaceRosters = new Map([
+    ["NORD", ["PDV_Kyne", "PDV_Kynareth", "PDV_Talos", "PDV_Shor", "PDV_Tsun", "PDV_Stuhn", "PDV_Mara", "PDV_Akatosh", "PDV_Arkay", "PDV_Stendarr", "PDV_Julianos", "PDV_Dibella", "PDV_Zenithar"]],
+    ["IMPERIAL", ["PDV_Kynareth", "PDV_Mara", "PDV_Akatosh", "PDV_Arkay", "PDV_Stendarr", "PDV_Julianos", "PDV_Dibella", "PDV_Zenithar"]],
+    ["BRETON", ["PDV_Kynareth", "PDV_Talos", "PDV_Mara", "PDV_Akatosh", "PDV_Arkay", "PDV_Stendarr", "PDV_Julianos", "PDV_Dibella", "PDV_Zenithar", "PDV_Magnus", "PDV_Yffre"]],
+    ["ALTMER", ["PDV_AuriEl", "PDV_Magnus", "PDV_Xarxes", "PDV_Trinimac", "PDV_Syrabane"]],
+    ["BOSMER", ["PDV_Yffre", "PDV_AuriEl", "PDV_Xarxes", "PDV_BaanDar", "PDV_Zen"]],
+    ["DUNMER", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala"]],
+    ["KHAJIIT", ["PDV_Azura", "PDV_Boethiah", "PDV_Mephala", "PDV_BaanDar", "PDV_Rajhin", "PDV_Alkosh", "PDV_Khenarthi"]],
+    ["ARGONIAN", ["PDV_Hist", "PDV_Sithis"]],
+    ["ORC", ["PDV_Malacath"]],
+    ["REDGUARD", ["PDV_Tuwhacca", "PDV_Leki", "PDV_HoonDing"]]
+  ]);
+  if (!dashboardRoster) {
+    fail("All-race ordinary reachability roster", "IsDashboardDeityInOriginRoster is missing.", sourceDir);
   } else {
-    fail("Altmer dashboard roster", "The Altmer dashboard roster is incomplete or includes Baan Dar.", dashboardRoster.filePath);
+    for (const [race, expectedValues] of expectedRaceRosters) {
+      const arm = dashboardRoster.body.match(new RegExp(`(?:if|elseIf)\\s+originRace\\s*==\\s*Manager\\.ORIGIN_${race}([\\s\\S]*?)(?=elseIf|endIf)`, "i"))?.[1] || "";
+      const expected = [...expectedValues].sort();
+      const actual = [...new Set(arm.match(/\bPDV_[A-Za-z0-9_]+\b/g) || [])].sort();
+      const missing = expected.filter((propertyName) => !actual.includes(propertyName));
+      const unexpected = actual.filter((propertyName) => !expected.includes(propertyName));
+      if (arm && !missing.length && !unexpected.length) {
+        pass("All-race ordinary reachability roster", `${race} has exactly its reviewed race-authorized deity set (${expected.length}).`, dashboardRoster.filePath);
+      } else {
+        fail("All-race ordinary reachability roster", `${race} drifted: missing=${missing.join(",") || "none"}; unexpected=${unexpected.join(",") || "none"}.`, dashboardRoster.filePath);
+      }
+    }
   }
 
   const guardedMutators = [
