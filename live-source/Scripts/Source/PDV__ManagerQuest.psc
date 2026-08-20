@@ -3183,7 +3183,7 @@ Function DebugForceKhajiitLunarPosture(Int newPosture, String reason)
     PDV_KhajiitLunarPostureTrack.SetState(newPosture, reason)
     if newPosture != oldPosture
         if newPosture == KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
-            OriginRuntime.ShowKhajiitMessage(PDV_Msg_Khajiit_CurseState_ShadowDriftEntry, "You have drifted into shadow.", False)
+            OriginRuntime.ShowOriginMessage(PDV_Msg_Khajiit_CurseState_ShadowDriftEntry, "You have drifted into shadow.", False)
         endIf
         SendPrismaShiftToast(OriginRuntime.GetKhajiitLunarPostureDisplayLabelAt(newPosture), OriginRuntime.GetKhajiitLunarPostureReadout(newPosture), "lunar")
         RequestPanelRefresh()

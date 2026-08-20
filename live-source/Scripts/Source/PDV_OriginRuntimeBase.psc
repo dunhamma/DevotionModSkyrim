@@ -1581,24 +1581,6 @@ Function ShowAltmerNotification(Message messageRecord, String fallbackText)
     Manager.SendPrismaToast("auri-el", "neutral", "", fallbackText)
 EndFunction
 
-Function ShowAltmerMessage(Message messageRecord, String fallbackText, Bool suppressModal)
-    if Manager.GetSuppressCurseTransitionOutputs()
-        return
-    endIf
-
-    if suppressModal
-        Manager.SendPrismaToast("auriel", "warning", "", fallbackText)
-        return
-    endIf
-
-    if messageRecord
-        messageRecord.Show()
-        return
-    endIf
-
-    Debug.MessageBox(fallbackText)
-EndFunction
-
 Bool Function IsBosmerOrigin()
     return GetPlayerOriginRaceIndex() == Manager.ORIGIN_BOSMER
 EndFunction
@@ -3043,10 +3025,6 @@ String Function GetKhajiitLunarPostureReadout(Int posture)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
-Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool suppressModal)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
 Function ApplyKhajiitCurseHandlers(Int oldState, Int newState, String reason)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
@@ -3454,23 +3432,6 @@ EndFunction
 
 Function ApplyArgonianCurseHandlers(Int oldState, Int newState, String reason)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
-Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppressModal)
-    if Manager.GetSuppressCurseTransitionOutputs()
-        return
-    endIf
-
-    ; Past this point the function always emits something (toast, modal, or fallback box),
-    ; so the generic curse toast can stand aside for this transition.
-    Manager.SetRaceCurseSurfaceShown(True)
-
-    if suppressModal || !messageRecord
-        Manager.SendPrismaToast("hist", "warning", "", fallback)
-        return
-    endIf
-
-    messageRecord.Show()
 EndFunction
 
 Bool Function IsArgonianOrigin()
