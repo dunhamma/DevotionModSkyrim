@@ -7,6 +7,8 @@
 > - **Source stamp:** `PDV_BUILD_VERSION` (`PDV__ManagerQuest.psc:607`, the machine-gated single source of truth) set to `"2.0.0-dev"` and compiled into `Devotion-V3Dev`; drop the `-dev` suffix when the release is cut.
 > - **Branch base:** continue on `feature/v3-big-update` (already contains `v1.5.0d` + 69 commits + all merged `codex/v3-*` fixes). No re-cut.
 >
+> **Implementation checkpoint (2026-08-20):** ORIGIN, RECOGNITION, and PRISMA are extracted and merged checkpoint-by-checkpoint into `feature/v3-big-update`. PRISMA now resides in `PDV_PrismaPresenter` (114 functions; 48 public / 66 private) with per-race content supplied by the accepted ORIGIN presentation hook. Compile, extraction-specific, direct houseCARL VMAD/readback, and SEQ proof are green. Fresh-game/player-surface proof, legacy verifier/gate residence refresh, stale manager VMAD-fill cleanup, profiler comparison, and package acceptance remain later proof buckets; they are not implied by the static checkpoint.
+>
 > **Open reconciliation loose ends (not blockers for this plan):**
 > - `hotfix/1.5.0e-daedric-consent-kid` (`409609b7`) is **not** merged into `feature/v3-big-update` — its Daedric-consent fixes are not yet in the V3 line. Deferred by owner decision; merge before the 2.0 release closeout.
 > - `dist/PDV_QuestModPatches_FOMOD/fomod/info.xml` still carries a tracked `<Version>3.0.0-alpha</Version>` placeholder for the separately-versioned Quest-Reaction-Compatibility sub-package (the shipper regenerates it from `--version`). Confirm the compat-hub's intended version independently before editing.

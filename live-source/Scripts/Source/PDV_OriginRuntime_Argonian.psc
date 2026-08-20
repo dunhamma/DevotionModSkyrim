@@ -54,6 +54,34 @@ String Function GetSurveyFragment()
     return GetArgonianSurveyText()
 EndFunction
 
+String Function GetQuasiPatronName()
+    return "Saxhleel Practice"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "hist"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetArgonianCulturalPracticeLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Hist memory, People, and the Void leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return "Hist " + GetArgonianHistPostureLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Argonian | " + GetArgonianHistPostureLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return "Hist " + GetArgonianHistPostureLabel()
+EndFunction
+
 Bool Function IsRaceLaneNeglected()
     return IsArgonianHistNeglected()
 EndFunction
@@ -176,7 +204,7 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
                 Float metricBefore = Manager.PDV_ArgonianHistSubstrate.GetMetric()
                 Int tierBefore = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
                 Manager.PDV_ArgonianHistSubstrate.RecordCulturalPractice("argonian_cooked_meal", reason)
-                Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier(), Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The first cooked meal kept Saxhleel practice.", "journal", GetArgonianCulturalPracticeLabel())
+                Manager.Prisma.SendPrismaSubstrateProgress("argonian-practice", tierBefore, Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier(), Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The first cooked meal kept Saxhleel practice.", "journal", GetArgonianCulturalPracticeLabel())
                 return True
             endIf
         endIf
@@ -296,7 +324,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
             if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay") != rootedRestStamp
                 Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.Argonian.RootedRestDay")
                 Manager.PDV_SPEL_ArgonianRootedRest.Cast(playerRef, playerRef)
-                Manager.SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
+                Manager.Prisma.SendPrismaToast("hist", "good", "Rooted rest", "You wake feeling rooted.")
                 Manager.Trace(1, "[PDV][ARGONIAN_ROOTED_REST] granted day=" + Manager.LedgerRuntime.GetDevotionalDay())
             else
                 Manager.Trace(2, "Argonian Rooted Rest suppressed: already granted this devotional day")
@@ -341,7 +369,7 @@ Bool Function TryArgonianBedOfChoiceSleep(Actor playerRef, Int sleepCellId, Stri
     endIf
     if pressed == 0
         SetArgonianHome(playerRef, sleepCellId, todayStamp, reason)
-        Manager.SendPrismaToast("hist", "good", "Place of rest", "The Hist remembers it now.")
+        Manager.Prisma.SendPrismaToast("hist", "good", "Place of rest", "The Hist remembers it now.")
     else
         StorageUtil.SetIntValue(None, "PDV.ArgBed.DeclineDay", todayStamp)
         StorageUtil.SetIntValue(None, "PDV.ArgBed.CandidateFormID", 0)
@@ -444,8 +472,8 @@ Function ApplyArgonianAdaptation(Actor playerRef, Int adaptationIndex)
 
     playerRef.AddSpell(chosenAdaptation, False)
     StorageUtil.SetIntValue(None, "PDV.Adapt.Active", adaptationIndex + 1)
-    Manager.SendPrismaShiftToast("The Hist has reshaped you.", "", "hist")
-    Manager.AppendBookOfDaysEntry("You took the Hist's adaptation into your body. The change is permanent -- the root has answered, and you are remade in its image.", Utility.GetCurrentGameTime() as Int, "reorientation", "hist", True, 3)
+    Manager.Prisma.SendPrismaShiftToast("The Hist has reshaped you.", "", "hist")
+    Manager.Prisma.AppendBookOfDaysEntry("You took the Hist's adaptation into your body. The change is permanent -- the root has answered, and you are remade in its image.", Utility.GetCurrentGameTime() as Int, "reorientation", "hist", True, 3)
     Manager.Trace(2, "Argonian adaptation applied: " + adaptationIndex)
 EndFunction
 
@@ -538,7 +566,7 @@ Function AwardArgonianSacredWater(Int siteFormId)
     endIf
     Debug.MessageBox("The water remembers. For one slow breath you stand in the marsh again, and the root speaks your name.")
     SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
-    Manager.AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
+    Manager.Prisma.AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
 
     if seenCount >= Manager.PDV_FLST_ArgonianSacredWaters.GetSize()
         StorageUtil.SetIntValue(None, "PDV.ArgWaters.Milestone", 1)
@@ -622,8 +650,8 @@ Function TryArgonianNearWaterMaintenance()
     if Manager.PDV_Hist
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The water remembers you.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The water remembers you.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Argonian near-water Hist maintenance routed.")
 EndFunction
 
@@ -760,9 +788,9 @@ Function HandleArgonianHistMaintenance(String reason)
     StorageUtil.AdjustIntValue(None, "PDV.Argonian.HistSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Argonian.LastHistSourceReason", reason)
     StorageUtil.SetFloatValue(None, "PDV.Argonian.LastHistSourceTime", Utility.GetCurrentGameTime())
-    Manager.SurfaceP2BookReadNotice(reason, "The Hist remembers", "The reading carries the smell of home.")
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Hist memory stirred.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SurfaceP2BookReadNotice(reason, "The Hist remembers", "The reading carries the smell of home.")
+    Manager.Prisma.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Hist memory stirred.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Argonian Hist maintenance routed with multiplier " + multiplier)
 EndFunction
 
@@ -777,8 +805,8 @@ Function HandleArgonianPeopleSupport(String reason)
     Manager.PDV_ArgonianHistSubstrate.RecordPeopleSupportScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "Your people were supported.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "Your people were supported.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Argonian People support routed with multiplier " + multiplier)
 EndFunction
 
@@ -793,8 +821,8 @@ Function HandleArgonianBedOfChoiceReturn(String reason)
     Manager.PDV_ArgonianHistSubstrate.RecordBedOfChoiceReturnScaled(multiplier, reason)
     RefreshArgonianHistPosture(reason)
     Int tierAfter = Manager.PDV_ArgonianHistSubstrate.GetSubstrateTier()
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The chosen rest took root.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The chosen rest took root.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Argonian bed-of-choice return routed with multiplier " + multiplier)
 EndFunction
 
@@ -818,8 +846,8 @@ Function HandleArgonianVoidSignal(String reason)
     if Manager.PDV_ArgonianHistSubstrate.IsVoidFullyActive() && Manager.PDV_ArgonianHistSubstrate.GetHistRelation() <= Manager.PDV_ArgonianHistSubstrate.HistNonCurseFloor
         EmitHistVoidOverreachMinus(reason)
     endIf
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Void was noticed.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The Void was noticed.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Argonian Void signal routed with multiplier " + multiplier)
 EndFunction
 
@@ -861,8 +889,8 @@ Function RefreshArgonianHistPosture(String reason)
     if Manager.PDV_ArgonianHistPostureTrack
         Manager.PDV_ArgonianHistPostureTrack.SetState(Manager.PDV_ArgonianHistSubstrate.GetHistPosture(), reason)
         if Manager.PDV_ArgonianHistPostureTrack.GetCurrentState() != oldPosture
-            Manager.SendPrismaShiftToast(GetArgonianHistPostureLabel(), "", "hist")
-            Manager.RequestPanelRefresh()
+            Manager.Prisma.SendPrismaShiftToast(GetArgonianHistPostureLabel(), "", "hist")
+            Manager.Prisma.RequestPanelRefresh()
             Int newPosture = Manager.PDV_ArgonianHistSubstrate.GetHistPosture()
             if newPosture == Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_CORRUPTED
                 EmitHistCorruptionMinus(reason)
@@ -1105,7 +1133,7 @@ Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppre
     Manager.SetRaceCurseSurfaceShown(True)
 
     if suppressModal || !messageRecord
-        Manager.SendPrismaToast("hist", "warning", "", fallback)
+        Manager.Prisma.SendPrismaToast("hist", "warning", "", fallback)
         return
     endIf
 
@@ -1113,8 +1141,8 @@ Function ShowArgonianMessage(Message messageRecord, String fallback, Bool suppre
 EndFunction
 
 String Function GetArgonianMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("hist", "The Hist", "substrate", "hist", Manager.PDV_Hist, "Root, memory, people, and sap.")
-    entries = entries + "," + Manager.RosterMedallionEntry("sithis", "Sithis", "god", "sithis", Manager.PDV_Sithis, "Void, change, and dangerous silence.")
+    String entries = Manager.Prisma.RosterMedallionEntry("hist", "The Hist", "substrate", "hist", Manager.PDV_Hist, "Root, memory, people, and sap.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("sithis", "Sithis", "god", "sithis", Manager.PDV_Sithis, "Void, change, and dangerous silence.")
     return entries
 EndFunction
 

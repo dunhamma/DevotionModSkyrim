@@ -441,7 +441,7 @@ Function AccumulateLikesDislikesSurface(PDV_DeityBase deity, Float amount, Int e
         BeginLikesDislikesSurface(eventType)
     endIf
 
-    String deityName = Manager.GetPublicDeityDisplayName(deity)
+    String deityName = Manager.Prisma.GetPublicDeityDisplayName(deity)
     if amount > 0.0
         if _ldSurfPosNamesCsv != ""
             _ldSurfPosNamesCsv = _ldSurfPosNamesCsv + "|"
@@ -451,7 +451,7 @@ Function AccumulateLikesDislikesSurface(PDV_DeityBase deity, Float amount, Int e
         if amount > _ldSurfBestPosAmount
             _ldSurfBestPosAmount = amount
             _ldSurfBestPosName = deityName
-            _ldSurfBestPosSymbol = Manager.GetPrismaSymbolForDeity(deity)
+            _ldSurfBestPosSymbol = Manager.Prisma.GetPrismaSymbolForDeity(deity)
         endIf
     else
         if _ldSurfNegNamesCsv != ""
@@ -462,7 +462,7 @@ Function AccumulateLikesDislikesSurface(PDV_DeityBase deity, Float amount, Int e
         if amount < _ldSurfBestNegAmount
             _ldSurfBestNegAmount = amount
             _ldSurfBestNegName = deityName
-            _ldSurfBestNegSymbol = Manager.GetPrismaSymbolForDeity(deity)
+            _ldSurfBestNegSymbol = Manager.Prisma.GetPrismaSymbolForDeity(deity)
         endIf
     endIf
 EndFunction
@@ -496,8 +496,8 @@ Function FlushLikesDislikesSurface(Int eventType)
         elseIf _ldSurfPosCount > 2
             posMsg = _ldSurfBestPosName + " and " + (_ldSurfPosCount - 1) + " others mark the act."
         endIf
-        Manager.SendPrismaToast(_ldSurfBestPosSymbol, "good", "A deed noticed", posMsg)
-        Manager.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act.", nowDay, "favor.act", _ldSurfBestPosSymbol, False, 1, "A deed noticed")
+        Manager.Prisma.SendPrismaToast(_ldSurfBestPosSymbol, "good", "A deed noticed", posMsg)
+        Manager.Prisma.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act.", nowDay, "favor.act", _ldSurfBestPosSymbol, False, 1, "A deed noticed")
     elseIf _ldSurfPosCount == 0
         String negMsg = _ldSurfBestNegName + " takes offense at the act."
         if _ldSurfNegCount == 2
@@ -505,8 +505,8 @@ Function FlushLikesDislikesSurface(Int eventType)
         elseIf _ldSurfNegCount > 2
             negMsg = _ldSurfBestNegName + " and " + (_ldSurfNegCount - 1) + " others take offense at the act."
         endIf
-        Manager.SendPrismaToast(_ldSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
-        Manager.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense at the act.", nowDay, "favor.loss", _ldSurfBestNegSymbol, False, 1, "A deed ill-received")
+        Manager.Prisma.SendPrismaToast(_ldSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
+        Manager.Prisma.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense at the act.", nowDay, "favor.loss", _ldSurfBestNegSymbol, False, 1, "A deed ill-received")
     else
         Bool positiveLeads = _ldSurfBestPosAmount >= (_ldSurfBestNegAmount * -1.0)
         String mixedTone = "good"
@@ -517,8 +517,8 @@ Function FlushLikesDislikesSurface(Int eventType)
             mixedSymbol = _ldSurfBestNegSymbol
             mixedBodTone = "favor.loss"
         endIf
-        Manager.SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _ldSurfBestPosName + " marks the act; " + _ldSurfBestNegName + " takes offense.")
-        Manager.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act; " + Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, 1, "A deed weighed")
+        Manager.Prisma.SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _ldSurfBestPosName + " marks the act; " + _ldSurfBestNegName + " takes offense.")
+        Manager.Prisma.AppendBookOfDaysEntry(Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfPosNamesCsv) + " marked the act; " + Manager.PDV_QuestReactionRuntimeService.JoinQuestSurfaceNames(_ldSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, 1, "A deed weighed")
     endIf
 
     Manager.Trace(1, "Likes/dislikes surface flushed: event " + eventType + ", positive " + _ldSurfPosCount + ", negative " + _ldSurfNegCount)
@@ -531,11 +531,11 @@ Function SurfaceDebugDislikeEvent(PDV_DeityBase deity, Float amount, Int eventTy
         return
     endIf
 
-    String deityName = Manager.GetPublicDeityDisplayName(deity)
-    String symbolName = Manager.GetPrismaSymbolForDeity(deity)
+    String deityName = Manager.Prisma.GetPublicDeityDisplayName(deity)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(deity)
     Int nowDay = Utility.GetCurrentGameTime() as Int
-    Manager.SendPrismaToast(symbolName, "warning", "A deed ill-received", deityName + " takes offense at the act.")
-    Manager.AppendBookOfDaysEntry(deityName + " took offense at the act.", nowDay, "favor.loss", symbolName, False, 1, "A deed ill-received")
+    Manager.Prisma.SendPrismaToast(symbolName, "warning", "A deed ill-received", deityName + " takes offense at the act.")
+    Manager.Prisma.AppendBookOfDaysEntry(deityName + " took offense at the act.", nowDay, "favor.loss", symbolName, False, 1, "A deed ill-received")
     Manager.Trace(1, "Debug dislike surface flushed: " + deity.DeityName + " event " + eventType)
 EndFunction
 
@@ -577,7 +577,7 @@ Bool Function IsGrandfatheredOffRosterPatron(PDV_DeityBase deity)
     if GetPatronState() != PATRON_STATE_ACTIVE || deity != Manager.GetActiveDeity() || Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex())
         return False
     endIf
-    String stance = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(Manager.GetPublicDeityDisplayName(deity), deity)
+    String stance = Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(Manager.Prisma.GetPublicDeityDisplayName(deity), deity)
     return stance == "FOREIGN" || stance == "TOLERATED"
 EndFunction
 
@@ -597,7 +597,7 @@ String Function ExtractTierLabelFromSurfaceKey(String surfaceKey)
 EndFunction
 
 String Function BuildCommitmentOfferAcceptJournalLine(Int deityIndex)
-    String patron = Manager.GetJournalDeityName(deityIndex)
+    String patron = Manager.Prisma.GetJournalDeityName(deityIndex)
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "The Reclamation deepens in you. You named " + patron + " as your focus."
@@ -610,7 +610,7 @@ String Function BuildCommitmentOfferAcceptJournalLine(Int deityIndex)
 EndFunction
 
 String Function BuildCommitmentOfferAcceptToastLine(PDV_DeityBase deity)
-    String patron = Manager.GetPublicDeityDisplayName(deity)
+    String patron = Manager.Prisma.GetPublicDeityDisplayName(deity)
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "The ash-prayer has a name: " + patron + "."
@@ -623,7 +623,7 @@ String Function BuildCommitmentOfferAcceptToastLine(PDV_DeityBase deity)
 EndFunction
 
 String Function BuildCommitmentOfferRefuseJournalLine(Int deityIndex)
-    String patron = Manager.GetJournalDeityName(deityIndex)
+    String patron = Manager.Prisma.GetJournalDeityName(deityIndex)
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "The Reclamation holds as it was. You set " + patron + " aside, and " + patron + " will not ask again."
@@ -636,7 +636,7 @@ String Function BuildCommitmentOfferRefuseJournalLine(Int deityIndex)
 EndFunction
 
 String Function BuildCommitmentOfferRefuseToastLine(PDV_DeityBase deity)
-    String patron = Manager.GetPublicDeityDisplayName(deity)
+    String patron = Manager.Prisma.GetPublicDeityDisplayName(deity)
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_DUNMER
         return "You set " + patron + " aside."
@@ -710,7 +710,7 @@ Function AwardCuratedSignal(PDV_DeityBase deity, Int signalType, Form contextRef
         return
     endIf
 
-    AwardPiety(deity, delta, Manager.CuratedSignalDriverReason(deity, signalType))
+    AwardPiety(deity, delta, Manager.Prisma.CuratedSignalDriverReason(deity, signalType))
 
     if Manager.GetDebugLevel() >= 2
         Debug.Trace("[PDV] AwardCuratedSignal: " + deity.DeityName + " signal " + signalType + " delta " + delta)
@@ -744,7 +744,7 @@ Function AwardCuratedSignalScaled(PDV_DeityBase deity, Int signalType, Form cont
     endIf
 
     Float scaledDelta = delta * multiplier
-    AwardPiety(deity, scaledDelta, Manager.CuratedSignalDriverReason(deity, signalType))
+    AwardPiety(deity, scaledDelta, Manager.Prisma.CuratedSignalDriverReason(deity, signalType))
 
     if Manager.GetDebugLevel() >= 2
         Debug.Trace("[PDV] AwardCuratedSignalScaled: " + deity.DeityName + " signal " + signalType + " delta " + scaledDelta + " multiplier " + multiplier)
@@ -889,8 +889,8 @@ Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, 
 
     if awarded
         HandleSubstrateShrinePrayer(primaryDeityName, secondaryDeityName, tertiaryDeityName, sourceId)
-        String label = Manager.ResolveShrinePrayerJournalLabel(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel)
-        Manager.AppendBookOfDaysEntry("You offered prayer at " + label + "'s shrine.", Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, "Shrine prayer answered")
+        String label = Manager.Prisma.ResolveShrinePrayerJournalLabel(primaryDeityName, secondaryDeityName, tertiaryDeityName, shrineLabel)
+        Manager.Prisma.AppendBookOfDaysEntry("You offered prayer at " + label + "'s shrine.", Utility.GetCurrentGameTime() as Int, "favor.act", "journal", False, 1, "Shrine prayer answered")
     endIf
 EndFunction
 
@@ -941,7 +941,7 @@ Bool Function AwardShrinePrayerToDeityName(String deityName, String shrineLabel,
 
     Float shrineAmount = 2.0
     if grandfatheredPatron
-        shrineAmount = shrineAmount * Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStanceMultiplier(Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(Manager.GetPublicDeityDisplayName(deity), deity))
+        shrineAmount = shrineAmount * Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStanceMultiplier(Manager.PDV_QuestReactionRuntimeService.GetQuestReactionStance(Manager.Prisma.GetPublicDeityDisplayName(deity), deity))
     endIf
     AwardPietyInternal(deity, shrineAmount, True, "shrine_prayer_" + sourceId, !grandfatheredPatron)
     if Manager.GetDebugLevel() >= 2
@@ -1014,7 +1014,7 @@ Function UnsafeApplyActiveDeityState(PDV_DeityBase newDeity)
 
     UpdatePatronDeityGlobal()
     RefreshPatronMirrors()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function SetBroadWorship()
@@ -1027,7 +1027,7 @@ Function SetBroadWorship()
     SetPatronState(PATRON_STATE_BROAD)
     UpdatePatronDeityGlobal()
     RefreshPatronMirrors()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Int Function GetPatronState()
@@ -1071,7 +1071,7 @@ String Function GetReservedSignalSurfaceName(PDV_DeityBase deity)
             return "Azurah"
         endIf
     endIf
-    return Manager.GetPublicDeityDisplayName(deity)
+    return Manager.Prisma.GetPublicDeityDisplayName(deity)
 EndFunction
 
 Function SurfaceReservedSignal(PDV_DeityBase deity, String titleText, String actionText)
@@ -1083,11 +1083,11 @@ Function SurfaceReservedSignal(PDV_DeityBase deity, String titleText, String act
     if deityName != ""
         bodyText = deityName + " " + actionText
     endIf
-    String symbolName = Manager.GetPrismaSymbolForDeity(deity)
-    Manager.SendPrismaToast(symbolName, "good", titleText, bodyText)
-    Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "favor.act", symbolName, False, 1, titleText)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(deity)
+    Manager.Prisma.SendPrismaToast(symbolName, "good", titleText, bodyText)
+    Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "favor.act", symbolName, False, 1, titleText)
     RecordRecentDevotionEvent(bodyText)
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
@@ -1150,13 +1150,13 @@ Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)
             elseIf NotifyTierUp(deity, newTier)
                 StorageUtil.SetFormValue(None, "PDV.BookOfDays.LastTierDeity", deityForm)
                 StorageUtil.SetIntValue(None, "PDV.BookOfDays.LastTierValue", newTier)
-                Manager.SendPrismaEventToast("tier", deity, "", Manager.GetPublicTierBand(newTier), "")
-                Manager.SurfaceTransition("tier", deity.DeityName + " " + Manager.GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
+                Manager.Prisma.SendPrismaEventToast("tier", deity, "", Manager.Prisma.GetPublicTierBand(newTier), "")
+                Manager.Prisma.SurfaceTransition("tier", deity.DeityName + " " + Manager.Prisma.GetTierStandingLabel(newTier), "reach", deity.DeityIndex, "", false, newTier >= TIER_CHAMPION)
                 Manager.OriginRuntime.MaybeShowNordKyneChampionEntry(deity, newTier)
             endIf
         endIf
 
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
     elseIf deity == Manager.GetActiveDeity()
         RefreshPatronMirrors()
     endIf
@@ -1200,8 +1200,8 @@ Function MaybeSurfaceDevotionMark(PDV_DeityBase deity)
     endIf
     StorageUtil.SetIntValue(None, shownKey, 1)
 
-    String deityName = Manager.GetPublicDeityDisplayName(deity)
-    Manager.AppendBookOfDaysEntry(deityName + " marks devotion held long past the day it was proven.", Utility.GetCurrentGameTime() as Int, "tier.reach", Manager.GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
+    String deityName = Manager.Prisma.GetPublicDeityDisplayName(deity)
+    Manager.Prisma.AppendBookOfDaysEntry(deityName + " marks devotion held long past the day it was proven.", Utility.GetCurrentGameTime() as Int, "tier.reach", Manager.Prisma.GetPrismaSymbolForDeity(deity), True, 2, "Long devotion")
     Manager.Trace(1, "Long Devotion mark " + marks + " surfaced for " + deity.DeityName)
 EndFunction
 
@@ -1941,12 +1941,12 @@ Function ProcessDawn()
     RunDawnApplySpellAndNeglectLayersNoop()
     RunDawnProcessCommitmentOffersNoop()
     RunDawnNotifyNoop()
-    Manager.RunDawnBookOfDays()
+    Manager.Prisma.RunDawnBookOfDays()
     RunDawnChampionAmbient()
     Manager.OriginRuntime.SyncKhajiitRuntimeState()
     Manager.OriginRuntime.ProcessKhajiitAlkoshWordDrip()
     Manager.OriginRuntime.DisarmDunmerAncestorWatch()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 
     if Manager.GetDebugLevel() >= 1
         Debug.Trace("[PDV] ProcessDawn complete.")
@@ -1971,7 +1971,7 @@ Function RunDawnChampionDeityAmbient()
     String cadenceKey = "PDV.Ambient.Champion." + deity.DeityIndex + ".Day"
     Int todayStamp = GetDevotionalDay() + 2
     Int lastStamp = ReadZeroReservedDevotionalDayStamp(cadenceKey)
-    if lastStamp > 0 && (todayStamp - lastStamp) < Manager.AMBIENT_CHAMPION_CADENCE_DAYS
+    if lastStamp > 0 && (todayStamp - lastStamp) < Manager.Prisma.AMBIENT_CHAMPION_CADENCE_DAYS
         return
     endIf
 
@@ -2074,14 +2074,14 @@ Function RunDawnConsolidateScratch()
             if clampedToday > 0.0
                 clampedToday = clampedToday * GetGainProviderProduct(deity, Manager.PHASE_AT_DAWN)
                 ; Record the gods fed today so the dawn digest can name them.
-                Manager.RecordBookOfDaysFedName(Manager.GetPublicDeityDisplayName(deity))
+                Manager.Prisma.RecordBookOfDaysFedName(Manager.Prisma.GetPublicDeityDisplayName(deity))
             endIf
             Float oldPiety = StorageUtil.GetFloatValue(deityForm, "PDV.Piety")
             Float newPiety = PDV_DevotionRules.ClampValue(oldPiety + clampedToday, 0.0, PIETY_MAX)
 
             StorageUtil.SetFloatValue(deityForm, "PDV.Piety", newPiety)
             ; Feed the Weekly tab's 7-day ring with this day's net before clearing it.
-            Manager.PushWeekNet(deityForm, pietyToday)
+            Manager.Prisma.PushWeekNet(deityForm, pietyToday)
             StorageUtil.SetFloatValue(deityForm, "PDV.PietyToday", 0.0)
             if clampedToday != 0.0
                 StorageUtil.SetFloatValue(deityForm, "PDV.LastEventGameTime", Utility.GetCurrentGameTime())
@@ -2201,7 +2201,7 @@ Function RunDawnApplySpellAndNeglectLayers()
         Manager.OriginRuntime.SyncKyneNeglectSpell(nordBroadLapsed)
         Manager.OriginRuntime.SyncNordPatronNeglectSpells()
         if nordBroadLapsed && StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState") == 0
-            Manager.SendPrismaToast("journal", "warning", "Devotion quiet", "The gods feel distant as your devotion goes quiet.")
+            Manager.Prisma.SendPrismaToast("journal", "warning", "Devotion quiet", "The gods feel distant as your devotion goes quiet.")
         endIf
         StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", PDV_DevotionRules.BoolToInt(nordBroadLapsed))
         Manager.FavorRuntime.UpdateContextualFavorRuntime()
@@ -2241,10 +2241,10 @@ Function RunDawnApplySpellAndNeglectLayers()
     Bool patronNeglected = IsNeglectFlagActive(Manager.GetActiveDeity())
     Int priorPatronToastState = StorageUtil.GetIntValue(None, "PDV.Neglect.PatronToastState")
     if patronNeglected && priorPatronToastState == 0
-        Manager.SendPrismaEventToast("neglect", Manager.GetActiveDeity(), "", "", "")
-        Manager.SurfaceTransition("neglect", Manager.GetActiveDeity().DeityName, "drop", Manager.GetActiveDeity().DeityIndex, "absence")
+        Manager.Prisma.SendPrismaEventToast("neglect", Manager.GetActiveDeity(), "", "", "")
+        Manager.Prisma.SurfaceTransition("neglect", Manager.GetActiveDeity().DeityName, "drop", Manager.GetActiveDeity().DeityIndex, "absence")
     elseIf !patronNeglected && priorPatronToastState == 1
-        Manager.SurfaceTransition("neglect", Manager.GetActiveDeity().DeityName, "recover", Manager.GetActiveDeity().DeityIndex, "renewal")
+        Manager.Prisma.SurfaceTransition("neglect", Manager.GetActiveDeity().DeityName, "recover", Manager.GetActiveDeity().DeityIndex, "renewal")
     endIf
     StorageUtil.SetIntValue(None, "PDV.Neglect.PatronToastState", PDV_DevotionRules.BoolToInt(patronNeglected))
     SyncFirstTierRaceRewardRuntime()
@@ -2277,8 +2277,8 @@ Function RefreshCommitmentOfferQualificationGuards()
 EndFunction
 
 Function RunDawnNotify()
-    Manager.SendPrismaEventToast("dawn", None, "", "", "", Manager.GetDawnHadActivity())
-    Manager.RefreshDiegeticMedallion("dawn")
+    Manager.Prisma.SendPrismaEventToast("dawn", None, "", "", "", Manager.GetDawnHadActivity())
+    Manager.Prisma.RefreshDiegeticMedallion("dawn")
     Manager.Trace(2, "Pattern summary: " + Manager.DebugGetPatternProvingSummary())
 EndFunction
 
@@ -2412,7 +2412,7 @@ Function ClearUnsafeFaultInjection()
     StorageUtil.UnsetStringValue(None, "PDV.Debug.UnsafeFaultInjectionReason")
     StorageUtil.UnsetFormValue(None, "PDV.Debug.UnsafeFaultInjectionDeity")
     Manager.DebugClosePrismaSurfaces()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Debug.Trace("[PDV][UNSAFE_FAULT_INJECTION] Cleared injected state; PDV.Debug.UnsafeFaultInjectionEver remains set and this run does not count as gameplay proof.")
 EndFunction
 
@@ -2762,7 +2762,7 @@ Bool Function SendPrismaBroadPantheonTierToast(String familyName, String tierNam
     j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierName) + "\""
     j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
     j = j + "}}"
-    return Manager.SendPrismaToastPayloadOrFallback(j, "", familyName + " has reached " + tierName + ".", True)
+    return Manager.Prisma.SendPrismaToastPayloadOrFallback(j, "", familyName + " has reached " + tierName + ".", True)
 EndFunction
 
 Function CatchUpBroadPantheonDecayBeforeCurrentDay(String poolId)
@@ -2892,7 +2892,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
     endIf
 
     if appliedAmount > 0.0 && deity == Manager.GetActiveDeity() && !Manager.GetSuppressAwardFavorToast()
-        Manager.SendPrismaEventToast("favor", deity, "", "", "")
+        Manager.Prisma.SendPrismaEventToast("favor", deity, "", "", "")
     endIf
 
     if allowRivalry && appliedAmount > 0.0 && stance == deity.STANCE_HOSTILE
@@ -2900,7 +2900,7 @@ Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowR
     endIf
 
     if appliedAmount != 0.0 && !queuedQuestReaction
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
     endIf
     ; B7 / fix-plan 4.3. This is the one place that knows whether the proposed delta
     ; survived RunGainPipeline. PDV_DeityBase.ScoreRepeatableAction now only PEEKS at
@@ -3299,7 +3299,7 @@ EndFunction
 
 Function RecordDeityDriver(PDV_DeityBase deity, String reason, Float delta)
     Form deityForm = deity as Form
-    String humanized = Manager.HumanizeDriverReason(reason)
+    String humanized = Manager.Prisma.HumanizeDriverReason(reason)
     while StorageUtil.StringListCount(deityForm, "PDV.Driver.Reasons") >= 6
         StorageUtil.StringListRemoveAt(deityForm, "PDV.Driver.Reasons", 0)
         StorageUtil.FloatListRemoveAt(deityForm, "PDV.Driver.Deltas", 0)
@@ -3780,8 +3780,8 @@ Function MaybeShowChampionRewardPresentation(Actor playerRef, Spell championSpel
     endIf
 
     if NotifyTierUp(deity, TIER_CHAMPION)
-        Manager.SendPrismaEventToast("tier", deity, "", Manager.GetPublicTierBand(TIER_CHAMPION), "")
-        Manager.SurfaceTransition("tier", deity.DeityName + " " + Manager.GetTierStandingLabel(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+        Manager.Prisma.SendPrismaEventToast("tier", deity, "", Manager.Prisma.GetPublicTierBand(TIER_CHAMPION), "")
+        Manager.Prisma.SurfaceTransition("tier", deity.DeityName + " " + Manager.Prisma.GetTierStandingLabel(TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
         if deity == Manager.PDV_Kyne
             Manager.OriginRuntime.ShowNordNotification(Manager.PDV_Notif_Nord_Kyne_ChampionAmbient_Storm, "The wind is blowing your way.")
         endIf
@@ -3940,7 +3940,7 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
         return
     endIf
 
-    Manager.DispatchDiegeticCue("offer", deity.DeityName, "present", deity, "revelation")
+    Manager.Prisma.DispatchDiegeticCue("offer", deity.DeityName, "present", deity, "revelation")
     StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 1)
     Int choice = offerMessage.Show()
     if choice == 0
@@ -4268,10 +4268,10 @@ Function HandleCurseStateTransition(Int oldState, Int newState, String reason)
     if suppressOutputs
         Manager.Trace(2, "Curse transition surfaced silently during load reconciliation.")
     else
-        Manager.SendPrismaCurseToast(oldState, newState)
-        Manager.SurfaceCurseTransitionDiegetic(oldState, newState)
+        Manager.Prisma.SendPrismaCurseToast(oldState, newState)
+        Manager.Prisma.SurfaceCurseTransitionDiegetic(oldState, newState)
     endIf
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function ResyncCurseStateMirror(String reason)
@@ -4314,7 +4314,7 @@ Function ApplyCurseRaceHandlers(Int oldState, Int newState, String reason)
             if !Manager.GetSuppressCurseTransitionOutputs()
                 Manager.PDV_HircinePath.HandleCurseTransition(oldState, newState, reason)
                 if oldState != 1 && newState == 1
-                    Manager.AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now.", Utility.GetCurrentGameTime() as Int, "curse.onset", "hircine", False, 3)
+                    Manager.Prisma.AppendBookOfDaysEntry("The beast-blood took you and stirred Hircine. The Hunt is in you now.", Utility.GetCurrentGameTime() as Int, "curse.onset", "hircine", False, 3)
                 endIf
                 Manager.PDV_HircinePath.UpdateResidueRecovery()
                 Manager.DaedricRuntime.DrainHircineResiduePrismaToasts()
@@ -4445,7 +4445,7 @@ Function ApplyRivalryPenalties(PDV_DeityBase sourceDeity, Float sourceAmount)
                 AwardPietyInternal(rivalDeity, rivalAmount, False, "rivalry with " + sourceDeity.DeityName)
 
                 if !rivalToastShown
-                    Manager.SendPrismaEventToast("rivalry", sourceDeity, "", "", rivalDeity.DeityName)
+                    Manager.Prisma.SendPrismaEventToast("rivalry", sourceDeity, "", "", rivalDeity.DeityName)
                     rivalToastShown = True
                 endIf
 

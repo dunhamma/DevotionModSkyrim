@@ -122,12 +122,12 @@ Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String 
     StorageUtil.SetFloatValue(None, "PDV.Favor.ActiveExpiresAt", Utility.GetCurrentGameTime() + GetFavorDurationDays(laneValue, familyValue))
     StorageUtil.SetFloatValue(None, GetFavorLastTriggerKey(laneValue, familyValue), Utility.GetCurrentGameTime())
     Manager.Trace(1, "Contextual favor applied: " + GetContextualFavorFamilyLabel(laneValue, familyValue) + " (" + reason + ")")
-    if !Manager.IsP2BookNoticeReason(reason)
+    if !Manager.Prisma.IsP2BookNoticeReason(reason)
         SendContextualFavorToast(laneValue, familyValue)
     endIf
     SyncKyneFavorDebugState()
-    if !Manager.IsP2BookNoticeReason(reason)
-        Manager.RequestPanelRefresh()
+    if !Manager.Prisma.IsP2BookNoticeReason(reason)
+        Manager.Prisma.RequestPanelRefresh()
     endIf
     return True
 EndFunction
@@ -149,7 +149,7 @@ Function SendContextualFavorToast(Int laneValue, Int familyValue)
         favorDeity = Manager.PDV_Kyne
     endIf
 
-    Manager.SendPrismaEventToast("favor", favorDeity, contextText, "", "")
+    Manager.Prisma.SendPrismaEventToast("favor", favorDeity, contextText, "", "")
 EndFunction
 
 Function EnsureActiveFavorApplied()
@@ -187,7 +187,7 @@ Function ClearActiveFavor(String reason)
     StorageUtil.SetFloatValue(None, "PDV.Favor.ActiveExpiresAt", 0.0)
     Manager.Trace(2, "Contextual favor cleared (" + reason + ")")
     SyncKyneFavorDebugState()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Bool Function IsFavorActive()

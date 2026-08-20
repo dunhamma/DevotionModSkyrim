@@ -1000,7 +1000,7 @@ Function FinalizeQueuedQuestReaction(String sourceModName, String reactionKey)
     if _qrQueueNeedsBretonRewardSync
         PDV_Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
     endIf
-    PDV_Manager.RequestPanelRefresh()
+    PDV_Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function ApplyQuestReactionFaucet(String faucetKey, Form sourceForm)
@@ -1089,7 +1089,7 @@ Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, Strin
     if !deity || amount == 0.0
         return
     endIf
-    String deityName = PDV_Manager.GetPublicDeityDisplayName(deity)
+    String deityName = PDV_Manager.Prisma.GetPublicDeityDisplayName(deity)
     if magnitude == "milestone"
         _qrSurfMilestone = True
     endIf
@@ -1102,7 +1102,7 @@ Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, Strin
         if amount > _qrSurfBestPosAmount
             _qrSurfBestPosAmount = amount
             _qrSurfBestPosName = deityName
-            _qrSurfBestPosSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+            _qrSurfBestPosSymbol = PDV_Manager.Prisma.GetPrismaSymbolForDeity(deity)
         endIf
     else
         if _qrSurfNegNamesCsv != ""
@@ -1113,7 +1113,7 @@ Function AccumulateQuestReactionSurface(PDV_DeityBase deity, Float amount, Strin
         if amount < _qrSurfBestNegAmount
             _qrSurfBestNegAmount = amount
             _qrSurfBestNegName = deityName
-            _qrSurfBestNegSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+            _qrSurfBestNegSymbol = PDV_Manager.Prisma.GetPrismaSymbolForDeity(deity)
         endIf
     endIf
 EndFunction
@@ -1162,8 +1162,8 @@ Function FlushQuestReactionSurface()
         elseIf _qrSurfPosCount > 2
             posMsg = _qrSurfBestPosName + " and " + (_qrSurfPosCount - 1) + " others mark your deed."
         endIf
-        PDV_Manager.SendPrismaToast(_qrSurfBestPosSymbol, "good", "A deed marked", posMsg)
-        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrSurfBestPosSymbol, False, bodMagnitude, "A deed marked")
+        PDV_Manager.Prisma.SendPrismaToast(_qrSurfBestPosSymbol, "good", "A deed marked", posMsg)
+        PDV_Manager.Prisma.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrSurfBestPosSymbol, False, bodMagnitude, "A deed marked")
     elseIf _qrSurfPosCount == 0
         String negMsg = _qrSurfBestNegName + " takes offense at your deed."
         if _qrSurfNegCount == 2
@@ -1171,8 +1171,8 @@ Function FlushQuestReactionSurface()
         elseIf _qrSurfNegCount > 2
             negMsg = _qrSurfBestNegName + " and " + (_qrSurfNegCount - 1) + " others take offense at your deed."
         endIf
-        PDV_Manager.SendPrismaToast(_qrSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
-        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received")
+        PDV_Manager.Prisma.SendPrismaToast(_qrSurfBestNegSymbol, "warning", "A deed ill-received", negMsg)
+        PDV_Manager.Prisma.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received")
     else
         ; Mixed: lead with the stronger side for tone and symbol.
         Bool positiveLeads = _qrSurfBestPosAmount >= (_qrSurfBestNegAmount * -1.0)
@@ -1184,8 +1184,8 @@ Function FlushQuestReactionSurface()
             mixedSymbol = _qrSurfBestNegSymbol
             mixedBodTone = "favor.loss"
         endIf
-        PDV_Manager.SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _qrSurfBestPosName + " marks your deed; " + _qrSurfBestNegName + " takes offense.")
-        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed")
+        PDV_Manager.Prisma.SendPrismaToast(mixedSymbol, mixedTone, "A deed weighed", _qrSurfBestPosName + " marks your deed; " + _qrSurfBestNegName + " takes offense.")
+        PDV_Manager.Prisma.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed")
     endIf
 
     ResetQuestReactionSurface()
@@ -1209,7 +1209,7 @@ Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount,
     if !deity || amount == 0.0
         return
     endIf
-    String deityName = PDV_Manager.GetPublicDeityDisplayName(deity)
+    String deityName = PDV_Manager.Prisma.GetPublicDeityDisplayName(deity)
     if magnitude == "milestone"
         _qrQueueSurfMilestone = True
     endIf
@@ -1225,7 +1225,7 @@ Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount,
         if amount > _qrQueueSurfBestPosAmount
             _qrQueueSurfBestPosAmount = amount
             _qrQueueSurfBestPosName = deityName
-            _qrQueueSurfBestPosSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+            _qrQueueSurfBestPosSymbol = PDV_Manager.Prisma.GetPrismaSymbolForDeity(deity)
         endIf
     else
         if !alreadyListed
@@ -1238,7 +1238,7 @@ Function AccumulateQueuedQuestReactionSurface(PDV_DeityBase deity, Float amount,
         if amount < _qrQueueSurfBestNegAmount
             _qrQueueSurfBestNegAmount = amount
             _qrQueueSurfBestNegName = deityName
-            _qrQueueSurfBestNegSymbol = PDV_Manager.GetPrismaSymbolForDeity(deity)
+            _qrQueueSurfBestNegSymbol = PDV_Manager.Prisma.GetPrismaSymbolForDeity(deity)
         endIf
     endIf
 EndFunction
@@ -1272,9 +1272,9 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "", String react
         elseIf _qrQueueSurfPosCount > 2
             posMsg = _qrQueueSurfBestPosName + " and " + (_qrQueueSurfPosCount - 1) + " others mark your deed."
         endIf
-        toastSent = PDV_Manager.SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, surfaceSourceModName, True, reactionKey)
+        toastSent = PDV_Manager.Prisma.SendPrismaToastWithSource(_qrQueueSurfBestPosSymbol, "good", "A deed marked", posMsg, surfaceSourceModName, True, reactionKey)
         TraceQuestReactionToastResult(reactionKey, toastSent)
-        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, surfaceSourceModName)
+        PDV_Manager.Prisma.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed.", nowDay, "favor.act", _qrQueueSurfBestPosSymbol, False, bodMagnitude, "A deed marked", False, surfaceSourceModName)
     elseIf _qrQueueSurfPosCount == 0
         String negMsg = _qrQueueSurfBestNegName + " takes offense at your deed."
         if _qrQueueSurfNegCount == 2
@@ -1282,9 +1282,9 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "", String react
         elseIf _qrQueueSurfNegCount > 2
             negMsg = _qrQueueSurfBestNegName + " and " + (_qrQueueSurfNegCount - 1) + " others take offense at your deed."
         endIf
-        toastSent = PDV_Manager.SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, surfaceSourceModName, True, reactionKey)
+        toastSent = PDV_Manager.Prisma.SendPrismaToastWithSource(_qrQueueSurfBestNegSymbol, "warning", "A deed ill-received", negMsg, surfaceSourceModName, True, reactionKey)
         TraceQuestReactionToastResult(reactionKey, toastSent)
-        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, surfaceSourceModName)
+        PDV_Manager.Prisma.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense at your deed.", nowDay, "favor.loss", _qrQueueSurfBestNegSymbol, False, bodMagnitude, "A deed ill-received", False, surfaceSourceModName)
     else
         Bool positiveLeads = _qrQueueSurfBestPosAmount >= (_qrQueueSurfBestNegAmount * -1.0)
         String mixedTone = "good"
@@ -1295,9 +1295,9 @@ Function FlushQueuedQuestReactionSurface(String sourceModName = "", String react
             mixedSymbol = _qrQueueSurfBestNegSymbol
             mixedBodTone = "favor.loss"
         endIf
-        toastSent = PDV_Manager.SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", surfaceSourceModName, True, reactionKey)
+        toastSent = PDV_Manager.Prisma.SendPrismaToastWithSource(mixedSymbol, mixedTone, "A deed weighed", _qrQueueSurfBestPosName + " marks your deed; " + _qrQueueSurfBestNegName + " takes offense.", surfaceSourceModName, True, reactionKey)
         TraceQuestReactionToastResult(reactionKey, toastSent)
-        PDV_Manager.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, surfaceSourceModName)
+        PDV_Manager.Prisma.AppendBookOfDaysEntry(JoinQuestSurfaceNames(_qrQueueSurfPosNamesCsv) + " marked your deed; " + JoinQuestSurfaceNames(_qrQueueSurfNegNamesCsv) + " took offense.", nowDay, mixedBodTone, mixedSymbol, False, bodMagnitude, "A deed weighed", False, surfaceSourceModName)
     endIf
     ResetQueuedQuestReactionSurface()
 EndFunction
@@ -1434,7 +1434,7 @@ Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reaso
     PDV_Manager.LedgerRuntime.AwardPietyInternal(deity, amount, True, reason, False)
     StorageUtil.SetStringValue(deityForm, "PDV.QuestReaction.LastReason", reason)
     if !_qrQueueTransactionActive
-        PDV_Manager.RequestPanelRefresh()
+        PDV_Manager.Prisma.RequestPanelRefresh()
     endIf
 
     if PDV_Manager.GetDebugLevel() >= 3 || (!_qrQueueTransactionActive && PDV_Manager.GetDebugLevel() >= 1)

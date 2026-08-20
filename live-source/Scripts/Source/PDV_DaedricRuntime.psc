@@ -189,7 +189,7 @@ Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)
     ; ProcessPendingDaedricPrePactNotices drains it), so a Prince chronicles the first
     ; time it crosses the notice threshold from ANY piety source -- not only live signals
     ; -- and never below it. A tier gain is a commitment, surfaced above.
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 
     if Manager.GetDebugLevel() >= 2
         Debug.Trace("[PDV] Daedric live signal: " + path.DeityName + " index " + pathIndex + " source " + sourceId)
@@ -208,17 +208,17 @@ Function HandleDaedricShrinePrayer(Int pathIndex, String sourceId)
         return
     endIf
     path.AdjustStoredPiety(2.0, sourceId)
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 
     ; Player-facing confirmation. The shrine prayer is daily-repeatable and a Prince
     ; can be uncommitted (so it never surfaces in the panel), so without this the
     ; action is invisible. Top-left line always fires; Prisma gets an explicit
     ; repeatable Daedric toast. The diegetic D1 dispatch remains separate for
     ; screen/sound/journal work and can stay disabled without hiding the toast.
-    SendPrismaDaedricToast(path.DeityName, "prayer", "Shrine prayer answered.", Manager.GetPrismaSymbolForDeity(path))
-    Manager.AppendBookOfDaysEntry("You offered prayer at the shrine of " + path.DeityName + ".", Utility.GetCurrentGameTime() as Int, "favor.act", Manager.GetPrismaSymbolForDeity(path), False, 1, "Shrine prayer answered")
-    if Manager.PDV_DiegeticDirectorService
-        Manager.PDV_DiegeticDirectorService.Dispatch("prayer", path.DeityName, "offer", path.DeityIndex, "")
+    SendPrismaDaedricToast(path.DeityName, "prayer", "Shrine prayer answered.", Manager.Prisma.GetPrismaSymbolForDeity(path))
+    Manager.Prisma.AppendBookOfDaysEntry("You offered prayer at the shrine of " + path.DeityName + ".", Utility.GetCurrentGameTime() as Int, "favor.act", Manager.Prisma.GetPrismaSymbolForDeity(path), False, 1, "Shrine prayer answered")
+    if Manager.Prisma.PDV_DiegeticDirectorService
+        Manager.Prisma.PDV_DiegeticDirectorService.Dispatch("prayer", path.DeityName, "offer", path.DeityIndex, "")
     endIf
 
     if Manager.GetDebugLevel() >= 2
@@ -323,7 +323,7 @@ EndFunction
 ; Survey block for an active pact. Uses GetPublicTierBand so the Prince band reads
 ; identically to a patron band. PLACEHOLDER copy (user rewrites post-beta).
 String Function GetDaedricSurveyText(PDV_DaedricPathBase path)
-    return path.DeityName + " holds your pact. Standing: " + Manager.GetPublicTierBand(path.GetStoredTier()) + "."
+    return path.DeityName + " holds your pact. Standing: " + Manager.Prisma.GetPublicTierBand(path.GetStoredTier()) + "."
 EndFunction
 
 ; Switch-severance surface (patron<->Prince). Top-left notification + Book of Days
@@ -336,8 +336,8 @@ Function SurfaceSwitchSeverance(String mode, String severedName)
     if mode == "patron_to_prince"
         line = "You turn from your former patron to " + severedName + ". The old bond is severed."
     endIf
-    Manager.SendPrismaEventToast("shift", None, line, "", "")
-    Manager.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
+    Manager.Prisma.SendPrismaEventToast("shift", None, line, "", "")
+    Manager.Prisma.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", true)
 EndFunction
 
 ; Lapse surface (a Prince pact fell to none). PLACEHOLDER copy.
@@ -346,8 +346,8 @@ Function SurfaceDaedricLapse(PDV_DaedricPathBase path)
         return
     endIf
     String line = "Your pact with " + path.DeityName + " has lapsed into silence."
-    Manager.SendPrismaEventToast("neglect", path, line, "", "")
-    Manager.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "neglect.drop", "daedric", false)
+    Manager.Prisma.SendPrismaEventToast("neglect", path, line, "", "")
+    Manager.Prisma.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "neglect.drop", "daedric", false)
 EndFunction
 
 ; Drain the deferred-lapse flag the base script sets in OnTierChange when a pact
@@ -398,14 +398,14 @@ Function ProcessPendingDaedricPrePactNotices()
         return
     endIf
 
-    String symbolName = Manager.GetPrismaSymbolForDeity(topPath)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(topPath)
     if symbolName == "journal"
         symbolName = "daedric"
     endIf
     ; The single pre-pact beat: the first time a still-uncommitted Prince crosses the
     ; notice threshold, name it in Book of Days and fire one soft toast. Quest reactions
     ; stay silent until the Prince reaches Seeker (see AccumulateQuestReactionSurface).
-    Manager.AppendBookOfDaysEntry(topPath.DeityName + " has taken notice of you.", Utility.GetCurrentGameTime() as Int, "daedric.pressure", symbolName, False, 1, "A Prince takes notice")
+    Manager.Prisma.AppendBookOfDaysEntry(topPath.DeityName + " has taken notice of you.", Utility.GetCurrentGameTime() as Int, "daedric.pressure", symbolName, False, 1, "A Prince takes notice")
     SendPrismaDaedricToast(topPath.DeityName, "watching", "An interest taken, not yet a pact.", symbolName)
     StorageUtil.SetIntValue(topForm, "PDV.Daedric.PrePactNoticeShown", 1)
 EndFunction
@@ -430,13 +430,13 @@ Function ProcessPendingDaedricActivation()
     endIf
     PDV_DaedricPathBase path = GetDaedricPathByForm(pending)
     if path
-        Manager.SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")
+        Manager.Prisma.SendPrismaEventToast("shift", path, path.DeityName + " claims your devotion.", "", "")
     endIf
     ; Patron<->Prince severance is retired: an active divine patron is no longer cut when
     ; a Prince pact activates (a pact now requires explicit consent, so both can coexist).
     ; The Prisma shift toast above and this Book-of-Days line still surface the activation.
     if path && !HasRecentDaedricMilestoneJournal(path)
-        Manager.AppendBookOfDaysEntry(path.DeityName + " claims your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "daedric", true)
+        Manager.Prisma.AppendBookOfDaysEntry(path.DeityName + " claims your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "daedric", true)
     endIf
 EndFunction
 
@@ -479,7 +479,7 @@ Function HandleHircineHuntRite(String reason)
         if multiplier > 0.0
             ShowDaedricMilestonePresentation(Manager.PDV_HircinePath, tierBefore, Manager.PDV_HircinePath.GetStoredTier(), False)
             MaybeEmitHircineStigmaPrice(stigmaBefore, Manager.PDV_HircinePath.GetStigma())
-            Manager.RequestPanelRefresh()
+            Manager.Prisma.RequestPanelRefresh()
         endIf
         Manager.Trace(2, "Hircine hunt rite routed with multiplier " + multiplier)
     endIf
@@ -785,12 +785,12 @@ Function RunDawnConsolidateDaedricWeek()
             PDV_DaedricPathBase path = pathForm as PDV_DaedricPathBase
             Float dayNet = StorageUtil.GetFloatValue(pathForm, "PDV.PietyToday")
             if path && dayNet > 0.0
-                Manager.RecordBookOfDaysFedName(path.DeityName)
+                Manager.Prisma.RecordBookOfDaysFedName(path.DeityName)
             endIf
             if dayNet != 0.0
                 Manager.SetDawnHadActivity(True)
             endIf
-            Manager.PushWeekNet(pathForm, dayNet)
+            Manager.Prisma.PushWeekNet(pathForm, dayNet)
             StorageUtil.SetFloatValue(pathForm, "PDV.PietyToday", 0.0)
         endIf
         i += 1
@@ -862,7 +862,7 @@ Bool Function SendPrismaDaedricToast(String princeName, String phase, String con
         j = j + ",\"context\":\"" + PDV_DevotionRules.JsonSafeString(context) + "\""
     endIf
     j = j + "}}"
-    return Manager.SendPrismaToastPayloadOrFallback(j, princeName, context, allowFallback)
+    return Manager.Prisma.SendPrismaToastPayloadOrFallback(j, princeName, context, allowFallback)
 EndFunction
 
 Bool Function ReplayConcreteDaedricChampionOffer(PDV_DaedricPathBase path, Int oldTier, Int newTier)
@@ -1020,8 +1020,8 @@ Function DrainHircineRenunciationJournal()
     endIf
 
     StorageUtil.SetIntValue(hircineForm, "PDV.Daedric.Hircine.RenunciationJournalPending", 0)
-    Manager.SendPrismaToast("hircine", "neutral", "You renounce the hunt.", "Hircine's pact is set down.")
-    Manager.AppendBookOfDaysEntry("Hircine's mark fades from your blood, and the pack is no longer yours.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", True, 3)
+    Manager.Prisma.SendPrismaToast("hircine", "neutral", "You renounce the hunt.", "Hircine's pact is set down.")
+    Manager.Prisma.AppendBookOfDaysEntry("Hircine's mark fades from your blood, and the pack is no longer yours.", Utility.GetCurrentGameTime() as Int, "reorientation", "hircine", True, 3)
 EndFunction
 
 Function QueueDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier, Int newTier, String reason)
@@ -1036,7 +1036,7 @@ Function QueueDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier
     _pendingDaedricMilestoneReplayChampionOffer = False
     _pendingDaedricMilestoneDelayTicks = 0
     if Manager.GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Daedric milestone queued: " + path.DeityName + " " + Manager.GetTierStandingLabel(newTier) + " (" + reason + ")")
+        Debug.Trace("[PDV] Daedric milestone queued: " + path.DeityName + " " + Manager.Prisma.GetTierStandingLabel(newTier) + " (" + reason + ")")
     endIf
 EndFunction
 
@@ -1052,7 +1052,7 @@ Function QueueDaedricMilestoneMcmReplay(PDV_DaedricPathBase path, Int oldTier, I
     _pendingDaedricMilestoneReplayChampionOffer = True
     _pendingDaedricMilestoneDelayTicks = 2
     if Manager.GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Daedric milestone MCM replay queued: " + path.DeityName + " " + Manager.GetTierStandingLabel(newTier) + " (" + reason + ")")
+        Debug.Trace("[PDV] Daedric milestone MCM replay queued: " + path.DeityName + " " + Manager.Prisma.GetTierStandingLabel(newTier) + " (" + reason + ")")
     endIf
 EndFunction
 
@@ -1111,7 +1111,7 @@ Function ProcessQueuedDaedricMilestonePresentation()
     endIf
 
     if Manager.GetDebugLevel() >= 1
-        Debug.Trace("[PDV] Daedric milestone queue processing: " + path.DeityName + " " + Manager.GetTierStandingLabel(targetTier) + " (" + reason + ")")
+        Debug.Trace("[PDV] Daedric milestone queue processing: " + path.DeityName + " " + Manager.Prisma.GetTierStandingLabel(targetTier) + " (" + reason + ")")
     endIf
     ShowDaedricMilestonePresentation(path, oldTier, targetTier, replayChampionOffer)
 EndFunction
@@ -1137,14 +1137,14 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
     endIf
 
     String princeName = path.DeityName
-    String tierLabel = Manager.GetTierStandingLabel(newTier)
+    String tierLabel = Manager.Prisma.GetTierStandingLabel(newTier)
     String flavorText = GetDaedricMilestoneFlavor(princeName, newTier)
     String boonText = GetDaedricBoonMechanicText(princeName, newTier)
     String priceText = ""
     if !path.ShouldWaivePriceForPlayer()
         priceText = GetDaedricPriceMechanicText(princeName, newTier)
     endIf
-    String symbolName = Manager.GetPrismaSymbolForDeity(path)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(path)
     if symbolName == "journal"
         symbolName = "daedric"
     endIf
@@ -1157,7 +1157,7 @@ Function ShowDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier,
     ; Surface the Daedric tier gain in the Book of Days like a patron tier-up
     ; (tone tier.reach -> "Favor deepened"/good; Champion pinned). The toast already
     ; fired above; this adds the persistent journal entry. PLACEHOLDER copy.
-    Manager.AppendBookOfDaysEntry(princeName + " names you " + tierLabel + ".", Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, newTier >= Manager.LedgerRuntime.TIER_CHAMPION)
+    Manager.Prisma.AppendBookOfDaysEntry(princeName + " names you " + tierLabel + ".", Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, newTier >= Manager.LedgerRuntime.TIER_CHAMPION)
     StorageUtil.SetFormValue(None, "PDV.Daedric.LastMilestoneJournalPath", path.GetDeityForm())
     StorageUtil.SetFloatValue(None, "PDV.Daedric.LastMilestoneJournalTime", Utility.GetCurrentGameTime())
 EndFunction
@@ -1184,7 +1184,7 @@ Bool Function SendPrismaDaedricMilestoneToast(String princeName, String tierLabe
     j = j + ",\"message\":\"" + PDV_DevotionRules.JsonSafeString(flavorText) + "\""
     j = j + ",\"duration\":9000"
     j = j + "}}"
-    Bool sent = Manager.SendPrismaToastPayloadOrFallback(j, titleText, flavorText, allowFallback)
+    Bool sent = Manager.Prisma.SendPrismaToastPayloadOrFallback(j, titleText, flavorText, allowFallback)
     if Manager.GetDebugLevel() >= 1
         Debug.Trace("[PDV] Daedric milestone Prisma payload sent=" + sent + " prince=" + princeName + " tier=" + tierLabel)
     endIf

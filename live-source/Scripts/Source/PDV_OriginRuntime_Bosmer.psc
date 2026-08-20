@@ -223,7 +223,7 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
         if pressed == 0
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DeclaredCell", sleepCellId)
             StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", StorageUtil.GetIntValue(None, "PDV.BosLoc.DiscoveryCount"))
-            Manager.SendPrismaToast("yffre", "good", "Hearth declared", "This is where your stories come home now.")
+            Manager.Prisma.SendPrismaToast("yffre", "good", "Hearth declared", "This is where your stories come home now.")
         else
             Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosHearth.DeclineDay")
         endIf
@@ -246,7 +246,7 @@ Bool Function TryBosmerHearthSleep(Actor playerRef, Int sleepCellId, String reas
         StorageUtil.SetIntValue(None, "PDV.BosHearth.DiscoveryAtLastStay", discoveryNow)
         if Manager.PDV_SPEL_BosmerTaleCarried
             Manager.PDV_SPEL_BosmerTaleCarried.Cast(playerRef, playerRef)
-            Manager.SendPrismaToast("yffre", "good", "Tale carried", "You told the tale, and the telling settled.")
+            Manager.Prisma.SendPrismaToast("yffre", "good", "Tale carried", "You told the tale, and the telling settled.")
             HandleBosmerLivingStoryCommunityKept(reason + "_tale_carried")
         endIf
     endIf
@@ -295,7 +295,7 @@ Function ApplyBosmerNaming(Actor playerRef, Int index)
     StorageUtil.SetIntValue(None, "PDV.BosNaming.Active", index + 1)
     StorageUtil.SetIntValue(None, "PDV.BosNaming.PathAtRite", GetBosmerPathState())
     StorageUtil.SetFloatValue(None, "PDV.BosNaming.LastRiteTime", Utility.GetCurrentGameTime())
-    Manager.SendPrismaToast("yffre", "good", "Naming", "You tell yourself anew. The shape settles into you.")
+    Manager.Prisma.SendPrismaToast("yffre", "good", "Naming", "You tell yourself anew. The shape settles into you.")
     Manager.Trace(2, "Bosmer Naming told-self applied: " + index)
 EndFunction
 
@@ -341,12 +341,12 @@ Function SyncBosmerNaming(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(told)
             playerRef.AddSpell(told, False)
-            Manager.SendPrismaToast("yffre", "good", "Told-self restored", "You are yourself again.")
+            Manager.Prisma.SendPrismaToast("yffre", "good", "Told-self restored", "You are yourself again.")
         endIf
     else
         if playerRef.HasSpell(told)
             playerRef.RemoveSpell(told)
-            Manager.SendPrismaToast("yffre", "warning", "The told-self goes quiet", "You have wandered from its path.")
+            Manager.Prisma.SendPrismaToast("yffre", "warning", "The told-self goes quiet", "You have wandered from its path.")
         endIf
     endIf
 EndFunction
@@ -378,7 +378,7 @@ Function TryBosmerPathDream(String reason)
         return
     endIf
 
-    Manager.SendPrismaToast("yffre", "neutral", "Green dream", GetBosmerDreamText(GetBosmerPathState()))
+    Manager.Prisma.SendPrismaToast("yffre", "neutral", "Green dream", GetBosmerDreamText(GetBosmerPathState()))
     StorageUtil.SetIntValue(None, "PDV.BosDream.Armed", 0)
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosDream.LastDay")
     Manager.Trace(2, "Bosmer path dream fired (" + reason + ")")
@@ -613,7 +613,7 @@ Function TryBosmerScalesAtRest(Actor playerRef)
 
     Manager.PDV_SPEL_BosmerScalesAtRest.Cast(playerRef, playerRef)
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay")
-    Manager.SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
+    Manager.Prisma.SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
     Manager.Trace(2, "Bosmer Scales at Rest fired.")
 EndFunction
 
@@ -636,7 +636,7 @@ Function TryBosmerBaanDarGap(Actor playerRef)
     Manager.PDV_SPEL_BosmerBaanDarGap.Cast(playerRef, playerRef)
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.GapLastDay")
     HandleBosmerBanditRoadReversal("baandar_gap_low_health")
-    Manager.SendPrismaToast("baandar", "good", "Baan Dar opens the gap", "Run.")
+    Manager.Prisma.SendPrismaToast("baandar", "good", "Baan Dar opens the gap", "Run.")
     Manager.Trace(2, "Bosmer Baan Dar Opens the Gap fired.")
 EndFunction
 
@@ -893,15 +893,15 @@ Function SyncBosmerNeglectSpell(Bool shouldBeActive)
 EndFunction
 
 String Function GetBosmerNativeMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", Manager.PDV_Yffre, "The Green, story, and the Old Contract.")
-    entries = entries + "," + Manager.RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", Manager.PDV_AuriEl, "Elven ancestry and high memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", Manager.PDV_Xarxes, "Record, lineage, and written memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", Manager.PDV_BaanDar, "Trickster road, masks, and survival.")
+    String entries = Manager.Prisma.RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", Manager.PDV_Yffre, "The Green, story, and the Old Contract.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", Manager.PDV_AuriEl, "Elven ancestry and high memory.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", Manager.PDV_Xarxes, "Record, lineage, and written memory.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", Manager.PDV_BaanDar, "Trickster road, masks, and survival.")
     return entries
 EndFunction
 
 String Function GetBosmerFocusMedallionEntriesJson()
-    return Manager.RosterMedallionEntry("zen", "Z'en", "god", "zen", Manager.LedgerRuntime.PDV_Zen, "Debt, toil, exchange, and obligation.")
+    return Manager.Prisma.RosterMedallionEntry("zen", "Z'en", "god", "zen", Manager.LedgerRuntime.PDV_Zen, "Debt, toil, exchange, and obligation.")
 EndFunction
 
 Bool Function HasBosmerSetupCompleted()
@@ -925,7 +925,7 @@ Function ApplyBosmerInitialChoice(Int pathState, String reason)
         SetBosmerGreenPactCompliance(0, reason)
         ApplyBosmerPathPatron(pathState, reason)
     endIf
-    Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(GetBosmerPathLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", GetBosmerPathSymbol(pathState), True, 3, "", True)
+    Manager.Prisma.AppendBookOfDaysEntry(Manager.Prisma.BuildStartupRoadJournalLine(GetBosmerPathLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", GetBosmerPathSymbol(pathState), True, 3, "", True)
     Manager.EndRaceSetupQuietPresentation()
 EndFunction
 
@@ -1037,7 +1037,7 @@ Function ApplyBosmerPathPatron(Int pathState, String reason)
 
     Manager.LedgerRuntime.SetActiveDeity(deity)
     Manager.Trace(2, "Bosmer foreground patron -> " + deity.DeityName + " (" + reason + ")")
-    Manager.SurfaceTransition("reorientation", GetBosmerPathLabel(), "shift", deity.DeityIndex, "turning")
+    Manager.Prisma.SurfaceTransition("reorientation", GetBosmerPathLabel(), "shift", deity.DeityIndex, "turning")
 EndFunction
 
 PDV_DeityBase Function GetBosmerForegroundDeity(Int pathState)
@@ -1178,10 +1178,10 @@ Function HandleBosmerSuggestionPopup(Int targetState)
     Int choice = suggestionMessage.Show()
     if choice == 0
         Manager.PDV_BosmerPathTrack.AcceptOfferedTransition("popup_accept")
-        Manager.SendPrismaToast(pathSymbol, "good", "A new path stirs", "Confirm the change at the next rite.")
+        Manager.Prisma.SendPrismaToast(pathSymbol, "good", "A new path stirs", "Confirm the change at the next rite.")
     else
         Manager.PDV_BosmerPathTrack.RefuseOfferedTransition("popup_refuse")
-        Manager.SendPrismaToast(pathSymbol, "neutral", "The call fades", "You turn aside from that path for now.")
+        Manager.Prisma.SendPrismaToast(pathSymbol, "neutral", "The call fades", "You turn aside from that path for now.")
     endIf
 EndFunction
 
@@ -1216,7 +1216,7 @@ Function ConfirmBosmerPendingTransition(String reason)
     Int pendingState = Manager.PDV_BosmerPathTrack.GetPendingState()
     if !CanConfirmBosmerPathState(pendingState)
         Manager.PDV_BosmerPathTrack.CancelPendingTransition("rite_invalid")
-        Manager.SendPrismaToast(GetBosmerPathSymbol(pendingState), "warning", "The rite fails", "The new path has not yet been proven.")
+        Manager.Prisma.SendPrismaToast(GetBosmerPathSymbol(pendingState), "warning", "The rite fails", "The new path has not yet been proven.")
         return
     endIf
 
@@ -1240,9 +1240,9 @@ Function ConfirmBosmerPendingTransition(String reason)
         endIf
     endIf
 
-    Manager.SendPrismaShiftToast(GetBosmerPathLabel(), "", Manager.GetPrismaSymbolForDeity(Manager.GetActiveDeity()))
-    Manager.AppendBookOfDaysEntry("Y'ffre's song settles within you. Your road through the Green is the " + GetBosmerPathLabel() + ".", Utility.GetCurrentGameTime() as Int, "reorientation", Manager.GetPrismaSymbolForDeity(Manager.GetActiveDeity()), False, 3)
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SendPrismaShiftToast(GetBosmerPathLabel(), "", Manager.Prisma.GetPrismaSymbolForDeity(Manager.GetActiveDeity()))
+    Manager.Prisma.AppendBookOfDaysEntry("Y'ffre's song settles within you. Your road through the Green is the " + GetBosmerPathLabel() + ".", Utility.GetCurrentGameTime() as Int, "reorientation", Manager.Prisma.GetPrismaSymbolForDeity(Manager.GetActiveDeity()), False, 3)
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Bool Function CanConfirmBosmerPathState(Int targetState)
@@ -1272,7 +1272,7 @@ String Function GetBosmerSurveyText()
     endIf
 
     Int pathValue = Manager.PDV_BosmerPathTrack.GetCurrentState()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     String text = ""
     if pathValue == Manager.BOSMER_PATH_OLD_CONTRACT
         text = "You walk the Old Contract, the Green Pact kept in full. Standing: " + band + ". Compliance: " + GetBosmerComplianceBand() + ". Y'ffre holds you to the terms."
@@ -1386,8 +1386,8 @@ Function HandleGreenPactViolation(String reason)
     AdjustBosmerGreenPactCompliance(-15, reason)
     if Manager.PDV_Yffre
         Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Yffre, Manager.PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
-        Manager.SendPrismaToast(Manager.GetPrismaSymbolForDeity(Manager.PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
-        Manager.SurfaceTransition("creed", "Green Pact", "drop", Manager.PDV_Yffre.DeityIndex, "absence", True)
+        Manager.Prisma.SendPrismaToast(Manager.Prisma.GetPrismaSymbolForDeity(Manager.PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
+        Manager.Prisma.SurfaceTransition("creed", "Green Pact", "drop", Manager.PDV_Yffre.DeityIndex, "absence", True)
     endIf
 
     Manager.Trace(2, "Green Pact violation count " + violationCount + " (" + reason + ")")
@@ -1424,6 +1424,34 @@ EndFunction
 
 String Function GetSurveyFragment()
     return GetBosmerSurveyText()
+EndFunction
+
+String Function GetQuasiPatronName()
+    return "Path Unsettled"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "branch"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetBosmerPathLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Green Pact, exchange, and story-path choices leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return GetBosmerPathLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Bosmer | " + GetBosmerPathLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetBosmerPathLabel()
 EndFunction
 
 Bool Function IsRaceLaneNeglected()

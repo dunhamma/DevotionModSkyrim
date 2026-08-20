@@ -48,7 +48,7 @@ Function HandleBretonSleepEvents(Actor playerRef, String reason)
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.LedgerRuntime.PDV_Mara, Manager.LedgerRuntime.PDV_Mara.SIGNAL_MERCY, None, multiplier)
     endIf
     AwardBretonPracticePulse(Manager.BRETON_TRADITION_HIDDEN_ART, Manager.BRETON_PRACTICE_RENEWABLE_POINTS, "event_314", "sleep_in_bed_" + reason)
-    Manager.SurfaceP2AmbientProgressNotice("Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
+    Manager.Prisma.SurfaceP2AmbientProgressNotice("Hidden reflection", "Rest gives the Hidden Art a hearth-kept shape.")
 EndFunction
 
 Function SyncBretonRewards(Actor playerRef)
@@ -258,7 +258,7 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
         return
     endIf
 
-    String deityName = Manager.GetPublicDeityDisplayName(championSource)
+    String deityName = Manager.Prisma.GetPublicDeityDisplayName(championSource)
     String shownKey = "PDV.Breton.ChampionBoonNoticeShown." + deityName
     if hadWanted && StorageUtil.GetIntValue(None, shownKey) == 1
         return
@@ -266,7 +266,7 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
 
     StorageUtil.SetIntValue(None, shownKey, 1)
     String traditionLabel = GetBretonTraditionLabel()
-    String symbolName = Manager.GetPrismaSymbolForDeity(championSource)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(championSource)
     String titleText = deityName + " names you Champion"
     String line = deityName + " names you Champion."
     if IsBretonResonantPatronChampion(traditionValue)
@@ -275,8 +275,8 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
     if Manager.LedgerRuntime.NotifyTierUp(championSource, Manager.LedgerRuntime.TIER_CHAMPION)
         Manager.Trace(2, "Breton champion boon marked generic tier guard: " + deityName)
     endIf
-    Manager.SendPrismaToast(symbolName, "good", titleText, line)
-    Manager.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, Manager.LedgerRuntime.TIER_CHAMPION, titleText)
+    Manager.Prisma.SendPrismaToast(symbolName, "good", titleText, line)
+    Manager.Prisma.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, Manager.LedgerRuntime.TIER_CHAMPION, titleText)
     Manager.Trace(1, "Breton champion boon presentation shown: " + deityName + " / " + traditionLabel)
 EndFunction
 
@@ -295,20 +295,20 @@ Function MaybeShowBretonTraditionRewardPresentation(Actor playerRef, Spell rewar
     endIf
 
     StorageUtil.SetIntValue(None, shownKey, 1)
-    String tierLabel = Manager.GetTierStandingLabel(tierValue)
-    String symbolName = Manager.GetPrismaSymbolForDeity(deity)
+    String tierLabel = Manager.Prisma.GetTierStandingLabel(tierValue)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(deity)
     String titleText = displayLabel + " deepens"
     String line = "The " + displayLabel + " names you " + tierLabel + "."
     if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION && deity
-        String deityName = Manager.GetPublicDeityDisplayName(deity)
+        String deityName = Manager.Prisma.GetPublicDeityDisplayName(deity)
         titleText = deityName + " names you " + tierLabel
         line = deityName + " names you " + tierLabel + " through the " + displayLabel + "."
         if Manager.LedgerRuntime.NotifyTierUp(deity, tierValue)
             Manager.Trace(2, "Breton focused Champion marked generic tier guard: " + deity.DeityName)
         endIf
     endIf
-    Manager.SendPrismaToast(symbolName, "good", titleText, line)
-    Manager.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= Manager.LedgerRuntime.TIER_CHAMPION, tierValue, titleText)
+    Manager.Prisma.SendPrismaToast(symbolName, "good", titleText, line)
+    Manager.Prisma.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= Manager.LedgerRuntime.TIER_CHAMPION, tierValue, titleText)
 EndFunction
 
 String Function GetBretonTraditionRewardDisplayLabel(String label)
@@ -448,11 +448,11 @@ EndFunction
 
 Function SurfaceBretonDruidicForkChange(Int forkValue)
     if forkValue == Manager.BRETON_DRUIDIC_FORK_WEREWOLF
-        Manager.SendPrismaShiftToast("The Green Way turns wild in you.", "", "kynareth")
-        Manager.AppendBookOfDaysEntry("The beast-blood took your Green Way down a wilder road. The Werewolf path is yours now.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
+        Manager.Prisma.SendPrismaShiftToast("The Green Way turns wild in you.", "", "kynareth")
+        Manager.Prisma.AppendBookOfDaysEntry("The beast-blood took your Green Way down a wilder road. The Werewolf path is yours now.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
     elseIf forkValue == Manager.BRETON_DRUIDIC_FORK_BETRAYED
-        Manager.SendPrismaShiftToast("You broke faith with the Green.", "", "kynareth")
-        Manager.AppendBookOfDaysEntry("You turned from the Green Way's trust. The path remembers the betrayal.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
+        Manager.Prisma.SendPrismaShiftToast("You broke faith with the Green.", "", "kynareth")
+        Manager.Prisma.AppendBookOfDaysEntry("You turned from the Green Way's trust. The path remembers the betrayal.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
     endIf
 EndFunction
 
@@ -555,7 +555,7 @@ Function SyncBretonCreedLossSpell(Spell creedLossSpell, Bool shouldBeActive, Str
             playerRef.AddSpell(creedLossSpell, False)
         endIf
         if !wasActive && noticeText != ""
-            Manager.SendPrismaToast("journal", "warning", "Creed strained", noticeText)
+            Manager.Prisma.SendPrismaToast("journal", "warning", "Creed strained", noticeText)
         endIf
         StorageUtil.SetIntValue(None, stateKey, 1)
     else
@@ -664,12 +664,12 @@ Function ApplyBretonInitialChoice(Int traditionValue, String reason)
     PDV_DeityBase traditionDeity = GetBretonTraditionDeity(normalized)
     if traditionDeity
         String traditionLabel = GetBretonTraditionLabel()
-        Manager.SendPrismaShiftToast("You set your tradition: " + traditionLabel + ".", "", Manager.GetPrismaSymbolForDeity(traditionDeity))
-        Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(traditionLabel), Utility.GetCurrentGameTime() as Int, "reorientation", Manager.GetPrismaSymbolForDeity(traditionDeity), True, 3, "", True)
-        Manager.SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
+        Manager.Prisma.SendPrismaShiftToast("You set your tradition: " + traditionLabel + ".", "", Manager.Prisma.GetPrismaSymbolForDeity(traditionDeity))
+        Manager.Prisma.AppendBookOfDaysEntry(Manager.Prisma.BuildStartupRoadJournalLine(traditionLabel), Utility.GetCurrentGameTime() as Int, "reorientation", Manager.Prisma.GetPrismaSymbolForDeity(traditionDeity), True, 3, "", True)
+        Manager.Prisma.SurfaceTransition("emergence", traditionDeity.DeityName, "onset", traditionDeity.DeityIndex, "revelation")
     endIf
     Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.EndRaceSetupQuietPresentation()
 EndFunction
 
@@ -877,7 +877,7 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
         Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
     endIf
     Manager.Trace(2, "Breton practice pulse " + traditionValue + " +" + appliedPoints + " from " + sourceKey + ": " + reason)
     return True
@@ -914,7 +914,7 @@ Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, 
         Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
     endIf
     Manager.Trace(2, "Breton practice pressure " + traditionValue + " from " + sourceKey + ": " + reason)
     return True
@@ -982,7 +982,7 @@ Function HandleBretonHiddenArtExposure(String reason)
     AwardBretonAncestorSpinePulse(multiplier, reason)
     ; An approved P2 book is a distinct player acknowledgement even when the
     ; daily practice cap has already reduced its mechanical credit.
-    Manager.SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
+    Manager.Prisma.SurfaceP2BookReadNotice(reason, GetBretonHiddenArtNoticeTitle(reason), GetBretonHiddenArtNoticeText(reason))
     Manager.Trace(2, "Breton Hidden Art exposure routed: " + reason)
 EndFunction
 
@@ -1034,18 +1034,18 @@ Function HandleBretonGreenWayStanding(String reason)
 EndFunction
 
 String Function GetBretonMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "Sky, travel, and druidic memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("talos", "Talos", "god", "talos", Manager.PDV_Talos, "Civic defiance and Septim inheritance.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Household, mercy, and love.")
-    entries = entries + "," + Manager.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, order, and covenant.")
-    entries = entries + "," + Manager.RosterMedallionEntry("arkay", "Arkay", "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Death, burial, and clean endings.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, protection, and oath.")
-    entries = entries + "," + Manager.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Learning, law, and formal craft.")
-    entries = entries + "," + Manager.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Beauty, courtliness, and grace.")
-    entries = entries + "," + Manager.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Trade, craft, and honest work.")
-    entries = entries + "," + Manager.RosterMedallionEntry("magnus", "Magnus", "god", "magnus", Manager.PDV_Magnus, "Magic, light, and hidden inheritance.")
-    entries = entries + "," + Manager.PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Pilgrimage, endurance, and Elven memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", Manager.PDV_Yffre, "Green memory, story, and law.")
+    String entries = Manager.Prisma.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "Sky, travel, and druidic memory.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("talos", "Talos", "god", "talos", Manager.PDV_Talos, "Civic defiance and Septim inheritance.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Household, mercy, and love.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, order, and covenant.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("arkay", "Arkay", "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Death, burial, and clean endings.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, protection, and oath.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Learning, law, and formal craft.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Beauty, courtliness, and grace.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Trade, craft, and honest work.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("magnus", "Magnus", "god", "magnus", Manager.PDV_Magnus, "Magic, light, and hidden inheritance.")
+    entries = entries + "," + Manager.Prisma.PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Pilgrimage, endurance, and Elven memory.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("yffre", "Y'ffre", "god", "yffre", Manager.PDV_Yffre, "Green memory, story, and law.")
     return entries
 EndFunction
 
@@ -1058,7 +1058,7 @@ String Function GetBretonSurveyText()
 
     String text = ""
     Int practiceTier = GetBretonPracticeTier(tradition)
-    String practiceText = " Practice: " + Manager.GetPublicTierBand(practiceTier) + "."
+    String practiceText = " Practice: " + Manager.Prisma.GetPublicTierBand(practiceTier) + "."
     if tradition == 0
         text = "You walk the Knight's Road: vow, mercy, and protective justice." + practiceText
         Int vow = StorageUtil.GetIntValue(None, "PDV.Breton.KnightlyVowIntegrity", 100)
@@ -1136,7 +1136,7 @@ EndFunction
 String Function GetBretonBookOfDaysPathStatusLabel()
     String traditionLabel = GetBretonTraditionLabel()
     Int practiceTier = GetBretonPracticeTier(GetBretonTraditionValue())
-    String status = traditionLabel + " Practice " + Manager.GetPublicTierBand(practiceTier)
+    String status = traditionLabel + " Practice " + Manager.Prisma.GetPublicTierBand(practiceTier)
 
     PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if activePact
@@ -1144,7 +1144,7 @@ String Function GetBretonBookOfDaysPathStatusLabel()
     endIf
 
     if Manager.GetActiveDeity() && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE
-        return status + " / " + Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " Focus"
+        return status + " / " + Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " Focus"
     endIf
 
     return status
@@ -1153,7 +1153,7 @@ EndFunction
 String Function GetBretonPatronSurveySentence(Int traditionValue)
     PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if activePact
-        String pactName = Manager.GetPublicDeityDisplayName(activePact)
+        String pactName = Manager.Prisma.GetPublicDeityDisplayName(activePact)
         if traditionValue == Manager.BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= Manager.LedgerRuntime.TIER_CHAMPION
             return " Your pact with " + pactName + " has opened Hidden Art - Champion."
         endIf
@@ -1164,7 +1164,7 @@ String Function GetBretonPatronSurveySentence(Int traditionValue)
         return ""
     endIf
 
-    String deityName = Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity())
+    String deityName = Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity())
     Int patronTier = Manager.LedgerRuntime.GetTier(Manager.GetActiveDeity())
     if patronTier >= Manager.LedgerRuntime.TIER_CHAMPION
         String boonName = GetBretonChampionBoonDisplayName(Manager.GetActiveDeity())
@@ -1282,6 +1282,34 @@ EndFunction
 
 String Function GetSurveyFragment()
     return GetBretonSurveyText()
+EndFunction
+
+String Function GetQuasiPatronName()
+    return "Breton Tradition"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "journal"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetBretonTraditionLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Tradition, hidden practice, and old covenants leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return GetBretonBookOfDaysPathStatusLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Breton | " + GetBretonTraditionLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetBretonTraditionLabel()
 EndFunction
 
 Bool Function IsRaceLaneNeglected()

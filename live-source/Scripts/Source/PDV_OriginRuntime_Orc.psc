@@ -105,8 +105,8 @@ Function ApplyOrcTrialOfIron(Actor playerRef, Int index)
     ; Surface in both Prisma spaces: a small Malacath pulse (Ledger driver; the 7-day
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
     Manager.LedgerRuntime.AwardPiety(Manager.PDV_Malacath, 0.5, "Took up the Trial of Iron")
-    Manager.AppendBookOfDaysEntry("You took up a discipline in the Trial of Iron. The Code is held in iron.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-    Manager.SendPrismaToast("malacath", "good", "Trial of Iron", "You take up a discipline of the Code. The Trial of Iron holds you to it.")
+    Manager.Prisma.AppendBookOfDaysEntry("You took up a discipline in the Trial of Iron. The Code is held in iron.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
+    Manager.Prisma.SendPrismaToast("malacath", "good", "Trial of Iron", "You take up a discipline of the Code. The Trial of Iron holds you to it.")
     Manager.Trace(2, "Orc Trial of Iron discipline applied: " + index)
 EndFunction
 
@@ -152,12 +152,12 @@ Function SyncOrcTrialOfIron(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(disc)
             playerRef.AddSpell(disc, False)
-            Manager.SendPrismaToast("malacath", "good", "The Code holds", "Your discipline returns.")
+            Manager.Prisma.SendPrismaToast("malacath", "good", "The Code holds", "Your discipline returns.")
         endIf
     else
         if playerRef.HasSpell(disc)
             playerRef.RemoveSpell(disc)
-            Manager.SendPrismaToast("malacath", "warning", "The discipline goes quiet", "The standing you swore it under has broken.")
+            Manager.Prisma.SendPrismaToast("malacath", "warning", "The discipline goes quiet", "The standing you swore it under has broken.")
         endIf
     endIf
 EndFunction
@@ -217,7 +217,7 @@ Function TryOrcCodeHolds(Actor playerRef)
     ; AddSpell, never cast -- Spell.Cast() on one is an engine no-op, and the author's
     ; comment above says the HealRate payload is deliberately dead under Requiem anyway.
     ; So the feedback is delivered the way both siblings deliver theirs: a toast.
-    Manager.SendPrismaToast("malacath", "good", "The Code holds", "The Code holds, and so do you.")
+    Manager.Prisma.SendPrismaToast("malacath", "good", "The Code holds", "The Code holds, and so do you.")
 
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.OrcCodeHolds")
     if multiplier > 0.0
@@ -358,7 +358,7 @@ Function HandleOrcMalacathConduct(Int modeValue, String reason)
     StorageUtil.AdjustFloatValue(None, "PDV.Orc.MalacathConduct", multiplier)
     StorageUtil.AdjustIntValue(None, "PDV.Orc.MalacathSourceCount", 1)
     StorageUtil.SetStringValue(None, "PDV.Orc.LastMalacathSourceReason", reason)
-    Manager.SurfaceP2BookReadNotice(reason, "The Code of Malacath", "Malacath weighs your conduct against it.")
+    Manager.Prisma.SurfaceP2BookReadNotice(reason, "The Code of Malacath", "Malacath weighs your conduct against it.")
     Manager.Trace(2, "Orc Malacath conduct routed with multiplier " + multiplier)
 EndFunction
 
@@ -432,8 +432,8 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
 
     if Manager.PDV_OrcLifeModeTrack.GetCurrentState() == modeValue
         SendPrismaSubstrateToast(GetOrcLifeModeSubstrateToken(modeValue), "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
-        Manager.AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
+        Manager.Prisma.RequestPanelRefresh()
         return
     endIf
 
@@ -458,9 +458,9 @@ Function ApplyOrcLifeModeSwitch(Int modeValue, String reason)
     if Manager.PDV_Malacath
         deityIndex = Manager.PDV_Malacath.DeityIndex
     endIf
-    Manager.SurfaceTransition("reorientation", GetOrcLifeModeLabel(), "shift", deityIndex, "turning")
-    Manager.SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SurfaceTransition("reorientation", GetOrcLifeModeLabel(), "shift", deityIndex, "turning")
+    Manager.Prisma.SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Bool Function IsOrcMajorLifeModeGate(String reason)
@@ -507,7 +507,7 @@ Function EvaluateOrcLifeModeAtDawn()
 
     if currentMode > Manager.ORC_LIFE_MODE_CITY && !Manager.PDV_OrcLifeModeTrack.HasRecentEvidenceDays(currentMode, 1, 14)
         ApplyOrcLifeModeSwitch(Manager.ORC_LIFE_MODE_CITY, "orc_dawn_lapse_to_city")
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
     endIf
 EndFunction
 
@@ -667,8 +667,8 @@ Function MaybeShowOrcHearthHeldNotice(String reason)
         ; chokepoint while the Book entry always logs. PDV_Notif_Orc_HearthHeld_Declare
         ; is deliberately no longer shown here (it would double the surface); the
         ; record stays in the ESP, orphaned, with its text kept in sync.
-        Manager.SendPrismaToast("malacath", "good", "A hearth held", "You claim this hearth as your own, and swear to hold it.")
-        Manager.AppendBookOfDaysEntry("You claim this hearth as your own, and swear to hold it.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
+        Manager.Prisma.SendPrismaToast("malacath", "good", "A hearth held", "You claim this hearth as your own, and swear to hold it.")
+        Manager.Prisma.AppendBookOfDaysEntry("You claim this hearth as your own, and swear to hold it.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
         return
     endIf
 
@@ -896,7 +896,7 @@ Function ShowOrcNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("malacath", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("malacath", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppressModal)
@@ -905,7 +905,7 @@ Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppres
     endIf
 
     if suppressModal
-        Manager.SendPrismaToast("malacath", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("malacath", "warning", "", fallbackText)
         return
     endIf
 
@@ -921,7 +921,7 @@ Function ApplyOrcInitialChoice(Int modeValue, String reason)
     Manager.BeginRaceSetupQuietPresentation(reason)
     if Manager.PDV_OrcLifeModeTrack
         Manager.PDV_OrcLifeModeTrack.SetState(PDV_DevotionRules.ClampInt(modeValue, Manager.ORC_LIFE_MODE_CITY, Manager.ORC_LIFE_MODE_LEGION_EXILE), reason)
-        Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(GetOrcLifeModeLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "malacath", True, 3, "", True)
+        Manager.Prisma.AppendBookOfDaysEntry(Manager.Prisma.BuildStartupRoadJournalLine(GetOrcLifeModeLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "malacath", True, 3, "", True)
     endIf
     ; Malacath is the single innate Orc spine (not chosen, not offered) -- activate him as the
     ; patron at origin so the life-mode reward ladder (gated on _activeDeity==PDV_Malacath) is
@@ -931,12 +931,12 @@ Function ApplyOrcInitialChoice(Int modeValue, String reason)
         Manager.LedgerRuntime.SetActiveDeity(Manager.PDV_Malacath)
     endIf
     Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.EndRaceSetupQuietPresentation()
 EndFunction
 
 String Function GetOrcMedallionEntriesJson()
-    return Manager.RosterMedallionEntry("malacath", "Malacath", "prince", "malacath", Manager.PDV_Malacath, "Oath, code, exile, and vengeance.")
+    return Manager.Prisma.RosterMedallionEntry("malacath", "Malacath", "prince", "malacath", Manager.PDV_Malacath, "Oath, code, exile, and vengeance.")
 EndFunction
 
 String Function GetOrcSurveyText()
@@ -945,7 +945,7 @@ String Function GetOrcSurveyText()
     endIf
 
     EnsureOrcLifeModeInitialized()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     Int mode = Manager.PDV_OrcLifeModeTrack.GetCurrentState()
     String text = ""
     if mode == Manager.ORC_LIFE_MODE_STRONGHOLD
@@ -1022,6 +1022,34 @@ EndFunction
 
 String Function GetSurveyFragment()
     return GetOrcSurveyText()
+EndFunction
+
+String Function GetQuasiPatronName()
+    return "Malacath"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "malacath"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetOrcLifeModeLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Malacath, Code, and life-mode choices leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return GetOrcLifeModeLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Orc | " + GetOrcLifeModeLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetOrcLifeModeLabel()
 EndFunction
 
 Bool Function IsRaceLaneNeglected()

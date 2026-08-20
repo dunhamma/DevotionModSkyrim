@@ -364,7 +364,7 @@ Function AwardImperialAncestorSpinePulse(Float multiplier, String reason)
         tierBefore = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
         Manager.PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(multiplier, reason)
         Int tierAfter = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Your public service steadies your devotion.", "journal", GetImperialCivicTierName())
+        Manager.Prisma.SendPrismaSubstrateProgress("imperial-civic", tierBefore, tierAfter, Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Your public service steadies your devotion.", "journal", GetImperialCivicTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Imperial.AncestralStanding", multiplier)
@@ -448,7 +448,7 @@ Function HandleImperialTalosPressure(Bool isPrivate, String reason)
 
     StorageUtil.SetStringValue(None, "PDV.Imperial.LastTalosPressureReason", reason)
     AwardImperialAncestorSpinePulse(multiplier, reason)
-    Manager.SurfaceP2BookReadNotice(reason, "The name of Talos", "The question of the Ninth presses harder.")
+    Manager.Prisma.SurfaceP2BookReadNotice(reason, "The name of Talos", "The question of the Ninth presses harder.")
     Manager.Trace(2, "Imperial Talos pressure routed: " + reason)
 EndFunction
 
@@ -475,23 +475,23 @@ Function HandleImperialPatronCivicFavor(String reason)
 EndFunction
 
 String Function GetImperialMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "Road, wind, and natural order.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Love, family, and mercy.")
-    entries = entries + "," + Manager.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, covenant, and empire.")
-    entries = entries + "," + Manager.RosterMedallionEntry("arkay", "Arkay", "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Life, death, and lawful burial.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, protection, and civic virtue.")
-    entries = entries + "," + Manager.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Law, learning, and reason.")
-    entries = entries + "," + Manager.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Art, beauty, and human grace.")
-    entries = entries + "," + Manager.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Work, trade, and prosperity.")
+    String entries = Manager.Prisma.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "Road, wind, and natural order.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Love, family, and mercy.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, covenant, and empire.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("arkay", "Arkay", "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Life, death, and lawful burial.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, protection, and civic virtue.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Law, learning, and reason.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Art, beauty, and human grace.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Work, trade, and prosperity.")
     return entries
 EndFunction
 
 String Function GetImperialSurveyText()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     String concordat = GetImperialConcordatLabel()
     String text = ""
     if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
-        text = Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
+        text = Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " holds your focus among the Nine. Standing: " + band + ". " + BuildImperialConcordatSurveySentence(concordat)
         if IsFocusedPantheonBoonSuspended()
             text = text + " The commitment remains, but its boon is suspended until 50 piety."
         endIf
@@ -652,6 +652,34 @@ String Function GetSurveyFragment()
     return GetImperialSurveyText()
 EndFunction
 
+String Function GetQuasiPatronName()
+    return "Nine Divines"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "akatosh"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetImperialConcordatLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Civic faith, Divines, and Concordat pressure leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return GetImperialConcordatLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Imperial | " + GetImperialConcordatLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetImperialConcordatLabel()
+EndFunction
+
 Bool Function IsRaceLaneNeglected()
     return IsImperialCivicNeglected()
 EndFunction
@@ -754,7 +782,7 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
                 Float metricBefore = Manager.PDV_ImperialAncestorSubstrate.GetMetric()
                 Int tierBefore = Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier()
                 Manager.PDV_ImperialAncestorSubstrate.RecordCivicStandingScaled(1.0, "craft_" + reason)
-                Manager.SendPrismaSubstrateProgress("imperial-civic", tierBefore, Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier(), Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", GetImperialCivicTierName())
+                Manager.Prisma.SendPrismaSubstrateProgress("imperial-civic", tierBefore, Manager.PDV_ImperialAncestorSubstrate.GetSubstrateTier(), Manager.PDV_ImperialAncestorSubstrate.GetMetric() - metricBefore, "Completed craft strengthened civic practice.", "journal", GetImperialCivicTierName())
                 return True
             endIf
         endIf

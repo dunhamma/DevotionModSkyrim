@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "description": "Exact Data-relative PlayerDevotion release payload. Packaging fails if a required entry is missing or any unlisted entry is present.",
-  "expectedEntryCount": 269,
-  "scriptPairCount": 117,
+  "expectedEntryCount": 273,
+  "scriptPairCount": 118,
   "releaseMetadata": [
     "CHANGELOG.txt",
     "README.txt"
@@ -127,6 +127,7 @@
     "Scripts/PDV_OriginRuntime_Nord.pex",
     "Scripts/PDV_OriginRuntime_Orc.pex",
     "Scripts/PDV_OriginRuntime_Redguard.pex",
+    "Scripts/PDV_PrismaPresenter.pex",
     "Scripts/PDV_PlayerEvents.pex",
     "Scripts/PDV_PotionArgonianHistSapEffect.pex",
     "Scripts/PDV_PrismaBridge.pex",
@@ -249,6 +250,7 @@
     "PDV_OriginRuntime_Nord",
     "PDV_OriginRuntime_Orc",
     "PDV_OriginRuntime_Redguard",
+    "PDV_PrismaPresenter",
     "PDV_PlayerEvents",
     "PDV_PotionArgonianHistSapEffect",
     "PDV_PrismaBridge",

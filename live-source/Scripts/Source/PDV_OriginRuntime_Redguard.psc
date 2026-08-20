@@ -94,8 +94,8 @@ Function ApplyRedguardRemembering(Actor playerRef, Int index)
     ; Surface in both Prisma spaces: a small Tu'whacca pulse (Ledger driver; the 7-day
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
     Manager.LedgerRuntime.AwardPiety(Manager.PDV_Tuwhacca, 0.5, "Took up the Remembering of Names")
-    Manager.AppendBookOfDaysEntry("You remembered a name of the old line. The dead are kept in the telling.", Utility.GetCurrentGameTime() as Int, "substrate.act", "tu-whacca", False)
-    Manager.SendPrismaToast("tuwhacca", "good", "Remembering of Names", "The observance settles into you.")
+    Manager.Prisma.AppendBookOfDaysEntry("You remembered a name of the old line. The dead are kept in the telling.", Utility.GetCurrentGameTime() as Int, "substrate.act", "tu-whacca", False)
+    Manager.Prisma.SendPrismaToast("tuwhacca", "good", "Remembering of Names", "The observance settles into you.")
     Manager.Trace(2, "Redguard Remembering observance applied: " + index)
 EndFunction
 
@@ -141,12 +141,12 @@ Function SyncRedguardRemembering(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(obs)
             playerRef.AddSpell(obs, False)
-            Manager.SendPrismaToast("tuwhacca", "good", "The old line settles", "Your observance returns.")
+            Manager.Prisma.SendPrismaToast("tuwhacca", "good", "The old line settles", "Your observance returns.")
         endIf
     else
         if playerRef.HasSpell(obs)
             playerRef.RemoveSpell(obs)
-            Manager.SendPrismaToast("tuwhacca", "warning", "The observance goes quiet", "The line you named it under has shifted.")
+            Manager.Prisma.SendPrismaToast("tuwhacca", "warning", "The observance goes quiet", "The line you named it under has shifted.")
         endIf
     endIf
 EndFunction
@@ -402,7 +402,7 @@ Function HandleRedguardAncestorSpine(String reason)
 
     Float multiplier = Manager.ConsumeDailyRepeatMultiplier("PDV.Signal.RedguardAncestorSpine")
     RecordRedguardAncestorSpinePulse(multiplier, reason)
-    Manager.SurfaceP2BookReadNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
+    Manager.Prisma.SurfaceP2BookReadNotice(reason, "The Yokudan dead", "The ancestor-line stands straighter in you.")
     Manager.Trace(2, "Redguard ancestor spine routed with multiplier " + multiplier)
 EndFunction
 
@@ -421,7 +421,7 @@ Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
     RecordRedguardSectSignal(currentSect, multiplier, reason)
     AwardRedguardAncestorSpinePietyPulse(multiplier, reason)
     ShowRedguardNotification(Manager.PDV_Notif_Redguard_AncestorSpine_Rest, "The ancestor-line steadies behind you.")
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function HandleRedguardVampireReentryComplete(String reason)
@@ -461,8 +461,8 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
     if Manager.PDV_RedguardSectTrack.GetCurrentState() == sectValue
         MaybeShowRedguardChampionEntry(sectValue)
         SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
-        Manager.AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)
+        Manager.Prisma.RequestPanelRefresh()
         return
     endIf
 
@@ -482,9 +482,9 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
         Manager.PDV_RedguardSectTrack.SetTransitionLockout(3.0, reason)
         ShowRedguardSectEntry(sectValue)
         MaybeShowRedguardChampionEntry(sectValue)
-        Manager.SurfaceTransition("reorientation", GetRedguardSectLabel(), "shift", -1, "turning")
-        Manager.SendPrismaShiftToast(GetRedguardSectLabel(), "", "sect")
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.SurfaceTransition("reorientation", GetRedguardSectLabel(), "shift", -1, "turning")
+        Manager.Prisma.SendPrismaShiftToast(GetRedguardSectLabel(), "", "sect")
+        Manager.Prisma.RequestPanelRefresh()
     endIf
 EndFunction
 
@@ -664,22 +664,22 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
     if sectValue == Manager.REDGUARD_SECT_CROWN
         if Manager.PDV_Tuwhacca && Manager.LedgerRuntime.GetTier(Manager.PDV_Tuwhacca) >= Manager.LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(Manager.PDV_Msg_Redguard_ChampionEntry_Crown, "The Crown way has become more than memory. It is a public shape of your devotion.", False)
-            Manager.AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            Manager.SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
+            Manager.Prisma.AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            Manager.Prisma.SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == Manager.REDGUARD_SECT_FOREBEAR
         if Manager.PDV_HoonDing && Manager.LedgerRuntime.GetTier(Manager.PDV_HoonDing) >= Manager.LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(Manager.PDV_Msg_Redguard_ChampionEntry_Forebear, "The Forebear way has become more than adaptation. It is a public shape of your devotion.", False)
-            Manager.AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            Manager.SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
+            Manager.Prisma.AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            Manager.Prisma.SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == Manager.REDGUARD_SECT_ASHABAH
         if Manager.PDV_Tuwhacca && Manager.LedgerRuntime.GetTier(Manager.PDV_Tuwhacca) >= Manager.LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(Manager.PDV_Msg_Redguard_ChampionEntry_AshAbah, "The Ash'abah duty has become more than necessity. It is a public shape of your devotion.", False)
-            Manager.AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            Manager.SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
+            Manager.Prisma.AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            Manager.Prisma.SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     endIf
@@ -901,7 +901,7 @@ Function ShowRedguardNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool suppressModal)
@@ -914,7 +914,7 @@ Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool su
     Manager.SetRaceCurseSurfaceShown(True)
 
     if suppressModal
-        Manager.SendPrismaToast("tuwhacca", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("tuwhacca", "warning", "", fallbackText)
         return
     endIf
 
@@ -931,23 +931,23 @@ Function ApplyRedguardInitialChoice(Int sectValue, String reason)
     if Manager.PDV_RedguardSectTrack
         Int normalized = PDV_DevotionRules.ClampInt(sectValue, Manager.REDGUARD_SECT_CROWN, Manager.REDGUARD_SECT_ASHABAH)
         Manager.PDV_RedguardSectTrack.SetState(normalized, reason)
-        Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(GetRedguardSectLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "sect", True, 3, "", True)
+        Manager.Prisma.AppendBookOfDaysEntry(Manager.Prisma.BuildStartupRoadJournalLine(GetRedguardSectLabel()), Utility.GetCurrentGameTime() as Int, "reorientation", "sect", True, 3, "", True)
         ShowRedguardSectEntry(normalized)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Redguard.SetupComplete", 1)
     Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.EndRaceSetupQuietPresentation()
 EndFunction
 
 String Function GetRedguardMedallionEntriesJson()
-    String entries = Manager.PendingMedallionEntry("satakal", "Satakal", "god", "satakal", "Worldskin, cycle, and cosmic turning.")
-    entries = entries + "," + Manager.PendingMedallionEntry("ruptga", "Ruptga", "god", "ruptga", "Tall Papa, ancestry, and guidance.")
-    entries = entries + "," + Manager.RosterMedallionEntry("tuwhacca", "Tu'whacca", "god", "tu-whacca", Manager.PDV_Tuwhacca, "Death, passage, and the proper road.")
-    entries = entries + "," + Manager.PendingMedallionEntry("tava", "Tava", "god", "tava", "Wind, sailors, and safe passage.")
-    entries = entries + "," + Manager.RosterMedallionEntry("leki", "Leki", "god", "leki", Manager.PDV_Leki, "Sword-skill, discipline, and grace.")
-    entries = entries + "," + Manager.PendingMedallionEntry("onsi", "Onsi", "god", "onsi", "The blade, craft, and warrior making.")
-    entries = entries + "," + Manager.RosterMedallionEntry("hoon-ding", "HoonDing", "god", "hoon-ding", Manager.PDV_HoonDing, "Make-way spirit and impossible survival.")
+    String entries = Manager.Prisma.PendingMedallionEntry("satakal", "Satakal", "god", "satakal", "Worldskin, cycle, and cosmic turning.")
+    entries = entries + "," + Manager.Prisma.PendingMedallionEntry("ruptga", "Ruptga", "god", "ruptga", "Tall Papa, ancestry, and guidance.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("tuwhacca", "Tu'whacca", "god", "tu-whacca", Manager.PDV_Tuwhacca, "Death, passage, and the proper road.")
+    entries = entries + "," + Manager.Prisma.PendingMedallionEntry("tava", "Tava", "god", "tava", "Wind, sailors, and safe passage.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("leki", "Leki", "god", "leki", Manager.PDV_Leki, "Sword-skill, discipline, and grace.")
+    entries = entries + "," + Manager.Prisma.PendingMedallionEntry("onsi", "Onsi", "god", "onsi", "The blade, craft, and warrior making.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("hoon-ding", "HoonDing", "god", "hoon-ding", Manager.PDV_HoonDing, "Make-way spirit and impossible survival.")
     return entries
 EndFunction
 
@@ -981,7 +981,7 @@ String Function GetRedguardSurveySectText()
         sectValue = Manager.PDV_RedguardSectTrack.GetCurrentState()
     endIf
 
-    String standing = Manager.GetCurrentStandingBand()
+    String standing = Manager.Prisma.GetCurrentStandingBand()
     if sectValue == Manager.REDGUARD_SECT_CROWN
         return "You keep the Crown way: orthodox Yokudan practice carried intact in exile. Standing: " + standing + ". The ancestors are strong at your back."
     elseIf sectValue == Manager.REDGUARD_SECT_ASHABAH
@@ -1021,7 +1021,7 @@ Function ReconcileRedguardSpineRewardAfterLoad()
     endIf
 
     SyncRedguardSpineBoon(playerRef, True, GetActiveRedguardSpineSect())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Redguard spine reward reconciled after player load.")
 EndFunction
 
@@ -1070,6 +1070,34 @@ EndFunction
 
 String Function GetSurveyFragment()
     return GetRedguardSurveyText()
+EndFunction
+
+String Function GetQuasiPatronName()
+    return "Yokudan Path"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "sect"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetRedguardSectLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Yokudan duty, ancestors, and the Far Shores leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return GetRedguardSectLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Redguard | " + GetRedguardSectLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetRedguardSectLabel()
 EndFunction
 
 Bool Function IsRaceLaneNeglected()

@@ -52,7 +52,7 @@ String Function GetNpcRecognitionStatusLine()
     if identityIndex < 0 || band <= Manager.LedgerRuntime.TIER_NONE
         return "On - no public standing"
     endIf
-    return GetRecognitionIdentityDisplayName(identityIndex) + " - " + Manager.GetPublicTierBand(band) + " (" + GetNpcRecognitionRelationLabel(band) + ")"
+    return GetRecognitionIdentityDisplayName(identityIndex) + " - " + Manager.Prisma.GetPublicTierBand(band) + " (" + GetNpcRecognitionRelationLabel(band) + ")"
 EndFunction
 
 String Function GetNpcRecognitionRelationLabel(Int band)
@@ -85,7 +85,7 @@ String Function GetNpcRecognitionPanelJson()
     Int identityIndex = ResolveNpcRecognitionIdentity()
     Int band = ResolveNpcRecognitionBand(identityIndex)
     String identityName = GetRecognitionIdentityDisplayName(identityIndex)
-    String bandName = Manager.GetPublicTierBand(band)
+    String bandName = Manager.Prisma.GetPublicTierBand(band)
     String statusText = GetNpcRecognitionStatusLine()
     String advisory = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
     String j = "{\"enabled\":" + PDV_DevotionRules.BoolToJson(recognitionEnabled)
@@ -239,7 +239,7 @@ Function SyncNpcReligiousRecognition()
     StorageUtil.SetIntValue(None, "PDV.Recognition.LastSignature", signature)
     EmitNpcRecognitionState(identityIndex, band, hostileRecognitionEnabled, ownerName)
     SurfaceNpcRecognitionTransition(identityIndex, band, recognitionEnabled, hostileRecognitionEnabled, ownerName)
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recognitionEnabled, Bool hostileRecognitionEnabled, String ownerName)
@@ -263,7 +263,7 @@ Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recog
         return
     endIf
     String identityName = GetRecognitionIdentityDisplayName(identityIndex)
-    String bandName = Manager.GetPublicTierBand(band)
+    String bandName = Manager.Prisma.GetPublicTierBand(band)
     String bodyText = GetNpcRecognitionAdvisory(identityIndex, band, recognitionEnabled, ownerName)
     if recognitionEnabled && ownerName == "" && identityIndex >= 0
         bodyText = identityName + " - " + bandName + ". " + bodyText
@@ -271,8 +271,8 @@ Function SurfaceNpcRecognitionTransition(Int identityIndex, Int band, Bool recog
             bodyText = bodyText + " Explicit rival adherents may regard you as an enemy."
         endIf
     endIf
-    Manager.SendPrismaToast("journal", "neutral", "Public recognition changed", bodyText)
-    Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", False, 1, "Public recognition changed")
+    Manager.Prisma.SendPrismaToast("journal", "neutral", "Public recognition changed", bodyText)
+    Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "reorientation", "journal", False, 1, "Public recognition changed")
 EndFunction
 
 Function ApplyNpcRecognitionHardRivals(Int identityIndex, Faction playerFaction)
@@ -299,7 +299,7 @@ Function EmitNpcRecognitionState(Int identityIndex, Int band, Bool hostileRecogn
         return
     endIf
     ModEvent.PushString(handle, GetRecognitionIdentityKey(identityIndex))
-    ModEvent.PushString(handle, Manager.GetPublicTierBand(band))
+    ModEvent.PushString(handle, Manager.Prisma.GetPublicTierBand(band))
     ModEvent.PushFloat(handle, PDV_DevotionRules.BoolToInt(hostileRecognitionEnabled) as Float)
     ModEvent.PushString(handle, ownerName)
     ModEvent.Send(handle)

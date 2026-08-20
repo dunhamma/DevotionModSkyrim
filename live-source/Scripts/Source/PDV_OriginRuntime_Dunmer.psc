@@ -72,6 +72,38 @@ String Function GetSurveyFragment()
     return GetDunmerSurveyText()
 EndFunction
 
+String Function GetQuasiPatronName()
+    return "House Ancestors"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "ancestor"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return "Ancestor layer: " + GetDunmerAncestorLayerLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Reclamations, ancestors, and ash-prayer duties leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    Int reclamationFocus = StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1)
+    if reclamationFocus >= 0
+        return GetDunmerReclamationFocusLabel(reclamationFocus) + " Reclamation Focus"
+    endIf
+    return "Ancestor Rites " + GetBookOfDaysDunmerAncestorLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Dunmer | " + GetDunmerAncestorLayerLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetDunmerAncestorLayerLabel()
+EndFunction
+
 Bool Function IsRaceLaneNeglected()
     return IsDunmerAncestorNeglected()
 EndFunction
@@ -222,7 +254,7 @@ Function HandleDunmerPortableShrinePrayer(String reason)
             Int tierBefore = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             Manager.PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(multiplier, reason)
             Int tierAfter = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
+            Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Ancestor prayer marked.", "ancestor", GetDunmerAncestorLayerLabel())
             ; The Ledger driver for the ancestral layer. Sits inside the layerWeight guard on purpose:
             ; vampirism silences this layer entirely, so a silenced prayer must not record one either.
             ; Self-caps to the first prayer of the devotional day; patron-independent by ruling.
@@ -230,7 +262,7 @@ Function HandleDunmerPortableShrinePrayer(String reason)
         else
             Manager.Trace(2, "Dunmer ancestor layer silenced by curse posture (" + reason + ")")
         endIf
-        Manager.NotifyDiegeticRoutineFavor("dunmer_portable_shrine")
+        Manager.Prisma.NotifyDiegeticRoutineFavor("dunmer_portable_shrine")
         Bool twilightAwarded = TryAwardDunmerTwilightWindowSignal(reason)
         if !twilightAwarded
             AwardActiveDunmerReclamationMemorySignal()
@@ -246,7 +278,7 @@ Function HandleDunmerPortableShrinePrayer(String reason)
             HandleDunmerPlayerHomeBonus(reason + "_home")
             _dunmerHomePrayerContext = False
         endIf
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
         Manager.Trace(2, "Dunmer portable shrine prayer routed (" + reason + ")")
     endIf
 EndFunction
@@ -268,7 +300,7 @@ Function HandleDunmerPlayerHomeBonus(String reason)
             Int tierBefore = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
             Manager.PDV_DunmerAncestorSubstrate.RecordPlayerHomeBonusScaled(multiplier, reason)
             Int tierAfter = Manager.PDV_DunmerAncestorSubstrate.GetSubstrateTier()
-            Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Prayers within the home feel more meaningful.", "ancestor", GetDunmerAncestorLayerLabel())
+            Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_DunmerAncestorSubstrate.GetMetric() - metricBefore, "Prayers within the home feel more meaningful.", "ancestor", GetDunmerAncestorLayerLabel())
             ; Ancestor watch (11a rework 2026-07-04): the home prayer no longer heals on
             ; the spot; it arms a once-per-day near-death save that lasts until dawn (the
             ; BaanDar-style low-health watcher, PDV_T3DailyLowHealthSaveEffect on the
@@ -281,8 +313,8 @@ Function HandleDunmerPlayerHomeBonus(String reason)
         else
             Manager.Trace(2, "Dunmer home rite silenced by curse posture (" + reason + ")")
         endIf
-        Manager.NotifyDiegeticRoutineFavor("dunmer_home_bonus")
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.NotifyDiegeticRoutineFavor("dunmer_home_bonus")
+        Manager.Prisma.RequestPanelRefresh()
         Manager.Trace(2, "Dunmer player-home bonus routed (" + reason + ")")
     endIf
 EndFunction
@@ -395,7 +427,7 @@ Function SetDunmerHome(Int sleepCellId, Int devotionalDayStamp, String reason)
     StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateFormID", 0)
     StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateCount", 0)
     StorageUtil.SetIntValue(None, "PDV.DunHome.CandidateDay", 0)
-    Manager.SendPrismaToast("ancestor", "good", "Ancestor-space", "The ancestors will know this place.")
+    Manager.Prisma.SendPrismaToast("ancestor", "good", "Ancestor-space", "The ancestors will know this place.")
     Manager.Trace(2, "Dunmer ancestor-home declared: " + reason)
 EndFunction
 
@@ -565,11 +597,11 @@ Function HandleDunmerReclamationFocus(Int focusValue, String reason)
     StorageUtil.SetStringValue(None, "PDV.Dunmer.LastReclamationReason", reason)
     AwardDunmerReclamationFocusSignal(focusValue, layerWeight)
     if focusValue == 0
-        Manager.SurfaceP2BookReadNotice(reason, "Azura's twilight", "The Reclamation turns toward her.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "Azura's twilight", "The Reclamation turns toward her.")
     elseIf focusValue == 1
-        Manager.SurfaceP2BookReadNotice(reason, "Boethiah's proving", "The Reclamation turns toward struggle.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "Boethiah's proving", "The Reclamation turns toward struggle.")
     else
-        Manager.SurfaceP2BookReadNotice(reason, "Mephala's web", "The Reclamation turns toward secrets.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "Mephala's web", "The Reclamation turns toward secrets.")
     endIf
     Manager.Trace(2, "Dunmer Reclamation focus routed: " + reason + " weight " + layerWeight)
 EndFunction
@@ -649,10 +681,10 @@ Function SurfaceDunmerDeviationPriceNotice()
     endIf
 
     Int today = Utility.GetCurrentGameTime() as Int
-    String activeName = Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity())
-    String symbolName = Manager.GetPrismaSymbolForDeity(Manager.GetActiveDeity())
+    String activeName = Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity())
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(Manager.GetActiveDeity())
     String line = "The ash-prayer thins; " + activeName + " marks the wound."
-    Manager.AppendBookOfDaysEntry(line, today, "creed.drop", symbolName, False, 2, "Reclamation strained")
+    Manager.Prisma.AppendBookOfDaysEntry(line, today, "creed.drop", symbolName, False, 2, "Reclamation strained")
 
     ; fix-plan 4.2: one notice per devotional day (the journal line above keeps the
     ; wall-clock date on purpose -- that is a display timestamp, not a cap).
@@ -660,7 +692,7 @@ Function SurfaceDunmerDeviationPriceNotice()
     Int toastDayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, toastKey, -1) != toastDayStamp
         StorageUtil.SetIntValue(None, toastKey, toastDayStamp)
-        Manager.SendPrismaToast(symbolName, "warning", "Reclamation strained", line)
+        Manager.Prisma.SendPrismaToast(symbolName, "warning", "Reclamation strained", line)
     endIf
 EndFunction
 
@@ -699,9 +731,9 @@ Function HandleDunmerOutdoorGoodDaedraShrine(String reason)
         if Manager.PDV_DunmerAncestorSubstrate && GetDunmerCurseLayerWeight(1) > 0.0
             Manager.PDV_DunmerAncestorSubstrate.RecordPortableShrinePrayerScaled(1.0, "good_daedra_altar_" + reason)
         endIf
-        Manager.SendPrismaToast("journal", "good", "Good Daedra", "The Good Daedra hear the ash-prayer.")
+        Manager.Prisma.SendPrismaToast("journal", "good", "Good Daedra", "The Good Daedra hear the ash-prayer.")
     elseIf GetPlayerOriginRaceIndex() == Manager.ORIGIN_DUNMER
-        Manager.SendPrismaToast("journal", "neutral", "Shrine quiet", "The shrine is quiet in this hour.")
+        Manager.Prisma.SendPrismaToast("journal", "neutral", "Shrine quiet", "The shrine is quiet in this hour.")
     endIf
 EndFunction
 
@@ -808,9 +840,9 @@ String Function GetBookOfDaysDunmerAncestorLabel()
 EndFunction
 
 String Function GetDunmerMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("azura", "Azura", "prince", "azura", Manager.PDV_Azura, "Dawn, dusk, prophecy, and fate.")
-    entries = entries + "," + Manager.RosterMedallionEntry("boethiah", "Boethiah", "prince", "boethiah", Manager.PDV_Boethiah, "Trial, overthrow, and hard becoming.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mephala", "Mephala", "prince", "mephala", Manager.PDV_Mephala, "Web, secrecy, clan, and hidden duty.")
+    String entries = Manager.Prisma.RosterMedallionEntry("azura", "Azura", "prince", "azura", Manager.PDV_Azura, "Dawn, dusk, prophecy, and fate.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("boethiah", "Boethiah", "prince", "boethiah", Manager.PDV_Boethiah, "Trial, overthrow, and hard becoming.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("mephala", "Mephala", "prince", "mephala", Manager.PDV_Mephala, "Web, secrecy, clan, and hidden duty.")
     return entries
 EndFunction
 
@@ -842,7 +874,7 @@ Function EnsureDunmerAncestralUrn()
 EndFunction
 
 String Function GetDunmerSurveyText()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     Int reclamationFocus = StorageUtil.GetIntValue(None, "PDV.Dunmer.ReclamationFocus", -1)
     String text = ""
     if reclamationFocus == 0

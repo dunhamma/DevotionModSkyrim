@@ -68,8 +68,8 @@ Function ApplyAltmerDiscipline(Actor playerRef, Int index)
     ; Surface in both Prisma spaces: a small Auri-El pulse (Ledger driver; the 7-day
     ; rite cooldown is the anti-farm cap) + a Book of Days beat (Chronicle).
     Manager.LedgerRuntime.AwardPiety(Manager.PDV_AuriEl, 0.5, "Set a Discipline of Return")
-    Manager.AppendBookOfDaysEntry("You set a discipline of the Return. The road back is walked daily.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False)
-    Manager.SendPrismaToast("auriel", "good", "Discipline of Return", "It holds while you hold to the path.")
+    Manager.Prisma.AppendBookOfDaysEntry("You set a discipline of the Return. The road back is walked daily.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False)
+    Manager.Prisma.SendPrismaToast("auriel", "good", "Discipline of Return", "It holds while you hold to the path.")
     Manager.Trace(2, "Altmer Discipline of Return applied: " + index)
 EndFunction
 
@@ -114,12 +114,12 @@ Function SyncAltmerDisciplines(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(disc)
             playerRef.AddSpell(disc, False)
-            Manager.SendPrismaToast("auriel", "good", "Coherence restored", "The discipline holds again.")
+            Manager.Prisma.SendPrismaToast("auriel", "good", "Coherence restored", "The discipline holds again.")
         endIf
     else
         if playerRef.HasSpell(disc)
             playerRef.RemoveSpell(disc)
-            Manager.SendPrismaToast("auriel", "warning", "The discipline goes quiet", "You have wandered from coherence.")
+            Manager.Prisma.SendPrismaToast("auriel", "warning", "The discipline goes quiet", "You have wandered from coherence.")
         endIf
     endIf
 EndFunction
@@ -289,8 +289,8 @@ Function MaybeSurfaceAltmerAlignmentBandChange(String oldBand, String reason)
         return
     endIf
 
-    Manager.SendPrismaShiftToast("The Thalmor question turns in you: " + newBand + ".", "", "auri-el")
-    Manager.SurfaceTransition("reorientation", newBand, "shift", -1, "turning", True, False)
+    Manager.Prisma.SendPrismaShiftToast("The Thalmor question turns in you: " + newBand + ".", "", "auri-el")
+    Manager.Prisma.SurfaceTransition("reorientation", newBand, "shift", -1, "turning", True, False)
     StorageUtil.SetStringValue(None, "PDV.Altmer.Alignment.LastCommittedBand", newBand)
     Manager.Trace(1, "Altmer committed alignment band " + oldBand + " -> " + newBand + " (" + reason + ")")
 EndFunction
@@ -549,9 +549,9 @@ Function HandleAltmerDawnSteadiness(String reason)
     Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("dawn_steadiness_" + reason)
     AwardActiveAltmerHeritageMemorySignal()
     if !crisisTransitioned && reason == "eventbus_p2_altmer_auriel_po3_book_altmer_auriel"
-        Manager.SurfaceP2BookReadNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "Auri-El's dawn", "The morning rite settles deeper.")
     elseIf !crisisTransitioned && reason == "eventbus_p2_altmer_magnus_po3_book_altmer_magnus"
-        Manager.SurfaceP2BookReadNotice(reason, "The road of Magnus", "The discipline of light holds you to the dawn.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "The road of Magnus", "The discipline of light holds you to the dawn.")
     endIf
 EndFunction
 
@@ -576,7 +576,7 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
     if Manager.PDV_Trinimac && Manager.ConsumeOncePerDaySignal("PDV.Signal.TrinimacOrthodoxPressure")
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Trinimac, Manager.PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE, None, 1.0)
-        if !Manager.IsP2BookNoticeReason(reason)
+        if !Manager.Prisma.IsP2BookNoticeReason(reason)
             Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Trinimac, "Orthodoxy upheld", "marks a costly defense of ancestral doctrine.")
         endIf
     endIf
@@ -585,7 +585,7 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
     Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("orthodox_cost_" + reason)
     if !crisisTransitioned
-        Manager.SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The ancestral record asks more of you.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The ancestral record asks more of you.")
     endIf
 EndFunction
 
@@ -603,7 +603,7 @@ Function HandleAltmerTrinimacOrthodoxy(String reason)
     if multiplier > 0.0
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Trinimac, Manager.PDV_Trinimac.SIGNAL_FALLEN_GOD_ORTHODOXY, None, multiplier)
     endIf
-    Manager.SurfaceP2BookReadNotice(reason, "Trinimac remembered", "Trinimac is named as he was, not as he was made.")
+    Manager.Prisma.SurfaceP2BookReadNotice(reason, "Trinimac remembered", "Trinimac is named as he was, not as he was made.")
 
     HandleAltmerOrthodoxCostlyEnforcement(reason)
 EndFunction
@@ -717,7 +717,7 @@ Function EnsureAltmerPracticeFocus()
             ; item with no quest, no marker and no tutorial, so without a line telling the player it
             ; is theirs to use, the mod's one unlimited daily Altmer act is a thing that sits in the
             ; inventory forever. Phrased as the practice, not as a control prompt.
-            Manager.AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken. Hold it in your hands when you would remember what you are.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
+            Manager.Prisma.AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken. Hold it in your hands when you would remember what you are.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
         endIf
     endIf
 EndFunction
@@ -760,7 +760,7 @@ Function HandleAltmerSyrabaneContainment(String reason)
     if multiplier > 0.0
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Syrabane, Manager.PDV_Syrabane.SIGNAL_MAGICAL_CONTAINMENT, None, multiplier)
     endIf
-    Manager.SurfaceP2BookReadNotice(reason, "The first warding", "Syrabane opens the apprentice's art to you.")
+    Manager.Prisma.SurfaceP2BookReadNotice(reason, "The first warding", "Syrabane opens the apprentice's art to you.")
 EndFunction
 
 Function AwardAltmerDawnSignal(String reason, Float multiplier)
@@ -847,7 +847,7 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
 
     String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)
     if Manager.PDV_AltmerAncestorSubstrate
-        Manager.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine, "auri-el", GetAltmerHeritageTierName())
+        Manager.Prisma.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine, "auri-el", GetAltmerHeritageTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
@@ -926,7 +926,7 @@ String Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
         return AppendAltmerPracticeEntry()
     endIf
     String sourceLine = GetAltmerHeritageSourceLine(reason)
-    Manager.AppendBookOfDaysEntry(sourceLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+    Manager.Prisma.AppendBookOfDaysEntry(sourceLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
     return sourceLine
 EndFunction
 
@@ -934,7 +934,7 @@ String Function AppendAltmerPracticeEntry()
     Int poolIndex = PickAltmerPracticeIndex()
     if poolIndex < 0
         String fallbackLine = "You kept the practice where you stood, with no shrine and no witness."
-        Manager.AppendBookOfDaysEntry(fallbackLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+        Manager.Prisma.AppendBookOfDaysEntry(fallbackLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
         return fallbackLine
     endIf
 
@@ -947,7 +947,7 @@ String Function AppendAltmerPracticeEntry()
     if titleText == ""
         titleText = "Ancestral practice"
     endIf
-    Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, titleText)
+    Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, titleText)
     return bodyText
 EndFunction
 
@@ -1092,9 +1092,9 @@ Function SetAltmerCrisisState(Int stateValue, String reason)
             String crisisHeadline = GetAltmerCrisisHeadline(stateValue)
             String crisisLine = GetAltmerCrisisJournalLine(stateValue)
             String crisisTone = GetAltmerCrisisJournalTone(stateValue)
-            Manager.SendPrismaShiftToast(crisisHeadline, crisisLine, "auri-el")
-            Manager.AppendBookOfDaysEntry(crisisLine, Utility.GetCurrentGameTime() as Int, crisisTone, "auri-el", True, 3, crisisHeadline)
-            Manager.RequestPanelRefresh()
+            Manager.Prisma.SendPrismaShiftToast(crisisHeadline, crisisLine, "auri-el")
+            Manager.Prisma.AppendBookOfDaysEntry(crisisLine, Utility.GetCurrentGameTime() as Int, crisisTone, "auri-el", True, 3, crisisHeadline)
+            Manager.Prisma.RequestPanelRefresh()
         endIf
     endIf
 EndFunction
@@ -1193,7 +1193,7 @@ Function RunDawnAltmerHeritageAmbient()
         String cadenceKey = "PDV.Ambient.Heritage.Day"
         Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
         Int lastStamp = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp(cadenceKey)
-        if lastStamp > 0 && (todayStamp - lastStamp) < Manager.AMBIENT_CHAMPION_CADENCE_DAYS
+        if lastStamp > 0 && (todayStamp - lastStamp) < Manager.Prisma.AMBIENT_CHAMPION_CADENCE_DAYS
             return
         endIf
 
@@ -1415,7 +1415,7 @@ Function ShowAltmerNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("auri-el", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("auri-el", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowAltmerMessage(Message messageRecord, String fallbackText, Bool suppressModal)
@@ -1424,7 +1424,7 @@ Function ShowAltmerMessage(Message messageRecord, String fallbackText, Bool supp
     endIf
 
     if suppressModal
-        Manager.SendPrismaToast("auriel", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("auriel", "warning", "", fallbackText)
         return
     endIf
 
@@ -1452,12 +1452,12 @@ String Function GetBookOfDaysAltmerCrisisLabel()
 EndFunction
 
 String Function GetAltmerMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("magnus", "Magnus", "god", "magnus", Manager.PDV_Magnus, "Light, magic, and origin memory.")
-    entries = entries + "," + Manager.PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
-    entries = entries + "," + Manager.RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", Manager.PDV_AuriEl, "The founding light and ancestral ascent.")
-    entries = entries + "," + Manager.RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", Manager.PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
-    entries = entries + "," + Manager.RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", Manager.PDV_Xarxes, "Lineage, record, and ordered memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("trinimac", "Trinimac", "god", "trinimac", Manager.PDV_Trinimac, "Warrior order and unbroken nobility.")
+    String entries = Manager.Prisma.RosterMedallionEntry("magnus", "Magnus", "god", "magnus", Manager.PDV_Magnus, "Light, magic, and origin memory.")
+    entries = entries + "," + Manager.Prisma.PendingMedallionEntry("phynaster", "Phynaster", "god", "phynaster", "Endurance, pilgrimage, and old discipline.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("auri-el", "Auri-El", "god", "auri-el", Manager.PDV_AuriEl, "The founding light and ancestral ascent.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("syrabane", "Syrabane", "god", "syrabane", Manager.PDV_Syrabane, "Protection, apprentices, and survival through wisdom.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("xarxes", "Xarxes", "god", "xarxes", Manager.PDV_Xarxes, "Lineage, record, and ordered memory.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("trinimac", "Trinimac", "god", "trinimac", Manager.PDV_Trinimac, "Warrior order and unbroken nobility.")
     return entries
 EndFunction
 
@@ -1559,7 +1559,7 @@ String Function GetAltmerHeritageTierJournalLine(Int tierValue)
 EndFunction
 
 String Function GetAltmerAlignmentSurveyBaseText()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     if !Manager.PDV_ThalmorAlignmentTrack
         return "Auri-El remains the foundation. Standing: " + band + "."
     endIf
@@ -1641,6 +1641,34 @@ EndFunction
 
 String Function GetSurveyFragment()
     return GetAltmerSurveyText()
+EndFunction
+
+String Function GetQuasiPatronName()
+    return "Auri-El Foundation"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "auri-el"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetAltmerCrisisStateLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Auri-El, ancestry, and crisis of return leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return "Crisis " + GetBookOfDaysAltmerCrisisLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Altmer | " + GetAltmerCrisisStateLabel() + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetAltmerCrisisStateLabel()
 EndFunction
 
 Bool Function IsRaceLaneNeglected()
@@ -1784,7 +1812,7 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
                 Int tierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
                 Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, craftToken + reason)
                 Float grantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - metricBefore
-                Manager.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+                Manager.Prisma.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), grantedMetric, "", "auri-el", GetAltmerHeritageTierName())
                 AppendAltmerHeritageVoice(grantedMetric, craftToken + reason)
 
                 ; P4: Magnus's renewable curated beat. Enchanting specifically -- binding magicka into
@@ -1799,7 +1827,7 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
                 Int studyTierBefore = Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier()
                 Manager.PDV_AltmerAncestorSubstrate.RecordHeritageStandingScaled(1.0, "study_" + reason)
                 Float studyGrantedMetric = Manager.PDV_AltmerAncestorSubstrate.GetMetric() - studyMetricBefore
-                Manager.SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
+                Manager.Prisma.SendPrismaSubstrateProgress("altmer-heritage", studyTierBefore, Manager.PDV_AltmerAncestorSubstrate.GetSubstrateTier(), studyGrantedMetric, "", "auri-el", GetAltmerHeritageTierName())
                 AppendAltmerHeritageVoice(studyGrantedMetric, "study_" + reason)
 
                 ; P5: the Xarxes study stamp. RunDawnAwardAltmerXarxesRecord reads this at the NEXT

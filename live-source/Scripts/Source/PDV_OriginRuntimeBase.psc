@@ -225,12 +225,12 @@ Function SyncAltmerDisciplines(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(disc)
             playerRef.AddSpell(disc, False)
-            Manager.SendPrismaToast("auriel", "good", "Coherence restored", "The discipline holds again.")
+            Manager.Prisma.SendPrismaToast("auriel", "good", "Coherence restored", "The discipline holds again.")
         endIf
     else
         if playerRef.HasSpell(disc)
             playerRef.RemoveSpell(disc)
-            Manager.SendPrismaToast("auriel", "warning", "The discipline goes quiet", "You have wandered from coherence.")
+            Manager.Prisma.SendPrismaToast("auriel", "warning", "The discipline goes quiet", "You have wandered from coherence.")
         endIf
     endIf
 EndFunction
@@ -488,7 +488,7 @@ Function TryBosmerScalesAtRest(Actor playerRef)
 
     Manager.PDV_SPEL_BosmerScalesAtRest.Cast(playerRef, playerRef)
     Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp("PDV.BosSig.ScalesLastDay")
-    Manager.SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
+    Manager.Prisma.SendPrismaToast("zenithar", "good", "Scales at rest", "The bargains fall your way for a while.")
     Manager.Trace(2, "Bosmer Scales at Rest fired.")
 EndFunction
 
@@ -699,8 +699,8 @@ Function MaybeSurfaceAltmerAlignmentBandChange(String oldBand, String reason)
         return
     endIf
 
-    Manager.SendPrismaShiftToast("The Thalmor question turns in you: " + newBand + ".", "", "auri-el")
-    Manager.SurfaceTransition("reorientation", newBand, "shift", -1, "turning", True, False)
+    Manager.Prisma.SendPrismaShiftToast("The Thalmor question turns in you: " + newBand + ".", "", "auri-el")
+    Manager.Prisma.SurfaceTransition("reorientation", newBand, "shift", -1, "turning", True, False)
     StorageUtil.SetStringValue(None, "PDV.Altmer.Alignment.LastCommittedBand", newBand)
     Manager.Trace(1, "Altmer committed alignment band " + oldBand + " -> " + newBand + " (" + reason + ")")
 EndFunction
@@ -914,7 +914,7 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
     if Manager.PDV_Trinimac && Manager.ConsumeOncePerDaySignal("PDV.Signal.TrinimacOrthodoxPressure")
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Trinimac, Manager.PDV_Trinimac.SIGNAL_ALTMER_ORTHODOX_PRESSURE, None, 1.0)
-        if !Manager.IsP2BookNoticeReason(reason)
+        if !Manager.Prisma.IsP2BookNoticeReason(reason)
             Manager.LedgerRuntime.SurfaceReservedSignal(Manager.PDV_Trinimac, "Orthodoxy upheld", "marks a costly defense of ancestral doctrine.")
         endIf
     endIf
@@ -923,7 +923,7 @@ Function HandleAltmerOrthodoxCostlyEnforcement(String reason)
     endIf
     Bool crisisTransitioned = RecordAltmerCrisisReassertEvidence("orthodox_cost_" + reason)
     if !crisisTransitioned
-        Manager.SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The ancestral record asks more of you.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "The scribe Xarxes", "The ancestral record asks more of you.")
     endIf
 EndFunction
 
@@ -995,7 +995,7 @@ Function EnsureAltmerPracticeFocus()
             ; item with no quest, no marker and no tutorial, so without a line telling the player it
             ; is theirs to use, the mod's one unlimited daily Altmer act is a thing that sits in the
             ; inventory forever. Phrased as the practice, not as a control prompt.
-            Manager.AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken. Hold it in your hands when you would remember what you are.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
+            Manager.Prisma.AppendBookOfDaysEntry("You have carried this since you were eighteen. A sphere of aetherquartz, given in a chapel by a Curate, and still unbroken. Hold it in your hands when you would remember what you are.", Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Your calian", True)
         endIf
     endIf
 EndFunction
@@ -1100,7 +1100,7 @@ Function AwardAltmerAncestorSpinePulse(Float multiplier, String reason)
 
     String voicedLine = AppendAltmerHeritageVoice(grantedMetric, reason)
     if Manager.PDV_AltmerAncestorSubstrate
-        Manager.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine, "auri-el", GetAltmerHeritageTierName())
+        Manager.Prisma.SendPrismaSubstrateProgress("altmer-heritage", tierBefore, tierAfter, grantedMetric, voicedLine, "auri-el", GetAltmerHeritageTierName())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Altmer.AncestralStanding", multiplier)
@@ -1179,7 +1179,7 @@ String Function AppendAltmerHeritageVoice(Float grantedMetric, String reason)
         return AppendAltmerPracticeEntry()
     endIf
     String sourceLine = GetAltmerHeritageSourceLine(reason)
-    Manager.AppendBookOfDaysEntry(sourceLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+    Manager.Prisma.AppendBookOfDaysEntry(sourceLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
     return sourceLine
 EndFunction
 
@@ -1187,7 +1187,7 @@ String Function AppendAltmerPracticeEntry()
     Int poolIndex = PickAltmerPracticeIndex()
     if poolIndex < 0
         String fallbackLine = "You kept the practice where you stood, with no shrine and no witness."
-        Manager.AppendBookOfDaysEntry(fallbackLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
+        Manager.Prisma.AppendBookOfDaysEntry(fallbackLine, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, "Ancestral practice")
         return fallbackLine
     endIf
 
@@ -1200,7 +1200,7 @@ String Function AppendAltmerPracticeEntry()
     if titleText == ""
         titleText = "Ancestral practice"
     endIf
-    Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, titleText)
+    Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", "auri-el", False, 1, titleText)
     return bodyText
 EndFunction
 
@@ -1341,9 +1341,9 @@ Function SetAltmerCrisisState(Int stateValue, String reason)
             String crisisHeadline = GetAltmerCrisisHeadline(stateValue)
             String crisisLine = GetAltmerCrisisJournalLine(stateValue)
             String crisisTone = GetAltmerCrisisJournalTone(stateValue)
-            Manager.SendPrismaShiftToast(crisisHeadline, crisisLine, "auri-el")
-            Manager.AppendBookOfDaysEntry(crisisLine, Utility.GetCurrentGameTime() as Int, crisisTone, "auri-el", True, 3, crisisHeadline)
-            Manager.RequestPanelRefresh()
+            Manager.Prisma.SendPrismaShiftToast(crisisHeadline, crisisLine, "auri-el")
+            Manager.Prisma.AppendBookOfDaysEntry(crisisLine, Utility.GetCurrentGameTime() as Int, crisisTone, "auri-el", True, 3, crisisHeadline)
+            Manager.Prisma.RequestPanelRefresh()
         endIf
     endIf
 EndFunction
@@ -1442,7 +1442,7 @@ Function RunDawnAltmerHeritageAmbient()
         String cadenceKey = "PDV.Ambient.Heritage.Day"
         Int todayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
         Int lastStamp = Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp(cadenceKey)
-        if lastStamp > 0 && (todayStamp - lastStamp) < Manager.AMBIENT_CHAMPION_CADENCE_DAYS
+        if lastStamp > 0 && (todayStamp - lastStamp) < Manager.Prisma.AMBIENT_CHAMPION_CADENCE_DAYS
             return
         endIf
 
@@ -1578,7 +1578,7 @@ Function ShowAltmerNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("auri-el", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("auri-el", "neutral", "", fallbackText)
 EndFunction
 
 Bool Function IsBosmerOrigin()
@@ -1760,10 +1760,10 @@ Function HandleBosmerSuggestionPopup(Int targetState)
     Int choice = suggestionMessage.Show()
     if choice == 0
         Manager.PDV_BosmerPathTrack.AcceptOfferedTransition("popup_accept")
-        Manager.SendPrismaToast(pathSymbol, "good", "A new path stirs", "Confirm the change at the next rite.")
+        Manager.Prisma.SendPrismaToast(pathSymbol, "good", "A new path stirs", "Confirm the change at the next rite.")
     else
         Manager.PDV_BosmerPathTrack.RefuseOfferedTransition("popup_refuse")
-        Manager.SendPrismaToast(pathSymbol, "neutral", "The call fades", "You turn aside from that path for now.")
+        Manager.Prisma.SendPrismaToast(pathSymbol, "neutral", "The call fades", "You turn aside from that path for now.")
     endIf
 EndFunction
 
@@ -1833,7 +1833,7 @@ String Function GetAltmerHeritageTierJournalLine(Int tierValue)
 EndFunction
 
 String Function GetAltmerAlignmentSurveyBaseText()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     if !Manager.PDV_ThalmorAlignmentTrack
         return "Auri-El remains the foundation. Standing: " + band + "."
     endIf
@@ -2123,7 +2123,7 @@ Function SyncKhajiitLatticeResonance(Actor playerRef)
             StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 0)
         endIf
         RefreshKhajiitFocusedRewardForResonance(playerRef)
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
         Manager.Trace(1, "Khajiit Lattice Resonance " + shouldResonate)
     endIf
 EndFunction
@@ -2160,8 +2160,8 @@ Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.AzurahPortent.Day", currentDay)
     Manager.PDV_SPEL_Khajiit_AzurahPortentDetect.Cast(playerRef, playerRef)
     String portentText = "For a moment, living hearts, restless dead, fallen bodies, Daedra, and brass minds declare their places."
-    Manager.SendPrismaToast("azurah", "good", "Azurah's Portent", portentText)
-    Manager.AppendBookOfDaysEntry(portentText, Utility.GetCurrentGameTime() as Int, "champion.act", "azurah", False, 1, "Azurah's Portent")
+    Manager.Prisma.SendPrismaToast("azurah", "good", "Azurah's Portent", portentText)
+    Manager.Prisma.AppendBookOfDaysEntry(portentText, Utility.GetCurrentGameTime() as Int, "champion.act", "azurah", False, 1, "Azurah's Portent")
     return True
 EndFunction
 
@@ -2231,7 +2231,7 @@ Function ProcessKhajiitAlkoshWordDrip()
 
     StorageUtil.SetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen", wordsSeen + awarded)
     Manager.Trace(2, "Khajiit Alkosh word-of-power drip awarded " + awarded + " of " + newWords + " new words")
-    Manager.SendPrismaShiftToast("Words marked", "Alkosh orders new words.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_ALKOSH))
+    Manager.Prisma.SendPrismaShiftToast("Words marked", "Alkosh orders new words.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_ALKOSH))
     Manager.LedgerRuntime.RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
 EndFunction
 
@@ -2359,7 +2359,7 @@ Function AwardArgonianSacredWater(Int siteFormId)
     endIf
     Debug.MessageBox("The water remembers. For one slow breath you stand in the marsh again, and the root speaks your name.")
     SendPrismaSubstrateToast("ArgonianHist", "water", "A water that remembers.", "hist", GetArgonianHistPostureLabel())
-    Manager.AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
+    Manager.Prisma.AppendBookOfDaysEntry("A water that remembers.", Utility.GetCurrentGameTime() as Int, "substrate.act", "hist", False)
 
     if seenCount >= Manager.PDV_FLST_ArgonianSacredWaters.GetSize()
         StorageUtil.SetIntValue(None, "PDV.ArgWaters.Milestone", 1)
@@ -2443,8 +2443,8 @@ Function TryArgonianNearWaterMaintenance()
     if Manager.PDV_Hist
         Manager.LedgerRuntime.AwardCuratedSignalScaled(Manager.PDV_Hist, Manager.PDV_Hist.SIGNAL_HIST_PULSE, None, multiplier)
     endIf
-    Manager.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The water remembers you.", "journal", GetArgonianCulturalPracticeLabel())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SendPrismaSubstrateProgress("argonian-practice", tierBefore, tierAfter, Manager.PDV_ArgonianHistSubstrate.GetMetric() - metricBefore, "The water remembers you.", "journal", GetArgonianCulturalPracticeLabel())
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Argonian near-water Hist maintenance routed.")
 EndFunction
 
@@ -2616,7 +2616,7 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
         ; Preserve the common actual-delta accounting path without emitting a
         ; second toast or Book entry; the authored contemplation below owns
         ; this rite's single player-facing presentation.
-        Manager.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "", "lunar", GetKhajiitLunarTierLabel(tierAfter), False)
+        Manager.Prisma.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "", "lunar", GetKhajiitLunarTierLabel(tierAfter), False)
     endIf
 
     ShowKhajiitMoonContemplation(focusValue, firstRiteToday)
@@ -2625,7 +2625,7 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastFocus", focusValue)
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", nowTime)
     Manager.Trace(1, "[PDV][MOON_RITE] success phase=" + phaseIndex + " focus=" + focusValue + " metricDelta=" + (metricAfter - metricBefore))
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
@@ -2667,9 +2667,9 @@ Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
     String resolvedId = JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "")
     String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "")
     String bodyText = JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "")
-    Manager.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    Manager.Prisma.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
     if firstRiteToday
-        Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+        Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
     endIf
     StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", resolvedId)
 EndFunction
@@ -2734,9 +2734,9 @@ Function ShowKhajiitMoonContemplationFallback(Int focusValue, Bool firstRiteToda
     endIf
     String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + GetKhajiitMoonContemplationTitle(messageIndex)
     String bodyText = GetKhajiitMoonContemplationText(messageIndex)
-    Manager.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    Manager.Prisma.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
     if firstRiteToday
-        Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+        Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", "fallback_" + messageIndex)
@@ -3072,8 +3072,8 @@ Function RefreshArgonianHistPosture(String reason)
     if Manager.PDV_ArgonianHistPostureTrack
         Manager.PDV_ArgonianHistPostureTrack.SetState(Manager.PDV_ArgonianHistSubstrate.GetHistPosture(), reason)
         if Manager.PDV_ArgonianHistPostureTrack.GetCurrentState() != oldPosture
-            Manager.SendPrismaShiftToast(GetArgonianHistPostureLabel(), "", "hist")
-            Manager.RequestPanelRefresh()
+            Manager.Prisma.SendPrismaShiftToast(GetArgonianHistPostureLabel(), "", "hist")
+            Manager.Prisma.RequestPanelRefresh()
             Int newPosture = Manager.PDV_ArgonianHistSubstrate.GetHistPosture()
             if newPosture == Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_CORRUPTED
                 EmitHistCorruptionMinus(reason)
@@ -3226,7 +3226,7 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
 
     Manager.Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
     String focusText = GetKhajiitFocusShiftText(focusValue)
-    Manager.SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", focusText, GetKhajiitFocusSymbol(focusValue))
+    Manager.Prisma.SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", focusText, GetKhajiitFocusSymbol(focusValue))
     Bool firstEmergence = oldFocus == Manager.KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
     if firstEmergence
         StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
@@ -3238,12 +3238,12 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
         endIf
     endIf
     if firstEmergence
-        Manager.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "focus.emergence", GetKhajiitFocusSymbol(focusValue), True, 1, GetKhajiitFocusLabel(focusValue) + " Emerges")
+        Manager.Prisma.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "focus.emergence", GetKhajiitFocusSymbol(focusValue), True, 1, GetKhajiitFocusLabel(focusValue) + " Emerges")
     else
-        Manager.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "reorientation", GetKhajiitFocusSymbol(focusValue), False, 1, "The Road Turns")
+        Manager.Prisma.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "reorientation", GetKhajiitFocusSymbol(focusValue), False, 1, "The Road Turns")
     endIf
     SyncKhajiitRuntimeState()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Message Function GetKhajiitFocusEmergenceMessage(Int focusValue)
@@ -3401,8 +3401,8 @@ Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFoc
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= Manager.LedgerRuntime.TIER_CHAMPION, "Khajiit " + label + " T3")
 
     if isActive && activeTier >= Manager.LedgerRuntime.TIER_CHAMPION && t3 && !hadChampionSpell && playerRef.HasSpell(t3) && deity && Manager.LedgerRuntime.NotifyTierUp(deity, Manager.LedgerRuntime.TIER_CHAMPION)
-        Manager.SendPrismaEventToast("tier", deity, "", Manager.GetPublicTierBand(Manager.LedgerRuntime.TIER_CHAMPION), "")
-        Manager.SurfaceTransition("tier", deity.DeityName + " " + Manager.GetTierStandingLabel(Manager.LedgerRuntime.TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+        Manager.Prisma.SendPrismaEventToast("tier", deity, "", Manager.Prisma.GetPublicTierBand(Manager.LedgerRuntime.TIER_CHAMPION), "")
+        Manager.Prisma.SurfaceTransition("tier", deity.DeityName + " " + Manager.Prisma.GetTierStandingLabel(Manager.LedgerRuntime.TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
         Manager.Trace(1, "Khajiit Champion reward presentation shown: " + deity.DeityName)
     endIf
 EndFunction
@@ -3586,12 +3586,12 @@ Function SyncRedguardRemembering(Actor playerRef)
     if eligible
         if !playerRef.HasSpell(obs)
             playerRef.AddSpell(obs, False)
-            Manager.SendPrismaToast("tuwhacca", "good", "The old line settles", "Your observance returns.")
+            Manager.Prisma.SendPrismaToast("tuwhacca", "good", "The old line settles", "Your observance returns.")
         endIf
     else
         if playerRef.HasSpell(obs)
             playerRef.RemoveSpell(obs)
-            Manager.SendPrismaToast("tuwhacca", "warning", "The observance goes quiet", "The line you named it under has shifted.")
+            Manager.Prisma.SendPrismaToast("tuwhacca", "warning", "The observance goes quiet", "The line you named it under has shifted.")
         endIf
     endIf
 EndFunction
@@ -3804,7 +3804,7 @@ Function RecordRedguardAncestorSpinePulse(Float multiplier, String reason)
     RecordRedguardSectSignal(currentSect, multiplier, reason)
     AwardRedguardAncestorSpinePietyPulse(multiplier, reason)
     ShowRedguardNotification(Manager.PDV_Notif_Redguard_AncestorSpine_Rest, "The ancestor-line steadies behind you.")
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function HandleRedguardVampireReentryComplete(String reason)
@@ -3844,8 +3844,8 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
     if Manager.PDV_RedguardSectTrack.GetCurrentState() == sectValue
         MaybeShowRedguardChampionEntry(sectValue)
         SendPrismaSubstrateToast("sect", "act", "The Yokudan path was marked.", "sect", GetRedguardSectLabel())
-        Manager.AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.AppendBookOfDaysEntry("The Yokudan path was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "sect", False)
+        Manager.Prisma.RequestPanelRefresh()
         return
     endIf
 
@@ -3865,9 +3865,9 @@ Function RecordRedguardSectSignal(Int sectValue, Float multiplier, String reason
         Manager.PDV_RedguardSectTrack.SetTransitionLockout(3.0, reason)
         ShowRedguardSectEntry(sectValue)
         MaybeShowRedguardChampionEntry(sectValue)
-        Manager.SurfaceTransition("reorientation", GetRedguardSectLabel(), "shift", -1, "turning")
-        Manager.SendPrismaShiftToast(GetRedguardSectLabel(), "", "sect")
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.SurfaceTransition("reorientation", GetRedguardSectLabel(), "shift", -1, "turning")
+        Manager.Prisma.SendPrismaShiftToast(GetRedguardSectLabel(), "", "sect")
+        Manager.Prisma.RequestPanelRefresh()
     endIf
 EndFunction
 
@@ -4047,22 +4047,22 @@ Function MaybeShowRedguardChampionEntry(Int sectValue)
     if sectValue == Manager.REDGUARD_SECT_CROWN
         if Manager.PDV_Tuwhacca && Manager.LedgerRuntime.GetTier(Manager.PDV_Tuwhacca) >= Manager.LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(Manager.PDV_Msg_Redguard_ChampionEntry_Crown, "The Crown way has become more than memory. It is a public shape of your devotion.", False)
-            Manager.AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            Manager.SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
+            Manager.Prisma.AppendBookOfDaysEntry("The Crown way is more than memory in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            Manager.Prisma.SendPrismaShiftToast("The Crown way, made public.", "More than memory now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == Manager.REDGUARD_SECT_FOREBEAR
         if Manager.PDV_HoonDing && Manager.LedgerRuntime.GetTier(Manager.PDV_HoonDing) >= Manager.LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(Manager.PDV_Msg_Redguard_ChampionEntry_Forebear, "The Forebear way has become more than adaptation. It is a public shape of your devotion.", False)
-            Manager.AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            Manager.SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
+            Manager.Prisma.AppendBookOfDaysEntry("The Forebear way is more than adaptation in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            Manager.Prisma.SendPrismaShiftToast("The Forebear way, made public.", "More than adaptation now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     elseIf sectValue == Manager.REDGUARD_SECT_ASHABAH
         if Manager.PDV_Tuwhacca && Manager.LedgerRuntime.GetTier(Manager.PDV_Tuwhacca) >= Manager.LedgerRuntime.TIER_CHAMPION
             ShowRedguardMessage(Manager.PDV_Msg_Redguard_ChampionEntry_AshAbah, "The Ash'abah duty has become more than necessity. It is a public shape of your devotion.", False)
-            Manager.AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
-            Manager.SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
+            Manager.Prisma.AppendBookOfDaysEntry("The Ash'abah duty is more than necessity in you now. It has become a public shape of your devotion.", Utility.GetCurrentGameTime() as Int, "reorientation", "sect", False, 3)
+            Manager.Prisma.SendPrismaShiftToast("The Ash'abah duty, made public.", "More than necessity now -- a public shape of your devotion.", "sect")
             StorageUtil.SetIntValue(None, shownKey, 1)
         endIf
     endIf
@@ -4254,7 +4254,7 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
         return
     endIf
 
-    String deityName = Manager.GetPublicDeityDisplayName(championSource)
+    String deityName = Manager.Prisma.GetPublicDeityDisplayName(championSource)
     String shownKey = "PDV.Breton.ChampionBoonNoticeShown." + deityName
     if hadWanted && StorageUtil.GetIntValue(None, shownKey) == 1
         return
@@ -4262,7 +4262,7 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
 
     StorageUtil.SetIntValue(None, shownKey, 1)
     String traditionLabel = GetBretonTraditionLabel()
-    String symbolName = Manager.GetPrismaSymbolForDeity(championSource)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(championSource)
     String titleText = deityName + " names you Champion"
     String line = deityName + " names you Champion."
     if IsBretonResonantPatronChampion(traditionValue)
@@ -4271,8 +4271,8 @@ Function MaybeShowBretonChampionBoonPresentation(Actor playerRef, Spell wantSpel
     if Manager.LedgerRuntime.NotifyTierUp(championSource, Manager.LedgerRuntime.TIER_CHAMPION)
         Manager.Trace(2, "Breton champion boon marked generic tier guard: " + deityName)
     endIf
-    Manager.SendPrismaToast(symbolName, "good", titleText, line)
-    Manager.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, Manager.LedgerRuntime.TIER_CHAMPION, titleText)
+    Manager.Prisma.SendPrismaToast(symbolName, "good", titleText, line)
+    Manager.Prisma.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, True, Manager.LedgerRuntime.TIER_CHAMPION, titleText)
     Manager.Trace(1, "Breton champion boon presentation shown: " + deityName + " / " + traditionLabel)
 EndFunction
 
@@ -4291,20 +4291,20 @@ Function MaybeShowBretonTraditionRewardPresentation(Actor playerRef, Spell rewar
     endIf
 
     StorageUtil.SetIntValue(None, shownKey, 1)
-    String tierLabel = Manager.GetTierStandingLabel(tierValue)
-    String symbolName = Manager.GetPrismaSymbolForDeity(deity)
+    String tierLabel = Manager.Prisma.GetTierStandingLabel(tierValue)
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(deity)
     String titleText = displayLabel + " deepens"
     String line = "The " + displayLabel + " names you " + tierLabel + "."
     if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION && deity
-        String deityName = Manager.GetPublicDeityDisplayName(deity)
+        String deityName = Manager.Prisma.GetPublicDeityDisplayName(deity)
         titleText = deityName + " names you " + tierLabel
         line = deityName + " names you " + tierLabel + " through the " + displayLabel + "."
         if Manager.LedgerRuntime.NotifyTierUp(deity, tierValue)
             Manager.Trace(2, "Breton focused Champion marked generic tier guard: " + deity.DeityName)
         endIf
     endIf
-    Manager.SendPrismaToast(symbolName, "good", titleText, line)
-    Manager.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= Manager.LedgerRuntime.TIER_CHAMPION, tierValue, titleText)
+    Manager.Prisma.SendPrismaToast(symbolName, "good", titleText, line)
+    Manager.Prisma.AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", symbolName, tierValue >= Manager.LedgerRuntime.TIER_CHAMPION, tierValue, titleText)
 EndFunction
 
 String Function GetBretonTraditionRewardDisplayLabel(String label)
@@ -4434,11 +4434,11 @@ EndFunction
 
 Function SurfaceBretonDruidicForkChange(Int forkValue)
     if forkValue == Manager.BRETON_DRUIDIC_FORK_WEREWOLF
-        Manager.SendPrismaShiftToast("The Green Way turns wild in you.", "", "kynareth")
-        Manager.AppendBookOfDaysEntry("The beast-blood took your Green Way down a wilder road. The Werewolf path is yours now.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
+        Manager.Prisma.SendPrismaShiftToast("The Green Way turns wild in you.", "", "kynareth")
+        Manager.Prisma.AppendBookOfDaysEntry("The beast-blood took your Green Way down a wilder road. The Werewolf path is yours now.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
     elseIf forkValue == Manager.BRETON_DRUIDIC_FORK_BETRAYED
-        Manager.SendPrismaShiftToast("You broke faith with the Green.", "", "kynareth")
-        Manager.AppendBookOfDaysEntry("You turned from the Green Way's trust. The path remembers the betrayal.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
+        Manager.Prisma.SendPrismaShiftToast("You broke faith with the Green.", "", "kynareth")
+        Manager.Prisma.AppendBookOfDaysEntry("You turned from the Green Way's trust. The path remembers the betrayal.", Utility.GetCurrentGameTime() as Int, "reorientation", "kynareth", False, 3)
     endIf
 EndFunction
 
@@ -4495,7 +4495,7 @@ Function SyncBretonCreedLossSpell(Spell creedLossSpell, Bool shouldBeActive, Str
             playerRef.AddSpell(creedLossSpell, False)
         endIf
         if !wasActive && noticeText != ""
-            Manager.SendPrismaToast("journal", "warning", "Creed strained", noticeText)
+            Manager.Prisma.SendPrismaToast("journal", "warning", "Creed strained", noticeText)
         endIf
         StorageUtil.SetIntValue(None, stateKey, 1)
     else
@@ -4600,7 +4600,7 @@ Function ShowRedguardNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("tuwhacca", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool suppressModal)
@@ -4613,7 +4613,7 @@ Function ShowRedguardMessage(Message messageRecord, String fallbackText, Bool su
     Manager.SetRaceCurseSurfaceShown(True)
 
     if suppressModal
-        Manager.SendPrismaToast("tuwhacca", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("tuwhacca", "warning", "", fallbackText)
         return
     endIf
 
@@ -4790,7 +4790,7 @@ Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, 
         Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
     endIf
     Manager.Trace(2, "Breton practice pulse " + traditionValue + " +" + appliedPoints + " from " + sourceKey + ": " + reason)
     return True
@@ -4827,7 +4827,7 @@ Bool Function DamageBretonPracticePressure(Int traditionValue, Int damageDelta, 
         Manager.PDV_QuestReactionRuntimeService.SetQrQueueNeedsBretonRewardSync(True)
     else
         Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
     endIf
     Manager.Trace(2, "Breton practice pressure " + traditionValue + " from " + sourceKey + ": " + reason)
     return True
@@ -4890,7 +4890,7 @@ String Function GetRedguardSurveySectText()
         sectValue = Manager.PDV_RedguardSectTrack.GetCurrentState()
     endIf
 
-    String standing = Manager.GetCurrentStandingBand()
+    String standing = Manager.Prisma.GetCurrentStandingBand()
     if sectValue == Manager.REDGUARD_SECT_CROWN
         return "You keep the Crown way: orthodox Yokudan practice carried intact in exile. Standing: " + standing + ". The ancestors are strong at your back."
     elseIf sectValue == Manager.REDGUARD_SECT_ASHABAH
@@ -4928,7 +4928,7 @@ EndFunction
 String Function GetBretonPatronSurveySentence(Int traditionValue)
     PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if activePact
-        String pactName = Manager.GetPublicDeityDisplayName(activePact)
+        String pactName = Manager.Prisma.GetPublicDeityDisplayName(activePact)
         if traditionValue == Manager.BRETON_TRADITION_HIDDEN_ART && activePact.GetStoredTier() >= Manager.LedgerRuntime.TIER_CHAMPION
             return " Your pact with " + pactName + " has opened Hidden Art - Champion."
         endIf
@@ -4939,7 +4939,7 @@ String Function GetBretonPatronSurveySentence(Int traditionValue)
         return ""
     endIf
 
-    String deityName = Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity())
+    String deityName = Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity())
     Int patronTier = Manager.LedgerRuntime.GetTier(Manager.GetActiveDeity())
     if patronTier >= Manager.LedgerRuntime.TIER_CHAMPION
         String boonName = GetBretonChampionBoonDisplayName(Manager.GetActiveDeity())
@@ -4974,7 +4974,7 @@ Function ReconcileRedguardSpineRewardAfterLoad()
     endIf
 
     SyncRedguardSpineBoon(playerRef, True, GetActiveRedguardSpineSect())
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Redguard spine reward reconciled after player load.")
 EndFunction
 
@@ -5112,7 +5112,7 @@ Function RecordNordAncestorSpine(String reason, Float multiplier)
         tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
         Manager.PDV_NordAncestorSubstrate.RecordAncestorStandingScaled(multiplier, reason)
         Int tierAfter = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line remembered.", "journal", GetNordAncestorLayerLabel())
+        Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line remembered.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -5133,7 +5133,7 @@ Function RecordNordHearthReturn(String reason, Float multiplier)
         tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
         Manager.PDV_NordAncestorSubstrate.RecordHearthReturnScaled(multiplier, reason)
         Int tierAfter = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The hearth remembered your return.", "journal", GetNordAncestorLayerLabel())
+        Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The hearth remembered your return.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -5308,7 +5308,7 @@ Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppre
     Manager.SetRaceCurseSurfaceShown(True)
 
     if suppressModal
-        Manager.SendPrismaToast("kyne", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("kyne", "warning", "", fallbackText)
         return
     endIf
 
@@ -5330,7 +5330,7 @@ Function ShowNordNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("kyne", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("kyne", "neutral", "", fallbackText)
 EndFunction
 
 Function ApplyNordInitialChoice(Int baselineValue, String reason)
@@ -5399,10 +5399,10 @@ Function SurfaceDunmerDeviationPriceNotice()
     endIf
 
     Int today = Utility.GetCurrentGameTime() as Int
-    String activeName = Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity())
-    String symbolName = Manager.GetPrismaSymbolForDeity(Manager.GetActiveDeity())
+    String activeName = Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity())
+    String symbolName = Manager.Prisma.GetPrismaSymbolForDeity(Manager.GetActiveDeity())
     String line = "The ash-prayer thins; " + activeName + " marks the wound."
-    Manager.AppendBookOfDaysEntry(line, today, "creed.drop", symbolName, False, 2, "Reclamation strained")
+    Manager.Prisma.AppendBookOfDaysEntry(line, today, "creed.drop", symbolName, False, 2, "Reclamation strained")
 
     ; fix-plan 4.2: one notice per devotional day (the journal line above keeps the
     ; wall-clock date on purpose -- that is a display timestamp, not a cap).
@@ -5410,7 +5410,7 @@ Function SurfaceDunmerDeviationPriceNotice()
     Int toastDayStamp = Manager.LedgerRuntime.GetDevotionalDay() + 2
     if StorageUtil.GetIntValue(None, toastKey, -1) != toastDayStamp
         StorageUtil.SetIntValue(None, toastKey, toastDayStamp)
-        Manager.SendPrismaToast(symbolName, "warning", "Reclamation strained", line)
+        Manager.Prisma.SendPrismaToast(symbolName, "warning", "Reclamation strained", line)
     endIf
 EndFunction
 
@@ -5681,7 +5681,7 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
     ; for the next dawn pass. This is especially visible on broad Old Ways T1, which otherwise does
     ; not appear until ProcessDawn even after the third accepted source has already been read.
     Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, traceLabel + " routed: " + reason)
     return True
 EndFunction
@@ -5985,8 +5985,8 @@ Function RecordOrcLifeModeSignal(Int modeValue, Float multiplier, String reason)
 
     if Manager.PDV_OrcLifeModeTrack.GetCurrentState() == modeValue
         SendPrismaSubstrateToast(GetOrcLifeModeSubstrateToken(modeValue), "act", "The code was marked.", "malacath", GetOrcLifeModeLabel())
-        Manager.AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.AppendBookOfDaysEntry("The code was marked.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
+        Manager.Prisma.RequestPanelRefresh()
         return
     endIf
 
@@ -6011,9 +6011,9 @@ Function ApplyOrcLifeModeSwitch(Int modeValue, String reason)
     if Manager.PDV_Malacath
         deityIndex = Manager.PDV_Malacath.DeityIndex
     endIf
-    Manager.SurfaceTransition("reorientation", GetOrcLifeModeLabel(), "shift", deityIndex, "turning")
-    Manager.SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SurfaceTransition("reorientation", GetOrcLifeModeLabel(), "shift", deityIndex, "turning")
+    Manager.Prisma.SendPrismaShiftToast(GetOrcLifeModeLabel(), "", "malacath")
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Bool Function IsOrcMajorLifeModeGate(String reason)
@@ -6189,8 +6189,8 @@ Function MaybeShowOrcHearthHeldNotice(String reason)
         ; chokepoint while the Book entry always logs. PDV_Notif_Orc_HearthHeld_Declare
         ; is deliberately no longer shown here (it would double the surface); the
         ; record stays in the ESP, orphaned, with its text kept in sync.
-        Manager.SendPrismaToast("malacath", "good", "A hearth held", "You claim this hearth as your own, and swear to hold it.")
-        Manager.AppendBookOfDaysEntry("You claim this hearth as your own, and swear to hold it.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
+        Manager.Prisma.SendPrismaToast("malacath", "good", "A hearth held", "You claim this hearth as your own, and swear to hold it.")
+        Manager.Prisma.AppendBookOfDaysEntry("You claim this hearth as your own, and swear to hold it.", Utility.GetCurrentGameTime() as Int, "substrate.act", "malacath", False)
         return
     endIf
 
@@ -6439,7 +6439,7 @@ Function ShowOrcNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("malacath", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("malacath", "neutral", "", fallbackText)
 EndFunction
 
 Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppressModal)
@@ -6448,7 +6448,7 @@ Function ShowOrcMessage(Message messageRecord, String fallbackText, Bool suppres
     endIf
 
     if suppressModal
-        Manager.SendPrismaToast("malacath", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("malacath", "warning", "", fallbackText)
         return
     endIf
 
@@ -6899,8 +6899,8 @@ Function HandleGreenPactViolation(String reason)
     AdjustBosmerGreenPactCompliance(-15, reason)
     if Manager.PDV_Yffre
         Manager.LedgerRuntime.AwardCuratedSignal(Manager.PDV_Yffre, Manager.PDV_Yffre.SIGNAL_PACT_VIOLATION, None)
-        Manager.SendPrismaToast(Manager.GetPrismaSymbolForDeity(Manager.PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
-        Manager.SurfaceTransition("creed", "Green Pact", "drop", Manager.PDV_Yffre.DeityIndex, "absence", True)
+        Manager.Prisma.SendPrismaToast(Manager.Prisma.GetPrismaSymbolForDeity(Manager.PDV_Yffre), "warning", "Green Pact broken", "You crossed Y'ffre's creed, and the path recoils.")
+        Manager.Prisma.SurfaceTransition("creed", "Green Pact", "drop", Manager.PDV_Yffre.DeityIndex, "absence", True)
     endIf
 
     Manager.Trace(2, "Green Pact violation count " + violationCount + " (" + reason + ")")
@@ -7205,7 +7205,7 @@ Function EmitBookOfDaysBroadLaneTierChange(Int today)
         String guard = "PDV.BookOfDays.BroadLaneTierShown." + originRace + "." + tier
         if StorageUtil.GetIntValue(None, guard) != 1
             StorageUtil.SetIntValue(None, guard, 1)
-            Manager.AppendBookOfDaysEntry(BuildBroadLaneTierReachJournalLine(originRace, tier), today, "tier.reach", GetBroadLaneSymbol(originRace), False, tier)
+            Manager.Prisma.AppendBookOfDaysEntry(BuildBroadLaneTierReachJournalLine(originRace, tier), today, "tier.reach", GetBroadLaneSymbol(originRace), False, tier)
         endIf
         tier += 1
     endWhile
@@ -7426,8 +7426,8 @@ Bool Function HandleTalosBetrayal(Int severity, String sourceReason)
     Manager.LedgerRuntime.AwardPiety(Manager.PDV_Talos, pietyLoss, reason)
     Manager.OriginRuntime.HandleContextualSignal("concordat-pressure", reason, None, concordatPressure as Float)
 
-    Manager.SendPrismaEventToast("creed", Manager.PDV_Talos, surfaceText, "", "")
-    Manager.SurfaceTransition("creed", "Talos betrayal", "drop", Manager.PDV_Talos.DeityIndex, "betrayal")
+    Manager.Prisma.SendPrismaEventToast("creed", Manager.PDV_Talos, surfaceText, "", "")
+    Manager.Prisma.SurfaceTransition("creed", "Talos betrayal", "drop", Manager.PDV_Talos.DeityIndex, "betrayal")
     Manager.Trace(2, "Talos betrayal applied: " + reason + " piety=" + pietyLoss + " source=" + sourceReason)
     return True
 EndFunction
@@ -7543,7 +7543,7 @@ Bool Function SendPrismaSubstrateToast(String substrate, String phase, String co
     if fallbackTitle == ""
         fallbackTitle = substrate
     endIf
-    return Manager.SendPrismaToastPayloadOrFallback(j, fallbackTitle, context, allowFallback)
+    return Manager.Prisma.SendPrismaToastPayloadOrFallback(j, fallbackTitle, context, allowFallback)
 EndFunction
 
 String Function GetMedallionSectionsJson(Int originRace)
@@ -7555,7 +7555,7 @@ String Function GetMedallionSectionsJson(Int originRace)
         return sections
     endIf
 
-    return MedallionSection("native", "Native worship", Manager.MedallionEntry("unknown", "Devotion", "substrate", "journal", None, False, "Your origin is not settled yet.", "Once your origin is known, the medallion can show the roster your people can name.", "Origin readback is pending."))
+    return MedallionSection("native", "Native worship", Manager.Prisma.MedallionEntry("unknown", "Devotion", "substrate", "journal", None, False, "Your origin is not settled yet.", "Once your origin is known, the medallion can show the roster your people can name.", "Origin readback is pending."))
 EndFunction
 
 String Function MedallionSection(String sectionId, String titleText, String entriesJson)
@@ -7696,6 +7696,34 @@ String Function GetOriginSummary()
 EndFunction
 
 String Function GetSurveyFragment()
+    return ""
+EndFunction
+
+String Function GetQuasiPatronName()
+    return ""
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return ""
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return ""
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return ""
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return ""
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return ""
+EndFunction
+
+String Function GetMcmModeLine()
     return ""
 EndFunction
 

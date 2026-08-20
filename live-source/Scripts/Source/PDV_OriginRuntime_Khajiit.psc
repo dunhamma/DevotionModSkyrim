@@ -60,6 +60,50 @@ String Function GetSurveyFragment()
     return GetKhajiitSurveyText()
 EndFunction
 
+String Function GetQuasiPatronName()
+    Int focus = GetKhajiitFocusedEmphasis()
+    if focus > 0
+        return GetKhajiitFocusLabel(focus)
+    endIf
+    return "Lunar Lattice"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    Int focus = GetKhajiitFocusedEmphasis()
+    if focus > 0
+        return GetKhajiitFocusSymbol(focus)
+    endIf
+    return "lunar"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    Int focus = GetKhajiitFocusedEmphasis()
+    if focus > 0
+        return "Focused: " + GetKhajiitFocusLabel(focus)
+    endIf
+    return "Lunar Lattice"
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Moons, road-home ways, and chosen spirits leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    Int focus = GetKhajiitFocusedEmphasis()
+    if focus > 0
+        return GetKhajiitFocusLabel(focus) + " Lunar Focus"
+    endIf
+    return "Lunar Lattice"
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return "Khajiit | " + GetKhajiitFocusLabel(GetKhajiitFocusedEmphasis()) + " | " + standingLabel
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetKhajiitFocusLabel(GetKhajiitFocusedEmphasis())
+EndFunction
+
 Bool Function IsRaceLaneNeglected()
     return IsKhajiitLunarNeglected()
 EndFunction
@@ -533,7 +577,7 @@ Function SyncKhajiitLatticeResonance(Actor playerRef)
             StorageUtil.SetIntValue(None, "PDV.Khajiit.LatticeResonating", 0)
         endIf
         RefreshKhajiitFocusedRewardForResonance(playerRef)
-        Manager.RequestPanelRefresh()
+        Manager.Prisma.RequestPanelRefresh()
         Manager.Trace(1, "Khajiit Lattice Resonance " + shouldResonate)
     endIf
 EndFunction
@@ -570,8 +614,8 @@ Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.AzurahPortent.Day", currentDay)
     Manager.PDV_SPEL_Khajiit_AzurahPortentDetect.Cast(playerRef, playerRef)
     String portentText = "For a moment, living hearts, restless dead, fallen bodies, Daedra, and brass minds declare their places."
-    Manager.SendPrismaToast("azurah", "good", "Azurah's Portent", portentText)
-    Manager.AppendBookOfDaysEntry(portentText, Utility.GetCurrentGameTime() as Int, "champion.act", "azurah", False, 1, "Azurah's Portent")
+    Manager.Prisma.SendPrismaToast("azurah", "good", "Azurah's Portent", portentText)
+    Manager.Prisma.AppendBookOfDaysEntry(portentText, Utility.GetCurrentGameTime() as Int, "champion.act", "azurah", False, 1, "Azurah's Portent")
     return True
 EndFunction
 
@@ -646,7 +690,7 @@ Function ProcessKhajiitAlkoshWordDrip()
 
     StorageUtil.SetIntValue(None, "PDV.Khajiit.AlkoshWordsSeen", wordsSeen + awarded)
     Manager.Trace(2, "Khajiit Alkosh word-of-power drip awarded " + awarded + " of " + newWords + " new words")
-    Manager.SendPrismaShiftToast("Words marked", "Alkosh orders new words.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_ALKOSH))
+    Manager.Prisma.SendPrismaShiftToast("Words marked", "Alkosh orders new words.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_ALKOSH))
     Manager.LedgerRuntime.RecordRecentDevotionEvent("Alkosh: " + awarded + " words marked")
 EndFunction
 
@@ -669,7 +713,7 @@ Function HandleKhajiitLunarSubstrate(String sourceId)
     ; claim the shared substrate day only; deity piety/focus remains on its own
     ; specifically authored receiver route.
     Manager.PDV_KhajiitLunarSubstrate.RecordCulturalSubstitute("khajiit_lunar_source", "p2_khajiit_lunar_" + sourceId)
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function EnsureKhajiitObserveMoonsPower()
@@ -794,7 +838,7 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
         ; Preserve the common actual-delta accounting path without emitting a
         ; second toast or Book entry; the authored contemplation below owns
         ; this rite's single player-facing presentation.
-        Manager.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "", "lunar", GetKhajiitLunarTierLabel(tierAfter), False)
+        Manager.Prisma.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, metricAfter - metricBefore, "", "lunar", GetKhajiitLunarTierLabel(tierAfter), False)
     endIf
 
     ShowKhajiitMoonContemplation(focusValue, firstRiteToday)
@@ -803,7 +847,7 @@ Function CompleteKhajiitMoonObservation(Actor playerRef)
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastFocus", focusValue)
     StorageUtil.SetFloatValue(None, "PDV.Khajiit.MoonRite.LastSuccessTime", nowTime)
     Manager.Trace(1, "[PDV][MOON_RITE] success phase=" + phaseIndex + " focus=" + focusValue + " metricDelta=" + (metricAfter - metricBefore))
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
@@ -845,9 +889,9 @@ Function ShowKhajiitMoonContemplation(Int focusValue, Bool firstRiteToday)
     String resolvedId = JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".id", "")
     String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".title", "")
     String bodyText = JsonUtil.GetPathStringValue(Manager.KHAJIIT_MOON_OBSERVATIONS_FILE, entryPath + ".body", "")
-    Manager.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    Manager.Prisma.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
     if firstRiteToday
-        Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+        Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
     endIf
     StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", resolvedId)
 EndFunction
@@ -912,9 +956,9 @@ Function ShowKhajiitMoonContemplationFallback(Int focusValue, Bool firstRiteToda
     endIf
     String titleText = GetKhajiitFocusLabel(focusValue) + " in Strength - " + GetKhajiitMoonContemplationTitle(messageIndex)
     String bodyText = GetKhajiitMoonContemplationText(messageIndex)
-    Manager.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
+    Manager.Prisma.SendPrismaToast(GetKhajiitFocusSymbol(focusValue), "good", titleText, bodyText)
     if firstRiteToday
-        Manager.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
+        Manager.Prisma.AppendBookOfDaysEntry(bodyText, Utility.GetCurrentGameTime() as Int, "substrate.act", GetKhajiitFocusSymbol(focusValue), False, 1, titleText)
     endIf
     StorageUtil.SetIntValue(None, "PDV.Khajiit.MoonRite.LastMessage", messageIndex)
     StorageUtil.SetStringValue(None, "PDV.Khajiit.MoonRite.LastResolvedId", "fallback_" + messageIndex)
@@ -1032,15 +1076,15 @@ Function HandleKhajiitRoadHome(String reason)
     if Manager.LedgerRuntime.ReadZeroReservedDevotionalDayStamp(presentationDayKey) != todayStamp
         Manager.LedgerRuntime.WriteZeroReservedDevotionalDayStamp(presentationDayKey)
         if grantedMetric > 0.0
-            Manager.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
+            Manager.Prisma.SendPrismaSubstrateProgress("lunar", tierBefore, tierAfter, grantedMetric, "The road home was remembered.", "lunar", GetKhajiitLunarTierLabel(tierAfter))
         else
             String cappedContext = "The road home was remembered. Today's lunar practice was already marked."
             SendPrismaSubstrateToast("lunar", "act", cappedContext, "lunar", GetKhajiitLunarTierLabel(tierAfter))
-            Manager.AppendBookOfDaysEntry(cappedContext, Utility.GetCurrentGameTime() as Int, "substrate.act", "lunar", False)
+            Manager.Prisma.AppendBookOfDaysEntry(cappedContext, Utility.GetCurrentGameTime() as Int, "substrate.act", "lunar", False)
         endIf
     endIf
-    Manager.NotifyDiegeticRoutineFavor("khajiit_road_home")
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.NotifyDiegeticRoutineFavor("khajiit_road_home")
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, "Khajiit road-home cadence routed with multiplier " + multiplier)
 EndFunction
 
@@ -1070,7 +1114,7 @@ Function HandleKhajiitRajhinElegantTheft(String reason)
     RecordKhajiitFocusSignal(Manager.KHAJIIT_FOCUS_RAJHIN, "PDV.Signal.KhajiitRajhinElegantTheft", "Rajhin elegant theft", reason)
     ; Night theft is shadow-coded behavior; it accrues toward the ShadowDrift boundary.
     RecordKhajiitShadowEvidence("rajhin_night_theft_" + reason)
-    Manager.SendPrismaShiftToast("Elegant theft", "Rajhin purrs.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_RAJHIN))
+    Manager.Prisma.SendPrismaShiftToast("Elegant theft", "Rajhin purrs.", GetKhajiitFocusSymbol(Manager.KHAJIIT_FOCUS_RAJHIN))
     Manager.LedgerRuntime.RecordRecentDevotionEvent("Rajhin: theft with style")
 EndFunction
 
@@ -1356,13 +1400,13 @@ Function RefreshKhajiitLunarPosture(String reason)
     endIf
 
     if newPosture == Manager.KHAJIIT_LUNAR_POSTURE_CORRUPTED
-        Manager.AppendBookOfDaysEntry("The moonlight scatters from your path. Corruption is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
+        Manager.Prisma.AppendBookOfDaysEntry("The moonlight scatters from your path. Corruption is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
     elseIf newPosture == Manager.KHAJIIT_LUNAR_POSTURE_SHADOWDRIFT
-        Manager.AppendBookOfDaysEntry("You slipped into the moons' shadow. Darkness is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
+        Manager.Prisma.AppendBookOfDaysEntry("You slipped into the moons' shadow. Darkness is upon you.", Utility.GetCurrentGameTime() as Int, "curse.onset", "lunar", False, 3)
     endIf
 
-    Manager.SendPrismaShiftToast(GetKhajiitLunarPostureDisplayLabelAt(newPosture), GetKhajiitLunarPostureReadout(newPosture), "lunar")
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.SendPrismaShiftToast(GetKhajiitLunarPostureDisplayLabelAt(newPosture), GetKhajiitLunarPostureReadout(newPosture), "lunar")
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 String Function GetKhajiitLunarPostureLabel()
@@ -1415,7 +1459,7 @@ Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool sup
     Manager.SetRaceCurseSurfaceShown(True)
 
     if suppressModal
-        Manager.SendPrismaToast("lunar", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("lunar", "warning", "", fallbackText)
         return
     endIf
 
@@ -1555,7 +1599,7 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
 
     Manager.Trace(1, "Khajiit focused emphasis " + GetKhajiitFocusLabel(oldFocus) + " -> " + GetKhajiitFocusLabel(focusValue) + " (" + reason + ")")
     String focusText = GetKhajiitFocusShiftText(focusValue)
-    Manager.SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", focusText, GetKhajiitFocusSymbol(focusValue))
+    Manager.Prisma.SendPrismaShiftToast("Your road turns toward " + GetKhajiitFocusLabel(focusValue) + ".", focusText, GetKhajiitFocusSymbol(focusValue))
     Bool firstEmergence = oldFocus == Manager.KHAJIIT_FOCUS_NONE && StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged") == 0
     if firstEmergence
         StorageUtil.SetIntValue(None, "PDV.Khajiit.FocusEmergenceAcknowledged", 1)
@@ -1567,12 +1611,12 @@ Function SetKhajiitFocusedEmphasis(Int focusValue, String reason)
         endIf
     endIf
     if firstEmergence
-        Manager.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "focus.emergence", GetKhajiitFocusSymbol(focusValue), True, 1, GetKhajiitFocusLabel(focusValue) + " Emerges")
+        Manager.Prisma.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "focus.emergence", GetKhajiitFocusSymbol(focusValue), True, 1, GetKhajiitFocusLabel(focusValue) + " Emerges")
     else
-        Manager.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "reorientation", GetKhajiitFocusSymbol(focusValue), False, 1, "The Road Turns")
+        Manager.Prisma.AppendBookOfDaysEntry(focusText, Utility.GetCurrentGameTime() as Int, "reorientation", GetKhajiitFocusSymbol(focusValue), False, 1, "The Road Turns")
     endIf
     SyncKhajiitRuntimeState()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
 EndFunction
 
 Message Function GetKhajiitFocusEmergenceMessage(Int focusValue)
@@ -1682,8 +1726,8 @@ Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFoc
     Manager.LedgerRuntime.SyncRaceRewardSpell(playerRef, t3, isActive && activeTier >= Manager.LedgerRuntime.TIER_CHAMPION, "Khajiit " + label + " T3")
 
     if isActive && activeTier >= Manager.LedgerRuntime.TIER_CHAMPION && t3 && !hadChampionSpell && playerRef.HasSpell(t3) && deity && Manager.LedgerRuntime.NotifyTierUp(deity, Manager.LedgerRuntime.TIER_CHAMPION)
-        Manager.SendPrismaEventToast("tier", deity, "", Manager.GetPublicTierBand(Manager.LedgerRuntime.TIER_CHAMPION), "")
-        Manager.SurfaceTransition("tier", deity.DeityName + " " + Manager.GetTierStandingLabel(Manager.LedgerRuntime.TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
+        Manager.Prisma.SendPrismaEventToast("tier", deity, "", Manager.Prisma.GetPublicTierBand(Manager.LedgerRuntime.TIER_CHAMPION), "")
+        Manager.Prisma.SurfaceTransition("tier", deity.DeityName + " " + Manager.Prisma.GetTierStandingLabel(Manager.LedgerRuntime.TIER_CHAMPION), "reach", deity.DeityIndex, "", false, true)
         Manager.Trace(1, "Khajiit Champion reward presentation shown: " + deity.DeityName)
     endIf
 EndFunction
@@ -1737,20 +1781,20 @@ String Function GetKhajiitFocusSymbol(Int focusValue)
 EndFunction
 
 String Function GetKhajiitMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("azura", "Azurah", "prince", "azura", Manager.PDV_Azura, "Dusk, dawn, moon-shadow, and fate.")
-    entries = entries + "," + Manager.RosterMedallionEntry("boethiah", "Boethra", "prince", "boethiah", Manager.PDV_Boethiah, "Trial, edge, and hard lessons.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mephala", "Mafala", "prince", "mephala", Manager.PDV_Mephala, "Hidden paths, webs, and clan memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", Manager.PDV_BaanDar, "The bandit god, wit, and road survival.")
-    entries = entries + "," + Manager.RosterMedallionEntry("rajhin", "Rajhin", "god", "rajhin", Manager.PDV_Rajhin, "The clever thief and impossible escape.")
-    entries = entries + "," + Manager.RosterMedallionEntry("alkosh", "Alkosh", "god", "alkosh", Manager.PDV_Alkosh, "Dragon order and time in Khajiit memory.")
-    entries = entries + "," + Manager.RosterMedallionEntry("khenarthi", "Khenarthi", "god", "khenarthi", Manager.PDV_Khenarthi, "Wind, sky-road, and breath.")
-    entries = entries + "," + Manager.PendingMedallionEntry("riddle-thar", "Riddle'Thar", "god", "riddle-thar", "Balance, ja-Kha'jay, and right conduct.")
-    entries = entries + "," + Manager.PendingMedallionEntry("jone-jode", "Jone and Jode", "god", "lunar", "The moons, the lattice, and the road home.")
+    String entries = Manager.Prisma.RosterMedallionEntry("azura", "Azurah", "prince", "azura", Manager.PDV_Azura, "Dusk, dawn, moon-shadow, and fate.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("boethiah", "Boethra", "prince", "boethiah", Manager.PDV_Boethiah, "Trial, edge, and hard lessons.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("mephala", "Mafala", "prince", "mephala", Manager.PDV_Mephala, "Hidden paths, webs, and clan memory.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("baan-dar", "Baan Dar", "god", "baan-dar", Manager.PDV_BaanDar, "The bandit god, wit, and road survival.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("rajhin", "Rajhin", "god", "rajhin", Manager.PDV_Rajhin, "The clever thief and impossible escape.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("alkosh", "Alkosh", "god", "alkosh", Manager.PDV_Alkosh, "Dragon order and time in Khajiit memory.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("khenarthi", "Khenarthi", "god", "khenarthi", Manager.PDV_Khenarthi, "Wind, sky-road, and breath.")
+    entries = entries + "," + Manager.Prisma.PendingMedallionEntry("riddle-thar", "Riddle'Thar", "god", "riddle-thar", "Balance, ja-Kha'jay, and right conduct.")
+    entries = entries + "," + Manager.Prisma.PendingMedallionEntry("jone-jode", "Jone and Jode", "god", "lunar", "The moons, the lattice, and the road home.")
     return entries
 EndFunction
 
 String Function GetKhajiitSurveyText()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     Int focusValue = GetKhajiitFocusedEmphasis()
     String text = ""
     if focusValue > Manager.KHAJIIT_FOCUS_NONE
@@ -1794,7 +1838,7 @@ String Function GetKhajiitFocusStandingLine(Int focusValue)
         return "not yet wired"
     endIf
 
-    String line = Manager.GetTierStandingLabel(Manager.LedgerRuntime.GetTier(deity)) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(Manager.LedgerRuntime.GetPiety(deity))
+    String line = Manager.Prisma.GetTierStandingLabel(Manager.LedgerRuntime.GetTier(deity)) + ", piety " + PDV_DevotionRules.FormatTwoDecimals(Manager.LedgerRuntime.GetPiety(deity))
     if GetKhajiitFocusedEmphasis() == focusValue
         line = line + " (leading)"
     endIf

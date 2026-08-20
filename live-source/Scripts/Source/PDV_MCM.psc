@@ -704,7 +704,7 @@ EndFunction
 Function OnOptionSelect(Int a_option)
     if a_option == _oidSurveyDevotion
         if EnsureManagerBinding("survey_devotion")
-            ShowMessage(PDV_Manager.GetSurveyDevotionText(), False, "$OK", "")
+            ShowMessage(PDV_Manager.Prisma.GetSurveyDevotionText(), False, "$OK", "")
         else
             ShowMessage("Devotion is still starting up.", False, "$OK", "")
         endIf
@@ -713,7 +713,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidExportReport
         if EnsureManagerBinding("export_report")
-            String reportFile = PDV_Manager.ExportDevotionReport()
+            String reportFile = PDV_Manager.Prisma.ExportDevotionReport()
             if reportFile != ""
                 ShowMessage("Devotion report saved as '" + reportFile + "' in your Skyrim game folder (same folder as SkyrimSE.exe). Attach that file to your bug report. If you cannot find it, search your PC for " + reportFile + ". For a crash or a hard-to-repro bug, also attach your Papyrus log (Documents\\My Games\\Skyrim Special Edition\\Logs\\Script\\Papyrus.0.log); the report file lists the exact path.", False, "$OK", "")
             else
@@ -954,7 +954,7 @@ Function OnOptionSelect(Int a_option)
 
     if a_option == _oidToastSize
         if EnsureManagerBinding("toggle_toast_size")
-            PDV_Manager.SetPrismaToastLargeEnabled(!PDV_Manager.PrismaToastLargeEnabled())
+            PDV_Manager.Prisma.SetPrismaToastLargeEnabled(!PDV_Manager.Prisma.PrismaToastLargeEnabled())
         endIf
         ForcePageReset()
         return
@@ -1857,7 +1857,7 @@ Event OnKeyDown(Int a_keyCode)
         if journalVisible
             StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 0)
             Debug.Notification("The Book of Days closes.")
-            PDV_Manager.ClosePrismaJournal()
+            PDV_Manager.Prisma.ClosePrismaJournal()
             return
         endIf
 
@@ -1871,7 +1871,7 @@ Event OnKeyDown(Int a_keyCode)
 
         StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
         Debug.Notification("The Book of Days opens.")
-        PDV_Manager.SendPrismaJournalPayload(True)
+        PDV_Manager.Prisma.SendPrismaJournalPayload(True)
         return
     endIf
 
@@ -1895,7 +1895,7 @@ Event OnKeyDown(Int a_keyCode)
         Debug.Notification("The Devotion panel opens.")
         ; Player-owned UI entry point: push fresh panel data, then focus the view so the
         ; dashboard filter buttons are clickable.
-        PDV_Manager.PushDevotionPanel(True)
+        PDV_Manager.Prisma.PushDevotionPanel(True)
         PDV_PrismaBridge.OpenDevotionPanel()
         return
     endIf
@@ -1907,7 +1907,7 @@ Function OpenBookOfDaysFromMcm()
     endIf
     StorageUtil.SetIntValue(None, "PDV.Diegetic.Journal.Open", 1)
     Debug.Notification("The Book of Days opens.")
-    PDV_Manager.SendPrismaJournalPayload(True)
+    PDV_Manager.Prisma.SendPrismaJournalPayload(True)
 EndFunction
 
 Function OnOptionSliderOpen(Int a_option)
@@ -2011,10 +2011,10 @@ Function BuildPlayerPage()
         AddTextOption("Summary", GetPlayerPageSummaryLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Startup", GetPlayerPageStartupLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Path", GetExperienceModeLabel(), OPTION_FLAG_DISABLED)
-        AddTextOption("Mode", PDV_Manager.GetPlayerMcmModeLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Patron", PDV_Manager.GetPlayerMcmPatronLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Standing", PDV_Manager.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
-        AddTextOption("Curse", PDV_Manager.GetPlayerMcmCurseLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Mode", PDV_Manager.Prisma.GetPlayerMcmModeLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Patron", PDV_Manager.Prisma.GetPlayerMcmPatronLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Standing", PDV_Manager.Prisma.GetPlayerMcmStandingLine(), OPTION_FLAG_DISABLED)
+        AddTextOption("Curse", PDV_Manager.Prisma.GetPlayerMcmCurseLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Favor", PDV_Manager.FavorRuntime.GetPlayerMcmFavorLine(), OPTION_FLAG_DISABLED)
         AddTextOption("Neglect", PDV_Manager.LedgerRuntime.GetPlayerMcmNeglectLine(), OPTION_FLAG_DISABLED)
         _oidSurveyDevotion = AddTextOption("Survey Devotion", "Open readout", OPTION_FLAG_NONE)
@@ -2067,7 +2067,7 @@ String Function GetPlayerPageSummaryLine()
         return "Startup pending"
     endIf
 
-    return PDV_Manager.GetPlayerMcmPatronLine() + " | " + PDV_Manager.GetPlayerMcmStandingLine()
+    return PDV_Manager.Prisma.GetPlayerMcmPatronLine() + " | " + PDV_Manager.Prisma.GetPlayerMcmStandingLine()
 EndFunction
 
 String Function GetPlayerPageStartupLine()
@@ -2213,7 +2213,7 @@ String Function OnOffLabel(Bool isOn)
 EndFunction
 
 String Function ToastSizeLabel()
-    if PDV_Manager && PDV_Manager.PrismaToastLargeEnabled()
+    if PDV_Manager && PDV_Manager.Prisma.PrismaToastLargeEnabled()
         return "Large"
     endIf
     return "Normal"
@@ -2289,7 +2289,7 @@ EndFunction
 
 String Function GetCompatSurvivalReadout()
     if PDV_Manager
-        return PDV_Manager.GetSurvivalContextStatusLine()
+        return PDV_Manager.Prisma.GetSurvivalContextStatusLine()
     endIf
 
     return "Unknown"
@@ -2297,7 +2297,7 @@ EndFunction
 
 String Function GetCompatCCReadout()
     if PDV_Manager
-        return PDV_Manager.GetCCContentStatusLine()
+        return PDV_Manager.Prisma.GetCCContentStatusLine()
     endIf
 
     return "Unknown"

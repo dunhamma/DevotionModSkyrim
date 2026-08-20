@@ -3333,6 +3333,13 @@
           ]
         },
         {
+          "name": "ClosePrismaJournal",
+          "signature": "Function ClosePrismaJournal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "CuratedSignalDriverReason",
           "signature": "String Function CuratedSignalDriverReason(PDV_DeityBase deity, Int signalType)",
           "calledByModules": [
@@ -3355,6 +3362,20 @@
           ]
         },
         {
+          "name": "ExportDevotionReport",
+          "signature": "String Function ExportDevotionReport()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "GetCCContentStatusLine",
+          "signature": "String Function GetCCContentStatusLine()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "GetCurrentStandingBand",
           "signature": "String Function GetCurrentStandingBand()",
           "calledByModules": [
@@ -3369,10 +3390,31 @@
           ]
         },
         {
+          "name": "GetPlayerMcmCurseLine",
+          "signature": "String Function GetPlayerMcmCurseLine()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "GetPlayerMcmModeLine",
           "signature": "String Function GetPlayerMcmModeLine()",
           "calledByModules": [
             "MANAGER"
+          ]
+        },
+        {
+          "name": "GetPlayerMcmPatronLine",
+          "signature": "String Function GetPlayerMcmPatronLine()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "GetPlayerMcmStandingLine",
+          "signature": "String Function GetPlayerMcmStandingLine()",
+          "calledByModules": [
+            "MCM"
           ]
         },
         {
@@ -3404,6 +3446,21 @@
             "MANAGER",
             "ORIGIN",
             "RECOGNITION"
+          ]
+        },
+        {
+          "name": "GetSurveyDevotionText",
+          "signature": "String Function GetSurveyDevotionText()",
+          "calledByModules": [
+            "MCM",
+            "SURVEY"
+          ]
+        },
+        {
+          "name": "GetSurvivalContextStatusLine",
+          "signature": "String Function GetSurvivalContextStatusLine()",
+          "calledByModules": [
+            "MCM"
           ]
         },
         {
@@ -3456,6 +3513,20 @@
           "signature": "String Function PendingMedallionEntry(String optionId, String titleText, String kindText, String symbolName, String summaryText)",
           "calledByModules": [
             "ORIGIN"
+          ]
+        },
+        {
+          "name": "PrismaToastLargeEnabled",
+          "signature": "Bool Function PrismaToastLargeEnabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "PushDevotionPanel",
+          "signature": "Bool Function PushDevotionPanel(Bool playerRequested = false)",
+          "calledByModules": [
+            "MCM"
           ]
         },
         {
@@ -3533,6 +3604,13 @@
           ]
         },
         {
+          "name": "SendPrismaJournalPayload",
+          "signature": "Function SendPrismaJournalPayload(Bool playerRequested = false)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "SendPrismaShiftToast",
           "signature": "Bool Function SendPrismaShiftToast(String shiftMode, String context, String symbolName, Bool allowFallback = True)",
           "calledByModules": [
@@ -3576,6 +3654,13 @@
           ]
         },
         {
+          "name": "SetPrismaToastLargeEnabled",
+          "signature": "Function SetPrismaToastLargeEnabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "SurfaceCurseTransitionDiegetic",
           "signature": "Function SurfaceCurseTransitionDiegetic(Int oldState, Int newState)",
           "calledByModules": [
@@ -3606,7 +3691,7 @@
           ]
         }
       ],
-      "privateCount": 79
+      "privateCount": 66
     },
     "RECOGNITION": {
       "targetScript": "PDV_RecognitionRuntime",

@@ -63,6 +63,34 @@ String Function GetSurveyFragment()
     return GetNordSurveyBaseText()
 EndFunction
 
+String Function GetQuasiPatronName()
+    return "Nord Worship"
+EndFunction
+
+String Function GetQuasiPatronSymbol()
+    return "kyne"
+EndFunction
+
+String Function GetQuasiPatronTierLabel()
+    return GetNordDevotionModeLabel()
+EndFunction
+
+String Function GetBookOfDaysSummary()
+    return "Old Gods, Divines, and chosen roads leave their marks here."
+EndFunction
+
+String Function GetBookOfDaysPathFallbackLabel()
+    return GetNordDevotionModeLabel()
+EndFunction
+
+String Function GetMcmSummaryLine(String standingLabel)
+    return GetNordDevotionModeLabel() + " | " + standingLabel + " | " + GetPlayerCursePublicLabel()
+EndFunction
+
+String Function GetMcmModeLine()
+    return GetNordDevotionModeLabel()
+EndFunction
+
 ; IsRaceLaneNeglected() is DELIBERATELY NOT overridden -- Nord inherits the base
 ; default False. Per the ADR ruling "neglect is THREE pools, and Nord has no
 ; race-lane one" (PDV_2_0_ADR_OriginAdapterInterface.md, 2026-08-19), neglect splits
@@ -188,13 +216,13 @@ Bool Function HandleContextualSignal(String signalId, String reason = "", Form c
                 Float metricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
                 Int tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
                 Manager.PDV_NordAncestorSubstrate.RecordAncestralRestScaled(1.0, "open_sky_rest_" + reason)
-                Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The open sky kept the old practice.", "journal", GetNordAncestorLayerLabel())
+                Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The open sky kept the old practice.", "journal", GetNordAncestorLayerLabel())
                 return True
             elseIf eventType == 333
                 Float hearthMetricBefore = Manager.PDV_NordAncestorSubstrate.GetMetric()
                 Int hearthTierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
                 Manager.PDV_NordAncestorSubstrate.RecordHearthReturnScaled(1.0, "cooked_meal_" + reason)
-                Manager.SendPrismaSubstrateProgress("ancestor", hearthTierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - hearthMetricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
+                Manager.Prisma.SendPrismaSubstrateProgress("ancestor", hearthTierBefore, Manager.PDV_NordAncestorSubstrate.GetSubstrateTier(), Manager.PDV_NordAncestorSubstrate.GetMetric() - hearthMetricBefore, "The first cooked meal kept the hearth.", "journal", GetNordAncestorLayerLabel())
                 return True
             endIf
         endIf
@@ -387,7 +415,7 @@ Function RecordNordAncestorSpine(String reason, Float multiplier)
         tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
         Manager.PDV_NordAncestorSubstrate.RecordAncestorStandingScaled(multiplier, reason)
         Int tierAfter = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line remembered.", "journal", GetNordAncestorLayerLabel())
+        Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line remembered.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -408,7 +436,7 @@ Function RecordNordAncestralRest(String reason, Float multiplier)
         tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
         Manager.PDV_NordAncestorSubstrate.RecordAncestralRestScaled(multiplier, reason)
         Int tierAfter = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line rested near.", "journal", GetNordAncestorLayerLabel())
+        Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The old line rested near.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -430,7 +458,7 @@ Function RecordNordHearthReturn(String reason, Float multiplier)
         tierBefore = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
         Manager.PDV_NordAncestorSubstrate.RecordHearthReturnScaled(multiplier, reason)
         Int tierAfter = Manager.PDV_NordAncestorSubstrate.GetSubstrateTier()
-        Manager.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The hearth remembered your return.", "journal", GetNordAncestorLayerLabel())
+        Manager.Prisma.SendPrismaSubstrateProgress("ancestor", tierBefore, tierAfter, Manager.PDV_NordAncestorSubstrate.GetMetric() - metricBefore, "The hearth remembered your return.", "journal", GetNordAncestorLayerLabel())
     endIf
 
     StorageUtil.AdjustFloatValue(None, "PDV.Nord.AncestralStanding", multiplier)
@@ -752,7 +780,7 @@ Function ShowNordMessage(Message messageRecord, String fallbackText, Bool suppre
     Manager.SetRaceCurseSurfaceShown(True)
 
     if suppressModal
-        Manager.SendPrismaToast("kyne", "warning", "", fallbackText)
+        Manager.Prisma.SendPrismaToast("kyne", "warning", "", fallbackText)
         return
     endIf
 
@@ -774,7 +802,7 @@ Function ShowNordNotification(Message messageRecord, String fallbackText)
         return
     endIf
 
-    Manager.SendPrismaToast("kyne", "neutral", "", fallbackText)
+    Manager.Prisma.SendPrismaToast("kyne", "neutral", "", fallbackText)
 EndFunction
 
 Function ApplyNordInitialChoice(Int baselineValue, String reason)
@@ -790,9 +818,9 @@ Function ApplyNordInitialChoice(Int baselineValue, String reason)
     if normalized == Manager.NORD_BASELINE_NINE_DIVINES
         baselineLabel = "Nine Divines"
     endIf
-    Manager.AppendBookOfDaysEntry(Manager.BuildStartupRoadJournalLine(baselineLabel), Utility.GetCurrentGameTime() as Int, "reorientation", "journal", True, 3, "", True)
+    Manager.Prisma.AppendBookOfDaysEntry(Manager.Prisma.BuildStartupRoadJournalLine(baselineLabel), Utility.GetCurrentGameTime() as Int, "reorientation", "journal", True, 3, "", True)
     Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.EndRaceSetupQuietPresentation()
 EndFunction
 
@@ -944,7 +972,7 @@ Bool Function RouteNordFamily(String reason, String countKey, String lastReasonK
     ; for the next dawn pass. This is especially visible on broad Old Ways T1, which otherwise does
     ; not appear until ProcessDawn even after the third accepted source has already been read.
     Manager.LedgerRuntime.SyncFirstTierRaceRewardRuntime()
-    Manager.RequestPanelRefresh()
+    Manager.Prisma.RequestPanelRefresh()
     Manager.Trace(2, traceLabel + " routed: " + reason)
     return True
 EndFunction
@@ -957,9 +985,9 @@ Function HandleNordOldWaysState(String reason)
 
     if RouteNordFamily(reason, "PDV.Nord.OldWaysContextCount", "PDV.Nord.LastOldWaysReason", "PDV.Nord.LastOldWaysSignalTime", "Nord Old Ways state")
         if GetNordPantheonBaselineState() == Manager.NORD_BASELINE_NINE_DIVINES
-            Manager.SurfaceP2BookReadNotice(reason, "Faith of the Holds", "The Divines honored in the holds stand nearer.")
+            Manager.Prisma.SurfaceP2BookReadNotice(reason, "Faith of the Holds", "The Divines honored in the holds stand nearer.")
         else
-            Manager.SurfaceP2BookReadNotice(reason, "The Old Ways", "The elder gods of the Nords stand nearer.")
+            Manager.Prisma.SurfaceP2BookReadNotice(reason, "The Old Ways", "The elder gods of the Nords stand nearer.")
         endIf
     endIf
 EndFunction
@@ -980,7 +1008,7 @@ Function HandleNordHircineArkayEdge(String reason)
     endIf
 
     if RouteNordFamily(reason, "PDV.Nord.HircineArkayEdgeCount", "PDV.Nord.LastHircineArkayReason", "PDV.Nord.LastHircineArkaySignalTime", "Nord Hircine/Arkay edge")
-        Manager.SurfaceP2BookReadNotice(reason, "Hunt and grave", "Beast and rest blur at the edges.")
+        Manager.Prisma.SurfaceP2BookReadNotice(reason, "Hunt and grave", "Beast and rest blur at the edges.")
     endIf
 EndFunction
 
@@ -992,23 +1020,23 @@ Bool Function UsesNordOldWaysDeityNames()
 EndFunction
 
 String Function GetNordMedallionEntriesJson()
-    String entries = Manager.RosterMedallionEntry("kyne", "Kyne", "god", "kyne", Manager.PDV_Kyne, "Sky, storm, hunt, and warrior-spirit.")
-    entries = entries + "," + Manager.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "The Nine Divines sky road.")
-    entries = entries + "," + Manager.RosterMedallionEntry("talos", "Talos", "god", "talos", Manager.PDV_Talos, "Open defiance and human apotheosis.")
-    entries = entries + "," + Manager.RosterMedallionEntry("shor", "Shor", "god", "shor", Manager.PDV_Shor, "The old king and afterlife road.")
-    entries = entries + "," + Manager.RosterMedallionEntry("tsun", "Tsun", "god", "tsun", Manager.PDV_Tsun, "Trial, honor, and the threshold.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stuhn", "Stuhn", "god", "stuhn", Manager.PDV_Stuhn, "Mercy in war and fair ransom.")
-    entries = entries + "," + Manager.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Love, hearth, and compassion.")
-    entries = entries + "," + Manager.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, order, and dragon authority.")
+    String entries = Manager.Prisma.RosterMedallionEntry("kyne", "Kyne", "god", "kyne", Manager.PDV_Kyne, "Sky, storm, hunt, and warrior-spirit.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("kynareth", "Kynareth", "god", "kynareth", Manager.LedgerRuntime.PDV_Kynareth, "The Nine Divines sky road.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("talos", "Talos", "god", "talos", Manager.PDV_Talos, "Open defiance and human apotheosis.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("shor", "Shor", "god", "shor", Manager.PDV_Shor, "The old king and afterlife road.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("tsun", "Tsun", "god", "tsun", Manager.PDV_Tsun, "Trial, honor, and the threshold.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("stuhn", "Stuhn", "god", "stuhn", Manager.PDV_Stuhn, "Mercy in war and fair ransom.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("mara", "Mara", "god", "mara", Manager.LedgerRuntime.PDV_Mara, "Love, hearth, and compassion.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("akatosh", "Akatosh", "god", "akatosh", Manager.LedgerRuntime.PDV_Akatosh, "Time, order, and dragon authority.")
     String arkayRosterName = "Arkay"
     if UsesNordOldWaysDeityNames()
         arkayRosterName = "Orkey"
     endIf
-    entries = entries + "," + Manager.RosterMedallionEntry("arkay", arkayRosterName, "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Death, burial, and proper passage.")
-    entries = entries + "," + Manager.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, justice, and protection.")
-    entries = entries + "," + Manager.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Law, learning, and craft of mind.")
-    entries = entries + "," + Manager.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Beauty, art, and embodied grace.")
-    entries = entries + "," + Manager.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Work, trade, and honest craft.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("arkay", arkayRosterName, "god", "arkay", Manager.LedgerRuntime.PDV_Arkay, "Death, burial, and proper passage.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("stendarr", "Stendarr", "god", "stendarr", Manager.LedgerRuntime.PDV_Stendarr, "Mercy, justice, and protection.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("julianos", "Julianos", "god", "julianos", Manager.LedgerRuntime.PDV_Julianos, "Law, learning, and craft of mind.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("dibella", "Dibella", "god", "dibella", Manager.LedgerRuntime.PDV_Dibella, "Beauty, art, and embodied grace.")
+    entries = entries + "," + Manager.Prisma.RosterMedallionEntry("zenithar", "Zenithar", "god", "zenithar", Manager.LedgerRuntime.PDV_Zenithar, "Work, trade, and honest craft.")
     return entries
 EndFunction
 
@@ -1029,14 +1057,14 @@ Bool Function HasNordVampireScar()
 EndFunction
 
 String Function GetNordSurveyBaseText()
-    String band = Manager.GetCurrentStandingBand()
+    String band = Manager.Prisma.GetCurrentStandingBand()
     if IsNordVampireSuppressed()
         return "Standing: " + band + ". Sovngarde is closed while the thirst remains. Cure the curse to reopen the road."
     endIf
 
     String contextText = GetNordContextSurveyText()
     if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
-        String focusedText = "Standing: " + band + ". " + Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " names you."
+        String focusedText = "Standing: " + band + ". " + Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity()) + " names you."
         if IsFocusedPantheonBoonSuspended()
             return focusedText + " The commitment remains, but its boon is suspended until 50 piety." + contextText
         endIf
@@ -1098,7 +1126,7 @@ String Function GetNordDevotionModeLabel()
     endIf
 
     if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE && Manager.GetActiveDeity()
-        return "Focused " + Manager.GetPublicDeityDisplayName(Manager.GetActiveDeity())
+        return "Focused " + Manager.Prisma.GetPublicDeityDisplayName(Manager.GetActiveDeity())
     endIf
 
     if Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_BROAD
