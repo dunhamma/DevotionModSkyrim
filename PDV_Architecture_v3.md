@@ -53,15 +53,12 @@ the unreleased 1.0.3. Three architecture contracts moved:
    project's first hard MO2 *priority* requirement: Devotion must sit below any Requiem
    bugfix pack, and the failure mode is silent.
 
-3. **Runtime cost is now an explicit ship gate.** The 1.0.4 pass resolves reaction data
-   once per save load instead of per equip check, pre-filters scorable events per deity,
-   collapses the 44-pass text formatter, and quiets background polling. **Architectural
-   risk, OPEN:** that source is not on `main` - it lives on the unmerged branch
-   `codex/pdv-ship-optimization` together with `pdv_ship_optimization_audit.mjs` and
-   `pdv_player_events_optimization_audit.mjs`, so neither the optimization contract nor
-   its gates are on the trunk that the rest of these docs describe. Until that branch
-   merges, `main` cannot rebuild the shipped build. Tracked in `AGENTS.md` Current Build
-   Status as `[!] SHIPPED-VS-REPO SOURCE DRIFT`.
+3. **Runtime cost is an explicit ship gate.** The historical 1.0.4 optimization source and
+   gates are now present in the V3 line. The 2026-08-20 post-module pass also snapshots the
+   active contextual-favor identity once per manager tick, batches five Daedric and seven
+   periodic origin/content calls behind module entry points, and caches completed startup
+   choice reconciliation. No timer or cadence changed. Static contracts are green; the
+   deterministic idle/active profiler comparison remains an independent human-runtime gate.
 
 Phase 20 / Phase 21 status is unchanged by the release: 1.0.4 is a defect-and-cost build,
 not a content build, so the open Phase 20 runtime/placement lane and the Phase 21
@@ -82,7 +79,7 @@ Baan Dar piety and tier surfaces; the common active-deity setter no longer accep
 flag. One labelled unsafe consent fixture retains controlled invalid-state injection,
 persists a proof-invalidating marker, self-cleans, and restores the prior patron mode.
 Machine evidence is compile 0/0 for the changed scripts, formal/reachability
-`PASS=435/WARN=0/FAIL=0`, VMAD 204/204 with zero unwaived findings, and repo/live source
+`PASS=435/WARN=0/FAIL=0`, VMAD 207/207 with zero unwaived findings, and repo/live source
 hash equality. Runtime/manual proof remains separate: Altmer/Baan Dar negative surfaces,
 race-change foreign-strip/no-double-dip, MCM open-time tab refresh, recognition-off silence,
 and final formal-offer wording. The `e739f79f` cast report is a reconciled historical
@@ -112,12 +109,17 @@ scripts compile 0/0. The integration sweep moved location ingress to one typed O
 routed remaining EventBus/moon/Baan-Dar queries through the generic ORIGIN contextual seam,
 and made source gates extraction-aware: complete module-family reads, all matching polymorphic
 override bodies, and an explicit manager VMAD property window. The full verifier is now clean
-at `FAIL=0, WARN=0, TODO=0, PASS=4092, INFO=97`; signal E2E, substrate pacing, broad pantheon,
-and both pantheon readback gates are also green. Duplicate historical manager VMAD properties
-for Nine Divines T1/T2 and Observe Moons/FormList point to the same correct forms and are parked
-as later record-cleanup debt rather than expanded into this source/gate checkpoint. Next work is
-fresh-game/player-surface proof; the
-tester-only console shim remains outside the user payload and awaits an exact driver-set ruling.
+at `FAIL=0, WARN=0, TODO=0, PASS=4098, INFO=100`; signal E2E, substrate pacing, broad pantheon,
+and both pantheon readback gates are also green. Manager VMAD cleanup is closed at 455 unique
+properties with no undeclared or duplicate names. `pdv_module_contract_sync.mjs` now derives
+the current module contract from source and RegionMap rather than treating the historical
+`e739f79f` cast report as current authority. The trigger-first optimization audit derives the
+119-pair release inventory and pins the new batching/caching contracts. Prisma remains
+event/call-driven with bounded toast and deferred-overlay lifetimes; no code optimization is
+justified. Its duplicate TTF/WOFF2 payload is deferred until an embedded-browser font-load and
+visual comparison can prove one format removable. Next work is fresh-game/player-surface and
+performance proof; the tester-only console shim remains outside the user payload and awaits an
+exact driver-set ruling.
 
 Current v3.100 addendum: the 2026-07-14 bug-report cluster is adjudicated and its
 fix pass EXECUTED (authority: Part D of

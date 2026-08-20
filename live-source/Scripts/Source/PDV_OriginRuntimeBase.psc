@@ -337,6 +337,16 @@ Bool Function TryAwardBosmerYffreLocationSite(Location loc)
     return False
 EndFunction
 
+; Three-second manager lane. Virtual dispatch stays inside the active origin
+; adapter, so the manager pays one cross-script call instead of five.
+Function ProcessPeriodicContextProbes()
+    TryArgonianEldergleamInterior()
+    TryArgonianNearWaterMaintenance()
+    TryBosmerEldergleamInterior()
+    TryBosmerGildergreenProximity()
+    TryBosmerYffreTreeStoneProximity()
+EndFunction
+
 Function TryBosmerEldergleamInterior()
     if StorageUtil.GetIntValue(None, "PDV.BosSongs.EldergleamActive") != 1
         return

@@ -1,6 +1,7 @@
 {
   "schema": "pdv-2.0-module-contracts/1",
-  "generatedFrom": "PDV_2_0RegionMap.json + live-source",
+  "generatedFrom": "PDV_2_0RegionMap.json + current live-source call graph",
+  "generatedBy": "tools/pdv_module_contract_sync.mjs",
   "modules": {
     "RULES": {
       "targetScript": "PDV_DevotionRules",
@@ -17,8 +18,8 @@
           "name": "BoolToInt",
           "signature": "Int Function BoolToInt(Bool value) Global",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "ORIGIN",
             "PRISMA",
             "RECOGNITION"
@@ -36,6 +37,7 @@
           "name": "ClampInt",
           "signature": "Int Function ClampInt(Int value, Int minValue, Int maxValue) Global",
           "calledByModules": [
+            "DEBUG",
             "FAVOR",
             "LEDGER",
             "MANAGER",
@@ -47,16 +49,24 @@
           "name": "ClampValue",
           "signature": "Float Function ClampValue(Float value, Float minValue, Float maxValue) Global",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "PRISMA"
+          ]
+        },
+        {
+          "name": "CountSetBits",
+          "signature": "Int Function CountSetBits(Int maskValue) Global",
+          "calledByModules": [
+            "ORIGIN"
           ]
         },
         {
           "name": "FormatTwoDecimals",
           "signature": "String Function FormatTwoDecimals(Float value) Global",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
+            "FAVOR",
             "ORIGIN",
             "PRISMA"
           ]
@@ -131,7 +141,7 @@
           ]
         }
       ],
-      "privateCount": 4
+      "privateCount": 3
     },
     "FAVOR": {
       "targetScript": "PDV_ContextualFavorRuntime",
@@ -141,8 +151,8 @@
           "name": "ClearActiveFavor",
           "signature": "Function ClearActiveFavor(String reason)",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "ORIGIN"
           ]
         },
@@ -179,7 +189,8 @@
           "name": "GetContextualFavorSummary",
           "signature": "String Function GetContextualFavorSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "ORIGIN"
           ]
         },
         {
@@ -193,13 +204,14 @@
           "name": "GetNextFavorFamilyForLane",
           "signature": "Int Function GetNextFavorFamilyForLane(Int laneValue, Int currentFamily)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetPlayerMcmFavorLine",
           "signature": "String Function GetPlayerMcmFavorLine()",
           "calledByModules": [
+            "MCM",
             "PRISMA"
           ]
         },
@@ -207,14 +219,28 @@
           "name": "GetSelectedContextualFavorFamily",
           "signature": "Int Function GetSelectedContextualFavorFamily()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "GetSelectedContextualFavorFamilyLabel",
+          "signature": "String Function GetSelectedContextualFavorFamilyLabel()",
+          "calledByModules": [
+            "MCM"
           ]
         },
         {
           "name": "GetSelectedContextualFavorLane",
           "signature": "Int Function GetSelectedContextualFavorLane()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "GetSelectedContextualFavorLaneLabel",
+          "signature": "String Function GetSelectedContextualFavorLaneLabel()",
+          "calledByModules": [
+            "MCM"
           ]
         },
         {
@@ -228,14 +254,14 @@
           "name": "SetSelectedContextualFavorLane",
           "signature": "Function SetSelectedContextualFavorLane(Int laneValue)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "TryActivateContextualFavor",
           "signature": "Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String reason)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -243,12 +269,13 @@
           "name": "UpdateContextualFavorRuntime",
           "signature": "Function UpdateContextualFavorRuntime()",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
             "MANAGER"
           ]
         }
       ],
-      "privateCount": 18
+      "privateCount": 16
     },
     "QUESTREACTION": {
       "targetScript": "PDV_QuestReactionRuntime",
@@ -270,6 +297,13 @@
           ]
         },
         {
+          "name": "ApplyQuestReactionFaucet",
+          "signature": "Function ApplyQuestReactionFaucet(String faucetKey, Form sourceForm)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
           "name": "ApplyQuestReactionPiety",
           "signature": "Function ApplyQuestReactionPiety(PDV_DeityBase deity, Float amount, String reason)",
           "calledByModules": [
@@ -286,9 +320,47 @@
           ]
         },
         {
+          "name": "Configure",
+          "signature": "Bool Function Configure(Alias questStageReceiver, Bool fromLoad = False)",
+          "calledByModules": [
+            "PDV_PlayerEvents"
+          ]
+        },
+        {
+          "name": "DebugQueuePerformanceSweep",
+          "signature": "String Function DebugQueuePerformanceSweep()",
+          "calledByModules": [
+            "DEBUG",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugReloadCatalog",
+          "signature": "String Function DebugReloadCatalog()",
+          "calledByModules": [
+            "DEBUG",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSubmitQuestStage",
+          "signature": "String Function DebugSubmitQuestStage(Int questFormId, String pluginName, Int stageValue, String label)",
+          "calledByModules": [
+            "DEBUG"
+          ]
+        },
+        {
           "name": "FlushQuestReactionSurface",
           "signature": "Function FlushQuestReactionSurface()",
           "calledByModules": [
+            "ORIGIN"
+          ]
+        },
+        {
+          "name": "GetQrQueueTransactionActive",
+          "signature": "Bool Function GetQrQueueTransactionActive()",
+          "calledByModules": [
+            "LEDGER",
             "ORIGIN"
           ]
         },
@@ -305,8 +377,8 @@
           "signature": "PDV_DeityBase Function GetQuestReactionDeity(String deityName)",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "ORIGIN"
           ]
         },
@@ -324,6 +396,13 @@
           "calledByModules": [
             "LEDGER",
             "ORIGIN"
+          ]
+        },
+        {
+          "name": "GetStatusLine",
+          "signature": "String Function GetStatusLine()",
+          "calledByModules": [
+            "MCM"
           ]
         },
         {
@@ -357,10 +436,16 @@
           ]
         },
         {
-          "name": "GetQrQueueTransactionActive",
-          "signature": "Bool Function GetQrQueueTransactionActive()",
+          "name": "ResolveQuestStage",
+          "signature": "Int Function ResolveQuestStage(Quest sourceQuest, Int physicalStage)",
           "calledByModules": [
-            "LEDGER",
+            "PDV_PlayerEvents"
+          ]
+        },
+        {
+          "name": "SetQrQueueNeedsBretonRewardSync",
+          "signature": "Function SetQrQueueNeedsBretonRewardSync(Bool value)",
+          "calledByModules": [
             "ORIGIN"
           ]
         },
@@ -373,19 +458,14 @@
           ]
         },
         {
-          "name": "SetQrQueueNeedsBretonRewardSync",
-          "signature": "Function SetQrQueueNeedsBretonRewardSync(Bool value)",
+          "name": "SubmitQuestStage",
+          "signature": "Bool Function SubmitQuestStage(Quest sourceQuest, Int stageValue, String logicalEventId = \"\")",
           "calledByModules": [
-            "ORIGIN"
+            "PDV_EventBus"
           ]
-        },
-        {
-          "name": "GetQrQueueNeedsBretonRewardSync",
-          "signature": "Bool Function GetQrQueueNeedsBretonRewardSync()",
-          "calledByModules": []
         }
       ],
-      "privateCount": 15
+      "privateCount": 51
     },
     "LEDGER": {
       "targetScript": "PDV_DevotionLedger",
@@ -402,14 +482,14 @@
           "name": "ApplyDebugDomainSting",
           "signature": "Bool Function ApplyDebugDomainSting(Int domainValue, Bool sharp, Bool respectCap)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "ApplyDecayToDeity",
           "signature": "Function ApplyDecayToDeity(PDV_DeityBase deity, Float nowTime)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -431,7 +511,7 @@
           "name": "AwardCuratedSignalByIndex",
           "signature": "Function AwardCuratedSignalByIndex(Int deityIndex, Int signalType)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -455,15 +535,17 @@
           "name": "AwardPietyFromLikesDislikes",
           "signature": "Float Function AwardPietyFromLikesDislikes(PDV_DeityBase deity, Float amount, Int eventType, String reason = \"\", Bool deferBroadPantheon = False, String detachedBroadPool = \"\")",
           "calledByModules": [
-            "MANAGER",
-            "ORIGIN"
+            "DEBUG",
+            "ORIGIN",
+            "PDV_ActionRouter",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "AwardPietyInternal",
           "signature": "Float Function AwardPietyInternal(PDV_DeityBase deity, Float amount, Bool allowRivalry, String reason = \"\", Bool applyStanceMultiplier = True, Bool trackBroadPantheon = True)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN",
             "QUESTREACTION"
           ]
@@ -472,8 +554,17 @@
           "name": "BeginBroadPantheonEvent",
           "signature": "Function BeginBroadPantheonEvent(String logicalEventId)",
           "calledByModules": [
-            "MANAGER",
-            "ORIGIN"
+            "DEBUG",
+            "ORIGIN",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "BeginLikesDislikesSurface",
+          "signature": "Function BeginLikesDislikesSurface(Int eventType, String parentLogicalEventId = \"\")",
+          "calledByModules": [
+            "PDV_ActionRouter",
+            "PDV_EventBus"
           ]
         },
         {
@@ -487,7 +578,7 @@
           "name": "BuildCommitmentOfferAcceptToastLine",
           "signature": "String Function BuildCommitmentOfferAcceptToastLine(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -501,7 +592,7 @@
           "name": "BuildCommitmentOfferRefuseToastLine",
           "signature": "String Function BuildCommitmentOfferRefuseToastLine(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -515,22 +606,38 @@
           "name": "ClearAllDisfavorStings",
           "signature": "Function ClearAllDisfavorStings()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "MCM"
           ]
         },
         {
           "name": "ClearPendingCommitment",
           "signature": "Function ClearPendingCommitment()",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
+          ]
+        },
+        {
+          "name": "ClearUnsafeFaultInjection",
+          "signature": "Function ClearUnsafeFaultInjection()",
+          "calledByModules": [
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "CommitDetachedBroadPantheonEvent",
+          "signature": "Function CommitDetachedBroadPantheonEvent(String logicalEventId, String poolId, Float bestPositive, Float worstNegative, Int eventType)",
+          "calledByModules": [
+            "PDV_ActionRouter",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "DomainForDeity",
           "signature": "Int Function DomainForDeity(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -544,6 +651,7 @@
           "name": "EnsureLikesDislikesTable",
           "signature": "Function EnsureLikesDislikesTable()",
           "calledByModules": [
+            "DEBUG",
             "MANAGER"
           ]
         },
@@ -558,7 +666,7 @@
           "name": "EvaluateFormalCommitmentOffer",
           "signature": "Function EvaluateFormalCommitmentOffer()",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -573,15 +681,25 @@
           "name": "FlushBroadPantheonEvent",
           "signature": "Function FlushBroadPantheonEvent()",
           "calledByModules": [
-            "MANAGER",
-            "ORIGIN"
+            "DEBUG",
+            "ORIGIN",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "FlushLikesDislikesSurface",
+          "signature": "Function FlushLikesDislikesSurface(Int eventType)",
+          "calledByModules": [
+            "PDV_ActionRouter",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "ForceSetActiveDeityByIndex",
           "signature": "Function ForceSetActiveDeityByIndex(Int deityIndex)",
           "calledByModules": [
-            "MANAGER"
+            "MANAGER",
+            "MCM"
           ]
         },
         {
@@ -602,8 +720,10 @@
           "name": "GetActiveBroadPantheonPoolId",
           "signature": "String Function GetActiveBroadPantheonPoolId()",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN",
+            "PDV_ActionRouter",
+            "PDV_EventBus",
             "PRISMA",
             "QUESTREACTION"
           ]
@@ -619,14 +739,15 @@
           "name": "GetActiveDisfavorSummary",
           "signature": "String Function GetActiveDisfavorSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "MCM"
           ]
         },
         {
           "name": "GetBroadPantheonLastEventKey",
           "signature": "String Function GetBroadPantheonLastEventKey(String poolId)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "QUESTREACTION"
           ]
         },
@@ -641,7 +762,7 @@
           "name": "GetBroadPantheonLastGainDayKey",
           "signature": "String Function GetBroadPantheonLastGainDayKey(String poolId)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "QUESTREACTION"
           ]
         },
@@ -649,28 +770,28 @@
           "name": "GetBroadPantheonLastProcessedDayKey",
           "signature": "String Function GetBroadPantheonLastProcessedDayKey(String poolId)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetBroadPantheonPoolIdByDebugIndex",
           "signature": "String Function GetBroadPantheonPoolIdByDebugIndex(Int poolIndex)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetBroadPantheonRosterForDebug",
           "signature": "String Function GetBroadPantheonRosterForDebug(String poolId)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetBroadPantheonScratch",
           "signature": "Float Function GetBroadPantheonScratch(String poolId)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN",
             "QUESTREACTION"
           ]
@@ -679,7 +800,7 @@
           "name": "GetBroadPantheonScratchDayKey",
           "signature": "String Function GetBroadPantheonScratchDayKey(String poolId)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "QUESTREACTION"
           ]
         },
@@ -687,7 +808,7 @@
           "name": "GetBroadPantheonScratchKey",
           "signature": "String Function GetBroadPantheonScratchKey(String poolId)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN",
             "QUESTREACTION"
           ]
@@ -696,7 +817,7 @@
           "name": "GetBroadPantheonStanding",
           "signature": "Float Function GetBroadPantheonStanding(String poolId)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -704,20 +825,21 @@
           "name": "GetCommitmentSummary",
           "signature": "String Function GetCommitmentSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetDecayFloorForDeity",
           "signature": "Float Function GetDecayFloorForDeity(PDV_DeityBase deity, Float currentPiety)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetDeityAtListIndex",
           "signature": "PDV_DeityBase Function GetDeityAtListIndex(Int listIndex)",
           "calledByModules": [
+            "MCM",
             "PRISMA"
           ]
         },
@@ -725,7 +847,8 @@
           "name": "GetDeityByIndex",
           "signature": "PDV_DeityBase Function GetDeityByIndex(Int deityIndex)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
+            "MCM",
             "PRISMA"
           ]
         },
@@ -741,6 +864,7 @@
           "name": "GetDeityCount",
           "signature": "Int Function GetDeityCount()",
           "calledByModules": [
+            "MCM",
             "PRISMA"
           ]
         },
@@ -755,6 +879,7 @@
           "name": "GetDevotionalDay",
           "signature": "Int Function GetDevotionalDay()",
           "calledByModules": [
+            "DEBUG",
             "MANAGER",
             "ORIGIN",
             "PRISMA",
@@ -765,21 +890,22 @@
           "name": "GetDisfavorDomainLabel",
           "signature": "String Function GetDisfavorDomainLabel(Int domainValue)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "MCM"
           ]
         },
         {
           "name": "GetDisfavorRepeatDayKey",
           "signature": "String Function GetDisfavorRepeatDayKey(Int domainValue, Int eventType)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetDislikeBaseDeltaForEvent",
           "signature": "Float Function GetDislikeBaseDeltaForEvent(PDV_DeityBase deity, Int eventType)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -793,21 +919,21 @@
           "name": "GetNeglectSummary",
           "signature": "String Function GetNeglectSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetPacingPatronCandidate",
           "signature": "PDV_DeityBase Function GetPacingPatronCandidate()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetPatronState",
           "signature": "Int Function GetPatronState()",
           "calledByModules": [
-            "DAEDRIC",
+            "DEBUG",
             "FAVOR",
             "MANAGER",
             "ORIGIN",
@@ -819,7 +945,8 @@
           "name": "GetPatronStateLabel",
           "signature": "String Function GetPatronStateLabel()",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
+            "MCM",
             "PRISMA"
           ]
         },
@@ -827,21 +954,22 @@
           "name": "GetPendingCommitmentDeity",
           "signature": "PDV_DeityBase Function GetPendingCommitmentDeity()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetPendingCommitmentDeityIndex",
           "signature": "Int Function GetPendingCommitmentDeityIndex()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetPiety",
           "signature": "Float Function GetPiety(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
+            "MCM",
             "ORIGIN",
             "PRISMA"
           ]
@@ -850,7 +978,8 @@
           "name": "GetPietyToday",
           "signature": "Float Function GetPietyToday(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
+            "MCM",
             "PRISMA"
           ]
         },
@@ -858,6 +987,7 @@
           "name": "GetPlayerMcmNeglectLine",
           "signature": "String Function GetPlayerMcmNeglectLine()",
           "calledByModules": [
+            "MCM",
             "PRISMA"
           ]
         },
@@ -865,7 +995,15 @@
           "name": "GetRecentCommitmentSignalDayCount",
           "signature": "Int Function GetRecentCommitmentSignalDayCount(PDV_DeityBase deity, Int windowDays)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "MCM"
+          ]
+        },
+        {
+          "name": "GetShrinePrayerDeityByName",
+          "signature": "PDV_DeityBase Function GetShrinePrayerDeityByName(String deityName)",
+          "calledByModules": [
+            "PRISMA"
           ]
         },
         {
@@ -880,19 +1018,28 @@
           "signature": "Int Function GetTier(PDV_DeityBase deity)",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "FAVOR",
-            "MANAGER",
+            "MCM",
             "ORIGIN",
             "PRISMA",
             "RECOGNITION"
           ]
         },
         {
+          "name": "HandleBardPerformance",
+          "signature": "Function HandleBardPerformance(Int qualityDelta, Bool receivedOvation, Form contextForm)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
           "name": "HandleCurseStateRefresh",
           "signature": "Function HandleCurseStateRefresh(String reason)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN",
+            "PDV_EventBus",
             "QUESTREACTION"
           ]
         },
@@ -900,20 +1047,28 @@
           "name": "HandleCurseStateTransition",
           "signature": "Function HandleCurseStateTransition(Int oldState, Int newState, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "HandleShrinePrayer",
+          "signature": "Function HandleShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String shrineLabel, String sourceId)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleSubstrateShrinePrayer",
           "signature": "Function HandleSubstrateShrinePrayer(String primaryDeityName, String secondaryDeityName, String tertiaryDeityName, String sourceId)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "HasRecentCommitmentSignalDays",
           "signature": "Bool Function HasRecentCommitmentSignalDays(PDV_DeityBase deity, Int requiredCount, Int windowDays)",
           "calledByModules": [
+            "MCM",
             "ORIGIN"
           ]
         },
@@ -950,7 +1105,7 @@
           "name": "IsBroadWorshipActive",
           "signature": "Bool Function IsBroadWorshipActive()",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN",
             "PRISMA"
           ]
@@ -963,6 +1118,20 @@
           ]
         },
         {
+          "name": "IsCommitmentOffered",
+          "signature": "Bool Function IsCommitmentOffered(PDV_DeityBase deity)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "IsCommitmentRefused",
+          "signature": "Bool Function IsCommitmentRefused(PDV_DeityBase deity)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "IsDeityEligibleForBroadPantheon",
           "signature": "Bool Function IsDeityEligibleForBroadPantheon(PDV_DeityBase deity, String poolId)",
           "calledByModules": [
@@ -970,10 +1139,18 @@
           ]
         },
         {
+          "name": "IsDeityReachableForCurrentOrigin",
+          "signature": "Bool Function IsDeityReachableForCurrentOrigin(PDV_DeityBase deity)",
+          "calledByModules": [
+            "DEBUG",
+            "MANAGER"
+          ]
+        },
+        {
           "name": "IsGenericLikesDislikesDeityReachable",
           "signature": "Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1002,7 +1179,7 @@
           "name": "IsPendingCommitmentStillAcceptable",
           "signature": "Bool Function IsPendingCommitmentStillAcceptable(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1017,6 +1194,20 @@
           "signature": "Bool Function IsSurvivalContextEnabled()",
           "calledByModules": [
             "PRISMA"
+          ]
+        },
+        {
+          "name": "IsUnsafeFaultInjectionActive",
+          "signature": "Bool Function IsUnsafeFaultInjectionActive()",
+          "calledByModules": [
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "JoinBroadPantheonEvent",
+          "signature": "Bool Function JoinBroadPantheonEvent(String logicalEventId)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
@@ -1037,12 +1228,20 @@
           "name": "ProcessBroadPantheonThroughDay",
           "signature": "Function ProcessBroadPantheonThroughDay(String poolId, Int targetDay, Float signedCap, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "ProcessDawn",
           "signature": "Function ProcessDawn()",
+          "calledByModules": [
+            "MANAGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "ProcessPeriodicContentProbes",
+          "signature": "Function ProcessPeriodicContentProbes()",
           "calledByModules": [
             "MANAGER"
           ]
@@ -1051,7 +1250,7 @@
           "name": "ReadZeroReservedDevotionalDayStamp",
           "signature": "Int Function ReadZeroReservedDevotionalDayStamp(String keyName)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -1066,7 +1265,15 @@
           "name": "RecomputeTier",
           "signature": "Int Function RecomputeTier(PDV_DeityBase deity, Bool surfaceTierUp = True)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_Origin"
+          ]
+        },
+        {
+          "name": "RecordCommitmentSignalDay",
+          "signature": "Function RecordCommitmentSignalDay(PDV_DeityBase deity)",
+          "calledByModules": [
+            "DAEDRIC"
           ]
         },
         {
@@ -1080,6 +1287,7 @@
           "name": "RefreshPatronMirrors",
           "signature": "Function RefreshPatronMirrors()",
           "calledByModules": [
+            "DEBUG",
             "MANAGER"
           ]
         },
@@ -1101,7 +1309,7 @@
           "name": "ResetBroadPantheonPool",
           "signature": "Function ResetBroadPantheonPool(String poolId)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1119,25 +1327,32 @@
           ]
         },
         {
+          "name": "ResyncCurseStateMirror",
+          "signature": "Function ResyncCurseStateMirror(String reason)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "RunDawnApplyDecay",
           "signature": "Function RunDawnApplyDecay()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "RunDawnApplySpellAndNeglectLayers",
           "signature": "Function RunDawnApplySpellAndNeglectLayers()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "SetActiveDeity",
-          "signature": "Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False)",
+          "signature": "Function SetActiveDeity(PDV_DeityBase newDeity)",
           "calledByModules": [
-            "DAEDRIC",
-            "MANAGER",
+            "DEBUG",
+            "MCM",
             "ORIGIN"
           ]
         },
@@ -1145,15 +1360,22 @@
           "name": "SetBroadPantheonStanding",
           "signature": "Function SetBroadPantheonStanding(String poolId, Float standing, String reason = \"\")",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "SetBroadWorship",
           "signature": "Function SetBroadWorship()",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
+          ]
+        },
+        {
+          "name": "SetGainProviders",
+          "signature": "Function SetGainProviders(PDV_GainModifierProvider[] providers)",
+          "calledByModules": [
+            "MANAGER"
           ]
         },
         {
@@ -1166,6 +1388,15 @@
         {
           "name": "ShouldSurfaceLikesDislikesEvent",
           "signature": "Bool Function ShouldSurfaceLikesDislikesEvent(Int eventType)",
+          "calledByModules": [
+            "DEBUG",
+            "PDV_ActionRouter",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "ShowFormalCommitmentOffer",
+          "signature": "Function ShowFormalCommitmentOffer(PDV_DeityBase deity)",
           "calledByModules": [
             "MANAGER"
           ]
@@ -1181,7 +1412,7 @@
           "name": "SurfaceDebugDislikeEvent",
           "signature": "Function SurfaceDebugDislikeEvent(PDV_DeityBase deity, Float amount, Int eventType)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1196,7 +1427,7 @@
           "name": "SyncBroadPantheonRewards",
           "signature": "Function SyncBroadPantheonRewards(Actor playerRef)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -1205,6 +1436,7 @@
           "signature": "Function SyncFirstTierRaceRewardRuntime()",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "MANAGER",
             "ORIGIN",
             "QUESTREACTION"
@@ -1233,17 +1465,10 @@
           ]
         },
         {
-          "name": "TryCCFishingDevotion",
-          "signature": "Function TryCCFishingDevotion()",
+          "name": "UnsafeFaultInjectActiveDeity",
+          "signature": "Function UnsafeFaultInjectActiveDeity(PDV_DeityBase deity, String reason)",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "TryCCSaintsRecognition",
-          "signature": "Function TryCCSaintsRecognition()",
-          "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1257,20 +1482,21 @@
           "name": "UsesFormalCommitmentOffersForDeity",
           "signature": "Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "MCM"
           ]
         },
         {
           "name": "WriteZeroReservedDevotionalDayStamp",
           "signature": "Function WriteZeroReservedDevotionalDayStamp(String keyName)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN",
             "QUESTREACTION"
           ]
         }
       ],
-      "privateCount": 103
+      "privateCount": 91
     },
     "ORIGIN": {
       "targetScript": "PDV_OriginRuntimeBase",
@@ -1301,7 +1527,7 @@
           "name": "ApplyBosmerPathPatron",
           "signature": "Function ApplyBosmerPathPatron(Int pathState, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1316,6 +1542,13 @@
           "signature": "Function ApplyBretonInitialChoice(Int traditionValue, String reason)",
           "calledByModules": [
             "MANAGER"
+          ]
+        },
+        {
+          "name": "ApplyConcordatPressure",
+          "signature": "Function ApplyConcordatPressure(Int adjustment, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
@@ -1385,7 +1618,7 @@
           "name": "ApplyUndeadCryptClearReactions",
           "signature": "Function ApplyUndeadCryptClearReactions(Location clearedLocation, Float repeatMultiplier)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1406,7 +1639,7 @@
           "name": "AwardBretonPracticePulse",
           "signature": "Bool Function AwardBretonPracticePulse(Int traditionValue, Int requestedPoints, String sourceKey, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1469,7 +1702,8 @@
           "name": "EnsureArgonianHistSapToken",
           "signature": "Function EnsureArgonianHistSapToken()",
           "calledByModules": [
-            "MANAGER"
+            "MANAGER",
+            "PDV_Origin"
           ]
         },
         {
@@ -1490,7 +1724,8 @@
           "name": "EnsureDunmerAncestralUrn",
           "signature": "Function EnsureDunmerAncestralUrn()",
           "calledByModules": [
-            "MANAGER"
+            "MANAGER",
+            "PDV_Origin"
           ]
         },
         {
@@ -1503,6 +1738,13 @@
         {
           "name": "EnsureNordRuntimeWiring",
           "signature": "Function EnsureNordRuntimeWiring()",
+          "calledByModules": [
+            "MANAGER"
+          ]
+        },
+        {
+          "name": "EnsureRuntimeWiring",
+          "signature": "Function EnsureRuntimeWiring()",
           "calledByModules": [
             "MANAGER"
           ]
@@ -1539,8 +1781,8 @@
           "name": "EvaluateKhajiitFocusedEmphasis",
           "signature": "Function EvaluateKhajiitFocusedEmphasis()",
           "calledByModules": [
-            "LEDGER",
-            "MANAGER"
+            "DEBUG",
+            "LEDGER"
           ]
         },
         {
@@ -1558,20 +1800,6 @@
           ]
         },
         {
-          "name": "GetAltmerCrisisStateLabel",
-          "signature": "String Function GetAltmerCrisisStateLabel()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetAltmerFormalCommitmentOfferMessage",
-          "signature": "Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
           "name": "GetAltmerHeritageTierJournalLine",
           "signature": "String Function GetAltmerHeritageTierJournalLine(Int tierValue)",
           "calledByModules": [
@@ -1582,14 +1810,7 @@
           "name": "GetAltmerSummary",
           "signature": "String Function GetAltmerSummary()",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "GetAltmerSurveyText",
-          "signature": "String Function GetAltmerSurveyText()",
-          "calledByModules": [
-            "PRISMA"
+            "DEBUG"
           ]
         },
         {
@@ -1607,29 +1828,15 @@
           ]
         },
         {
-          "name": "GetArgonianHistPostureLabel",
-          "signature": "String Function GetArgonianHistPostureLabel()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
           "name": "GetArgonianHistSummary",
           "signature": "String Function GetArgonianHistSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetArgonianLayerStrengthLabel",
           "signature": "String Function GetArgonianLayerStrengthLabel(Float value)",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetArgonianSurveyText",
-          "signature": "String Function GetArgonianSurveyText()",
           "calledByModules": [
             "PRISMA"
           ]
@@ -1642,15 +1849,15 @@
           ]
         },
         {
-          "name": "GetBookOfDaysAltmerCrisisLabel",
-          "signature": "String Function GetBookOfDaysAltmerCrisisLabel()",
+          "name": "GetBookOfDaysPathFallbackLabel",
+          "signature": "String Function GetBookOfDaysPathFallbackLabel()",
           "calledByModules": [
             "PRISMA"
           ]
         },
         {
-          "name": "GetBookOfDaysDunmerAncestorLabel",
-          "signature": "String Function GetBookOfDaysDunmerAncestorLabel()",
+          "name": "GetBookOfDaysSummary",
+          "signature": "String Function GetBookOfDaysSummary()",
           "calledByModules": [
             "PRISMA"
           ]
@@ -1673,14 +1880,7 @@
           "name": "GetBosmerSummary",
           "signature": "String Function GetBosmerSummary()",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "GetBosmerSurveyText",
-          "signature": "String Function GetBosmerSurveyText()",
-          "calledByModules": [
-            "PRISMA"
+            "DEBUG"
           ]
         },
         {
@@ -1691,17 +1891,10 @@
           ]
         },
         {
-          "name": "GetBretonFormalCommitmentOfferMessage",
-          "signature": "Message Function GetBretonFormalCommitmentOfferMessage(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
           "name": "GetBretonPracticeCount",
           "signature": "Int Function GetBretonPracticeCount(Int traditionValue)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "PRISMA"
           ]
         },
@@ -1709,24 +1902,16 @@
           "name": "GetBretonPracticeTier",
           "signature": "Int Function GetBretonPracticeTier(Int traditionValue)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "PRISMA",
             "RECOGNITION"
-          ]
-        },
-        {
-          "name": "GetBretonSurveyText",
-          "signature": "String Function GetBretonSurveyText()",
-          "calledByModules": [
-            "PRISMA"
           ]
         },
         {
           "name": "GetBretonTraditionLabel",
           "signature": "String Function GetBretonTraditionLabel()",
           "calledByModules": [
-            "MANAGER",
-            "PRISMA"
+            "DEBUG"
           ]
         },
         {
@@ -1734,8 +1919,8 @@
           "signature": "Int Function GetBretonTraditionValue()",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "PRISMA",
             "RECOGNITION"
           ]
@@ -1804,7 +1989,7 @@
           "name": "GetConcordatSummary",
           "signature": "String Function GetConcordatSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1815,17 +2000,24 @@
           ]
         },
         {
+          "name": "GetCurseGainMultiplier",
+          "signature": "Float Function GetCurseGainMultiplier(PDV_DeityBase deity)",
+          "calledByModules": [
+            "DEBUG"
+          ]
+        },
+        {
           "name": "GetCurseHandlerSummary",
           "signature": "String Function GetCurseHandlerSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetCurseStateSummary",
           "signature": "String Function GetCurseStateSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1839,56 +2031,14 @@
           "name": "GetDunmerAncestorSummary",
           "signature": "String Function GetDunmerAncestorSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
-          "name": "GetDunmerFormalCommitmentOfferMessage",
-          "signature": "Message Function GetDunmerFormalCommitmentOfferMessage(PDV_DeityBase deity)",
+          "name": "GetFormalCommitmentOfferMessage",
+          "signature": "Message Function GetFormalCommitmentOfferMessage(PDV_DeityBase deity)",
           "calledByModules": [
             "LEDGER"
-          ]
-        },
-        {
-          "name": "GetDunmerReclamationFocusLabel",
-          "signature": "String Function GetDunmerReclamationFocusLabel(Int focusValue)",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetDunmerSurveyText",
-          "signature": "String Function GetDunmerSurveyText()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetImperialConcordatLabel",
-          "signature": "String Function GetImperialConcordatLabel()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetImperialCurseGainMultiplier",
-          "signature": "Float Function GetImperialCurseGainMultiplier(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "GetImperialFormalCommitmentOfferMessage",
-          "signature": "Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "GetImperialSurveyText",
-          "signature": "String Function GetImperialSurveyText()",
-          "calledByModules": [
-            "PRISMA"
           ]
         },
         {
@@ -1911,58 +2061,59 @@
           "name": "GetKhajiitFocusForDeity",
           "signature": "Int Function GetKhajiitFocusForDeity(PDV_DeityBase deity)",
           "calledByModules": [
-            "LEDGER",
-            "MANAGER"
+            "DEBUG",
+            "LEDGER"
           ]
         },
         {
           "name": "GetKhajiitFocusLabel",
           "signature": "String Function GetKhajiitFocusLabel(Int focusValue)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
+            "MCM",
             "PRISMA"
           ]
         },
         {
-          "name": "GetKhajiitFocusSymbol",
-          "signature": "String Function GetKhajiitFocusSymbol(Int focusValue)",
+          "name": "GetKhajiitFocusStandingLine",
+          "signature": "String Function GetKhajiitFocusStandingLine(Int focusValue)",
           "calledByModules": [
-            "PRISMA"
+            "MCM"
           ]
         },
         {
           "name": "GetKhajiitFocusWeightKey",
           "signature": "String Function GetKhajiitFocusWeightKey(Int focusValue)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetKhajiitLunarPosture",
           "signature": "Int Function GetKhajiitLunarPosture()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetKhajiitLunarPostureDisplayLabelAt",
           "signature": "String Function GetKhajiitLunarPostureDisplayLabelAt(Int posture)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetKhajiitLunarPostureReadout",
           "signature": "String Function GetKhajiitLunarPostureReadout(Int posture)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetKhajiitLunarSummary",
           "signature": "String Function GetKhajiitLunarSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -1976,20 +2127,27 @@
           "name": "GetKhajiitMoonPhaseFromGameDay",
           "signature": "Int Function GetKhajiitMoonPhaseFromGameDay(Float gameDay)",
           "calledByModules": [
-            "MANAGER",
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetKhajiitSurveyText",
-          "signature": "String Function GetKhajiitSurveyText()",
-          "calledByModules": [
+            "DEBUG",
             "PRISMA"
           ]
         },
         {
           "name": "GetLunarPresidingFocus",
           "signature": "Int Function GetLunarPresidingFocus(Int phaseIndex)",
+          "calledByModules": [
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetMcmModeLine",
+          "signature": "String Function GetMcmModeLine()",
+          "calledByModules": [
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetMcmSummaryLine",
+          "signature": "String Function GetMcmSummaryLine(String standingLabel)",
           "calledByModules": [
             "PRISMA"
           ]
@@ -2002,48 +2160,13 @@
           ]
         },
         {
-          "name": "GetNordDevotionModeLabel",
-          "signature": "String Function GetNordDevotionModeLabel()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetNordFormalCommitmentOfferMessage",
-          "signature": "Message Function GetNordFormalCommitmentOfferMessage(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
           "name": "GetNordPantheonBaselineState",
           "signature": "Int Function GetNordPantheonBaselineState()",
           "calledByModules": [
+            "DEBUG",
             "FAVOR",
             "LEDGER",
-            "MANAGER",
             "RECOGNITION"
-          ]
-        },
-        {
-          "name": "GetNordScarLabel",
-          "signature": "String Function GetNordScarLabel()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetNordSurveyBaseText",
-          "signature": "String Function GetNordSurveyBaseText()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "GetOrcLifeModeGainMultiplier",
-          "signature": "Float Function GetOrcLifeModeGainMultiplier(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
           ]
         },
         {
@@ -2057,12 +2180,12 @@
           "name": "GetOrcSummary",
           "signature": "String Function GetOrcSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
-          "name": "GetOrcSurveyText",
-          "signature": "String Function GetOrcSurveyText()",
+          "name": "GetOriginDetailLabel",
+          "signature": "String Function GetOriginDetailLabel(String detailKey)",
           "calledByModules": [
             "PRISMA"
           ]
@@ -2071,7 +2194,9 @@
           "name": "GetOriginRaceLabel",
           "signature": "String Function GetOriginRaceLabel(Int originRace)",
           "calledByModules": [
+            "DEBUG",
             "MANAGER",
+            "MCM",
             "PRISMA",
             "QUESTREACTION"
           ]
@@ -2084,23 +2209,24 @@
           ]
         },
         {
-          "name": "GetPlayerOriginRaceIndex",
-          "signature": "Int Function GetPlayerOriginRaceIndex()",
+          "name": "GetQuasiPatronName",
+          "signature": "String Function GetQuasiPatronName()",
           "calledByModules": [
-            "DAEDRIC",
-            "FAVOR",
-            "LEDGER",
-            "MANAGER",
-            "PRISMA",
-            "QUESTREACTION",
-            "RECOGNITION"
+            "PRISMA"
           ]
         },
         {
-          "name": "GetRedguardFormalCommitmentOfferMessage",
-          "signature": "Message Function GetRedguardFormalCommitmentOfferMessage(PDV_DeityBase deity)",
+          "name": "GetQuasiPatronSymbol",
+          "signature": "String Function GetQuasiPatronSymbol()",
           "calledByModules": [
-            "LEDGER"
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetQuasiPatronTierLabel",
+          "signature": "String Function GetQuasiPatronTierLabel()",
+          "calledByModules": [
+            "PRISMA"
           ]
         },
         {
@@ -2114,119 +2240,301 @@
           "name": "GetRedguardSummary",
           "signature": "String Function GetRedguardSummary()",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "GetRedguardSurveyText",
-          "signature": "String Function GetRedguardSurveyText()",
-          "calledByModules": [
-            "PRISMA"
+            "DEBUG"
           ]
         },
         {
           "name": "GetSubstrateDecaySummary",
           "signature": "String Function GetSubstrateDecaySummary(Int originValue)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "GetSubstrateForPacingOrigin",
           "signature": "PDV_SubstrateBase Function GetSubstrateForPacingOrigin(Int originValue)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "GetSurveyFragment",
+          "signature": "String Function GetSurveyFragment()",
+          "calledByModules": [
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetTalosEffectiveGainMultiplier",
+          "signature": "Float Function GetTalosEffectiveGainMultiplier()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "GetTalosTrackGainMultiplier",
+          "signature": "Float Function GetTalosTrackGainMultiplier()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "HandleAltmerAlignmentSignal",
+          "signature": "Function HandleAltmerAlignmentSignal(String actionKey, Form sourceForm, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleAltmerCrisisSource",
           "signature": "Function HandleAltmerCrisisSource(Int crisisSource, String sourceId)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleAltmerDawnSteadiness",
           "signature": "Function HandleAltmerDawnSteadiness(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleAltmerLorkhanPressure",
           "signature": "Function HandleAltmerLorkhanPressure(Int pressureTier, String sourceId)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleAltmerMagicSkillIncrease",
           "signature": "Function HandleAltmerMagicSkillIncrease(String skillName)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_ActionRouter"
           ]
         },
         {
           "name": "HandleAltmerOrthodoxCostlyEnforcement",
           "signature": "Function HandleAltmerOrthodoxCostlyEnforcement(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleAltmerSyrabaneAntiMageSurvival",
+          "signature": "Function HandleAltmerSyrabaneAntiMageSurvival(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleAltmerSyrabaneContainment",
+          "signature": "Function HandleAltmerSyrabaneContainment(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleAltmerSyrabaneCureWard",
+          "signature": "Function HandleAltmerSyrabaneCureWard(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleAltmerSyrabaneProtectiveWard",
+          "signature": "Function HandleAltmerSyrabaneProtectiveWard(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleAltmerTrinimacCivilizationDefense",
+          "signature": "Function HandleAltmerTrinimacCivilizationDefense(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleAltmerTrinimacOrthodoxy",
+          "signature": "Function HandleAltmerTrinimacOrthodoxy(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleArgonianBedOfChoiceReturn",
           "signature": "Function HandleArgonianBedOfChoiceReturn(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleArgonianHistMaintenance",
           "signature": "Function HandleArgonianHistMaintenance(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleArgonianPeopleSupport",
           "signature": "Function HandleArgonianPeopleSupport(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleArgonianSacredWaterDiscovery",
+          "signature": "Function HandleArgonianSacredWaterDiscovery(Location discoveredLocation)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
+          "name": "HandleArgonianSapVision",
+          "signature": "Function HandleArgonianSapVision()",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleArgonianShadowscaleKill",
+          "signature": "Function HandleArgonianShadowscaleKill(Actor playerRef)",
+          "calledByModules": [
+            "PDV_ActionRouter"
           ]
         },
         {
           "name": "HandleArgonianVoidSignal",
           "signature": "Function HandleArgonianVoidSignal(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerBanditRoadReversal",
+          "signature": "Function HandleBosmerBanditRoadReversal(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerBanditRoadRoadLife",
+          "signature": "Function HandleBosmerBanditRoadRoadLife(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleBosmerBanditRoadSignal",
           "signature": "Function HandleBosmerBanditRoadSignal(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerExchangeDebtSettled",
+          "signature": "Function HandleBosmerExchangeDebtSettled(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerExchangeProportionateVengeance",
+          "signature": "Function HandleBosmerExchangeProportionateVengeance(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleBosmerExchangeSignal",
           "signature": "Function HandleBosmerExchangeSignal(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerLivingStoryCommunityKept",
+          "signature": "Function HandleBosmerLivingStoryCommunityKept(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerLivingStoryNatureSite",
+          "signature": "Function HandleBosmerLivingStoryNatureSite(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleBosmerLivingStorySignal",
           "signature": "Function HandleBosmerLivingStorySignal(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerOldContractForestKept",
+          "signature": "Function HandleBosmerOldContractForestKept(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBosmerOldContractProperHunt",
+          "signature": "Function HandleBosmerOldContractProperHunt(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleBosmerPactPositiveSignal",
           "signature": "Function HandleBosmerPactPositiveSignal(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBretonActionPracticeSignal",
+          "signature": "Function HandleBretonActionPracticeSignal(Int eventType, String reason)",
+          "calledByModules": [
+            "PDV_ActionRouter",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBretonGreenWayStanding",
+          "signature": "Function HandleBretonGreenWayStanding(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBretonHiddenArtExposure",
+          "signature": "Function HandleBretonHiddenArtExposure(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleBretonKnightlyVow",
+          "signature": "Function HandleBretonKnightlyVow(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
@@ -2237,143 +2545,514 @@
           ]
         },
         {
+          "name": "HandleBretonTraditionChoice",
+          "signature": "Function HandleBretonTraditionChoice(Int traditionValue, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleContextualQuery",
+          "signature": "Int Function HandleContextualQuery(String signalId, String reason = \"\", Form contextForm = None)",
+          "calledByModules": [
+            "PDV_EventBus",
+            "PDV_KhajiitBaanDarRescueEffect",
+            "PDV_ObserveMoonsEffect"
+          ]
+        },
+        {
+          "name": "HandleDunmerDeviationPrice",
+          "signature": "Function HandleDunmerDeviationPrice(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleDunmerHonorableVictory",
+          "signature": "Function HandleDunmerHonorableVictory(Form victimForm)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleDunmerOutdoorGoodDaedraShrine",
+          "signature": "Function HandleDunmerOutdoorGoodDaedraShrine(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
           "name": "HandleDunmerPlayerHomeBonus",
           "signature": "Function HandleDunmerPlayerHomeBonus(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleDunmerPortableShrinePrayer",
           "signature": "Function HandleDunmerPortableShrinePrayer(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleDunmerReclamationFocus",
           "signature": "Function HandleDunmerReclamationFocus(Int focusValue, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleGreenPactViolation",
           "signature": "Function HandleGreenPactViolation(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleHoonDingBreakthroughKill",
+          "signature": "Function HandleHoonDingBreakthroughKill(Form victimForm, Int eventType)",
+          "calledByModules": [
+            "PDV_ActionRouter"
           ]
         },
         {
           "name": "HandleImperialCivicService",
           "signature": "Function HandleImperialCivicService(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleImperialPatronCivicFavor",
+          "signature": "Function HandleImperialPatronCivicFavor(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleImperialSleepEvents",
           "signature": "Function HandleImperialSleepEvents(Actor playerRef, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "HandleImperialTalosPressure",
+          "signature": "Function HandleImperialTalosPressure(Bool isPrivate, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitAlkoshChaosAid",
+          "signature": "Function HandleKhajiitAlkoshChaosAid(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitAlkoshDragonOrder",
+          "signature": "Function HandleKhajiitAlkoshDragonOrder(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitAlkoshGenericDragon",
+          "signature": "Function HandleKhajiitAlkoshGenericDragon(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitAlkoshNamedDragon",
+          "signature": "Function HandleKhajiitAlkoshNamedDragon(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitAzurahDesecration",
+          "signature": "Function HandleKhajiitAzurahDesecration(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitBaanDarBetrayal",
+          "signature": "Function HandleKhajiitBaanDarBetrayal(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitBaanDarReversal",
+          "signature": "Function HandleKhajiitBaanDarReversal(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitBaanDarRoadTrick",
+          "signature": "Function HandleKhajiitBaanDarRoadTrick(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitFocusedSource",
+          "signature": "Function HandleKhajiitFocusedSource(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitFocusedSourceForFocus",
+          "signature": "Function HandleKhajiitFocusedSourceForFocus(Int focusValue, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleKhajiitKhenarthiCaravanAid",
           "signature": "Function HandleKhajiitKhenarthiCaravanAid(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitKhenarthiCaravanHarm",
+          "signature": "Function HandleKhajiitKhenarthiCaravanHarm(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleKhajiitLunarSubstrate",
           "signature": "Function HandleKhajiitLunarSubstrate(String sourceId)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleKhajiitMoonObservance",
           "signature": "Function HandleKhajiitMoonObservance(Int phaseIndex, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitRajhinBotchedTheft",
+          "signature": "Function HandleKhajiitRajhinBotchedTheft(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleKhajiitRajhinElegantTheft",
+          "signature": "Function HandleKhajiitRajhinElegantTheft(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleKhajiitRajhinLegendMade",
           "signature": "Function HandleKhajiitRajhinLegendMade(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleKhajiitRoadHome",
           "signature": "Function HandleKhajiitRoadHome(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleKhajiitRoadHomeAnchor",
           "signature": "Function HandleKhajiitRoadHomeAnchor(Int anchorId, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleLekiHonorableDuel",
+          "signature": "Function HandleLekiHonorableDuel(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleLocationChange",
+          "signature": "Function HandleLocationChange(Form newLocation = None)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
+          "name": "HandleNordHircineArkayEdge",
+          "signature": "Function HandleNordHircineArkayEdge(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleNordKyneTalosContext",
+          "signature": "Function HandleNordKyneTalosContext(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleNordOldWaysState",
           "signature": "Function HandleNordOldWaysState(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleNordTsunAdversitySurvived",
+          "signature": "Function HandleNordTsunAdversitySurvived(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcBloodKinCrisis",
+          "signature": "Function HandleOrcBloodKinCrisis(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcCityDignity",
+          "signature": "Function HandleOrcCityDignity(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcFourHoldsVisit",
+          "signature": "Function HandleOrcFourHoldsVisit(Int holdId, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcLegionService",
+          "signature": "Function HandleOrcLegionService(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcMalacathConduct",
+          "signature": "Function HandleOrcMalacathConduct(Int modeValue, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcOathBreak",
+          "signature": "Function HandleOrcOathBreak(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcSelfMadeCommunity",
+          "signature": "Function HandleOrcSelfMadeCommunity(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcStoryCraftForge",
+          "signature": "Function HandleOrcStoryCraftForge(Location craftLocation)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
+          "name": "HandleOrcStrongholdForge",
+          "signature": "Function HandleOrcStrongholdForge(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleOrcStrongholdPresence",
+          "signature": "Function HandleOrcStrongholdPresence(Int holdId, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandlePaarthurnaxKill",
           "signature": "Function HandlePaarthurnaxKill(Form sourceForm, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandlePaarthurnaxSpare",
           "signature": "Function HandlePaarthurnaxSpare(Form sourceForm, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandlePlayerBelowHealthGate",
+          "signature": "Function HandlePlayerBelowHealthGate(Actor playerRef)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandlePlayerBelowHealthSurvived",
+          "signature": "Function HandlePlayerBelowHealthSurvived(Actor playerRef)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandlePlayerSleepStop",
+          "signature": "Function HandlePlayerSleepStop(Actor playerRef, Bool wasInterrupted, Bool hadSleepStartContext, Bool sleepStartedOutside, String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleRedguardAncestorSpine",
+          "signature": "Function HandleRedguardAncestorSpine(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleRedguardAshAbahDeathDuty",
+          "signature": "Function HandleRedguardAshAbahDeathDuty(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleRedguardAshAbahMajorBurden",
+          "signature": "Function HandleRedguardAshAbahMajorBurden(Form victimForm, Int eventType)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
+          "name": "HandleRedguardAshAbahUndeadSiteClear",
+          "signature": "Function HandleRedguardAshAbahUndeadSiteClear(Location clearedLocation)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
+          "name": "HandleRedguardCrownTombRespect",
+          "signature": "Function HandleRedguardCrownTombRespect(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleRedguardFarShoresToken",
+          "signature": "Function HandleRedguardFarShoresToken(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleRedguardForebearRoadPassage",
+          "signature": "Function HandleRedguardForebearRoadPassage(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleShoutAttack",
           "signature": "Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "MANAGER",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleStateTransitionConfirmationRite",
           "signature": "Function HandleStateTransitionConfirmationRite(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleSubstrateActionEvent",
           "signature": "Function HandleSubstrateActionEvent(Int eventType, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_ActionRouter",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleTalosBetrayal",
           "signature": "Bool Function HandleTalosBetrayal(Int severity, String sourceReason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "HandleTalosShrineDefiance",
           "signature": "Function HandleTalosShrineDefiance(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleTalosWorshipperRescued",
+          "signature": "Function HandleTalosWorshipperRescued(String reason)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleThalmorUnprovokedKill",
+          "signature": "Function HandleThalmorUnprovokedKill(Form victimForm)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
+          "name": "HandleUndeadCryptSiteClear",
+          "signature": "Function HandleUndeadCryptSiteClear(Location clearedLocation)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
+          "name": "HandleWayfarerAkatoshLevel",
+          "signature": "Function HandleWayfarerAkatoshLevel()",
+          "calledByModules": [
+            "PDV_PlayerEvents"
           ]
         },
         {
@@ -2387,14 +3066,7 @@
           "name": "InitializeBosmerStorage",
           "signature": "Function InitializeBosmerStorage()",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "IsAltmerCoherenceNeglected",
-          "signature": "Bool Function IsAltmerCoherenceNeglected()",
-          "calledByModules": [
-            "LEDGER"
+            "DEBUG"
           ]
         },
         {
@@ -2402,13 +3074,6 @@
           "signature": "Bool Function IsAltmerFavorSuppressedByCurse()",
           "calledByModules": [
             "FAVOR",
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "IsAltmerOfferEligibleDeity",
-          "signature": "Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)",
-          "calledByModules": [
             "LEDGER"
           ]
         },
@@ -2423,14 +3088,7 @@
           "name": "IsAltmerRejectedLorkhanSurface",
           "signature": "Bool Function IsAltmerRejectedLorkhanSurface(String sourceId)",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "IsArgonianHistNeglected",
-          "signature": "Bool Function IsArgonianHistNeglected()",
-          "calledByModules": [
-            "LEDGER"
+            "DEBUG"
           ]
         },
         {
@@ -2444,8 +3102,8 @@
           "name": "IsBosmerOrigin",
           "signature": "Bool Function IsBosmerOrigin()",
           "calledByModules": [
-            "LEDGER",
-            "MANAGER"
+            "DEBUG",
+            "LEDGER"
           ]
         },
         {
@@ -2453,27 +3111,6 @@
           "signature": "Bool Function IsBosmerPactBound()",
           "calledByModules": [
             "PRISMA"
-          ]
-        },
-        {
-          "name": "IsBosmerPathNeglected",
-          "signature": "Bool Function IsBosmerPathNeglected()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "IsBretonOfferEligibleDeity",
-          "signature": "Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "IsBretonTraditionNeglected",
-          "signature": "Bool Function IsBretonTraditionNeglected()",
-          "calledByModules": [
-            "LEDGER"
           ]
         },
         {
@@ -2507,38 +3144,10 @@
           ]
         },
         {
-          "name": "IsDunmerAncestorNeglected",
-          "signature": "Bool Function IsDunmerAncestorNeglected()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "IsDunmerOfferEligibleDeity",
-          "signature": "Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
           "name": "IsFocusedPantheonBoonSuspended",
           "signature": "Bool Function IsFocusedPantheonBoonSuspended()",
           "calledByModules": [
             "PRISMA"
-          ]
-        },
-        {
-          "name": "IsImperialCivicNeglected",
-          "signature": "Bool Function IsImperialCivicNeglected()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "IsImperialOfferEligibleDeity",
-          "signature": "Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
           ]
         },
         {
@@ -2556,18 +3165,11 @@
           ]
         },
         {
-          "name": "IsKhajiitLunarNeglected",
-          "signature": "Bool Function IsKhajiitLunarNeglected()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
           "name": "IsKhajiitOrigin",
           "signature": "Bool Function IsKhajiitOrigin()",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "PRISMA"
           ]
         },
@@ -2579,15 +3181,6 @@
           ]
         },
         {
-          "name": "IsNordOfferEligibleDeity",
-          "signature": "Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER",
-            "MANAGER",
-            "QUESTREACTION"
-          ]
-        },
-        {
           "name": "IsNordVampireSuppressed",
           "signature": "Bool Function IsNordVampireSuppressed()",
           "calledByModules": [
@@ -2596,29 +3189,17 @@
           ]
         },
         {
-          "name": "IsOrcCodeNeglected",
-          "signature": "Bool Function IsOrcCodeNeglected()",
+          "name": "IsOfferEligibleDeity",
+          "signature": "Bool Function IsOfferEligibleDeity(PDV_DeityBase deity)",
           "calledByModules": [
-            "LEDGER"
+            "DEBUG",
+            "LEDGER",
+            "QUESTREACTION"
           ]
         },
         {
           "name": "IsOrcOrigin",
           "signature": "Bool Function IsOrcOrigin()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "IsRedguardAncestorDistanceNeglected",
-          "signature": "Bool Function IsRedguardAncestorDistanceNeglected()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "IsRedguardOfferEligibleDeity",
-          "signature": "Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)",
           "calledByModules": [
             "LEDGER"
           ]
@@ -2659,6 +3240,20 @@
           ]
         },
         {
+          "name": "ProcessPendingKhajiitMoonObservation",
+          "signature": "Function ProcessPendingKhajiitMoonObservation(Int observationToken)",
+          "calledByModules": [
+            "PDV_ObserveMoonsEffect"
+          ]
+        },
+        {
+          "name": "ProcessPeriodicContextProbes",
+          "signature": "Function ProcessPeriodicContextProbes()",
+          "calledByModules": [
+            "MANAGER"
+          ]
+        },
+        {
           "name": "ProcessQueuedNordKyneChampionEntry",
           "signature": "Function ProcessQueuedNordKyneChampionEntry()",
           "calledByModules": [
@@ -2673,6 +3268,13 @@
           ]
         },
         {
+          "name": "RecordDunmerStoryVictoryEvidence",
+          "signature": "Function RecordDunmerStoryVictoryEvidence(Form victimForm, Int relationshipRank)",
+          "calledByModules": [
+            "PDV_ActionRouter"
+          ]
+        },
+        {
           "name": "RefreshArgonianDominationPressureForPath",
           "signature": "Function RefreshArgonianDominationPressureForPath(PDV_DaedricPathBase path, String reason)",
           "calledByModules": [
@@ -2683,8 +3285,8 @@
           "name": "RefreshArgonianHistPosture",
           "signature": "Function RefreshArgonianHistPosture(String reason)",
           "calledByModules": [
-            "LEDGER",
-            "MANAGER"
+            "DEBUG",
+            "LEDGER"
           ]
         },
         {
@@ -2712,7 +3314,7 @@
           "name": "ResetSubstratePacingState",
           "signature": "Function ResetSubstratePacingState(Int originValue)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -2796,28 +3398,28 @@
           "name": "SetBosmerGreenPactCompliance",
           "signature": "Function SetBosmerGreenPactCompliance(Int value, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "SetBosmerPactBound",
           "signature": "Function SetBosmerPactBound(Bool isBound, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "SetBretonDruidicFork",
           "signature": "Function SetBretonDruidicFork(Int forkValue, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "SetBretonPracticeCount",
           "signature": "Function SetBretonPracticeCount(Int traditionValue, Int practicePoints)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -2842,13 +3444,6 @@
           ]
         },
         {
-          "name": "ShowKhajiitMessage",
-          "signature": "Function ShowKhajiitMessage(Message messageRecord, String fallbackText, Bool suppressModal)",
-          "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
           "name": "ShowNordNotification",
           "signature": "Function ShowNordNotification(Message messageRecord, String fallbackText)",
           "calledByModules": [
@@ -2856,37 +3451,15 @@
           ]
         },
         {
+          "name": "ShowOriginMessage",
+          "signature": "Function ShowOriginMessage(Message messageRecord, String fallbackText, Bool suppressModal = False)",
+          "calledByModules": [
+            "DEBUG"
+          ]
+        },
+        {
           "name": "SyncAltmerDisciplines",
           "signature": "Function SyncAltmerDisciplines(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER",
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "SyncAltmerNeglectSpell",
-          "signature": "Function SyncAltmerNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncAltmerRewards",
-          "signature": "Function SyncAltmerRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncArgonianNeglectSpell",
-          "signature": "Function SyncArgonianNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncArgonianRewards",
-          "signature": "Function SyncArgonianRewards(Actor playerRef)",
           "calledByModules": [
             "LEDGER",
             "MANAGER"
@@ -2900,80 +3473,10 @@
           ]
         },
         {
-          "name": "SyncBosmerNeglectSpell",
-          "signature": "Function SyncBosmerNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncBosmerRewards",
-          "signature": "Function SyncBosmerRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncBretonNeglectSpell",
-          "signature": "Function SyncBretonNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncBretonRewards",
-          "signature": "Function SyncBretonRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncDunmerNeglectSpell",
-          "signature": "Function SyncDunmerNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncDunmerRewards",
-          "signature": "Function SyncDunmerRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncImperialNeglectSpell",
-          "signature": "Function SyncImperialNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncImperialRewards",
-          "signature": "Function SyncImperialRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncKhajiitEmphasisRewards",
-          "signature": "Function SyncKhajiitEmphasisRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
           "name": "SyncKhajiitLatticeResonance",
           "signature": "Function SyncKhajiitLatticeResonance(Actor playerRef)",
           "calledByModules": [
             "MANAGER"
-          ]
-        },
-        {
-          "name": "SyncKhajiitNeglectSpell",
-          "signature": "Function SyncKhajiitNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
           ]
         },
         {
@@ -2987,6 +3490,7 @@
           "name": "SyncKhajiitRuntimeState",
           "signature": "Function SyncKhajiitRuntimeState()",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
             "MANAGER"
           ]
@@ -3006,27 +3510,6 @@
           ]
         },
         {
-          "name": "SyncNordRewards",
-          "signature": "Function SyncNordRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncOrcNeglectSpell",
-          "signature": "Function SyncOrcNeglectSpell(Bool shouldBeActive)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "SyncOrcRewards",
-          "signature": "Function SyncOrcRewards(Actor playerRef)",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
           "name": "SyncOrcTrialOfIron",
           "signature": "Function SyncOrcTrialOfIron(Actor playerRef)",
           "calledByModules": [
@@ -3034,10 +3517,10 @@
           ]
         },
         {
-          "name": "SyncRedguardNeglectSpell",
-          "signature": "Function SyncRedguardNeglectSpell(Bool shouldBeActive)",
+          "name": "SyncRaceRewards",
+          "signature": "Function SyncRaceRewards()",
           "calledByModules": [
-            "LEDGER"
+            "DEBUG"
           ]
         },
         {
@@ -3049,52 +3532,31 @@
           ]
         },
         {
-          "name": "SyncRedguardRewards",
-          "signature": "Function SyncRedguardRewards(Actor playerRef)",
+          "name": "TrackRedguardAshAbahUndeadSiteVisit",
+          "signature": "Function TrackRedguardAshAbahUndeadSiteVisit(Location currentLocation)",
           "calledByModules": [
-            "LEDGER"
+            "PDV_ActionRouter"
           ]
         },
         {
-          "name": "TryArgonianEldergleamInterior",
-          "signature": "Function TryArgonianEldergleamInterior()",
+          "name": "TrackUndeadCryptClearSiteVisit",
+          "signature": "Function TrackUndeadCryptClearSiteVisit(Location currentLocation)",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "TryArgonianNearWaterMaintenance",
-          "signature": "Function TryArgonianNearWaterMaintenance()",
-          "calledByModules": [
-            "MANAGER"
+            "PDV_ActionRouter"
           ]
         },
         {
           "name": "TryAwardBosmerYffreGreenSite",
           "signature": "Bool Function TryAwardBosmerYffreGreenSite(String siteKey, String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
-          "name": "TryBosmerEldergleamInterior",
-          "signature": "Function TryBosmerEldergleamInterior()",
+          "name": "TryUseKhajiitAzurahPortent",
+          "signature": "Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)",
           "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "TryBosmerGildergreenProximity",
-          "signature": "Function TryBosmerGildergreenProximity()",
-          "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "TryBosmerYffreTreeStoneProximity",
-          "signature": "Function TryBosmerYffreTreeStoneProximity()",
-          "calledByModules": [
-            "MANAGER"
+            "PDV_KhajiitAzurahPortentEffect"
           ]
         },
         {
@@ -3105,7 +3567,7 @@
           ]
         }
       ],
-      "privateCount": 412
+      "privateCount": 414
     },
     "DAEDRIC": {
       "targetScript": "PDV_DaedricRuntime",
@@ -3122,21 +3584,22 @@
           "name": "DrainHircineRenunciationJournal",
           "signature": "Function DrainHircineRenunciationJournal()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
           "name": "DrainHircineResiduePrismaToasts",
           "signature": "Function DrainHircineResiduePrismaToasts()",
           "calledByModules": [
-            "LEDGER",
-            "MANAGER"
+            "DEBUG",
+            "LEDGER"
           ]
         },
         {
           "name": "GetActiveDaedricPactPath",
           "signature": "PDV_DaedricPathBase Function GetActiveDaedricPactPath()",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
             "MANAGER",
             "ORIGIN",
@@ -3145,8 +3608,23 @@
           ]
         },
         {
+          "name": "GetDaedricPathAtListIndex",
+          "signature": "PDV_DaedricPathBase Function GetDaedricPathAtListIndex(Int listIndex)",
+          "calledByModules": [
+            "MANAGER"
+          ]
+        },
+        {
           "name": "GetDaedricPathByName",
           "signature": "PDV_DaedricPathBase Function GetDaedricPathByName(String deityName)",
+          "calledByModules": [
+            "DEBUG",
+            "MANAGER"
+          ]
+        },
+        {
+          "name": "GetDaedricPathCount",
+          "signature": "Int Function GetDaedricPathCount()",
           "calledByModules": [
             "MANAGER"
           ]
@@ -3155,14 +3633,7 @@
           "name": "GetDaedricStigmaGainMultiplier",
           "signature": "Float Function GetDaedricStigmaGainMultiplier(PDV_DeityBase deity)",
           "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "GetDaedricStigmaGainMultiplierNoop",
-          "signature": "Float Function GetDaedricStigmaGainMultiplierNoop(PDV_DeityBase deity)",
-          "calledByModules": [
-            "LEDGER"
+            "DEBUG"
           ]
         },
         {
@@ -3176,7 +3647,7 @@
           "name": "GetHircineSummary",
           "signature": "String Function GetHircineSummary()",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG"
           ]
         },
         {
@@ -3190,21 +3661,45 @@
           "name": "HandleBoethiahHonorableDuel",
           "signature": "Function HandleBoethiahHonorableDuel(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleDaedricGenericSilenceProbe",
+          "signature": "Function HandleDaedricGenericSilenceProbe(String sourceId)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleDaedricPrinceSignal",
+          "signature": "Function HandleDaedricPrinceSignal(Int pathIndex, String sourceId)",
+          "calledByModules": [
+            "PDV_EventBus"
+          ]
+        },
+        {
+          "name": "HandleDaedricShrinePrayer",
+          "signature": "Function HandleDaedricShrinePrayer(Int pathIndex, String sourceId)",
+          "calledByModules": [
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleHircineHuntRite",
           "signature": "Function HandleHircineHuntRite(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
           "name": "HandleMephalaWebWoven",
           "signature": "Function HandleMephalaWebWoven(String reason)",
           "calledByModules": [
-            "MANAGER"
+            "DEBUG",
+            "PDV_EventBus"
           ]
         },
         {
@@ -3230,29 +3725,8 @@
           ]
         },
         {
-          "name": "ProcessDelayedHircineResiduePrismaToasts",
-          "signature": "Function ProcessDelayedHircineResiduePrismaToasts()",
-          "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "ProcessPendingDaedricActivation",
-          "signature": "Function ProcessPendingDaedricActivation()",
-          "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "ProcessPendingDaedricLapse",
-          "signature": "Function ProcessPendingDaedricLapse()",
-          "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "ProcessPendingDaedricPrePactNotices",
-          "signature": "Function ProcessPendingDaedricPrePactNotices()",
+          "name": "ProcessPendingDaedricWork",
+          "signature": "Function ProcessPendingDaedricWork()",
           "calledByModules": [
             "MANAGER"
           ]
@@ -3265,10 +3739,32 @@
           ]
         },
         {
+          "name": "QueueDaedricMilestoneMcmReplay",
+          "signature": "Function QueueDaedricMilestoneMcmReplay(PDV_DaedricPathBase path, Int oldTier, Int newTier, String reason)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "QueueDaedricMilestonePresentation",
+          "signature": "Function QueueDaedricMilestonePresentation(PDV_DaedricPathBase path, Int oldTier, Int newTier, String reason)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "RepairDaedricPathRuntimeNames",
           "signature": "Int Function RepairDaedricPathRuntimeNames()",
           "calledByModules": [
             "LEDGER"
+          ]
+        },
+        {
+          "name": "RouteActionToOpenPaths",
+          "signature": "Function RouteActionToOpenPaths(Int eventType, Form actorRef, Form targetRef)",
+          "calledByModules": [
+            "PDV_ActionRouter",
+            "PDV_EventBus"
           ]
         },
         {
@@ -3307,7 +3803,7 @@
           ]
         }
       ],
-      "privateCount": 21
+      "privateCount": 18
     },
     "PRISMA": {
       "targetScript": "PDV_PrismaPresenter",
@@ -3350,8 +3846,8 @@
           "name": "DispatchDiegeticCue",
           "signature": "Function DispatchDiegeticCue(String eventClass, String surfaceKey, String direction, PDV_DeityBase deity, String toneOverride = \"\")",
           "calledByModules": [
-            "LEDGER",
-            "MANAGER"
+            "DEBUG",
+            "LEDGER"
           ]
         },
         {
@@ -3400,7 +3896,8 @@
           "name": "GetPlayerMcmModeLine",
           "signature": "String Function GetPlayerMcmModeLine()",
           "calledByModules": [
-            "MANAGER"
+            "MANAGER",
+            "MCM"
           ]
         },
         {
@@ -3422,8 +3919,8 @@
           "signature": "String Function GetPrismaSymbolForDeity(PDV_DeityBase deity)",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "ORIGIN",
             "QUESTREACTION"
           ]
@@ -3442,8 +3939,8 @@
           "signature": "String Function GetPublicTierBand(Int tier)",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "ORIGIN",
             "RECOGNITION"
           ]
@@ -3557,6 +4054,7 @@
           "signature": "Function RequestPanelRefresh()",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "FAVOR",
             "LEDGER",
             "MANAGER",
@@ -3614,7 +4112,7 @@
           "name": "SendPrismaShiftToast",
           "signature": "Bool Function SendPrismaShiftToast(String shiftMode, String context, String symbolName, Bool allowFallback = True)",
           "calledByModules": [
-            "MANAGER",
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -3630,6 +4128,7 @@
           "signature": "Bool Function SendPrismaToast(String symbolName, String tone, String titleText, String messageText, Bool allowFallback = True, Bool allowDuringRaceSetup = False)",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "LEDGER",
             "MANAGER",
             "ORIGIN",
@@ -3685,8 +4184,8 @@
           "name": "SurfaceTransition",
           "signature": "Function SurfaceTransition(String eventClass, String surfaceKey, String direction, Int deityIndex = -1, String toneOverride = \"\", Bool repeatable = false, Bool headline = false, Bool silent = false)",
           "calledByModules": [
+            "DEBUG",
             "LEDGER",
-            "MANAGER",
             "ORIGIN"
           ]
         }
@@ -3697,41 +4196,6 @@
       "targetScript": "PDV_RecognitionRuntime",
       "callForm": "RecognitionRuntime.<fn> (instance)",
       "public": [
-        {
-          "name": "NpcReligiousRecognitionEnabled",
-          "signature": "Bool Function NpcReligiousRecognitionEnabled()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "NpcHostileRecognitionEnabled",
-          "signature": "Bool Function NpcHostileRecognitionEnabled()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "SetNpcReligiousRecognitionEnabled",
-          "signature": "Function SetNpcReligiousRecognitionEnabled(Bool enabled)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "SetNpcHostileRecognitionEnabled",
-          "signature": "Function SetNpcHostileRecognitionEnabled(Bool enabled)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "GetNpcRecognitionStatusLine",
-          "signature": "String Function GetNpcRecognitionStatusLine()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
         {
           "name": "EnsureRecognitionModEvents",
           "signature": "Function EnsureRecognitionModEvents()",
@@ -3747,10 +4211,45 @@
           ]
         },
         {
+          "name": "GetNpcRecognitionStatusLine",
+          "signature": "String Function GetNpcRecognitionStatusLine()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "InvalidateNpcReligiousRecognition",
           "signature": "Function InvalidateNpcReligiousRecognition()",
           "calledByModules": [
             "MANAGER"
+          ]
+        },
+        {
+          "name": "NpcHostileRecognitionEnabled",
+          "signature": "Bool Function NpcHostileRecognitionEnabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "NpcReligiousRecognitionEnabled",
+          "signature": "Bool Function NpcReligiousRecognitionEnabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "SetNpcHostileRecognitionEnabled",
+          "signature": "Function SetNpcHostileRecognitionEnabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "SetNpcReligiousRecognitionEnabled",
+          "signature": "Function SetNpcReligiousRecognitionEnabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
           ]
         },
         {
@@ -3769,187 +4268,17 @@
       "callForm": "DebugRuntime.<fn> (instance; MCM reaches PDV_Manager.DebugRuntime)",
       "public": [
         {
-          "name": "DebugGetDiegeticD1Enabled",
-          "signature": "Bool Function DebugGetDiegeticD1Enabled()",
+          "name": "DebugAcceptPatronForPacing",
+          "signature": "String Function DebugAcceptPatronForPacing()",
           "calledByModules": [
             "MCM"
           ]
         },
         {
-          "name": "DebugSetDiegeticD1Enabled",
-          "signature": "Function DebugSetDiegeticD1Enabled(Bool enabled)",
+          "name": "DebugAcceptPendingCommitment",
+          "signature": "Function DebugAcceptPendingCommitment()",
           "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetSignalFloorSmokeScenarioCount",
-          "signature": "Int Function DebugGetSignalFloorSmokeScenarioCount()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetSignalFloorSmokeLabel",
-          "signature": "String Function DebugGetSignalFloorSmokeLabel(Int scenarioIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRunSignalFloorSmokeScenario",
-          "signature": "String Function DebugRunSignalFloorSmokeScenario(Int scenarioIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSeedArgonian",
-          "signature": "Function DebugSeedArgonian(Float histValue, Float peopleValue, Float voidValue)",
-          "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "DebugSeedBosmerVariety",
-          "signature": "Function DebugSeedBosmerVariety()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetKhajiitLunarMetric",
-          "signature": "String Function DebugSetKhajiitLunarMetric(Float metricTarget)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugResetKhajiitLunarSubstrate",
-          "signature": "String Function DebugResetKhajiitLunarSubstrate()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetKhajiitLunarBudgetSummary",
-          "signature": "String Function DebugGetKhajiitLunarBudgetSummary()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugCycleKhajiitLunarPosture",
-          "signature": "Function DebugCycleKhajiitLunarPosture()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugClosePrismaSurfaces",
-          "signature": "Function DebugClosePrismaSurfaces()",
-          "calledByModules": [
-            "MANAGER",
-            "PDV_DevotionLedger"
-          ]
-        },
-        {
-          "name": "DebugSyncRewardsOnly",
-          "signature": "Function DebugSyncRewardsOnly()",
-          "calledByModules": [
-            "MANAGER"
-          ]
-        },
-        {
-          "name": "DebugForceSetPietyByIndex",
-          "signature": "Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugForceSetPietyTodayByIndex",
-          "signature": "Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugPrimeDecayGraceByIndex",
-          "signature": "Function DebugPrimeDecayGraceByIndex(Int deityIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugPrimeDecayEligibleByIndex",
-          "signature": "Function DebugPrimeDecayEligibleByIndex(Int deityIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRunDecayPass",
-          "signature": "Function DebugRunDecayPass()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRunDecayProofDaysByIndex",
-          "signature": "Function DebugRunDecayProofDaysByIndex(Int deityIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugAwardCuratedSignalByIndex",
-          "signature": "Function DebugAwardCuratedSignalByIndex(Int deityIndex, Int signalType)",
-          "calledByModules": [
-            "MANAGER",
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetPietyMapString",
-          "signature": "String Function DebugGetPietyMapString()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugClearActiveDeity",
-          "signature": "Function DebugClearActiveDeity()",
-          "calledByModules": [
-            "MANAGER",
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetBroadWorship",
-          "signature": "Function DebugSetBroadWorship()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSeedBroadLane",
-          "signature": "Function DebugSeedBroadLane()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetBretonPracticeSummary",
-          "signature": "String Function DebugGetBretonPracticeSummary()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetBretonPracticePoints",
-          "signature": "String Function DebugSetBretonPracticePoints(Int practicePoints)",
-          "calledByModules": [
+            "LEDGER",
             "MCM"
           ]
         },
@@ -3961,52 +4290,8 @@
           ]
         },
         {
-          "name": "DebugResetBretonPracticePoints",
-          "signature": "String Function DebugResetBretonPracticePoints()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetOriginDiagnostic",
-          "signature": "String Function DebugGetOriginDiagnostic()",
-          "calledByModules": [
-            "MCM",
-            "PDV_PrismaPresenter"
-          ]
-        },
-        {
-          "name": "DebugResetDeityByIndex",
-          "signature": "Function DebugResetDeityByIndex(Int deityIndex)",
-          "calledByModules": [
-            "MANAGER",
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugFireDislike",
-          "signature": "Function DebugFireDislike(PDV_DeityBase deity, Int eventType)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
           "name": "DebugApplyDomainSting",
           "signature": "Function DebugApplyDomainSting(Int domainValue, Bool sharp)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugBurstAntiStack",
-          "signature": "Function DebugBurstAntiStack()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugDislikeSummaryLine",
-          "signature": "String Function DebugDislikeSummaryLine(PDV_DeityBase deity, Int eventType)",
           "calledByModules": [
             "MCM"
           ]
@@ -4026,445 +4311,39 @@
           ]
         },
         {
-          "name": "DebugUnlockConcordatWalkback",
-          "signature": "Function DebugUnlockConcordatWalkback()",
+          "name": "DebugAwardCuratedSignalByIndex",
+          "signature": "Function DebugAwardCuratedSignalByIndex(Int deityIndex, Int signalType)",
+          "calledByModules": [
+            "MANAGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugBurstAntiStack",
+          "signature": "Function DebugBurstAntiStack()",
           "calledByModules": [
             "MCM"
           ]
         },
         {
-          "name": "DebugSetBosmerPathState",
-          "signature": "Function DebugSetBosmerPathState(Int stateValue)",
+          "name": "DebugClearActiveDeity",
+          "signature": "Function DebugClearActiveDeity()",
           "calledByModules": [
+            "MANAGER",
             "MCM"
           ]
         },
         {
-          "name": "DebugTriggerGreenPactViolation",
-          "signature": "Function DebugTriggerGreenPactViolation()",
+          "name": "DebugClosePrismaSurfaces",
+          "signature": "Function DebugClosePrismaSurfaces()",
           "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordBosmerLivingStorySignal",
-          "signature": "Function DebugRecordBosmerLivingStorySignal()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordBosmerExchangeSignal",
-          "signature": "Function DebugRecordBosmerExchangeSignal()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordBosmerBanditRoadSignal",
-          "signature": "Function DebugRecordBosmerBanditRoadSignal()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordBosmerPactPositiveSignal",
-          "signature": "Function DebugRecordBosmerPactPositiveSignal()",
-          "calledByModules": [
-            "MCM"
+            "LEDGER",
+            "MANAGER"
           ]
         },
         {
           "name": "DebugConfirmStateTransitionRite",
           "signature": "Function DebugConfirmStateTransitionRite()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordDunmerAncestorPrayer",
-          "signature": "Function DebugRecordDunmerAncestorPrayer()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordDunmerAncestorHomeBonus",
-          "signature": "Function DebugRecordDunmerAncestorHomeBonus()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordKhajiitMoonObservance",
-          "signature": "Function DebugRecordKhajiitMoonObservance()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordKhajiitRoadHome",
-          "signature": "Function DebugRecordKhajiitRoadHome()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordKhajiitCaravanAid",
-          "signature": "Function DebugRecordKhajiitCaravanAid()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordKhajiitLegendMade",
-          "signature": "Function DebugRecordKhajiitLegendMade()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordMephalaWebWoven",
-          "signature": "Function DebugRecordMephalaWebWoven()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordBoethiahHonorableDuel",
-          "signature": "Function DebugRecordBoethiahHonorableDuel()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordTalosShrineDefiance",
-          "signature": "Function DebugRecordTalosShrineDefiance()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetNordPantheonBaseline",
-          "signature": "Function DebugSetNordPantheonBaseline(Int stateValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetSubstratePacingSummary",
-          "signature": "String Function DebugGetSubstratePacingSummary(Int originValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugTriggerSubstratePacingSource",
-          "signature": "String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceIndex = 0)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSeedSubstrateMetric",
-          "signature": "String Function DebugSeedSubstrateMetric(Int originValue, Float metricValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugResetSubstratePacing",
-          "signature": "String Function DebugResetSubstratePacing(Int originValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetBroadPantheonSummary",
-          "signature": "String Function DebugGetBroadPantheonSummary(Int poolIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSeedBroadPantheonPool",
-          "signature": "String Function DebugSeedBroadPantheonPool(Int poolIndex, Float standingValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugResetBroadPantheonPool",
-          "signature": "String Function DebugResetBroadPantheonPool(Int poolIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRunBroadPantheonFanoutTest",
-          "signature": "String Function DebugRunBroadPantheonFanoutTest()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugPrimeBroadPantheonScratch",
-          "signature": "String Function DebugPrimeBroadPantheonScratch(Int poolIndex, Float scratchValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRunBroadPantheonCatchupForPacing",
-          "signature": "String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetNordBaselineForPacing",
-          "signature": "String Function DebugSetNordBaselineForPacing(Int baselineValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugOfferAcceptRecoverySummary",
-          "signature": "String Function DebugOfferAcceptRecoverySummary()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetBroadWorshipForPacing",
-          "signature": "String Function DebugSetBroadWorshipForPacing()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRunPatronOfferForPacing",
-          "signature": "String Function DebugRunPatronOfferForPacing()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugAcceptPatronForPacing",
-          "signature": "String Function DebugAcceptPatronForPacing()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugLapsePatronForPacing",
-          "signature": "String Function DebugLapsePatronForPacing()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecoverPatronForPacing",
-          "signature": "String Function DebugRecoverPatronForPacing()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetImperialVampireForPacing",
-          "signature": "String Function DebugSetImperialVampireForPacing(Bool vampireActive)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetKhajiitFocus",
-          "signature": "Function DebugSetKhajiitFocus(Int focusValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetBretonTradition",
-          "signature": "Function DebugSetBretonTradition(Int traditionValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetOrcLifeMode",
-          "signature": "Function DebugSetOrcLifeMode(Int modeValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetArgonianFocus",
-          "signature": "Function DebugSetArgonianFocus(Int focusValue)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugCycleContextualFavorLane",
-          "signature": "Function DebugCycleContextualFavorLane()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugCycleContextualFavorFamily",
-          "signature": "Function DebugCycleContextualFavorFamily()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugTriggerSelectedContextualFavor",
-          "signature": "Function DebugTriggerSelectedContextualFavor()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugExpireActiveFavor",
-          "signature": "Function DebugExpireActiveFavor()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugPrimeRaceLaneNeglect",
-          "signature": "Function DebugPrimeRaceLaneNeglect()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRecordHircineHuntRite",
-          "signature": "Function DebugRecordHircineHuntRite()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugResetHircinePath",
-          "signature": "Function DebugResetHircinePath()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRenounceHircinePath",
-          "signature": "Function DebugRenounceHircinePath()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugForceCurseNone",
-          "signature": "Function DebugForceCurseNone()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugForceCurseWerewolf",
-          "signature": "Function DebugForceCurseWerewolf()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugForceCurseVampire",
-          "signature": "Function DebugForceCurseVampire()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugRefreshCurseFromPlayerState",
-          "signature": "Function DebugRefreshCurseFromPlayerState()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSetCurseProofOriginRace",
-          "signature": "Bool Function DebugSetCurseProofOriginRace(Int originRace)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugEvaluateCommitmentOffer",
-          "signature": "Function DebugEvaluateCommitmentOffer()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSeedCommitmentSignalDaysByIndex",
-          "signature": "Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugResetCommitmentStateByIndex",
-          "signature": "Function DebugResetCommitmentStateByIndex(Int deityIndex)",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugAcceptPendingCommitment",
-          "signature": "Function DebugAcceptPendingCommitment()",
-          "calledByModules": [
-            "MCM",
-            "PDV_DevotionLedger"
-          ]
-        },
-        {
-          "name": "DebugDeclinePendingCommitment",
-          "signature": "Function DebugDeclinePendingCommitment()",
-          "calledByModules": [
-            "MCM",
-            "PDV_DevotionLedger"
-          ]
-        },
-        {
-          "name": "DebugRefusePendingCommitment",
-          "signature": "Function DebugRefusePendingCommitment()",
-          "calledByModules": [
-            "MCM",
-            "PDV_DevotionLedger"
-          ]
-        },
-        {
-          "name": "DebugRunNeglectPass",
-          "signature": "Function DebugRunNeglectPass()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSanguineConsentReadback",
-          "signature": "String Function DebugSanguineConsentReadback()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugSeedSanguineOfferReady",
-          "signature": "String Function DebugSeedSanguineOfferReady()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugEvaluateConsentOfferReport",
-          "signature": "String Function DebugEvaluateConsentOfferReport()",
           "calledByModules": [
             "MCM"
           ]
@@ -4477,8 +4356,107 @@
           ]
         },
         {
+          "name": "DebugCycleContextualFavorFamily",
+          "signature": "Function DebugCycleContextualFavorFamily()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugCycleContextualFavorLane",
+          "signature": "Function DebugCycleContextualFavorLane()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugCycleKhajiitLunarPosture",
+          "signature": "Function DebugCycleKhajiitLunarPosture()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugDeclinePendingCommitment",
+          "signature": "Function DebugDeclinePendingCommitment()",
+          "calledByModules": [
+            "LEDGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugDislikeSummaryLine",
+          "signature": "String Function DebugDislikeSummaryLine(PDV_DeityBase deity, Int eventType)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugEvaluateCommitmentOffer",
+          "signature": "Function DebugEvaluateCommitmentOffer()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugEvaluateConsentOfferReport",
+          "signature": "String Function DebugEvaluateConsentOfferReport()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugExpireActiveFavor",
+          "signature": "Function DebugExpireActiveFavor()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugFireDislike",
+          "signature": "Function DebugFireDislike(PDV_DeityBase deity, Int eventType)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "DebugFireSanguineAlcoholTwice",
           "signature": "String Function DebugFireSanguineAlcoholTwice()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceCurseNone",
+          "signature": "Function DebugForceCurseNone()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceCurseVampire",
+          "signature": "Function DebugForceCurseVampire()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceCurseWerewolf",
+          "signature": "Function DebugForceCurseWerewolf()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceSetPietyByIndex",
+          "signature": "Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugForceSetPietyTodayByIndex",
+          "signature": "Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)",
           "calledByModules": [
             "MCM"
           ]
@@ -4491,30 +4469,29 @@
           ]
         },
         {
-          "name": "DebugGetPatternProvingSummary",
-          "signature": "String Function DebugGetPatternProvingSummary()",
-          "calledByModules": [
-            "MCM",
-            "PDV_DevotionLedger"
-          ]
-        },
-        {
-          "name": "DebugGetPatternSummarySection",
-          "signature": "String Function DebugGetPatternSummarySection(Int sectionIndex)",
+          "name": "DebugGetBretonPracticeSummary",
+          "signature": "String Function DebugGetBretonPracticeSummary()",
           "calledByModules": [
             "MCM"
           ]
         },
         {
-          "name": "DebugGetPatternSummarySectionCount",
-          "signature": "Int Function DebugGetPatternSummarySectionCount()",
+          "name": "DebugGetBroadPantheonSummary",
+          "signature": "String Function DebugGetBroadPantheonSummary(Int poolIndex)",
           "calledByModules": [
             "MCM"
           ]
         },
         {
-          "name": "DebugGetPatternSummaryRaceSection",
-          "signature": "Int Function DebugGetPatternSummaryRaceSection(Int originRace)",
+          "name": "DebugGetConcordatGateLabel",
+          "signature": "String Function DebugGetConcordatGateLabel()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetConcordatPendingStateLabel",
+          "signature": "String Function DebugGetConcordatPendingStateLabel()",
           "calledByModules": [
             "MCM"
           ]
@@ -4534,22 +4511,544 @@
           ]
         },
         {
-          "name": "DebugGetConcordatPendingStateLabel",
-          "signature": "String Function DebugGetConcordatPendingStateLabel()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
-          "name": "DebugGetConcordatGateLabel",
-          "signature": "String Function DebugGetConcordatGateLabel()",
-          "calledByModules": [
-            "MCM"
-          ]
-        },
-        {
           "name": "DebugGetDecaySummaryByIndex",
           "signature": "String Function DebugGetDecaySummaryByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetDiegeticD1Enabled",
+          "signature": "Bool Function DebugGetDiegeticD1Enabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetKhajiitLunarBudgetSummary",
+          "signature": "String Function DebugGetKhajiitLunarBudgetSummary()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetOriginDiagnostic",
+          "signature": "String Function DebugGetOriginDiagnostic()",
+          "calledByModules": [
+            "MCM",
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "DebugGetPatternProvingSummary",
+          "signature": "String Function DebugGetPatternProvingSummary()",
+          "calledByModules": [
+            "LEDGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPatternSummaryRaceSection",
+          "signature": "Int Function DebugGetPatternSummaryRaceSection(Int originRace)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPatternSummarySection",
+          "signature": "String Function DebugGetPatternSummarySection(Int sectionIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPatternSummarySectionCount",
+          "signature": "Int Function DebugGetPatternSummarySectionCount()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetPietyMapString",
+          "signature": "String Function DebugGetPietyMapString()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetSignalFloorSmokeLabel",
+          "signature": "String Function DebugGetSignalFloorSmokeLabel(Int scenarioIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetSignalFloorSmokeScenarioCount",
+          "signature": "Int Function DebugGetSignalFloorSmokeScenarioCount()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugGetSubstratePacingSummary",
+          "signature": "String Function DebugGetSubstratePacingSummary(Int originValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugLapsePatronForPacing",
+          "signature": "String Function DebugLapsePatronForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugOfferAcceptRecoverySummary",
+          "signature": "String Function DebugOfferAcceptRecoverySummary()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeBroadPantheonScratch",
+          "signature": "String Function DebugPrimeBroadPantheonScratch(Int poolIndex, Float scratchValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeDecayEligibleByIndex",
+          "signature": "Function DebugPrimeDecayEligibleByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeDecayGraceByIndex",
+          "signature": "Function DebugPrimeDecayGraceByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugPrimeRaceLaneNeglect",
+          "signature": "Function DebugPrimeRaceLaneNeglect()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBoethiahHonorableDuel",
+          "signature": "Function DebugRecordBoethiahHonorableDuel()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerBanditRoadSignal",
+          "signature": "Function DebugRecordBosmerBanditRoadSignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerExchangeSignal",
+          "signature": "Function DebugRecordBosmerExchangeSignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerLivingStorySignal",
+          "signature": "Function DebugRecordBosmerLivingStorySignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordBosmerPactPositiveSignal",
+          "signature": "Function DebugRecordBosmerPactPositiveSignal()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordDunmerAncestorHomeBonus",
+          "signature": "Function DebugRecordDunmerAncestorHomeBonus()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordDunmerAncestorPrayer",
+          "signature": "Function DebugRecordDunmerAncestorPrayer()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordHircineHuntRite",
+          "signature": "Function DebugRecordHircineHuntRite()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitCaravanAid",
+          "signature": "Function DebugRecordKhajiitCaravanAid()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitLegendMade",
+          "signature": "Function DebugRecordKhajiitLegendMade()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitMoonObservance",
+          "signature": "Function DebugRecordKhajiitMoonObservance()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordKhajiitRoadHome",
+          "signature": "Function DebugRecordKhajiitRoadHome()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordMephalaWebWoven",
+          "signature": "Function DebugRecordMephalaWebWoven()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecordTalosShrineDefiance",
+          "signature": "Function DebugRecordTalosShrineDefiance()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRecoverPatronForPacing",
+          "signature": "String Function DebugRecoverPatronForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRefreshCurseFromPlayerState",
+          "signature": "Function DebugRefreshCurseFromPlayerState()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRefusePendingCommitment",
+          "signature": "Function DebugRefusePendingCommitment()",
+          "calledByModules": [
+            "LEDGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRenounceHircinePath",
+          "signature": "Function DebugRenounceHircinePath()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetBretonPracticePoints",
+          "signature": "String Function DebugResetBretonPracticePoints()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetBroadPantheonPool",
+          "signature": "String Function DebugResetBroadPantheonPool(Int poolIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetCommitmentStateByIndex",
+          "signature": "Function DebugResetCommitmentStateByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetDeityByIndex",
+          "signature": "Function DebugResetDeityByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MANAGER",
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetHircinePath",
+          "signature": "Function DebugResetHircinePath()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetKhajiitLunarSubstrate",
+          "signature": "String Function DebugResetKhajiitLunarSubstrate()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugResetSubstratePacing",
+          "signature": "String Function DebugResetSubstratePacing(Int originValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunBroadPantheonCatchupForPacing",
+          "signature": "String Function DebugRunBroadPantheonCatchupForPacing(Int poolIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunBroadPantheonFanoutTest",
+          "signature": "String Function DebugRunBroadPantheonFanoutTest()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunDecayPass",
+          "signature": "Function DebugRunDecayPass()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunDecayProofDaysByIndex",
+          "signature": "Function DebugRunDecayProofDaysByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunNeglectPass",
+          "signature": "Function DebugRunNeglectPass()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunPatronOfferForPacing",
+          "signature": "String Function DebugRunPatronOfferForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugRunSignalFloorSmokeScenario",
+          "signature": "String Function DebugRunSignalFloorSmokeScenario(Int scenarioIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSanguineConsentReadback",
+          "signature": "String Function DebugSanguineConsentReadback()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedArgonian",
+          "signature": "Function DebugSeedArgonian(Float histValue, Float peopleValue, Float voidValue)",
+          "calledByModules": [
+            "MANAGER"
+          ]
+        },
+        {
+          "name": "DebugSeedBosmerVariety",
+          "signature": "Function DebugSeedBosmerVariety()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedBroadLane",
+          "signature": "Function DebugSeedBroadLane()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedBroadPantheonPool",
+          "signature": "String Function DebugSeedBroadPantheonPool(Int poolIndex, Float standingValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedCommitmentSignalDaysByIndex",
+          "signature": "Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedSanguineOfferReady",
+          "signature": "String Function DebugSeedSanguineOfferReady()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSeedSubstrateMetric",
+          "signature": "String Function DebugSeedSubstrateMetric(Int originValue, Float metricValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetArgonianFocus",
+          "signature": "Function DebugSetArgonianFocus(Int focusValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBosmerPathState",
+          "signature": "Function DebugSetBosmerPathState(Int stateValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBretonPracticePoints",
+          "signature": "String Function DebugSetBretonPracticePoints(Int practicePoints)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBretonTradition",
+          "signature": "Function DebugSetBretonTradition(Int traditionValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBroadWorship",
+          "signature": "Function DebugSetBroadWorship()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetBroadWorshipForPacing",
+          "signature": "String Function DebugSetBroadWorshipForPacing()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetCurseProofOriginRace",
+          "signature": "Bool Function DebugSetCurseProofOriginRace(Int originRace)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetDiegeticD1Enabled",
+          "signature": "Function DebugSetDiegeticD1Enabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetImperialVampireForPacing",
+          "signature": "String Function DebugSetImperialVampireForPacing(Bool vampireActive)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetKhajiitFocus",
+          "signature": "Function DebugSetKhajiitFocus(Int focusValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetKhajiitLunarMetric",
+          "signature": "String Function DebugSetKhajiitLunarMetric(Float metricTarget)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetNordBaselineForPacing",
+          "signature": "String Function DebugSetNordBaselineForPacing(Int baselineValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetNordPantheonBaseline",
+          "signature": "Function DebugSetNordPantheonBaseline(Int stateValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSetOrcLifeMode",
+          "signature": "Function DebugSetOrcLifeMode(Int modeValue)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugSyncRewardsOnly",
+          "signature": "Function DebugSyncRewardsOnly()",
+          "calledByModules": [
+            "MANAGER"
+          ]
+        },
+        {
+          "name": "DebugTriggerGreenPactViolation",
+          "signature": "Function DebugTriggerGreenPactViolation()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugTriggerSelectedContextualFavor",
+          "signature": "Function DebugTriggerSelectedContextualFavor()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugTriggerSubstratePacingSource",
+          "signature": "String Function DebugTriggerSubstratePacingSource(Int originValue, Int sourceIndex = 0)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "DebugUnlockConcordatWalkback",
+          "signature": "Function DebugUnlockConcordatWalkback()",
           "calledByModules": [
             "MCM"
           ]
@@ -4562,9 +5061,17 @@
       "callForm": "manager-internal / Manager.<fn> via backref",
       "public": [
         {
+          "name": "ApplyInGameEffectsPreference",
+          "signature": "Function ApplyInGameEffectsPreference()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
           "name": "BeginRaceSetupQuietPresentation",
           "signature": "Function BeginRaceSetupQuietPresentation(String reason)",
           "calledByModules": [
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -4581,48 +5088,15 @@
           "name": "ConsumeOncePerDaySignal",
           "signature": "Bool Function ConsumeOncePerDaySignal(String keyPrefix)",
           "calledByModules": [
+            "DAEDRIC",
             "ORIGIN"
-          ]
-        },
-        {
-          "name": "DebugAcceptPendingCommitment",
-          "signature": "Function DebugAcceptPendingCommitment()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "DebugDeclinePendingCommitment",
-          "signature": "Function DebugDeclinePendingCommitment()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "DebugGetOriginDiagnostic",
-          "signature": "String Function DebugGetOriginDiagnostic()",
-          "calledByModules": [
-            "PRISMA"
-          ]
-        },
-        {
-          "name": "DebugGetPatternProvingSummary",
-          "signature": "String Function DebugGetPatternProvingSummary()",
-          "calledByModules": [
-            "LEDGER"
-          ]
-        },
-        {
-          "name": "DebugRefusePendingCommitment",
-          "signature": "Function DebugRefusePendingCommitment()",
-          "calledByModules": [
-            "LEDGER"
           ]
         },
         {
           "name": "EndRaceSetupQuietPresentation",
           "signature": "Function EndRaceSetupQuietPresentation()",
           "calledByModules": [
+            "DEBUG",
             "ORIGIN"
           ]
         },
@@ -4634,10 +5108,53 @@
           ]
         },
         {
+          "name": "GetActiveDeity",
+          "signature": "PDV_DeityBase Function GetActiveDeity()",
+          "calledByModules": [
+            "DEBUG",
+            "FAVOR",
+            "LEDGER",
+            "ORIGIN",
+            "PRISMA",
+            "RECOGNITION"
+          ]
+        },
+        {
+          "name": "GetAuthoriaResidueSummary",
+          "signature": "String Function GetAuthoriaResidueSummary()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "GetBroadPantheonSelfEventSequence",
+          "signature": "Int Function GetBroadPantheonSelfEventSequence()",
+          "calledByModules": [
+            "DEBUG",
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "GetBuildVersion",
+          "signature": "String Function GetBuildVersion()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "GetDawnHadActivity",
+          "signature": "Bool Function GetDawnHadActivity()",
+          "calledByModules": [
+            "LEDGER",
+            "PRISMA"
+          ]
+        },
+        {
           "name": "GetDebugLevel",
           "signature": "Int Function GetDebugLevel()",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "LEDGER",
             "ORIGIN",
             "PRISMA",
@@ -4650,6 +5167,60 @@
           "calledByModules": [
             "LEDGER",
             "QUESTREACTION"
+          ]
+        },
+        {
+          "name": "GetPdvCCFishingPresent",
+          "signature": "Bool Function GetPdvCCFishingPresent()",
+          "calledByModules": [
+            "LEDGER",
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetPdvCCSaintsPresent",
+          "signature": "Bool Function GetPdvCCSaintsPresent()",
+          "calledByModules": [
+            "LEDGER",
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetPdvSunHelmPresent",
+          "signature": "Bool Function GetPdvSunHelmPresent()",
+          "calledByModules": [
+            "LEDGER",
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetPdvSurvivalModePresent",
+          "signature": "Bool Function GetPdvSurvivalModePresent()",
+          "calledByModules": [
+            "LEDGER",
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "GetPlayerOriginRaceIndex",
+          "signature": "Int Function GetPlayerOriginRaceIndex()",
+          "calledByModules": [
+            "DAEDRIC",
+            "DEBUG",
+            "FAVOR",
+            "LEDGER",
+            "MCM",
+            "ORIGIN",
+            "PRISMA",
+            "QUESTREACTION",
+            "RECOGNITION"
+          ]
+        },
+        {
+          "name": "GetRaceCurseSurfaceShown",
+          "signature": "Bool Function GetRaceCurseSurfaceShown()",
+          "calledByModules": [
+            "PRISMA"
           ]
         },
         {
@@ -4709,6 +5280,51 @@
           ]
         },
         {
+          "name": "GetSuppressAwardFavorToast",
+          "signature": "Bool Function GetSuppressAwardFavorToast()",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "GetSuppressCurseTransitionOutputs",
+          "signature": "Bool Function GetSuppressCurseTransitionOutputs()",
+          "calledByModules": [
+            "LEDGER",
+            "ORIGIN"
+          ]
+        },
+        {
+          "name": "HandleKIDAction",
+          "signature": "Function HandleKIDAction(String actionKey, Form sourceForm)",
+          "calledByModules": [
+            "DEBUG",
+            "PDV_PlayerEvents"
+          ]
+        },
+        {
+          "name": "InGameEffectsEnabled",
+          "signature": "Bool Function InGameEffectsEnabled()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "IsDaedricPactOfferEligibleDeity",
+          "signature": "Bool Function IsDaedricPactOfferEligibleDeity(PDV_DeityBase deity)",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "IsDebugDeityTargetEligible",
+          "signature": "Bool Function IsDebugDeityTargetEligible(PDV_DeityBase deity, String actionName = \"debug action\")",
+          "calledByModules": [
+            "DEBUG",
+            "MCM"
+          ]
+        },
+        {
           "name": "IsRaceSetupQuietPresentationActive",
           "signature": "Bool Function IsRaceSetupQuietPresentationActive()",
           "calledByModules": [
@@ -4716,6 +5332,13 @@
             "LEDGER",
             "ORIGIN",
             "PRISMA"
+          ]
+        },
+        {
+          "name": "MigrateDaedricConsentIfNeeded",
+          "signature": "Function MigrateDaedricConsentIfNeeded()",
+          "calledByModules": [
+            "DEBUG"
           ]
         },
         {
@@ -4732,8 +5355,140 @@
           "signature": "Bool Function NotificationsEnabled()",
           "calledByModules": [
             "LEDGER",
+            "MCM",
             "ORIGIN",
             "PRISMA"
+          ]
+        },
+        {
+          "name": "PrepareForUninstall",
+          "signature": "Function PrepareForUninstall()",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "ResolveOriginRuntime",
+          "signature": "Bool Function ResolveOriginRuntime()",
+          "calledByModules": [
+            "DEBUG"
+          ]
+        },
+        {
+          "name": "RunAuthoriaActorValueRepair",
+          "signature": "Function RunAuthoriaActorValueRepair(Bool zeroPermanentModifiers, Bool resyncAfterwards)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "SetActiveDeityRef",
+          "signature": "Function SetActiveDeityRef(PDV_DeityBase value)",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetBroadPantheonSelfEventSequence",
+          "signature": "Function SetBroadPantheonSelfEventSequence(Int value)",
+          "calledByModules": [
+            "DEBUG",
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetDawnHadActivity",
+          "signature": "Function SetDawnHadActivity(Bool value)",
+          "calledByModules": [
+            "DAEDRIC",
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetDiegeticLoadHandled",
+          "signature": "Function SetDiegeticLoadHandled(Bool value)",
+          "calledByModules": [
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "SetInGameEffectsEnabled",
+          "signature": "Function SetInGameEffectsEnabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "SetNotificationsEnabled",
+          "signature": "Function SetNotificationsEnabled(Bool enabled)",
+          "calledByModules": [
+            "MCM"
+          ]
+        },
+        {
+          "name": "SetPanelDirty",
+          "signature": "Function SetPanelDirty(Bool value)",
+          "calledByModules": [
+            "DEBUG",
+            "PRISMA"
+          ]
+        },
+        {
+          "name": "SetPdvCCFishingPresent",
+          "signature": "Function SetPdvCCFishingPresent(Bool value)",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetPdvCCSaintsPresent",
+          "signature": "Function SetPdvCCSaintsPresent(Bool value)",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetPdvSunHelmPresent",
+          "signature": "Function SetPdvSunHelmPresent(Bool value)",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetPdvSurvivalModePresent",
+          "signature": "Function SetPdvSurvivalModePresent(Bool value)",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetPendingCommitmentOfferDeity",
+          "signature": "Function SetPendingCommitmentOfferDeity(PDV_DeityBase value)",
+          "calledByModules": [
+            "LEDGER"
+          ]
+        },
+        {
+          "name": "SetRaceCurseSurfaceShown",
+          "signature": "Function SetRaceCurseSurfaceShown(Bool value)",
+          "calledByModules": [
+            "LEDGER",
+            "ORIGIN"
+          ]
+        },
+        {
+          "name": "SetSuppressAwardFavorToast",
+          "signature": "Function SetSuppressAwardFavorToast(Bool value)",
+          "calledByModules": [
+            "LEDGER",
+            "ORIGIN"
+          ]
+        },
+        {
+          "name": "SetSuppressCurseTransitionOutputs",
+          "signature": "Function SetSuppressCurseTransitionOutputs(Bool value)",
+          "calledByModules": [
+            "LEDGER"
           ]
         },
         {
@@ -4748,16 +5503,16 @@
           "signature": "Function Trace(Int level, String traceText)",
           "calledByModules": [
             "DAEDRIC",
+            "DEBUG",
             "FAVOR",
             "LEDGER",
             "ORIGIN",
             "PRISMA",
-            "QUESTREACTION",
             "RECOGNITION"
           ]
         }
       ],
-      "privateCount": 165
+      "privateCount": 38
     }
   }
 }

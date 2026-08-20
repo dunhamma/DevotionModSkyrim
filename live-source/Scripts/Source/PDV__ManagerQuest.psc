@@ -771,6 +771,8 @@ Int _optimizationHotLaneRuns = 0
 Int _optimizationDisfavorRuns = 0
 Int _optimizationReconcileRuns = 0
 Int _optimizationContextProbeRuns = 0
+Bool _unifiedStartupChoiceCacheInitialized = False
+Bool _unifiedStartupChoiceComplete = False
 Bool _panelDirty = False
 Bool _suppressAwardFavorToast = False
 Bool _suppressCurseTransitionOutputs = False
@@ -966,11 +968,9 @@ Event OnUpdate()
     DaedricRuntime.ProcessQueuedDaedricMilestonePresentation()
     ProcessQueuedCommitmentOffer()
     OriginRuntime.ProcessQueuedNordKyneChampionEntry()
-    DaedricRuntime.ProcessPendingDaedricActivation()
-    DaedricRuntime.ProcessPendingDaedricLapse()
-    DaedricRuntime.ProcessPendingDaedricPrePactNotices()
-    DaedricRuntime.DrainHircineRenunciationJournal()
-    DaedricRuntime.ProcessDelayedHircineResiduePrismaToasts()
+    ; Keep the exact pending-work order inside the owning module while paying one
+    ; cross-script call per tick instead of five.
+    DaedricRuntime.ProcessPendingDaedricWork()
     _optimizationHotLaneRuns += 1
     if DebugCommand != 0
         RunDebugCommand()
@@ -1062,13 +1062,10 @@ Event OnUpdate()
     if _contextProbeTicks >= 3
         _contextProbeTicks = 0
         _optimizationContextProbeRuns += 1
-        OriginRuntime.TryArgonianEldergleamInterior()
-        OriginRuntime.TryArgonianNearWaterMaintenance()
-        OriginRuntime.TryBosmerEldergleamInterior()
-        OriginRuntime.TryBosmerGildergreenProximity()
-        OriginRuntime.TryBosmerYffreTreeStoneProximity()
-        LedgerRuntime.TryCCSaintsRecognition()
-        LedgerRuntime.TryCCFishingDevotion()
+        ; The modules retain the original probe order. Batching turns seven
+        ; manager-to-module calls into two without adding a timer or changing cadence.
+        OriginRuntime.ProcessPeriodicContextProbes()
+        LedgerRuntime.ProcessPeriodicContentProbes()
     endIf
 
     if DebugSeedGo != 0
@@ -3452,11 +3449,17 @@ EndFunction
 
 
 Function EnsureUnifiedStartupChoice()
-    ; Self-disable flag first: this runs on the 1s tick, and once startup has
-    ; completed it stays complete forever, so check the cheap StorageUtil flag
-    ; before paying the GetPlayerOriginRaceIndex() cross-script call.
-    if StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") == 1
+    ; This runs on the permanent 1s tick. Reconcile persistent authority once per
+    ; load/script update, then stay entirely script-local after completion.
+    if _unifiedStartupChoiceComplete
         return
+    endIf
+    if !_unifiedStartupChoiceCacheInitialized
+        _unifiedStartupChoiceCacheInitialized = True
+        _unifiedStartupChoiceComplete = StorageUtil.GetIntValue(None, "PDV.Startup.UnifiedChoiceComplete") == 1
+        if _unifiedStartupChoiceComplete
+            return
+        endIf
     endIf
 
     Int originRace = GetPlayerOriginRaceIndex()
@@ -3497,6 +3500,7 @@ Function EnsureExplicitStartupChoice(Int originRace)
         ApplyStartupChoice(originRace, defaultOption, "startup_missing_message_default")
         RecordStartupEvent("startup_confirmed")
         StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
+        _unifiedStartupChoiceComplete = True
         return
     endIf
 
@@ -3514,6 +3518,7 @@ Function EnsureExplicitStartupChoice(Int originRace)
     ApplyStartupChoice(originRace, selection, "startup_choice")
     RecordStartupEvent("startup_confirmed")
     StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
+    _unifiedStartupChoiceComplete = True
 EndFunction
 
 Bool Function ConfirmStartupSelection(Int originRace, Message choiceMessage, Int expectedSelection)
@@ -3578,6 +3583,7 @@ Function EnsureInfoOnlyStartup(Int originRace)
     Debug.MessageBox(GetStartupInfoOnlyText(originRace))
     RecordStartupEvent("startup_info_acknowledged")
     StorageUtil.SetIntValue(None, "PDV.Startup.UnifiedChoiceComplete", 1)
+    _unifiedStartupChoiceComplete = True
 EndFunction
 
 Function RecordStartupEvent(String eventName)

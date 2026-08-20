@@ -152,11 +152,17 @@ if (Object.keys(ROSTER).length !== RACES.length) {
 if (Object.keys(CANON).length === 0) fail("parse", "parsed no canonical deity names from RepairDeityRuntimeName");
 
 const selectionBlock = functionBlock(managerSrc, "SetActiveDeity");
-if (!selectionBlock.includes("IsDashboardDeityInOriginRoster(newDeity") || !selectionBlock.includes("UsesFormalCommitmentOffersForDeity(newDeity")) {
-  fail("source-contract", "SetActiveDeity lacks the central roster/formal-offer selection guard");
+if (!selectionBlock.includes("!IsDeityReachableForCurrentOrigin(newDeity)")) {
+  fail("source-contract", "SetActiveDeity lacks the shared current-origin reachability guard");
 }
-if (!mcmSrc.includes("forcePatronManager.SetActiveDeity(forcePatronDeity, True)") || !mcmSrc.includes("primeNeglectManager.SetActiveDeity(primeNeglectDeity, True)")) {
-  fail("source-contract", "MCM patron/neglect test controls do not use the explicit off-roster debug override");
+const mcmDebugTargetsUseOrdinaryGuard =
+  mcmSrc.includes('forcePatronManager.IsDebugDeityTargetEligible(forcePatronDeity, "Force selected patron")') &&
+  mcmSrc.includes("forcePatronManager.SetActiveDeity(forcePatronDeity)") &&
+  mcmSrc.includes('primeNeglectManager.IsDebugDeityTargetEligible(primeNeglectDeity, "Prime neglect eligible")') &&
+  mcmSrc.includes("primeNeglectManager.SetActiveDeity(primeNeglectDeity)") &&
+  !/SetActiveDeity\s*\([^\r\n)]*,\s*True\s*\)/i.test(mcmSrc);
+if (!mcmDebugTargetsUseOrdinaryGuard) {
+  fail("source-contract", "MCM patron/neglect controls must preflight reachability and use the ordinary guarded setter without an off-roster override");
 }
 const grandfatherBlock = functionBlock(managerSrc, "IsGrandfatheredOffRosterPatron");
 if (!grandfatherBlock.includes("PATRON_STATE_ACTIVE") || !grandfatherBlock.includes('stance == "FOREIGN" || stance == "TOLERATED"')) {

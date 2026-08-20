@@ -3439,6 +3439,13 @@ Bool Function IsCCContentEnabled()
     return StorageUtil.GetIntValue(None, COMPAT_CC_TOGGLE_KEY, 1) != 0
 EndFunction
 
+; Three-second manager lane. Preserve the two content probes and their order,
+; but cross the manager/ledger boundary once instead of twice.
+Function ProcessPeriodicContentProbes()
+    TryCCSaintsRecognition()
+    TryCCFishingDevotion()
+EndFunction
+
 Function TryCCSaintsRecognition()
     if !IsCCContentEnabled()
         return

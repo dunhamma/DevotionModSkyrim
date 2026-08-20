@@ -54,31 +54,56 @@ Float Property FAVOR_DURATION_ENVIRONMENTAL_DAYS = 0.125 AutoReadOnly
 Float Property FAVOR_FAMILY_MOMENTARY_COOLDOWN_DAYS = 0.02 AutoReadOnly
 Float Property FAVOR_FAMILY_STANDARD_COOLDOWN_DAYS = 0.5 AutoReadOnly
 
+; The manager calls UpdateContextualFavorRuntime every second. Cache only the
+; derived debug mirror so an unchanged favor state does not write StorageUtil on
+; every tick. -1 forces one reconciliation after a script update or fresh load.
+Int _lastKyneFavorDebugActiveCount = -1
+
 Function EvaluateKyneContextualFavorFamily()
     UpdateContextualFavorRuntime()
 EndFunction
 
 Function UpdateContextualFavorRuntime()
-    if IsActiveFavorExpired()
+    ; Snapshot the two authoritative keys once. The previous nested helpers each
+    ; called IsFavorActive independently, multiplying StorageUtil reads on the
+    ; permanent one-second manager lane.
+    Int activeLane = GetActiveFavorLane()
+    Int activeFamily = 0
+    if activeLane != FAVOR_LANE_NONE
+        activeFamily = GetActiveFavorFamily()
+    endIf
+
+    if IsActiveFavorExpired(activeLane, activeFamily)
         ClearActiveFavor("expired")
-    elseIf IsFavorActive()
-        if !IsActiveFavorStillEligible()
+        activeLane = FAVOR_LANE_NONE
+    elseIf activeLane != FAVOR_LANE_NONE && activeFamily > 0
+        if !IsActiveFavorStillEligible(activeLane, activeFamily)
             ClearActiveFavor("no_longer_eligible")
+            activeLane = FAVOR_LANE_NONE
         else
-            EnsureActiveFavorApplied()
+            EnsureActiveFavorApplied(activeLane, activeFamily)
         endIf
     endIf
 
-    SyncKyneFavorDebugState()
+    SyncKyneFavorDebugState(activeLane)
 EndFunction
 
-Function SyncKyneFavorDebugState()
+Function SyncKyneFavorDebugState(Int activeLane = -1)
+    if activeLane < FAVOR_LANE_NONE
+        activeLane = GetActiveFavorLane()
+    endIf
+
     Int activeCount = 0
-    if GetActiveFavorLane() == FAVOR_LANE_KYNE
+    if activeLane == FAVOR_LANE_KYNE
         activeCount = 1
     endIf
 
+    if activeCount == _lastKyneFavorDebugActiveCount
+        return
+    endIf
+
     StorageUtil.SetIntValue(None, "PDV.KyneFavor.ActiveCount", activeCount)
+    _lastKyneFavorDebugActiveCount = activeCount
 EndFunction
 
 Bool Function TryActivateContextualFavor(Int laneValue, Int familyValue, String reason)
@@ -152,9 +177,13 @@ Function SendContextualFavorToast(Int laneValue, Int familyValue)
     Manager.Prisma.SendPrismaEventToast("favor", favorDeity, contextText, "", "")
 EndFunction
 
-Function EnsureActiveFavorApplied()
-    Int laneValue = GetActiveFavorLane()
-    Int familyValue = GetActiveFavorFamily()
+Function EnsureActiveFavorApplied(Int laneValue = -1, Int familyValue = -1)
+    if laneValue < FAVOR_LANE_NONE
+        laneValue = GetActiveFavorLane()
+    endIf
+    if familyValue < 0
+        familyValue = GetActiveFavorFamily()
+    endIf
     if laneValue == FAVOR_LANE_NONE || familyValue <= 0
         return
     endIf
@@ -194,8 +223,14 @@ Bool Function IsFavorActive()
     return GetActiveFavorLane() != FAVOR_LANE_NONE && GetActiveFavorFamily() > 0
 EndFunction
 
-Bool Function IsActiveFavorExpired()
-    if !IsFavorActive()
+Bool Function IsActiveFavorExpired(Int activeLane = -1, Int activeFamily = -1)
+    if activeLane < FAVOR_LANE_NONE
+        activeLane = GetActiveFavorLane()
+    endIf
+    if activeFamily < 0 && activeLane != FAVOR_LANE_NONE
+        activeFamily = GetActiveFavorFamily()
+    endIf
+    if activeLane == FAVOR_LANE_NONE || activeFamily <= 0
         return False
     endIf
 
@@ -203,12 +238,18 @@ Bool Function IsActiveFavorExpired()
     return expiresAt > 0.0 && Utility.GetCurrentGameTime() >= expiresAt
 EndFunction
 
-Bool Function IsActiveFavorStillEligible()
-    if !IsFavorActive()
+Bool Function IsActiveFavorStillEligible(Int activeLane = -1, Int activeFamily = -1)
+    if activeLane < FAVOR_LANE_NONE
+        activeLane = GetActiveFavorLane()
+    endIf
+    if activeFamily < 0 && activeLane != FAVOR_LANE_NONE
+        activeFamily = GetActiveFavorFamily()
+    endIf
+    if activeLane == FAVOR_LANE_NONE || activeFamily <= 0
         return False
     endIf
 
-    return ResolveEligibleFavorLane() == GetActiveFavorLane()
+    return ResolveEligibleFavorLane() == activeLane
 EndFunction
 
 Bool Function IsEligibleForFavorLane(Int laneValue)
@@ -575,6 +616,4 @@ String Function GetContextualFavorSummary()
     summary = summary + ";selected=" + GetSelectedContextualFavorLaneLabel() + "/" + GetSelectedContextualFavorFamilyLabel()
     return summary
 EndFunction
-
-
 

@@ -354,6 +354,16 @@ EndFunction
 ; lapses to none (the base has no manager handle, so it leaves a breadcrumb the
 ; manager tick picks up). Switch/migration severs clear the pointer directly and
 ; never set this flag, so they cannot false-fire a lapse here.
+; Permanent manager hot-lane entry point. Keeping the five drains inside their
+; owning module preserves order while reducing manager cross-script calls 5 -> 1.
+Function ProcessPendingDaedricWork()
+    ProcessPendingDaedricActivation()
+    ProcessPendingDaedricLapse()
+    ProcessPendingDaedricPrePactNotices()
+    DrainHircineRenunciationJournal()
+    ProcessDelayedHircineResiduePrismaToasts()
+EndFunction
+
 Function ProcessPendingDaedricLapse()
     Form pending = StorageUtil.GetFormValue(None, "PDV.Daedric.PendingLapse")
     if !pending
