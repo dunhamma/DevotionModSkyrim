@@ -275,6 +275,25 @@ Creation Kit's built-in Papyrus compiler (Ctrl+F7 in the CK script editor) remai
 >
 > **2026-05-12 update:** The active CKPE/MO2 setup now outputs directly into the `Devotion` mod. Source files live in `Devotion\Scripts\Source\`; compiled `.pex` files should land in `Devotion\Scripts\`. If CK cannot see a newly added script, compile that script with `tools\pdv_compile.mjs --script <ScriptName>` using the known SSE import chain documented in `AGENTS.md`.
 
+### V3 runtime acceptance workflow
+
+The V3 feature branch uses one commit-pinned evidence gate instead of treating each module smoke
+card as independent completion. Run it from the V3 worktree with the live-root override set:
+
+```powershell
+$env:PDV_DEVOTION_ROOT = 'D:/Wabbajack/modlists/Anvil/mods/Devotion-V3Dev'
+node .\tools\pdv_v3_runtime_acceptance.mjs --start --commit (git rev-parse HEAD)
+node .\tools\pdv_v3_runtime_acceptance.mjs --summary
+node .\tools\pdv_v3_runtime_acceptance.mjs --check --gate gate1 --log '<fresh-session-log>'
+```
+
+Record each runtime/manual observation with `--record --case <id> --slot <id> --status <status>
+--note <observation>`. Passing evidence must name the tested commit; `blocked` does not pass. Gate 1
+requires fresh logs and fails if runtime-sensitive files changed after the tested commit. It must
+pass before the MCM revamp begins. Gate 2 covers that revamp, and `--gate final` is the only combined
+merge claim. Full operator order and return artifacts are in
+`references\authoring\PDV_2_0_RuntimeAcceptance_Runbook.md`.
+
 ### Build files (in the mod folder)
 
 | File | Role |

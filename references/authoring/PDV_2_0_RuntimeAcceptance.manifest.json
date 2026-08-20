@@ -1,0 +1,171 @@
+{
+  "schema": "pdv.v3-runtime-acceptance-manifest.v1",
+  "revision": 1,
+  "claim": "feature/v3-big-update is safe to merge after module runtime acceptance, the isolated MCM revamp, and final regression",
+  "branch": "feature/v3-big-update",
+  "profile": "Devotion Dev",
+  "enabledMod": "Devotion-V3Dev",
+  "disabledMod": "Devotion",
+  "newGameOnly": true,
+  "statusValues": [
+    "pending",
+    "pass",
+    "fail",
+    "blocked",
+    "not_required"
+  ],
+  "runtimeSensitivePaths": [
+    "SKSE/",
+    "dist/",
+    "live-source/",
+    "mod-data/",
+    "native/",
+    "patch-source/",
+    "references/authoring/PDV_2_0ModuleContracts.manifest.json",
+    "references/authoring/PDV_BroadPantheonContracts.json",
+    "references/authoring/PDV_DeityLikesDislikes.csv",
+    "references/authoring/PDV_QuestReactionCompatibility.manifest.json"
+  ],
+  "logRules": {
+    "failPatterns": [
+      {
+        "id": "pdv-error",
+        "pattern": "(?:error[^\\r\\n]*PDV|PDV[^\\r\\n]*error)",
+        "flags": "i"
+      },
+      {
+        "id": "missing-property",
+        "pattern": "(?:cannot be initialized|cannot be bound)[^\\r\\n]*(?:PDV_|Runtime|Manager)",
+        "flags": "i"
+      },
+      {
+        "id": "none-reference",
+        "pattern": "(?:(?:None object|None reference|cannot call)[^\\r\\n]*(?:PDV_|Runtime|Manager)|(?:PDV_|Runtime|Manager)[^\\r\\n]*(?:None object|None reference|cannot call))",
+        "flags": "i"
+      },
+      {
+        "id": "stack-dump",
+        "pattern": "stack dump",
+        "flags": "i"
+      },
+      {
+        "id": "queue-abort",
+        "pattern": "\\[PDV\\][^\\r\\n]*(?:OVERFLOW|BROAD_SCOPE_ABORT)",
+        "flags": "i"
+      },
+      {
+        "id": "mcm-array-error",
+        "pattern": "Array index[^\\r\\n]*out of range[^\\r\\n]*(?:PDV_MCM|Debug:)",
+        "flags": "i"
+      }
+    ]
+  },
+  "gates": [
+    {
+      "id": "gate1",
+      "title": "Extracted-module runtime acceptance on the existing MCM driver",
+      "requiresLog": true,
+      "cases": [
+        {
+          "id": "preflight",
+          "title": "Branch, load-order, freshness, and new-game preflight",
+          "slots": ["branch_tip", "profile", "v3_winner", "seq", "freshness", "clean_log", "fresh_game"]
+        },
+        {
+          "id": "nord_core",
+          "title": "Nord bootstrap, Ledger, reward, neglect, dawn, and Quest Reaction",
+          "slots": ["bootstrap", "ledger_direct", "ledger_organic", "dawn", "reward", "neglect_apply", "neglect_recover", "qr_controlled", "qr_organic", "surfaces", "save_load", "log_safety"]
+        },
+        {
+          "id": "khajiit_origin",
+          "title": "Khajiit thick-adapter and delayed-query proof",
+          "slots": ["bootstrap", "debug_pages", "moon_observance", "lunar_posture", "lunar_budget", "observe_moons", "outdoor_rest", "surfaces", "save_load", "log_safety"]
+        },
+        {
+          "id": "imperial_origin",
+          "title": "Imperial thin-adapter and Concordat query proof",
+          "slots": ["bootstrap", "debug_pages", "concordat_defiance", "concordat_compliance", "talos_dual_route", "formal_offer", "surfaces", "save_load", "log_safety"]
+        },
+        {
+          "id": "altmer_regression",
+          "title": "Altmer reward, Favor, offer, and negative reachability regression",
+          "slots": ["bootstrap", "auriel_reward", "magnus_replacement", "favor_activate", "favor_clear", "favor_cooldown", "auriel_offer", "baandar_no_offer", "tier_toast_classified", "surfaces", "log_safety"]
+        },
+        {
+          "id": "race_change",
+          "title": "Nord to Altmer to Khajiit reconciliation",
+          "slots": ["nord_seed", "altmer_rebind", "nord_state_removed", "altmer_seed", "khajiit_rebind", "altmer_state_removed", "no_double_dip", "save_load", "log_safety"]
+        },
+        {
+          "id": "presentation",
+          "title": "Toast, Chronicle, Book, Survey, panel, and public-name cardinality",
+          "slots": ["one_toast", "one_book_entry", "chronicle_only_on_milestone", "survey", "panel", "public_names", "source_labels", "log_safety"]
+        },
+        {
+          "id": "recognition",
+          "title": "Recognition default-off silence and enabled transitions",
+          "slots": ["default_off_silent", "friendly_once", "hostile_once", "disable_returns_silent", "save_load", "log_safety"]
+        },
+        {
+          "id": "compatibility",
+          "title": "Generated package and conditional adapter runtime acceptance",
+          "slots": ["package_gate", "data_only", "afdi", "once_we_were_here", "wars_folly", "whispers_of_the_depths", "daedric_shrines", "source_labels", "log_safety"]
+        },
+        {
+          "id": "performance",
+          "title": "Deterministic idle and active runtime comparison",
+          "slots": ["idle_window", "active_window", "qr_latency", "no_stack_dump", "no_overflow", "no_broad_scope_abort", "log_safety"]
+        }
+      ]
+    },
+    {
+      "id": "gate2",
+      "title": "MCM revamp acceptance",
+      "requiresLog": true,
+      "cases": [
+        {
+          "id": "mcm_pages",
+          "title": "Four shipped pages and immediate developer-page visibility",
+          "slots": ["four_player_pages", "dev_pages_open_refresh", "dev_pages_hide", "no_blank_values", "no_internal_copy"]
+        },
+        {
+          "id": "mcm_controls",
+          "title": "Native ST controls and one-shot actions",
+          "slots": ["toggles", "menus", "sliders", "keymaps", "actions_once", "reopen_persistence", "save_load"]
+        },
+        {
+          "id": "experience_mode",
+          "title": "Experience Mode canonical state and global mirror",
+          "slots": ["confirmation", "storage_state", "quest_api", "global_mirror", "player_label", "gain_behavior", "save_load"]
+        },
+        {
+          "id": "accessibility",
+          "title": "Reduced motion, font scale, palette, and default visual parity",
+          "slots": ["reduce_motion", "font_scale", "high_contrast", "colorblind_safe", "default_parity", "screen_reader_text", "valence_glyph", "embedded_1080p", "embedded_4k", "save_load"]
+        },
+        {
+          "id": "localization_wiring",
+          "title": "Translation, cache, compile freshness, and VMAD readback",
+          "slots": ["english_keys", "no_raw_keys", "ascii", "cache_keys", "compile_order", "pex_freshness", "vmad", "record_readback", "log_safety"]
+        }
+      ]
+    },
+    {
+      "id": "final",
+      "title": "Final regression and merge claim",
+      "requiresLog": true,
+      "cases": [
+        {
+          "id": "critical_regression",
+          "title": "Post-MCM critical runtime regression",
+          "slots": ["bootstrap", "nord_reward_neglect_dawn", "altmer_negative_offer", "race_change", "qr_resume", "presentation_cardinality", "recognition_off", "performance", "log_safety"]
+        },
+        {
+          "id": "final_static",
+          "title": "Final compile, verifier, readback, package, and documentation closure",
+          "slots": ["compile", "verifier", "module_contract", "prisma", "vmad", "package", "direct_readback", "docs", "pr_title"]
+        }
+      ]
+    }
+  ]
+}

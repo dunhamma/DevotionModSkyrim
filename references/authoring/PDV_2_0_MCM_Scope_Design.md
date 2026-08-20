@@ -1,8 +1,9 @@
 # PDV 2.0 -- MCM Cleanup / Revamp Scope (design pre-work)
 
-Status: DRAFT for owner review. Scope/triage doc, not a build. The MCM build is a single focused
-pass at the END of 2.0 (after the extraction/dedup/property work); interim MCM stays as-is. Owner
-rulings below were captured this session. Design only -- no code lands from this doc.
+Status: RATIFIED 2026-08-20 for implementation after Gate 1 runtime acceptance. The MCM build is a
+single focused pass at the END of 2.0; the existing MCM remains the first human acceptance driver.
+The full ST rewrite and the complete opt-in accessibility set are owner-approved. No MCM revamp
+code lands until `tools/pdv_v3_runtime_acceptance.mjs --check --gate gate1` passes with fresh logs.
 
 Grounding (all facts re-derived from the current tree this session):
 `live-source/Scripts/Source/PDV_MCM.psc` (4320 lines), `PDV__ManagerQuest.psc`,
@@ -60,9 +61,10 @@ helpers; and the `*ST` callback + `Add*ST` family if ST is adopted.
 
 **Mandatory de-risk:** the real `SKI_ConfigBase.psc` is NOT in-tree (only the stub). Source the real
 signatures from the installed SkyUI BSA before extending the shim -- signature drift compiles GREEN
-against the stub but binds wrong / breaks at runtime. Do not hand-author from memory. **Hybrid**
-(native toggles/sliders/menus for boolean+choice rows, keep OID dispatch for action buttons) is the
-fallback if end-phase time is tight; it leaves two dispatch paradigms coexisting.
+against the stub but binds wrong / breaks at runtime. Do not hand-author from memory. The owner chose
+the full ST rewrite; the hybrid path is not a time-pressure fallback. If a real SkyUI signature or
+runtime-binding defect blocks ST, stop with the reproduced evidence instead of silently retaining
+two dispatch paradigms.
 
 ## 4. Experience Mode page + records
 
@@ -96,12 +98,14 @@ aesthetics is OPT-IN so the default look is untouched.
 - Weekly sparkline **`.sr-only` text + keep the tooltip** -- screen-reader values with ZERO visual
   change (today the spark is `aria-hidden`, value only in `title=`, `app.js:2138-2157`).
 
-**Opt-in toggles (dedicated Accessibility page):**
+**Opt-in controls (dedicated Accessibility page, all owner-approved):**
 - **Reduce motion** -> body class duplicating `styles.css:1624` (today only the OS query drives it; a
   CEF overlay may not inherit the OS setting).
-- **Font scale** -> root/`rem` control covering panel + Book of Days (today only toasts have "Large").
+- **Font scale** -> root/`rem` control covering panel + Book of Days (today only toasts have "Large");
+  values 90%, 100%, 110%, 120%, 130%, and 140%, default 100%.
 - **High-contrast / colorblind palette** -> override the `:root` CSS variables (`styles.css:1-19`,
-  Book-of-Days block `:1659-1665`) under a body class -- theming is already variable-based.
+  Book-of-Days block `:1659-1665`) under a body class -- theming is already variable-based. One menu
+  exposes Default, High Contrast, and Colorblind Safe; Default preserves the current view exactly.
 - Aesthetic-cost items (VISIBLE sparkline numbers, stronger contrast, larger glyph strokes) surface
   ONLY under these modes, never on the default view.
 
@@ -135,14 +139,14 @@ second pass). Convert every `AddXOption` literal + the label helpers (`OnOffLabe
 
 ## 8. Sequencing and deferrals
 
-Build order: after F1 (DebugRuntime) and the extraction spine; one end-of-2.0 pass; MCM compiled
-last. Out of scope / deferred: MCM verbosity preset (Silent/Transitions/Verbose), per-axis difficulty
-sliders (permanently out), a broader daily-management player surface.
+Build order: Gate 1 runtime acceptance on the existing MCM, then one end-of-2.0 MCM pass on the same
+feature branch; MCM compiled last. Gate 2 and the final critical regression must pass before PR #82
+can merge. Out of scope / deferred: MCM verbosity preset (Silent/Transitions/Verbose), per-axis
+difficulty sliders (permanently out), a broader daily-management player surface.
 
-## 9. Open questions for the owner
+## 9. Locked control order
 
-1. Exact control order / grouping on the new Accessibility page.
-2. Whether the aesthetic-cost tweaks (stronger default contrast, larger glyph strokes) are wanted at
-   all even as opt-ins, or dropped in favor of just the palette + font-scale.
-3. Full ST rewrite vs the hybrid fallback -- confirm ST is the target given the shim-drift risk, or
-   pre-authorize the hybrid as the safe default.
+The Accessibility page order is: explanatory header, Reduce Motion, Font Scale, Palette, then a
+read-only note that defaults preserve the existing presentation. Stronger contrast and larger glyph
+strokes appear only inside High Contrast or Colorblind Safe; they do not alter Default. The full ST
+rewrite is required.

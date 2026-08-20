@@ -1,0 +1,1139 @@
+{
+  "schema": "pdv.v3-runtime-acceptance-ledger.v1",
+  "manifestRevision": 1,
+  "testedCommit": "",
+  "profile": "Devotion Dev",
+  "enabledMod": "Devotion-V3Dev",
+  "startedAtLocal": "",
+  "updatedAtLocal": "20/08/2026, 21:09:21",
+  "cases": [
+    {
+      "id": "preflight",
+      "gate": "gate1",
+      "title": "Branch, load-order, freshness, and new-game preflight",
+      "slots": {
+        "branch_tip": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "profile": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "v3_winner": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "seq": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "freshness": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "clean_log": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "fresh_game": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "nord_core",
+      "gate": "gate1",
+      "title": "Nord bootstrap, Ledger, reward, neglect, dawn, and Quest Reaction",
+      "slots": {
+        "bootstrap": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "ledger_direct": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "ledger_organic": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "dawn": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "reward": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "neglect_apply": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "neglect_recover": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "qr_controlled": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "qr_organic": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "surfaces": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "khajiit_origin",
+      "gate": "gate1",
+      "title": "Khajiit thick-adapter and delayed-query proof",
+      "slots": {
+        "bootstrap": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "debug_pages": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "moon_observance": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "lunar_posture": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "lunar_budget": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "observe_moons": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "outdoor_rest": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "surfaces": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "imperial_origin",
+      "gate": "gate1",
+      "title": "Imperial thin-adapter and Concordat query proof",
+      "slots": {
+        "bootstrap": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "debug_pages": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "concordat_defiance": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "concordat_compliance": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "talos_dual_route": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "formal_offer": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "surfaces": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "altmer_regression",
+      "gate": "gate1",
+      "title": "Altmer reward, Favor, offer, and negative reachability regression",
+      "slots": {
+        "bootstrap": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "auriel_reward": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "magnus_replacement": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "favor_activate": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "favor_clear": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "favor_cooldown": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "auriel_offer": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "baandar_no_offer": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "tier_toast_classified": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "surfaces": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "race_change",
+      "gate": "gate1",
+      "title": "Nord to Altmer to Khajiit reconciliation",
+      "slots": {
+        "nord_seed": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "altmer_rebind": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "nord_state_removed": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "altmer_seed": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "khajiit_rebind": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "altmer_state_removed": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "no_double_dip": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "presentation",
+      "gate": "gate1",
+      "title": "Toast, Chronicle, Book, Survey, panel, and public-name cardinality",
+      "slots": {
+        "one_toast": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "one_book_entry": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "chronicle_only_on_milestone": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "survey": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "panel": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "public_names": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "source_labels": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "recognition",
+      "gate": "gate1",
+      "title": "Recognition default-off silence and enabled transitions",
+      "slots": {
+        "default_off_silent": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "friendly_once": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "hostile_once": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "disable_returns_silent": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "compatibility",
+      "gate": "gate1",
+      "title": "Generated package and conditional adapter runtime acceptance",
+      "slots": {
+        "package_gate": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "data_only": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "afdi": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "once_we_were_here": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "wars_folly": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "whispers_of_the_depths": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "daedric_shrines": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "source_labels": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "performance",
+      "gate": "gate1",
+      "title": "Deterministic idle and active runtime comparison",
+      "slots": {
+        "idle_window": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "active_window": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "qr_latency": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "no_stack_dump": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "no_overflow": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "no_broad_scope_abort": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "mcm_pages",
+      "gate": "gate2",
+      "title": "Four shipped pages and immediate developer-page visibility",
+      "slots": {
+        "four_player_pages": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "dev_pages_open_refresh": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "dev_pages_hide": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "no_blank_values": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "no_internal_copy": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "mcm_controls",
+      "gate": "gate2",
+      "title": "Native ST controls and one-shot actions",
+      "slots": {
+        "toggles": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "menus": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "sliders": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "keymaps": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "actions_once": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "reopen_persistence": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "experience_mode",
+      "gate": "gate2",
+      "title": "Experience Mode canonical state and global mirror",
+      "slots": {
+        "confirmation": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "storage_state": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "quest_api": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "global_mirror": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "player_label": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "gain_behavior": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "accessibility",
+      "gate": "gate2",
+      "title": "Reduced motion, font scale, palette, and default visual parity",
+      "slots": {
+        "reduce_motion": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "font_scale": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "high_contrast": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "colorblind_safe": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "default_parity": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "screen_reader_text": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "valence_glyph": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "embedded_1080p": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "embedded_4k": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "save_load": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "localization_wiring",
+      "gate": "gate2",
+      "title": "Translation, cache, compile freshness, and VMAD readback",
+      "slots": {
+        "english_keys": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "no_raw_keys": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "ascii": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "cache_keys": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "compile_order": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "pex_freshness": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "vmad": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "record_readback": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "critical_regression",
+      "gate": "final",
+      "title": "Post-MCM critical runtime regression",
+      "slots": {
+        "bootstrap": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "nord_reward_neglect_dawn": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "altmer_negative_offer": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "race_change": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "qr_resume": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "presentation_cardinality": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "recognition_off": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "performance": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "log_safety": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    },
+    {
+      "id": "final_static",
+      "gate": "final",
+      "title": "Final compile, verifier, readback, package, and documentation closure",
+      "slots": {
+        "compile": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "verifier": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "module_contract": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "prisma": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "vmad": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "package": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "direct_readback": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "docs": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "pr_title": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        }
+      }
+    }
+  ],
+  "observations": []
+}

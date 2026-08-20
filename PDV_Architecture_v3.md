@@ -126,6 +126,17 @@ performance proof. The first human regression uses the existing MCM driver surfa
 tester-only console shim remains outside the user payload and is deferred unless that run proves
 a concrete driver gap.
 
+The human proof lane is now one three-gate contract, not a collection of independently green smoke
+cards. `PDV_2_0_RuntimeAcceptance.manifest.json` defines Gate 1 for extracted-module behavior on the
+existing MCM, Gate 2 for the end-phase MCM revamp, and the final combined regression. Its committed
+ledger starts pending; `pdv_v3_runtime_acceptance.mjs` records one evidence slot at a time, requires
+fresh Papyrus log scans, and rejects a tested commit when later changes touch runtime-sensitive
+paths. Route logs, manual/player surfaces, save/load, compatibility support, and performance remain
+separate slots. The MCM scope is ratified but blocked on Gate 1: four shipped pages, a full native
+SkyUI ST rewrite, all three opt-in accessibility controls, and same-branch delivery before PR #82
+merges. No Experience Mode record creation, MCM property rewrite, or player UI mutation starts
+before Gate 1 passes.
+
 Current v3.100 addendum: the 2026-07-14 bug-report cluster is adjudicated and its
 fix pass EXECUTED (authority: Part D of
 `handoff/PDV_TierNameDrift_BugReport_2026-07-14.md`; execution:
