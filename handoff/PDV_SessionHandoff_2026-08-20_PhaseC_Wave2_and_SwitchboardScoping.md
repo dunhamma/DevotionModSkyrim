@@ -14,7 +14,12 @@ Resume pointer for the 2.0 rebuild, continuing from
 | `f50a743f` | switchboard slice 1 | reward/neglect per-cycle loop (ledger+manager) | ledger + manager compile 0/0 |
 | `1fe0ff28` | switchboard slice 2 | removed 27 dead reward/neglect base decls (-490 lines) | base+Altmer compile 0/0 · parity removed=27, changed=0 |
 
-**Phase C tally: 266 of 605 neutralized** (100 deleted [73 wave-1 + 27 slice-2] + 166 emptied [142 wave-1 + 24 wave-2]).
+**Phase C tally:** waves neutralized 73 deleted + 166 emptied (wave-1 142 + 2a 21 + 2b 3). Then
+the switchboard pass REMOVED 52 dead per-lane base declarations across 5 lanes (reward/neglect 27,
+IsOfferEligibleDeity 6, offer-message 6, survey 10, presentation 3) -- see the lane-status table
+below (commits `c4a6257a`, `e63d6e74`, presentation). The base is now **561 functions** (from 613
+after wave 2). Remaining lanes are DEFER (blocked / high-risk) -- mechanical switchboard migration
+is near-exhausted.
 
 Per-change gates (kept in separate buckets): isolated compile of `PDV_OriginRuntimeBase`
 against the WORKTREE source into a scratch output = `0 error(s), 0 warning(s), succeeded`
@@ -91,16 +96,35 @@ generic (not just one). Example: `IsNordOfferEligibleDeity` has 5 callers
 IsQuestReactionDeityReachable, DebugSetNordPantheonBaseline x2), not 1. Removal is the parity
 REMOVED category -- run with `--allow-removed` and treat each as an intentional retire.
 
-## Next slices
+## Switchboard lane status (updated end of session)
 
-1. **IsOfferEligibleDeity lane** (IN PROGRESS -- next): migrate the callers of the 6 per-lane
-   `IsXOfferEligibleDeity` to the generic `OriginRuntime.IsOfferEligibleDeity(deity)`, then remove
-   the 6 base declarations (bodies already emptied in wave 2a). Verify every caller first --
-   `IsNordOfferEligibleDeity` has 5 (UsesFormalCommitmentOffersForDeity,
-   IsGenericLikesDislikesDeityReachable, IsQuestReactionDeityReachable, DebugSetNordPantheonBaseline x2).
-2. **Presentation lane** (`ShowOriginNotification`/`ShowOriginMessage`, `GetSurveyFragment`,
-   `GetOriginDetailLabel/Value`) -- generics exist; check caller counts.
-3. ~~Reward/neglect lane~~ -- DONE (`f50a743f`, `1fe0ff28`).
+The cleanly-migratable switchboard lanes are DONE. Remaining lanes were scoped by parallel
+read-only subagents and are DEFER (blocked or high-risk). The base went 613 -> 561 functions
+this session's switchboard work (52 dead per-lane declarations removed across 5 lanes).
+
+| Lane | Status | Commit / note |
+|---|---|---|
+| Reward/neglect | DONE -- 27 removed | `f50a743f` + `1fe0ff28` |
+| IsOfferEligibleDeity | DONE -- 6 removed | `c4a6257a` |
+| GetFormalCommitmentOfferMessage | DONE -- 6 removed | `e63d6e74` |
+| Survey (GetSurveyFragment) | DONE -- 10 removed | `e63d6e74` |
+| Presentation (Show*Message) | DONE -- 3 removed (the callerless ones) | presentation commit |
+| Presentation (Show*Notification) | DEFER -- BLOCKED | base decls pinned by internal callers from OTHER lanes still live in the base; callers are deity-gated not race-gated (a Bosmer Auri-El champion reaches ShowAltmerNotification) |
+| State/detail (GetOriginStateLabel/Value, GetOriginDetailLabel/Value) | DEFER -- COMPLEX | parameterized methods the key-generic can't carry; dense base-internal Self callers pin the decls; Bool->Int round-trips in gameplay branches; Argonian arm divergence |
+| HandleContextualSignal / HandleContextualQuery | DEFER -- HIGH RISK | ~166 stringly-typed action->piety call sites, silent-misroute risk, partial routing coverage, NO coverage gate, thin payoff (stubs must stay as no-op fallback). Would need: per-site audit table, new adapter switch arms for uncovered methods, a NEW coverage gate, full per-race runtime proof. Also trips a string/name pin at `tools/pdv_substrate_pacing_audit.mjs:299`. |
+
+**Why the DEFER lanes are stuck:** the remaining base per-lane declarations are pinned by
+base-internal `Self` callers from OTHER lanes whose bodies still live in the base. Mechanical
+"migrate external callers + delete decl" is near-exhausted; further progress needs either those
+other lanes' bodies extracted first, or (for the signal router) a coverage-gated design pass.
+
+## Optional follow-ups (cleanup, not blocking)
+
+- Ladder collapses: `GetFormalCommitmentOfferMessage` (ledger) and `GetSurveyDevotionText`
+  (manager, minus the Nord scar-label tail) now call the identical generic per branch -- each
+  race `if/elseIf` ladder can collapse to one call (base default handles non-offer races).
+- Dead helper subtrees from the reward lane (`SyncAltmerRewardFamily`, `SyncAltmerAncestorSubstrate`, ...)
+  -- a dead-code sweep.
 
 ## Open bugs / debt (carried from wave-1 handoff, still open)
 
