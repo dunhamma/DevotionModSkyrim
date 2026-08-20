@@ -81,6 +81,7 @@ If a task appears blocked by a houseCARL limitation, **first reproduce it with a
 | `tools/pdv_v3_prisma_extraction_audit.mjs` | Read-only V3 PRISMA extraction gate | Checking the 114-function presenter residence, manager/presenter backrefs, seven origin presentation virtuals across all ten adapters, removal of the eight multi-race content switches, and exact 48-public/66-private call-graph contract |
 | `tools/pdv_v3_debug_extraction_audit.mjs` | Read-only V3 DEBUG extraction gate | Checking the 136-function debug-harness residence, retained manager dispatcher/registers, typed MCM double-hop, eight module references, zero Global/console surface, and exact 111-public/25-private call-graph contract |
 | `tools/pdv_active_effect_naming_audit.mjs` | Direct houseCARL Active Effects naming audit | Checking every `PDV_Bless_*` spell and child MGEF: parent spells carry the family/tier heading, while child effects carry concise mechanical labels or distinct scripted-effect names |
+| `tools/pdv_penalty_serialization_audit.mjs` | Direct houseCARL penalty serialization gate | Checking every linked `Neglect`, `Disfavor`, and `Price` spell effect for `Recover` plus exactly one engine-valid magnitude/`Detrimental` encoding; non-modifier script effects are reported separately |
 | `tools/pdv_mcp_check.mjs` | MCP server health check -- pings the Anvil MO2 MCP server and validates the active profile is `Devotion Dev` | Confirming the server is live and on the right profile before any `mo2_*` tool use; surfaces ECONNREFUSED with actionable startup instructions |
 | `tools/pdv_papyrus_lookup.mjs` | BellCube-backed Papyrus lookup helper for Skyrim SE script/function pages | Looking up Papyrus signatures, script pages, and likely function locations on `papyrus.bellcube.dev` before guessing at API surfaces |
 | `tools/skyui_compile_shim/*.psc` | Minimal compile-only SkyUI base-class shims used by `pdv_compile.mjs` | Compiling `PDV_MCM.psc` without inheriting noisy third-party MCM source overrides |
@@ -1106,6 +1107,21 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 ---
 
 ## Decisions Log
+
+- **[2026-08-20] - Penalty serialization is a record contract, not a module responsibility:**
+  The V3 module interfaces own penalty eligibility and spell add/remove lifecycle; they do not
+  interpret MGEF flags or stored SPEL magnitudes. A direct-houseCARL gate now inventories every
+  linked `Neglect`, `Disfavor`, and `Price` effect and accepts both engine-valid encodings:
+  negative magnitude without `Detrimental`, or positive magnitude with `Detrimental`, always
+  with `Recover`. The first full sweep found one defect: Kyne's reused Frost Resistance neglect
+  had positive `8` with no `Detrimental`; `PDV_MGEF_Neglect_Kyne_Stamina` was corrected in place
+  without changing its FormID, actor value, magnitude, or carrier-spell link. Post-write result:
+  81 spells, 82 linked effects, 79 modifier pairs, 79 valid, zero invalid; three legacy Hircine
+  script effects remain explicitly outside the modifier rule. This is record/readback proof, not
+  fresh-game, save/load, Active Effects, cure/dispel, or package proof. `pdv_verify.mjs` targets
+  the V3 tree when `PDV_DEVOTION_ROOT` is set; `pdv_requiem_penalty_audit.mjs` still hardcodes the
+  disabled public `mods\Devotion\Devotion.esp`, so its findings cannot accept or reject this
+  module-branch record repair until it adopts the shared path resolver.
 
 - **[2026-08-11] - Daedric effect composition is a deep module; balance remains a separate proof lane:**
   `tools/lib/pdv_daedric_effect_model.mjs` now owns every Prince's three boon and

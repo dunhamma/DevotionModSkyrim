@@ -89,6 +89,18 @@ evidence stated above.
   path, not an offer. Static reachability is guarded; the next runtime pass should still confirm
   that no Altmer run can select or receive a Baan Dar offer.
 
+### Repository/module follow-ups
+
+1. Adjudicate the intentionally deferred ORIGIN notification, state/detail, and stringly contextual
+   signal/query seams from a fresh call-site inventory; migrate only families that deepen the typed
+   interface rather than recreating a distributed manager switchboard.
+2. Decide the exact driver-set contract for the tester-only console shim; it remains outside the
+   user payload and is not release-authorized.
+3. Migrate `pdv_requiem_penalty_audit.mjs` to `tools/lib/pdv_paths.mjs` so a
+   `PDV_DEVOTION_ROOT` V3 run cannot silently inspect the disabled public 1.5 tree.
+4. Regenerate the decomposition cast report after the remaining module rulings land; the current
+   `e739f79f` report remains a reconciled historical baseline, not final authority.
+
 ## Human/runtime handoff
 
 The next acceptance pass should cover only proof unavailable to the repository:
@@ -100,5 +112,7 @@ The next acceptance pass should cover only proof unavailable to the repository:
 5. Papyrus log absence of manager missing-property warnings;
 6. deterministic performance comparison after extraction;
 7. owner-approved copy for the 23 formal-offer descriptions, followed by direct Message readback.
+8. Kyne neglect application/removal on the V3 profile: Active Effects must show Frost Resistance
+   `-8%`, broad-worship clearing must remove it, and the corrected state must survive save/load.
 
 Packaging and public readiness remain blocked on those independent proof buckets.

@@ -280,6 +280,13 @@ the patron pool (`SyncNordPatronNeglectSpells`) only. Mapping it to
 `IsNordVampireSuppressed()` would equate curse-suppression with lane lapse, which is a third
 and unrelated thing. The base default `False` is the honest answer.
 
+**Serialization seam:** the module interface owns eligibility plus spell add/remove lifecycle;
+it does not own MGEF flags or stored SPEL magnitudes. `node tools/pdv_penalty_serialization_audit.mjs`
+is the record-side gate: every linked `Neglect`, `Disfavor`, and `Price` modifier must carry
+`Recover` and use exactly one valid penalty encoding (negative magnitude without `Detrimental`,
+or positive magnitude with `Detrimental`). Keep this contract out of `SyncNeglectSpells()` so a
+record migration cannot widen the runtime module interface.
+
 ## Ruling: the Dunmer urn rides the normal signal path (2026-08-19)
 
 Also raised by the owner: should the Dunmer ancestral urn use the new value channel?

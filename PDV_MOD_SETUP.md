@@ -85,6 +85,7 @@ Work Rule".
 | `tools/pdv_pantheon_record_readback.mjs` | Direct houseCARL focused Imperial/Nord reward and substrate inherited-property readback |
 | `tools/pdv_pantheon_presentation_readback.mjs` | Direct houseCARL broad reward, active-substrate, Observe-the-Moons, manager VMAD, and player-visible `Spine` readback |
 | `tools/pdv_active_effect_naming_audit.mjs` | Direct houseCARL audit of every `PDV_Bless_*` parent spell and child MGEF; parent spells use family/tier headings while child effects use concise mechanical or distinct scripted-effect labels |
+| `tools/pdv_penalty_serialization_audit.mjs` | Direct houseCARL gate for every linked `Neglect`, `Disfavor`, and `Price` effect; requires `Recover` and exactly one valid magnitude/`Detrimental` encoding while reporting non-modifier script effects separately |
 | `tools/pdv_guide_tables_gen.mjs` | Regenerates race-guide bonus tables from the reward spec JSONs and prints them to STDOUT -- it does NOT edit the guide `.md` files; guide tables are hand-spliced from its output. Its old Observant/Faithful "retired-word" lint was retired 2026-07-15 (those are the ratified broad bands); a per-family vocabulary gate is the tracked follow-up. |
 | `tools/pdv_main_quest_full_coverage_audit.mjs` | Fail-closed static/generated-readback gate for the 2026-07-15 main-quest contract: 45 identities x 25 exact stages, 951 T11 rows, 1978-cell compiled matrix, strict integer stages, no `echo`, exact 17/11 Paarthurnax rosters, and indexed 134-watch registration. A PASS is not in-game route/display proof. |
 | `tools/pdv_guide_bbcode.mjs` | Emits `dist/nexus-articles/*.bb` from the 10 race guides and hard-fails on surviving review tags, HTML comments, or non-ASCII -- the Nexus release gate. Run after ANY guide edit. |
@@ -1260,6 +1261,19 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 ---
 
 ## Notes / Decisions Log
+
+**2026-08-20 AEST - Penalty serialization gate and Kyne correction:**
+Penalty record serialization stays outside the V3 module interfaces: modules decide when a
+penalty spell applies or clears, while `node .\tools\pdv_penalty_serialization_audit.mjs` checks
+the live SPEL/MGEF contract through direct houseCARL. The gate accepts negative magnitude without
+`Detrimental` or positive magnitude with `Detrimental`, requires `Recover`, and fails the two buff-
+producing sign/flag combinations. Its first 81-spell sweep found only Kyne's reused Frost
+Resistance neglect (`+8`, no `Detrimental`); the existing linked MGEF gained `Detrimental` with no
+FormID, link, actor-value, or magnitude change. Post-write: 79/79 modifier pairs valid; three
+legacy scripted Hircine price effects are reported as non-modifiers. This is readback proof only.
+The umbrella verifier targets this tree when `PDV_DEVOTION_ROOT` is set. The older Requiem penalty
+audit still hardcodes the disabled public `mods\Devotion\Devotion.esp`; do not use its findings as
+evidence about this repair until it adopts the shared path resolver.
 
 **2026-08-20 AEST - V3 post-module integration gate reconciliation:**
 After ORIGIN, RECOGNITION, PRISMA, and DEBUG extraction, the 37 known verifier failures were

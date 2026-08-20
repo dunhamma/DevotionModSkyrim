@@ -340,15 +340,21 @@ magnitude sign-flip is a ~400+ SPEL edit that must move in lockstep with the fla
 or it inverts a penalty into a buff. The only upside is cosmetic (correct
 red / debuff colour in the active-effects menu).
 
-**What exists:** All 418 effects now carry `Recover` (1.0.3, ESP-verified:
-`Archetype.Type = ValueModifier AND Flags has Recover` = 422/422). Convention is
-unchanged.
+**What exists:** All script-toggled modifier effects carry `Recover`. The active
+record set intentionally uses both valid encodings rather than pretending the
+convention is uniform. `tools/pdv_penalty_serialization_audit.mjs` now checks every
+linked `Neglect`, `Disfavor`, and `Price` spell effect through direct houseCARL. Its
+2026-08-20 post-repair sweep found 81 spells / 82 linked effects / 79 modifier
+pairs, all valid; three legacy Hircine script effects are reported separately.
+The sweep also corrected one real defect, Kyne's `+8` Frost Resistance neglect
+without `Detrimental`, by adding the flag to the existing linked MGEF.
 
 **First V2 step:** Decide whether the red-debuff display correctness is worth the
 cross-mod interaction surface. If yes, do it as an *isolated* pass: flip
 magnitude sign + add `Detrimental` per effect in lockstep, re-verify each AV
-direction, and test cure / dispel + magic-resist interactions under Requiem /
-Authoria before shipping. Ref: bug issue #23.
+direction with the serialization gate, and test cure / dispel + magic-resist
+interactions under Requiem / Authoria before shipping. The module decomposition
+does not authorize this bulk migration. Ref: bug issue #23.
 
 ---
 
