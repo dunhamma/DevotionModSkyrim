@@ -81,7 +81,8 @@ flag. One labelled unsafe consent fixture retains controlled invalid-state injec
 persists a proof-invalidating marker, self-cleans, and restores the prior patron mode.
 Machine evidence is compile 0/0 for the changed scripts, all-race formal/reachability
 `PASS=412/WARN=0/FAIL=0`, VMAD 207/207 with zero unwaived findings, and repo/live source
-hash equality. Runtime/manual proof remains separate: representative all-race negative surfaces,
+normalized-text equality. Three core PSC pairs differ bytewise only by CRLF/LF; all 16 checked
+module PEX files are fresh against their live PSC. Runtime/manual proof remains separate: representative all-race negative surfaces,
 race-change prior-race-strip/no-double-dip, MCM open-time tab refresh, recognition-off silence,
 and final formal-offer wording. The `e739f79f` cast report is a reconciled historical
 baseline; the source-derived module contract now supersedes it, and the retirement authority

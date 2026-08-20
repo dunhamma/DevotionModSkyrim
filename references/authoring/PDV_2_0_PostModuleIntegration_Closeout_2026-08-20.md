@@ -67,6 +67,10 @@ A second check reports `changed=false`, `questCount=58`.
 - Prisma UI audit after decomposition-aware repairs: `PASS=133 FAIL=0`.
 - Prisma extraction: 37/37; Debug extraction: 27/27; all-race reachability/formal-offer: 412/412.
 - VMAD audit: 207/207 attachments, zero unwaived findings.
+- End-session artifact sync: all 16 module PSC pairs match between the repository and
+  `Devotion-V3Dev` after line-ending normalization, and all 16 live PEX files are fresh. The
+  manager, Ledger, and ORIGIN-base pairs differ bytewise only because one side is CRLF and the
+  other LF; this is not claimed as raw-hash equality.
 - Signal E2E: 41 surfaces green, 215/215 curated parity, 488 targets with 486 reachable and two
   reserved known gaps, zero failures.
 - Broad pantheon, substrate pacing, pantheon record readback, and presentation readback pass.

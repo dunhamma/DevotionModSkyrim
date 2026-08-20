@@ -1108,6 +1108,18 @@ Originating dated entries are in `archive/PDV_DecisionsLog_Archive_2026-05.md`.
 
 ## Decisions Log
 
+- **[2026-08-20] - Race isolation gates enforce whole roster and neglect families, not named fixtures:**
+  A defect is any ordinary run reaching a deity outside its current race-authorized roster or
+  carrying another race/path's neglect family. Altmer-to-Baan-Dar and Nord/Kyne Frost Resistance
+  remain useful concrete regression fixtures, but neither defines the invariant. The reachability
+  gate therefore checks exact ordinary rosters for all ten races and exact reviewed offer sets for
+  all six offer races; the module-contract gate checks every adapter's exact neglect helper and
+  `PDV_SPEL_Neglect_*` reference family. Explicit formal-offer and Daedric pact lanes remain
+  separately reviewed exceptions. Forced invalid state is test evidence only when the named unsafe
+  injector emits its proof-invalidating marker and self-cleans. Rationale: fixture-specific gates
+  would allow the same cross-race bug to recur under a different race, deity, or neglect spell
+  while remaining green.
+
 - **[2026-08-20] - Penalty serialization is an all-family record contract, not a module responsibility:**
   The V3 module interfaces own penalty eligibility and spell add/remove lifecycle; they do not
   interpret MGEF flags or stored SPEL magnitudes. A direct-houseCARL gate now inventories every
