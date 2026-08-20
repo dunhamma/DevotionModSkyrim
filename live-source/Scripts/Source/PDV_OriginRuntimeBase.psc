@@ -1281,7 +1281,8 @@ Function RecordAltmerSourceFavor(Int familyValue, String reason)
 EndFunction
 
 Bool Function IsValidAltmerSourceFavorFamily(Int familyValue)
-    return familyValue == Manager.FavorRuntime.FAVOR_FAMILY_ALTMER_DAWN_STEADINESS || familyValue == Manager.FavorRuntime.FAVOR_FAMILY_ALTMER_ORTHODOX_COST
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 String Function GetAltmerFavorFamilyKey(Int familyValue)
@@ -1553,20 +1554,8 @@ Function SyncAltmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, 
 EndFunction
 
 Bool Function IsAltmerCoherenceNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
-        return False
-    endIf
-
-    if IsAltmerFavorSuppressedByCurse()
-        return False
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Altmer.Favor.LastGameTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 3.0
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncAltmerNeglectSpell(Bool shouldBeActive)
@@ -1636,18 +1625,8 @@ Int Function GetBosmerFavorSignalCount()
 EndFunction
 
 Bool Function IsBosmerPathNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BOSMER
-        return False
-    endIf
-
-    Int pathState = GetBosmerPathState()
-    if pathState == Manager.BOSMER_PATH_EXCHANGE
-        return Manager.LedgerRuntime.IsNeglectFlagActive(Manager.LedgerRuntime.PDV_Zen)
-    elseIf pathState == Manager.BOSMER_PATH_BANDIT_ROAD
-        return Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_BaanDar)
-    endIf
-
-    return Manager.LedgerRuntime.IsNeglectFlagActive(Manager.PDV_Yffre)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncBosmerNeglectSpell(Bool shouldBeActive)
@@ -1675,15 +1654,8 @@ Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ALTMER
-        return False
-    endIf
-
-    return deity == Manager.PDV_AuriEl || deity == Manager.PDV_Magnus || deity == Manager.PDV_Xarxes || deity == Manager.PDV_Trinimac || deity == Manager.PDV_Syrabane
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
@@ -1746,7 +1718,8 @@ Function InitializeBosmerStorage()
 EndFunction
 
 Bool Function IsBosmerPactBound()
-    return StorageUtil.GetIntValue(None, "PDV.Bosmer.PactBound") == 1
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SetBosmerPactBound(Bool isBound, String reason)
@@ -2191,15 +2164,8 @@ Function SyncKhajiitPhaseBlessing()
 EndFunction
 
 Bool Function IsKhajiitLatticeResonating()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
-        return False
-    endIf
-    Int focusValue = GetKhajiitFocusedEmphasis()
-    if focusValue == Manager.KHAJIIT_FOCUS_NONE || focusValue != GetCurrentLunarPresidingFocus()
-        return False
-    endIf
-    PDV_DeityBase deity = GetKhajiitEmphasisDeity(focusValue)
-    return deity && Manager.LedgerRuntime.GetPiety(deity) >= 25.0
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Spell Function GetKhajiitFocusedRewardSpell(Int focusValue, Int tierValue)
@@ -2331,13 +2297,8 @@ Bool Function TryUseKhajiitAzurahPortent(Actor playerRef)
 EndFunction
 
 Bool Function CanExecuteKhajiitBaanDarRescue(Actor playerRef)
-    if !playerRef || GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT || GetKhajiitFocusedEmphasis() != Manager.KHAJIIT_FOCUS_BAANDAR
-        return False
-    endIf
-    if !Manager.PDV_BaanDar || Manager.LedgerRuntime.GetTier(Manager.PDV_BaanDar) < Manager.LedgerRuntime.TIER_CHAMPION || !Manager.PDV_Bless_Khajiit_BaanDar_T3
-        return False
-    endIf
-    return playerRef.HasSpell(Manager.PDV_Bless_Khajiit_BaanDar_T3)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function ScheduleNextKhajiitGodStrengthBoundary()
@@ -3436,7 +3397,8 @@ Message Function GetKhajiitFocusEmergenceMessage(Int focusValue)
 EndFunction
 
 Int Function GetKhajiitFocusedEmphasis()
-    return StorageUtil.GetIntValue(None, "PDV.Khajiit.FocusedEmphasis")
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return 0
 EndFunction
 
 Float Function GetKhajiitFocusWeight(Int focusValue)
@@ -3581,16 +3543,8 @@ Function SyncKhajiitEmphasisFamily(Actor playerRef, Int thisFocus, Int activeFoc
 EndFunction
 
 Bool Function IsKhajiitLunarNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_KHAJIIT
-        return False
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Khajiit.LastLunarSourceTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > Manager.KHAJIIT_LUNAR_NEGLECT_GRACE_DAYS
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncKhajiitNeglectSpell(Bool shouldBeActive)
@@ -3679,21 +3633,8 @@ Int Function GetArgonianActiveFocus(Float peopleRelation, Float voidRelation, Bo
 EndFunction
 
 Bool Function IsArgonianHistNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ARGONIAN || !Manager.PDV_ArgonianHistSubstrate
-        return False
-    endIf
-
-    Int posture = Manager.PDV_ArgonianHistSubstrate.GetHistPosture()
-    if posture != Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_SILENCED && posture != Manager.PDV_ArgonianHistSubstrate.HIST_POSTURE_CORRUPTED
-        return False
-    endIf
-
-    if !Manager.PDV_ArgonianHistSubstrate.HasHistMaintenance()
-        return True
-    endIf
-
-    Int elapsedDays = Manager.LedgerRuntime.GetDevotionalDay() - Manager.PDV_ArgonianHistSubstrate.GetLastHistMaintenanceDevotionalDay()
-    return elapsedDays > (Manager.ARGONIAN_HIST_NEGLECT_GRACE_DAYS as Int)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncArgonianNeglectSpell(Bool shouldBeActive)
@@ -4828,16 +4769,8 @@ Bool Function IsBretonGreenWayForkEligible()
 EndFunction
 
 Bool Function IsBretonTraditionNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
-        return False
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Breton.LastTraditionSignalTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncBretonNeglectSpell(Bool shouldBeActive)
@@ -4966,20 +4899,8 @@ Function SyncRedguardRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1
 EndFunction
 
 Bool Function IsRedguardAncestorDistanceNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
-        return False
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Curse.Redguard.CyclePressure") > 0
-        return True
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Redguard.LastSectSignalTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncRedguardNeglectSpell(Bool shouldBeActive)
@@ -5035,15 +4956,8 @@ Message Function GetRedguardFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_BRETON
-        return False
-    endIf
-
-    return deity == Manager.LedgerRuntime.PDV_Kynareth || deity == Manager.PDV_Talos || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Zenithar || deity == Manager.PDV_Magnus || deity == Manager.PDV_Yffre || Manager.DaedricRuntime.IsBretonHiddenArtDaedricOfferDeity(deity)
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity, Int newTier)
@@ -5061,15 +4975,8 @@ Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity
 EndFunction
 
 Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_REDGUARD
-        return False
-    endIf
-
-    return deity == Manager.PDV_Tuwhacca || deity == Manager.PDV_HoonDing || deity == Manager.PDV_Leki
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function ApplyBretonCurseHandlers(Int oldState, Int newState, String reason)
@@ -5742,12 +5649,8 @@ Function SyncDunmerRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1, 
 EndFunction
 
 Bool Function IsDunmerAncestorNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
-        return False
-    endIf
-
-    Int dunmerPosture = StorageUtil.GetIntValue(None, "PDV.Curse.Dunmer.Posture")
-    return dunmerPosture == 1 || dunmerPosture == 2
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncDunmerNeglectSpell(Bool shouldBeActive)
@@ -5863,38 +5766,13 @@ Bool Function IsKyneCommitmentSignalReady()
 EndFunction
 
 Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
-        return False
-    endIf
-
-    if deity == Manager.PDV_Talos
-        return True
-    endIf
-
-    Int baselineState = GetNordPantheonBaselineState()
-    if baselineState == Manager.NORD_BASELINE_OLD_WAYS
-        return deity == Manager.PDV_Kyne || deity == Manager.PDV_Shor || deity == Manager.PDV_Tsun || deity == Manager.PDV_Stuhn || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Dibella
-    elseIf baselineState == Manager.NORD_BASELINE_NINE_DIVINES
-        return deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Zenithar || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Kynareth
-    endIf
-
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
     return False
 EndFunction
 
 Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_DUNMER
-        return False
-    endIf
-
-    return deity == Manager.PDV_Azura || deity == Manager.PDV_Boethiah || deity == Manager.PDV_Mephala
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function ApplyDunmerCurseHandlers(Int oldState, Int newState, String reason)
@@ -6364,15 +6242,8 @@ Function EnsureDunmerAncestralUrn()
 EndFunction
 
 Bool Function IsNordVampireSuppressed()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_NORD
-        return False
-    endIf
-
-    if Manager.PDV_CurseStateService && Manager.PDV_CurseStateService.GetCurseState() == 2
-        return True
-    endIf
-
-    return StorageUtil.GetIntValue(None, "PDV.Nord.VampireActive") == 1
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 String Function GetNordSurveyBaseText()
@@ -6983,20 +6854,8 @@ Function SyncOrcRewardFamily(Actor playerRef, Int thisMode, Int activeMode, Int 
 EndFunction
 
 Bool Function IsOrcCodeNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_ORC
-        return False
-    endIf
-
-    if StorageUtil.GetIntValue(None, "PDV.Curse.Orc.CodePressure") == 1
-        return True
-    endIf
-
-    Float lastSource = StorageUtil.GetFloatValue(None, "PDV.Orc.LastLifeModeSignalTime")
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 5.0
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncOrcNeglectSpell(Bool shouldBeActive)
@@ -7113,20 +6972,8 @@ Function SyncImperialRewardFamily(Actor playerRef, PDV_DeityBase deity, Spell t1
 EndFunction
 
 Bool Function IsImperialCivicNeglected()
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
-        return False
-    endIf
-
-    if !Manager.PDV_ImperialAncestorSubstrate || Manager.PDV_ImperialAncestorSubstrate.GetMetric() <= 0.0
-        return False
-    endIf
-
-    Float lastSource = Manager.PDV_ImperialAncestorSubstrate.GetLastAcceptedTime()
-    if lastSource <= 0.0
-        return False
-    endIf
-
-    return (Utility.GetCurrentGameTime() - lastSource) > 3.0
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Function SyncImperialNeglectSpell(Bool shouldBeActive)
@@ -7190,19 +7037,8 @@ Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
 EndFunction
 
 Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)
-    if !deity
-        return False
-    endIf
-
-    if GetPlayerOriginRaceIndex() != Manager.ORIGIN_IMPERIAL
-        return False
-    endIf
-
-    if deity == Manager.PDV_Talos
-        return IsImperialTalosOfferAllowed()
-    endIf
-
-    return deity == Manager.LedgerRuntime.PDV_Akatosh || deity == Manager.LedgerRuntime.PDV_Mara || deity == Manager.LedgerRuntime.PDV_Arkay || deity == Manager.LedgerRuntime.PDV_Stendarr || deity == Manager.LedgerRuntime.PDV_Zenithar || deity == Manager.LedgerRuntime.PDV_Dibella || deity == Manager.LedgerRuntime.PDV_Julianos || deity == Manager.LedgerRuntime.PDV_Kynareth
+    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
+    return False
 EndFunction
 
 Bool Function IsImperialTalosOfferAllowed()
