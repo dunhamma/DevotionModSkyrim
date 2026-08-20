@@ -3897,6 +3897,20 @@ Function DebugSyncRewardsOnly()
     endIf
 EndFunction
 
+Bool Function IsDebugDeityTargetEligible(PDV_DeityBase deity, String actionName = "debug action")
+    if !deity
+        if GetDebugLevel() >= 1
+            Debug.Trace("[PDV] " + actionName + " rejected: no deity target.")
+        endIf
+        return False
+    endIf
+    if !LedgerRuntime.IsDeityReachableForCurrentOrigin(deity)
+        Debug.Trace("[PDV] " + actionName + " blocked for " + deity.DeityName + ": deity is not reachable for the current origin.")
+        return False
+    endIf
+    return True
+EndFunction
+
 
 
 
@@ -3906,6 +3920,9 @@ Function DebugForceSetPietyByIndex(Int deityIndex, Float amount)
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugForceSetPietyByIndex failed: no deity with index " + deityIndex)
         endIf
+        return
+    endIf
+    if !IsDebugDeityTargetEligible(deity, "DebugForceSetPietyByIndex")
         return
     endIf
 
@@ -3933,6 +3950,9 @@ Function DebugForceSetPietyTodayByIndex(Int deityIndex, Float amount)
         endIf
         return
     endIf
+    if !IsDebugDeityTargetEligible(deity, "DebugForceSetPietyTodayByIndex")
+        return
+    endIf
 
     StorageUtil.SetFloatValue(deity as Form, "PDV.PietyToday", amount)
 EndFunction
@@ -3943,6 +3963,9 @@ Function DebugPrimeDecayGraceByIndex(Int deityIndex)
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugPrimeDecayGraceByIndex failed: no deity with index " + deityIndex)
         endIf
+        return
+    endIf
+    if !IsDebugDeityTargetEligible(deity, "DebugPrimeDecayGraceByIndex")
         return
     endIf
 
@@ -3963,6 +3986,9 @@ Function DebugPrimeDecayEligibleByIndex(Int deityIndex)
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugPrimeDecayEligibleByIndex failed: no deity with index " + deityIndex)
         endIf
+        return
+    endIf
+    if !IsDebugDeityTargetEligible(deity, "DebugPrimeDecayEligibleByIndex")
         return
     endIf
 
@@ -3988,6 +4014,9 @@ Function DebugRunDecayProofDaysByIndex(Int deityIndex)
         if GetDebugLevel() >= 1
             Debug.Trace("[PDV] DebugRunDecayProofDaysByIndex failed: no deity with index " + deityIndex)
         endIf
+        return
+    endIf
+    if !IsDebugDeityTargetEligible(deity, "DebugRunDecayProofDaysByIndex")
         return
     endIf
 
@@ -4017,6 +4046,10 @@ Function DebugRunDecayProofDaysByIndex(Int deityIndex)
 EndFunction
 
 Function DebugAwardCuratedSignalByIndex(Int deityIndex, Int signalType)
+    PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
+    if !IsDebugDeityTargetEligible(deity, "DebugAwardCuratedSignalByIndex")
+        return
+    endIf
     LedgerRuntime.AwardCuratedSignalByIndex(deityIndex, signalType)
 EndFunction
 
@@ -4059,6 +4092,11 @@ String Function DebugGetPietyMapString()
 EndFunction
 
 Function DebugClearActiveDeity()
+    if LedgerRuntime.IsUnsafeFaultInjectionActive()
+        LedgerRuntime.ClearUnsafeFaultInjection()
+        return
+    endIf
+
     LedgerRuntime.SetActiveDeity(None)
     ; Strip the now-unfocused patron's reward spells immediately (same dawn-lag class
     ; as ForceSetActiveDeityByIndex).
@@ -6278,7 +6316,7 @@ EndFunction
 
 Function DebugSeedCommitmentSignalDaysByIndex(Int deityIndex)
     PDV_DeityBase deity = LedgerRuntime.GetDeityByIndex(deityIndex)
-    if !deity
+    if !IsDebugDeityTargetEligible(deity, "DebugSeedCommitmentSignalDaysByIndex")
         return
     endIf
 
@@ -6297,7 +6335,7 @@ EndFunction
 ; resolve through GetDeityByIndex, so the index seeder misses a Prince; seed by form
 ; directly to make a path offer-ready.
 Function DebugSeedCommitmentSignalDaysForDeity(PDV_DeityBase deity)
-    if !deity
+    if !IsDebugDeityTargetEligible(deity, "DebugSeedCommitmentSignalDaysForDeity")
         return
     endIf
     Form deityForm = deity as Form
@@ -6536,8 +6574,16 @@ String Function DebugConsentDivinePatronThenRaiseSanguine()
     if !LedgerRuntime.PDV_Akatosh
         return "PDV_Akatosh is not wired; cannot set a divine patron."
     endIf
+    PDV_DeityBase previousPatron = _activeDeity
+    Int previousPatronState = LedgerRuntime.GetPatronState()
+    if previousPatron && !LedgerRuntime.IsDeityReachableForCurrentOrigin(previousPatron)
+        return "Unsafe consent fixture refused: the current patron is a grandfathered off-roster deity and cannot be restored through the ordinary setter."
+    endIf
+    if DaedricRuntime.GetActiveDaedricPactPath()
+        return "Unsafe consent fixture refused: clear the active Daedric pact first so the fixture cannot sever player state it does not restore."
+    endIf
     ; A divine patron must suppress the Daedric pact offer and survive the raise.
-    LedgerRuntime.SetActiveDeity(LedgerRuntime.PDV_Akatosh, True)
+    LedgerRuntime.UnsafeFaultInjectActiveDeity(LedgerRuntime.PDV_Akatosh, "consent fixture: divine patron suppresses Sanguine offer")
     DebugSeedSanguineOfferReadyCore()
     LedgerRuntime.EvaluateFormalCommitmentOffer()
     Int pendingAfter = LedgerRuntime.GetPendingCommitmentDeityIndex()
@@ -6554,7 +6600,14 @@ String Function DebugConsentDivinePatronThenRaiseSanguine()
     if _activeDeity
         patronLabel = _activeDeity.DeityName
     endIf
-    return "Divine patron=" + patronLabel + " (state " + LedgerRuntime.GetPatronStateLabel() + "); Sanguine raised to offer-ready; offer pending=" + pendingLabel + " (expect none -> suppressed)."
+    String result = "Divine patron=" + patronLabel + " (state " + LedgerRuntime.GetPatronStateLabel() + "); Sanguine raised to offer-ready; offer pending=" + pendingLabel + " (expect none -> suppressed)."
+    LedgerRuntime.ClearUnsafeFaultInjection()
+    if previousPatronState == LedgerRuntime.PATRON_STATE_ACTIVE && previousPatron
+        LedgerRuntime.SetActiveDeity(previousPatron)
+    elseIf previousPatronState == LedgerRuntime.PATRON_STATE_BROAD
+        LedgerRuntime.SetBroadWorship()
+    endIf
+    return result + " Unsafe patron injection was cleared and the prior patron mode restored; the persistent unsafe marker still invalidates this run as gameplay proof."
 EndFunction
 
 String Function DebugFireSanguineAlcoholTwice()

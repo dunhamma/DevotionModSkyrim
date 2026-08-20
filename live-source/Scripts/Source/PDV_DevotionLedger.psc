@@ -954,7 +954,15 @@ Float Function GetPietyTodayByIndex(Int deityIndex)
     return GetPietyToday(GetDeityByIndex(deityIndex))
 EndFunction
 
-Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False)
+Bool Function IsDeityReachableForCurrentOrigin(PDV_DeityBase deity)
+    if !deity || !Manager || !Manager.OriginRuntime
+        return False
+    endIf
+
+    return Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, Manager.GetPlayerOriginRaceIndex()) || UsesFormalCommitmentOffersForDeity(deity)
+EndFunction
+
+Function SetActiveDeity(PDV_DeityBase newDeity)
     if newDeity == Manager.GetActiveDeity()
         return
     endIf
@@ -964,10 +972,18 @@ Function SetActiveDeity(PDV_DeityBase newDeity, Bool allowOffRosterDebug = False
     ; Imperial Talos and Breton Hidden Art's dynamic eligibility while blocking
     ; accidental off-roster assignment. RestoreActiveDeityFromStoredPatron
     ; deliberately bypasses this setter for save-safe grandfathering.
-    if newDeity && !allowOffRosterDebug && !Manager.OriginRuntime.IsDashboardDeityInOriginRoster(newDeity, Manager.GetPlayerOriginRaceIndex()) && !UsesFormalCommitmentOffersForDeity(newDeity)
+    if newDeity && !IsDeityReachableForCurrentOrigin(newDeity)
         Manager.Trace(1, "SetActiveDeity blocked off-roster commitment to " + newDeity.DeityName)
         return
     endIf
+
+    UnsafeApplyActiveDeityState(newDeity)
+EndFunction
+
+; This routine deliberately performs no reachability check. Keep it behind the
+; named fault-injection boundary; ordinary gameplay and debug callers use
+; SetActiveDeity so off-origin deities cannot become reachable by accident.
+Function UnsafeApplyActiveDeityState(PDV_DeityBase newDeity)
 
     ; Exclusivity (data-layer): committing a patron severs an active Prince pact.
     ; Guarded on newDeity != None so SetActiveDeity(None) (the patron-teardown path,
@@ -2354,11 +2370,50 @@ Function ForceSetActiveDeityByIndex(Int deityIndex)
         return
     endIf
 
-    SetActiveDeity(deity, True)
+    SetActiveDeity(deity)
     ; Resync the race reward families immediately (mirrors DebugForceSetPietyByIndex):
     ; without this a debug patron override surfaces every toast/panel/Survey cue but
     ; grants no reward spells until the next dawn pass -- reads as "rewards not wired".
     SyncFirstTierRaceRewardRuntime()
+EndFunction
+
+Function UnsafeFaultInjectActiveDeity(PDV_DeityBase deity, String reason)
+    if !deity
+        Manager.Trace(1, "[UNSAFE_FAULT_INJECTION] Active-deity injection rejected: no deity.")
+        return
+    endIf
+
+    String injectionReason = reason
+    if injectionReason == ""
+        injectionReason = "unspecified"
+    endIf
+    StorageUtil.SetIntValue(None, "PDV.Debug.UnsafeFaultInjectionActive", 1)
+    StorageUtil.SetIntValue(None, "PDV.Debug.UnsafeFaultInjectionEver", 1)
+    StorageUtil.SetStringValue(None, "PDV.Debug.UnsafeFaultInjectionReason", injectionReason)
+    StorageUtil.SetFormValue(None, "PDV.Debug.UnsafeFaultInjectionDeity", deity as Form)
+    Debug.Trace("[PDV][UNSAFE_FAULT_INJECTION] Injecting active deity " + deity.DeityName + ": " + injectionReason)
+    UnsafeApplyActiveDeityState(deity)
+    SyncFirstTierRaceRewardRuntime()
+EndFunction
+
+Bool Function IsUnsafeFaultInjectionActive()
+    return StorageUtil.GetIntValue(None, "PDV.Debug.UnsafeFaultInjectionActive") == 1
+EndFunction
+
+Function ClearUnsafeFaultInjection()
+    if !IsUnsafeFaultInjectionActive()
+        return
+    endIf
+
+    ClearPendingCommitment()
+    SetActiveDeity(None)
+    SyncFirstTierRaceRewardRuntime()
+    StorageUtil.UnsetIntValue(None, "PDV.Debug.UnsafeFaultInjectionActive")
+    StorageUtil.UnsetStringValue(None, "PDV.Debug.UnsafeFaultInjectionReason")
+    StorageUtil.UnsetFormValue(None, "PDV.Debug.UnsafeFaultInjectionDeity")
+    Manager.DebugClosePrismaSurfaces()
+    Manager.RequestPanelRefresh()
+    Debug.Trace("[PDV][UNSAFE_FAULT_INJECTION] Cleared injected state; PDV.Debug.UnsafeFaultInjectionEver remains set and this run does not count as gameplay proof.")
 EndFunction
 
 Function ForceSetPietyToday(Float amount)

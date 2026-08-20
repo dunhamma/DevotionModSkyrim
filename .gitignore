@@ -115,6 +115,7 @@ scratch/incoming-devotion-prisma-*/
 scratch/live-prisma-before-*/
 scratch/ship-optimization-pex/
 scratch/ship-optimization-all-pex/
+scratch/phasec-origin-compile/
 scratch/ship-optimization-pdv-verify.*.txt
 references/authoring/PDV_ShipOptimizationLedger.json
 references/authoring/PDV_ShipOptimizationLedger.md

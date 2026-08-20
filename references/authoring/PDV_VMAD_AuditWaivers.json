@@ -16,6 +16,13 @@
       "evidence": "tools/pdv_verify.mjs:6697-6699 asserts substrate ownership; references/authoring/PDV_HO_1.0.4_Scope_DrHeisenPatch_2026-07-25.md:170-197 records the same false finding and its correction."
     },
     {
+      "script": "PDV__ManagerQuest",
+      "formids": ["00C325:Devotion.esp"],
+      "properties": ["OriginRuntime"],
+      "reason": "Runtime switchboard output. OriginRuntime is deliberately assigned in code from PDV_FLST_OriginAdapters after PDV_GLO_OriginRace becomes valid, then rebound whenever the captured origin changes. A static VMAD binding would pin one race adapter and defeat the switchboard.",
+      "evidence": "PDV__ManagerQuest.psc:739-745 declares the runtime-filled property and adapter FormList; ResolveOriginRuntime at :855-886 selects list[raceIndex], assigns OriginRuntime, and tracks _boundOriginRace. Direct houseCARL readback 2026-08-20 confirms the ten adapter quests 071794-07179D and PDV_FLST_OriginAdapters 07179E are present; validate_scripts reports OriginRuntime absent as designed."
+    },
+    {
       "script": "PDV_DaedricPath_Azura",
       "formids": ["071280:Devotion.esp"],
       "properties": ["Msg_Response_Dunmer"],

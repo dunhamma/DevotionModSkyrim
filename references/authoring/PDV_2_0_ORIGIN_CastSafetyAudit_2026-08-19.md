@@ -44,6 +44,35 @@ Cast the 175 A+B now (scripted, then compile 0/0 + parity per wave), and work th
 passes: the 39 read-only quickly, the 77 side-effecting deliberately. Every C that review
 clears joins the cast set; any that can't stays a base declaration (or gets a keyed virtual).
 
+## 2026-08-20 current-source reconciliation
+
+Commit `e739f79f` and the distribution below are retained as the pre-switchboard historical
+baseline, not as current cast authority. After the Phase C switchboard migrations and the
+Altmer reachability closeout, current source contains **591** qualified
+`OriginRuntime.<name>(...)` calls over **298** names:
+
+| Current classification | Names | Calls |
+|---|---:|---:|
+| Single-adapter duplicate | 240 | 418 |
+| Multi-adapter duplicate | 9 | 43 |
+| Base-only | 49 | 130 |
+| Unknown | 0 | 0 |
+
+Of the 292 names audited below, 241 still have qualified calls and retain the audit's
+original 419 callsites exactly. The other 51 names (56 old callsites) were removed from
+qualified use by the later eligibility/neglect, reward/neglect, offer/survey, and
+presentation switchboard migrations. Conversely, 57 currently qualified names (172
+calls) were not classified in `e739f79f`. The old rows sum to 475 callsites, despite the
+introductory prose saying 473.
+
+Current base/adapter declaration ownership also differs from this snapshot: 502 names are
+duplicated between the base and at least one adapter, comprising 481 single-adapter names
+and 21 multi-adapter names. Therefore no remaining cast decision may be copied from the
+counts below without regenerating the current caller and owner classification. To avoid
+repeating this drift after every extraction, the full regenerated cast-decision pass is
+deferred until the remaining modules land; this reconciliation is sufficient to prevent
+the historical report from being mistaken for current authority during those modules.
+
 ---
 
 ## C: NEEDS-REVIEW (116)

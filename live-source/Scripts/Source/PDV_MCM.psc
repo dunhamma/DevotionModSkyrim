@@ -611,7 +611,7 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidConsentRefuse
         SetInfoText("Refuses the pending commitment offer (rupture/cooldown). Shows the consent readback afterward.")
     elseIf a_option == _oidConsentDivineThenRaise
-        SetInfoText("Sets a divine patron active, then raises Sanguine to offer-ready. The Daedric offer should be SUPPRESSED and the divine patron should survive.")
+        SetInfoText("UNSAFE fault-injection fixture: temporarily sets a divine patron, raises Sanguine to offer-ready, verifies suppression, then clears the invalid patron state and restores the prior patron mode. Permanently marks the run invalid as gameplay proof.")
     elseIf a_option == _oidConsentAlcoholTwice
         SetInfoText("Fires the sanguine_alcohol KID action twice and reports Sanguine piety before/after so the second hit is seen capped by the once-per-day gate.")
     elseIf a_option == _oidConsentForceMigrate
@@ -1698,10 +1698,12 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidForceSelectedPatron
         PDV__ManagerQuest forcePatronManager = GetManagerService()
         PDV_DeityBase forcePatronDeity = GetSelectedDeity()
-        if forcePatronManager && forcePatronDeity
-            forcePatronManager.LedgerRuntime.SetActiveDeity(forcePatronDeity, True)
+        if forcePatronManager && forcePatronManager.IsDebugDeityTargetEligible(forcePatronDeity, "Force selected patron")
+            forcePatronManager.LedgerRuntime.SetActiveDeity(forcePatronDeity)
             Debug.Notification("PDV: active patron forced.")
             ForcePageReset()
+        elseIf forcePatronDeity
+            Debug.Notification("PDV: selected deity is not reachable for this origin.")
         else
             Debug.Notification("PDV: select a deity first.")
         endIf
@@ -1711,15 +1713,17 @@ Function OnOptionSelect(Int a_option)
     if a_option == _oidPrimeNeglectEligible
         PDV__ManagerQuest primeNeglectManager = GetManagerService()
         PDV_DeityBase primeNeglectDeity = GetSelectedDeity()
-        if primeNeglectManager && primeNeglectDeity
+        if primeNeglectManager && primeNeglectManager.IsDebugDeityTargetEligible(primeNeglectDeity, "Prime neglect eligible")
             ; Deterministic active-patron neglect setup, modal-free: make the selected deity the
             ; active patron, then drop its piety to 0 so ApplyGenericNeglectFlags selects it (piety
             ; <= NEGLECT_ACTIVE_PIETY_MAX). Sidesteps Prime-decay-eligible, which sets piety 20 and
             ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
-            primeNeglectManager.LedgerRuntime.SetActiveDeity(primeNeglectDeity, True)
+            primeNeglectManager.LedgerRuntime.SetActiveDeity(primeNeglectDeity)
             primeNeglectManager.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
             Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
             ForcePageReset()
+        elseIf primeNeglectDeity
+            Debug.Notification("PDV: selected deity is not reachable for this origin.")
         else
             Debug.Notification("PDV: select a deity first.")
         endIf
@@ -2562,7 +2566,7 @@ Function BuildDaedricPage()
     _oidConsentAccept = AddTextOption("[Consent] Accept pending", "Consent + pact", OPTION_FLAG_NONE)
     _oidConsentNotYet = AddTextOption("[Consent] Not-yet pending", "Postpone", OPTION_FLAG_NONE)
     _oidConsentRefuse = AddTextOption("[Consent] Refuse pending", "Rupture/cooldown", OPTION_FLAG_NONE)
-    _oidConsentDivineThenRaise = AddTextOption("[Consent] Divine patron then raise Sanguine", "Expect suppressed", OPTION_FLAG_NONE)
+    _oidConsentDivineThenRaise = AddTextOption("[UNSAFE] Divine patron then raise Sanguine", "Self-cleans; invalidates proof", OPTION_FLAG_NONE)
     _oidConsentAlcoholTwice = AddTextOption("[Consent] Fire sanguine_alcohol x2", "2nd hit capped", OPTION_FLAG_NONE)
     _oidConsentForceMigrate = AddTextOption("[Consent] Force un-consented pact + migrate", "Piety preserved", OPTION_FLAG_NONE)
     _oidConsentReadback = AddTextOption("[Consent] Readback", "State summary", OPTION_FLAG_NONE)
@@ -2967,6 +2971,9 @@ Function DebugOverridePatron()
         ShowMessage("No selected deity is available.", False, "$OK", "")
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Debug patron override")
+        return
+    endIf
 
     if ShowMessage("Apply a debug patron override to " + deity.DeityName + "?", True, "$Yes", "$No")
         PDV_Manager.LedgerRuntime.ForceSetActiveDeityByIndex(deity.DeityIndex)
@@ -3000,6 +3007,9 @@ Function DebugApplySelectedPiety()
         ShowMessage("No selected deity is available.", False, "$OK", "")
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Apply selected piety")
+        return
+    endIf
 
     if ShowMessage("Force " + deity.DeityName + " piety to " + FormatFloat(_pendingPiety) + "?", True, "$Yes", "$No")
         PDV_Manager.DebugForceSetPietyByIndex(deity.DeityIndex, _pendingPiety)
@@ -3013,6 +3023,9 @@ Function DebugApplySelectedPietyToday()
         ShowMessage("No selected deity is available.", False, "$OK", "")
         return
     endIf
+    if !RequireEligibleDebugDeity(deity, "Apply selected scratch piety")
+        return
+    endIf
 
     if ShowMessage("Force " + deity.DeityName + " scratch piety to " + FormatFloat(_pendingPietyToday) + "?", True, "$Yes", "$No")
         PDV_Manager.DebugForceSetPietyTodayByIndex(deity.DeityIndex, _pendingPietyToday)
@@ -3024,6 +3037,9 @@ Function DebugApplyCuratedSignal()
     PDV_DeityBase deity = GetSelectedDeity()
     if !deity
         ShowMessage("No selected deity is available.", False, "$OK", "")
+        return
+    endIf
+    if !RequireEligibleDebugDeity(deity, "Apply curated signal")
         return
     endIf
 
@@ -3040,6 +3056,9 @@ Function DebugFireSelectedDislike()
         return
     endIf
     if !PDV_Manager
+        return
+    endIf
+    if !RequireEligibleDebugDeity(deity, "Fire selected dislike")
         return
     endIf
 
@@ -3107,6 +3126,17 @@ PDV_DeityBase Function GetSelectedDeity()
         return None
     endIf
     return PDV_Manager.LedgerRuntime.GetDeityAtListIndex(_selectedListIndex)
+EndFunction
+
+Bool Function RequireEligibleDebugDeity(PDV_DeityBase deity, String actionName)
+    if !PDV_Manager || !deity
+        return False
+    endIf
+    if PDV_Manager.IsDebugDeityTargetEligible(deity, actionName)
+        return True
+    endIf
+    ShowMessage(deity.DeityName + " is not reachable for the current origin. Switch to an eligible origin before using this control.", False, "$OK", "")
+    return False
 EndFunction
 
 Int Function GetDeityCount()
@@ -4323,5 +4353,3 @@ Function ResetAllOptionIds()
     _oidTalosBetrayalMajor = -1
     _oidTalosShrineDefiance = -1
 EndFunction
-
-
