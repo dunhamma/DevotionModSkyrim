@@ -71,3 +71,24 @@ headline line ("Broad Nine Divines - Unproven"), then `Path`, `Favor`, `Curse`, 
 drop the standalone `summary`, `Patron`, `mode`, `Standing` rows once their content is folded
 in. Confirm no other surface reads those individual rows before removing them.
 - **Status:** OPEN -- deferred to MCM rebuild.
+
+## Deity name renders lowercase in Prisma surfacing (2026-08-20, owner-flagged) -- DEDICATED PASS
+
+Second occurrence of a lowercase deity name (first was Talos, quest-reaction line). Auri-El
+in the tier-reach card: "Favor deepened / Your devotion to auri-el has reached Champion."
+NOT the Papyrus layer -- GetPublicDeityDisplayName / BuildTierReachJournalLine / SendPrismaEventToast
+(PDV__ManagerQuest.psc:7689/1674/1415) all produce "Auri-El"; Auri-El ESP DeityName (QUST 03DE88) is
+correct. The lowercase "auri-el" is Altmers Prisma SYMBOL/key -- so the render bug is in the PRISMA
+BRIDGE JS/view (tier + journal toast templates compose from the symbol instead of the deity field).
+Fix the templates, bump index.html cache key, re-check Talos + all multi-word/hyphenated names
+(Tuwhacca, Zen, Baan Dar, Auri-El). See the ForCodex handoff (2026-08-20) section 3a.
+- **Status:** OPEN -- dedicated dev pass (render bug, not copy).
+
+## Formal commitment offer must NAME the deity + rewrite drafts (2026-08-20, owner-flagged)
+
+Offer fired at Devoted (piety 50) but did not name Auri-El. Owner: ALL offers should name their
+deity, and the current drafts read mediocre -- owner will supply rewrites. Records: per-adapter
+GetXFormalCommitmentOfferMessage -> PDV_Msg_<Race>_<Deity>_Offer (Altmer AuriEl/Magnus/Xarxes/
+Trinimac/Syrabane; same shape for Breton/Dunmer/Imperial/Nord/Redguard). Audit every offer Message
+record for the deity name; drop owners rewritten drafts here. See ForCodex handoff section 3b.
+- **Status:** OPEN -- owner to draft; Codex to apply to the Message records.
