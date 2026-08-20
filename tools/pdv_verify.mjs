@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 import { verifyPhase21RosterCoverage } from "./lib/pdv-roster-coverage.mjs";
 import { recordActorValueFor } from "./lib/pdv_actor_value_aliases.mjs";
 import { resolveDevotionRoot, devotionSource, devotionPex, devotionEsp } from "./lib/pdv_paths.mjs";
-import { callTokenPattern, decompositionFamily, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
+import { callTokenPattern, decompositionFamily, familySourceText, stripQualifiers } from "./lib/pdv_symbol_home.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
@@ -6256,7 +6256,7 @@ class Verifier {
       "PDV_Magnus.SIGNAL_ANCESTOR_SPINE",
     ]);
     this.checkSourceContains("Nord spine location router source", "PDV_ActionRouter", [
-      "PDV_Manager.HandleNordLocationChange(akNewLocation)",
+      "PDV_Manager.OriginRuntime.HandleLocationChange(akNewLocation)",
     ]);
 
     const substrateRecord = this.recordsByEdid.get("PDV_Substrate_NordAncestor");
@@ -9603,7 +9603,7 @@ class Verifier {
       "ShouldSuppressDuplicateShoutAttack()",
       "Function HandleTalosShrineDefiance(String reason)",
       "Function HandleShoutAttack(Int eventType, Actor playerRef, Shout shoutUsed, String reason)",
-      "ApplyConcordatPressure(-15, \"talos_shrine_\" + reason)",
+      "HandleContextualSignal(\"hidden_talos_shrine\", \"talos_shrine_\" + reason)",
       "AwardCuratedSignalScaled(PDV_Talos, PDV_Talos.SIGNAL_SHRINE_DEFIANCE, None, multiplier)",
     ]);
     this.checkSourceContains("Phase 7 source", "PDV_EventSignalActivator", [
@@ -9887,14 +9887,10 @@ class Verifier {
     const familyContains = (snippet) => {
       if (_familyText === null) {
         const fam = decompositionFamily(PROJECT_ROOT);
-        _familyText = fam.includes(scriptName)
-          ? fam
-              .map((s) => {
-                const p = path.join(DEVOTION_SOURCE, `${s}.psc`);
-                return exists(p) ? stripQualifiers(fs.readFileSync(p, "utf8")) : "";
-              })
-              .join("\n")
-          : "";
+        _familyText = stripQualifiers(text);
+        if (fam.includes(scriptName)) {
+          _familyText += "\n" + familySourceText(PROJECT_ROOT, DEVOTION_SOURCE);
+        }
       }
       return _familyText.length > 0 && _familyText.includes(stripQualifiers(snippet));
     };
@@ -10033,7 +10029,7 @@ class Verifier {
       return;
     }
 
-    const sourceText = fs.readFileSync(managerSource, "utf8");
+    const sourceText = familySourceText(PROJECT_ROOT, DEVOTION_SOURCE);
     const deityGenerated = buildLikesDislikesFunction(DEITY_LIKES_DISLIKES_CSV, {
       functionName: "LoadRowsForDeity",
       argumentType: "PDV_DeityBase",
@@ -10284,7 +10280,7 @@ class Verifier {
     for (const [source, label, snippet] of checks) {
       if (!source.exists) {
         this.fail(checkName, `${source.scriptName}.psc is missing for ${label}.`, source.path);
-      } else if (source.text.includes(snippet)) {
+      } else if (stripQualifiers(source.text).includes(stripQualifiers(snippet))) {
         this.pass(checkName, label, source.path);
       } else {
         this.fail(checkName, `${source.scriptName}.psc is missing ${snippet}.`, source.path);

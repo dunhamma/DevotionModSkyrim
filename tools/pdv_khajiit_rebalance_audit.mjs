@@ -78,7 +78,7 @@ check("portent.day-key", /PDV\.Khajiit\.AzurahPortent\.Day/.test(manager) && /Ge
 check("portent.native-cast", /PDV_SPEL_Khajiit_AzurahPortentDetect\.Cast/.test(manager) && !/FindClosestActor|GetNthRef|GetNumRefs/.test(portent), "Portent must cast conditioned native detection without actor searches");
 check("portent.script-gate", /TryUseKhajiitAzurahPortent/.test(portent), "lesser-power effect must route through the manager eligibility gate");
 
-check("baan.final-guard", /!HasRuntimeEligibility\(\)/.test(rescue) && /CanExecuteKhajiitBaanDarRescue\(playerRef\)/.test(baanRescue) && /return 0\.50/.test(baanRescue), "Baan Dar rescue must defend immediately before healing and restore to 50% Health");
+check("baan.final-guard", /!HasRuntimeEligibility\(\)/.test(rescue) && /HandleContextualQuery\(\"baandar-rescue-eligible\"[^\r\n]*playerRef\)\s*==\s*1/.test(baanRescue) && /return 0\.50/.test(baanRescue), "Baan Dar rescue must defend immediately before healing and restore to 50% Health");
 check("baan.manager-eligibility", /GetPlayerOriginRaceIndex\(\) != ORIGIN_KHAJIIT/.test(manager) && /GetKhajiitFocusedEmphasis\(\) != KHAJIIT_FOCUS_BAANDAR/.test(manager) && /GetTier\(PDV_BaanDar\) < TIER_CHAMPION/.test(manager) && /HasSpell\(PDV_Bless_Khajiit_BaanDar_T3\)/.test(manager), "manager must require origin, focus, Champion tier, and the correct T3");
 
 check("prisma.payload", ["currentFocus", "godInStrength", "focusStanding", "substrateTier", "resonating"].every((token) => manager.includes(`\\\"${token}\\\"`)), "extended lunar payload fields are incomplete");

@@ -134,7 +134,7 @@ async function main() {
   const [moonRecordsResult, moonMessagesResult, managerResult] = await Promise.all([
     callHousecarl("housecarl_batch_record_detail", { formids: ["0716C6:Devotion.esp", "0716C7:Devotion.esp", "0716DC:Devotion.esp", "070523:Devotion.esp", "070524:Devotion.esp"], fields: ["EditorID", "Name", "Effects", "Items", "Type", "TargetType", "CastType", "EquipmentType", "Flags"], depth: 4, max_chars: 60_000 }),
     callHousecarl("housecarl_batch_record_detail", { formids: moonIds, fields: ["EditorID", "Name", "Description"], depth: 2, max_chars: 100_000 }),
-    callHousecarl("housecarl_read_record", { formid: "00C325:Devotion.esp", fields: Array.from({ length: 11 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${488 + i}]`), depth: 3, max_chars: 40_000 }),
+    callHousecarl("housecarl_read_record", { formid: "00C325:Devotion.esp", fields: Array.from({ length: 75 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${440 + i}]`), depth: 3, max_chars: 180_000 }),
   ]);
   const moonText = extractHousecarlText(moonRecordsResult);
   const moonList = blocks(moonText, "FormList")[0] || "";

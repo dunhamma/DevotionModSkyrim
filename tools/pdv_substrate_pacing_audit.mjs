@@ -82,11 +82,14 @@ function hasNumber(source, label, expected) {
 }
 
 function bodyFor(source, functionName) {
-  const start = source.search(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "i"));
-  if (start < 0) return "";
-  const tail = source.slice(start);
-  const end = tail.search(/\n\s*EndFunction\b/i);
-  return end >= 0 ? tail.slice(0, end + 12) : tail;
+  const starts = [...source.matchAll(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "ig"))];
+  const bodies = [];
+  for (const match of starts) {
+    const tail = source.slice(match.index);
+    const end = tail.search(/\n\s*EndFunction\b/i);
+    bodies.push(end >= 0 ? tail.slice(0, end + 12) : tail);
+  }
+  return bodies.join("\n");
 }
 
 function playerFacingSpineValues(value, here = "$") {
@@ -363,7 +366,7 @@ export function evaluate({ contract, baseSource, managerSource, concreteSources,
   const dunmerHome = bodyFor(managerSource, "HandleDunmerPlayerHomeBonus");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(nearWater) && /WriteZeroReservedDevotionalDayStamp/i.test(nearWater) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(nearWater), "source.day-zero.argonian-water", "Argonian water credit must use the zero-reserved +2 devotional-day stamp");
   add(/ReadZeroReservedDevotionalDayStamp/i.test(moonRite) && /WriteZeroReservedDevotionalDayStamp/i.test(moonRite) && /GetDevotionalDay\s*\(\s*\)\s*\+\s*2/i.test(moonRite), "source.day-zero.khajiit-moon-piety", "Khajiit moon piety must use the zero-reserved +2 devotional-day stamp");
-  add(/observationToken\s*=\s*(?:[A-Za-z_]\w*\.)*BeginKhajiitMoonObservation\s*\(\s*(?:akTarget|playerActor)\s*\)/i.test(observeMoonsSource)
+  add(/observationToken\s*=\s*(?:(?:[A-Za-z_]\w*\.)*BeginKhajiitMoonObservation\s*\(\s*(?:akTarget|playerActor)\s*\)|(?:[A-Za-z_]\w*\.)*HandleContextualQuery\s*\(\s*"moon-observation-begin"[^\r\n]*(?:akTarget|playerActor)\s*\))/i.test(observeMoonsSource)
     && /observationToken\s*>\s*0[\s\S]*Utility\.Wait\s*\(\s*2\.0\s*\)[\s\S]*ProcessPendingKhajiitMoonObservation\s*\(\s*observationToken\s*\)/i.test(observeMoonsSource)
     && /_khajiitMoonObservationGeneration\s*\+=\s*1/i.test(moonBegin)
     && /observationToken\s*!=\s*_khajiitMoonObservationGeneration/i.test(moonComplete)

@@ -1261,6 +1261,21 @@ Suggested branch naming: `feature/nord-combat-triggers`, `fix/dawn-event-doublin
 
 ## Notes / Decisions Log
 
+**2026-08-20 AEST - V3 post-module integration gate reconciliation:**
+After ORIGIN, RECOGNITION, PRISMA, and DEBUG extraction, the 37 known verifier failures were
+retired as one integration checkpoint rather than churned during each module move. Normal
+location ingress now calls `OriginRuntime.HandleLocationChange(...)` once; contextual ORIGIN
+events and queries, including moon observation and Baan Dar rescue eligibility, route through
+the generic typed seam. Any verifier that follows decomposed behavior must read the complete
+module family, join every matching polymorphic override body, and inspect an explicit VMAD
+property window instead of assuming manager residence, selecting the first override, or using
+a stale tail slice. Full verification is clean at `FAIL=0, WARN=0, TODO=0, PASS=4092, INFO=97`.
+The manager still has duplicate historical Nine Divines T1/T2 and Observe Moons/FormList VMAD
+properties; both copies point to the same correct forms, so deletion is a later supervised
+record-cleanup pass, not part of this source/gate checkpoint. This evidence is static,
+compile, and readback proof only; fresh-game, player-surface, save/load, and package proof remain
+separate.
+
 **2026-08-11 AEST - Daedric effect-model decomposition (balance-neutral):**
 Daedric boon and price composition moved behind
 `tools/lib/pdv_daedric_effect_model.mjs`. The compiler now consumes one

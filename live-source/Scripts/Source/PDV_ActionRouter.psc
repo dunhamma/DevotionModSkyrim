@@ -311,14 +311,9 @@ Function HandleStoryChangeLocation(ObjectReference akActor, Location akOldLocati
     ; Runs on EVERY location change (before the one-shot discovery gate) so the
     ; Eldergleam interior-cell catch can arm/disarm as the player comes and goes.
     if PDV_Manager
-        PDV_Manager.OriginRuntime.UpdateArgonianSanctuaryActive(akNewLocation)
-        ; Bosmer Songs of the Green + Hearth discovery counter. Self-contained
-        ; (own per-FormID seen keys + Eldergleam arm/disarm), so it rides every
-        ; change here rather than the one-shot MarkLocationSeen gate below.
-        PDV_Manager.OriginRuntime.HandleBosmerLocationChange(akNewLocation)
-        PDV_Manager.OriginRuntime.HandleNordLocationChange(akNewLocation)
-        PDV_Manager.OriginRuntime.HandleOrcLocationChange(akNewLocation)
-        PDV_Manager.OriginRuntime.TrackRedguardAshAbahUndeadSiteVisit(akNewLocation)
+        ; The selected origin adapter owns the race-specific location verb. This
+        ; replaces five parallel, self-gated race calls with one polymorphic dispatch.
+        PDV_Manager.OriginRuntime.HandleLocationChange(akNewLocation)
         PDV_Manager.OriginRuntime.TrackUndeadCryptClearSiteVisit(akNewLocation)
         PDV_Manager.OriginRuntime.HandleRedguardAshAbahUndeadSiteClear(akOldLocation)
         PDV_Manager.OriginRuntime.HandleUndeadCryptSiteClear(akOldLocation)
@@ -769,7 +764,6 @@ Function Trace(Int level, String traceText)
         Debug.Trace("[PDV] ActionRouter: " + traceText)
     endIf
 EndFunction
-
 
 
 

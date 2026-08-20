@@ -28,10 +28,10 @@ const expectedProperties = [
 ];
 
 // Appended manager VMAD properties (Nine Divines, Observe-Moons, QuestReaction, etc.)
-// sit beyond houseCARL's bounded generic container expansion. Request an explicit
-// TAIL WINDOW and resolve the ones we need BY NAME (parseProperties maps Name->Object),
-// so the audit survives future property insertions instead of pinning absolute indices.
-const TAIL_SLOTS = Array.from({ length: 11 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${488 + i}]`);
+// sit beyond houseCARL's bounded generic container expansion. Request the explicit
+// manager-module window through property 515 and resolve the values BY NAME
+// (parseProperties maps Name->Object). Widen this window when new manager properties land.
+const MANAGER_PROPERTY_WINDOW = Array.from({ length: 75 }, (_, i) => `VirtualMachineAdapter.Scripts[0].Properties[${440 + i}]`);
 
 function normalizeFormKey(value) {
   const match = String(value ?? "").trim().match(/^([0-9A-Fa-f]{6}):(.+)$/);
@@ -79,15 +79,15 @@ async function main() {
   const managerResult = await callHousecarl("housecarl_read_record", {
     formid: "00C325:Devotion.esp", fields: [
       "VirtualMachineAdapter.Scripts[0].Properties",
-      ...TAIL_SLOTS,
-    ], depth: 3, max_chars: 350_000,
+      ...MANAGER_PROPERTY_WINDOW,
+    ], depth: 3, max_chars: 400_000,
   }, { timeoutMs: 90_000 });
   const managerProperties = parseProperties(extractHousecarlText(managerResult));
   const appendedResult = await callHousecarl("housecarl_batch_record_detail", {
     formids: ["00C325:Devotion.esp"],
-    fields: TAIL_SLOTS,
+    fields: MANAGER_PROPERTY_WINDOW,
     depth: 3,
-    max_chars: 40_000,
+    max_chars: 180_000,
   }, { timeoutMs: 90_000 });
   const appendedProperties = parseProperties(extractHousecarlText(appendedResult));
   for (const [name, target] of appendedProperties) managerProperties.set(name, target);

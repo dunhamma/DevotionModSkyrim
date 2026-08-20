@@ -61,7 +61,7 @@ Function RouteConcordatPressure(Bool isCompliance)
         ; Concordat defiance is the canonical "side with the Stormcloaks" act; source its
         ; magnitude from the graduated Imperial point table so spec tuning propagates here
         ; without editing the proven CW quest fragments (default stays -15 if unmapped).
-        Int defianceTableValue = PDV_Manager.OriginRuntime.GetImperialConcordatPressureForAction("side_with_stormcloaks")
+        Int defianceTableValue = PDV_Manager.OriginRuntime.HandleContextualQuery("side_with_stormcloaks")
         if defianceTableValue != 0
             adjustment = defianceTableValue
         endIf
@@ -700,7 +700,7 @@ Int Function RouteAltmerPracticeFocus()
         Trace(1, "RouteAltmerPracticeFocus skipped: PDV_Manager not assigned.")
         return 0
     endIf
-    return PDV_Manager.OriginRuntime.HandleAltmerPracticeFocus("eventbus_altmer_practice_focus")
+    return PDV_Manager.OriginRuntime.HandleContextualQuery("practice-focus", "eventbus_altmer_practice_focus")
 EndFunction
 
 Function RouteAltmerSyrabaneContainment(String sourceId)

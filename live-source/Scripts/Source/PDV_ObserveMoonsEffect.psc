@@ -30,10 +30,9 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
         return
     endIf
 
-    Int observationToken = PDV_Manager.OriginRuntime.BeginKhajiitMoonObservation(playerActor)
+    Int observationToken = PDV_Manager.OriginRuntime.HandleContextualQuery("moon-observation-begin", "observe-moons", playerActor)
     if observationToken > 0
         Utility.Wait(2.0)
         PDV_Manager.OriginRuntime.ProcessPendingKhajiitMoonObservation(observationToken)
     endIf
 EndEvent
-

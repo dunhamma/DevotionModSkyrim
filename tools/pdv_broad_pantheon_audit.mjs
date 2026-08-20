@@ -38,11 +38,14 @@ function norm(value) {
 }
 
 function bodyFor(source, functionName) {
-  const start = source.search(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "i"));
-  if (start < 0) return "";
-  const tail = source.slice(start);
-  const end = tail.search(/\n\s*EndFunction\b/i);
-  return end >= 0 ? tail.slice(0, end + 12) : tail;
+  const starts = [...source.matchAll(new RegExp(`(?:(?:Bool|Float|Int|String|Form|Spell)\\s+)?Function\\s+${functionName}\\s*\\(`, "ig"))];
+  const bodies = [];
+  for (const match of starts) {
+    const tail = source.slice(match.index);
+    const end = tail.search(/\n\s*EndFunction\b/i);
+    bodies.push(end >= 0 ? tail.slice(0, end + 12) : tail);
+  }
+  return bodies.join("\n");
 }
 
 function eventBodyFor(source, eventName) {
@@ -278,8 +281,12 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
     && /GetBroadPantheonScratchDayKey\s*\(\s*poolId\s*\)[^\r\n]*0/i.test(resetPool), "source.recent-event-ring-reset", "pool reset must clear both recent-event rings and the scratch-day stamp");
   const talosDefiance = bodyFor(managerSource, "HandleTalosShrineDefiance");
   const talosPressure = bodyFor(managerSource, "HandleImperialTalosPressure");
+  const contextualSignal = bodyFor(managerSource, "HandleContextualSignal");
   add(/ShrinePrayerHasAlias\s*\([^\r\n]*"Talos"\)/i.test(shrinePrayer) && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(shrinePrayer), "source.talos-unlock-prayer", "explicit Imperial Talos prayer must unlock Talos for the broad roster");
-  add(/GetPlayerOriginRaceIndex\(\)\s*==\s*ORIGIN_IMPERIAL/i.test(talosDefiance) && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(talosDefiance), "source.talos-unlock-defiance", "Imperial Talos shrine defiance must unlock Talos for the broad roster");
+  add(/HandleContextualSignal\s*\(\s*"hidden_talos_shrine"/i.test(talosDefiance)
+    && /signalId\s*==\s*"hidden_talos_shrine"/i.test(contextualSignal)
+    && /!IsImperialVampireStateActive/i.test(contextualSignal)
+    && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(contextualSignal), "source.talos-unlock-defiance", "Imperial Talos shrine defiance must unlock Talos for the broad roster");
   add(/GetPlayerOriginRaceIndex\(\)\s*!=\s*ORIGIN_IMPERIAL/i.test(talosPressure) && /IsImperialVampireStateActive/i.test(talosPressure) && /PDV\.Imperial\.TalosBroadUnlocked[^\r\n]*1/i.test(talosPressure), "source.talos-unlock-stance", "eligible Imperial Talos pressure must unlock Talos while rejecting wrong-origin and vampire routes");
   const imperialCurse = bodyFor(managerSource, "ApplyImperialCurseHandlers");
   const imperialRewardFamily = bodyFor(managerSource, "SyncImperialRewardFamily");
@@ -302,7 +309,7 @@ export function evaluate({ contract, managerSource, playerEventsSource, eventBus
     && /ProcessBroadPantheonThroughDay\s*\(\s*poolId\s*,\s*targetDay\s*,\s*signedCap\s*,\s*"mcm_ps_a11_catchup"/i.test(pacingCatchup), "source.ps-a11-production-catchup", "PS-A11 must require a suppressed, settled, real-gain pool and exercise the production catch-up routine through gain day +5");
   add(/_oidPacingBroadCatchup/i.test(mcmSource)
     && /DebugRunBroadPantheonCatchupForPacing\s*\(\s*\)/i.test(mcmSource)
-    && /PDV_Manager\.DebugRunBroadPantheonCatchupForPacing\s*\(\s*_selectedBroadPantheonPool\s*\)/i.test(mcmSource), "source.ps-a11-mcm-control", "Pacing MCM must expose the PS-A11 production catch-up control for the selected broad pool");
+    && /PDV_Manager\.(?:DebugRuntime\.)?DebugRunBroadPantheonCatchupForPacing\s*\(\s*_selectedBroadPantheonPool\s*\)/i.test(mcmSource), "source.ps-a11-mcm-control", "Pacing MCM must expose the PS-A11 production catch-up control for the selected broad pool");
 
   return { status: findings.some((item) => item.status === "FAIL") ? "FAIL" : "PASS", findings };
 }
