@@ -1564,11 +1564,6 @@ Message Function GetAltmerFormalCommitmentOfferMessage(PDV_DeityBase deity)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
-Bool Function IsAltmerOfferEligibleDeity(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
 Function ApplyAltmerCurseHandlers(Int oldState, Int newState, String reason)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
@@ -4636,11 +4631,6 @@ Message Function GetRedguardFormalCommitmentOfferMessage(PDV_DeityBase deity)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
 EndFunction
 
-Bool Function IsBretonOfferEligibleDeity(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
 Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity, Int newTier)
     if newTier < Manager.LedgerRuntime.TIER_CHAMPION
         return False
@@ -4653,11 +4643,6 @@ Bool Function ShouldSuppressBretonFocusedChampionTierSurface(PDV_DeityBase deity
     endIf
 
     return IsDeityResonantWithBretonTradition(GetBretonTraditionValue(), deity)
-EndFunction
-
-Bool Function IsRedguardOfferEligibleDeity(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
 EndFunction
 
 Function ApplyBretonCurseHandlers(Int oldState, Int newState, String reason)
@@ -5366,16 +5351,6 @@ Bool Function IsKyneCommitmentSignalReady()
     endIf
 
     return Manager.LedgerRuntime.HasRecentCommitmentSignalDays(Manager.PDV_Kyne, 2, 7)
-EndFunction
-
-Bool Function IsNordOfferEligibleDeity(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
-EndFunction
-
-Bool Function IsDunmerOfferEligibleDeity(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
 EndFunction
 
 Function ApplyDunmerCurseHandlers(Int oldState, Int newState, String reason)
@@ -6519,11 +6494,6 @@ EndFunction
 
 Message Function GetImperialFormalCommitmentOfferMessage(PDV_DeityBase deity)
     ; body removed in Phase C dedup -- live impl is the race adapter override; base stub never runs (call sites are race-gated).
-EndFunction
-
-Bool Function IsImperialOfferEligibleDeity(PDV_DeityBase deity)
-    ; body removed in Phase C dedup -- live impl is the race adapter override; base stub returns the type default (non-owner-race path).
-    return False
 EndFunction
 
 Bool Function IsImperialTalosOfferAllowed()

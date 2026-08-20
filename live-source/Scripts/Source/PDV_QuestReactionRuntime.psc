@@ -1416,7 +1416,7 @@ Bool Function IsQuestReactionDeityReachable(PDV_DeityBase deity)
 
     Int originRace = PDV_Manager.GetPlayerOriginRaceIndex()
     if originRace == PDV_Manager.ORIGIN_NORD
-        return PDV_Manager.OriginRuntime.IsNordOfferEligibleDeity(deity)
+        return PDV_Manager.OriginRuntime.IsOfferEligibleDeity(deity)
     endIf
 
     return PDV_Manager.OriginRuntime.IsDashboardDeityInOriginRoster(deity, originRace)

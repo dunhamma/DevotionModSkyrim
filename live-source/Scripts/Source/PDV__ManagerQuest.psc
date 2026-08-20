@@ -5683,10 +5683,10 @@ Function DebugSetNordPantheonBaseline(Int stateValue)
         PDV_NordPantheonBaselineTrack.SetState(normalizedState, "mcm_pattern")
     endIf
     PDV_DeityBase pending = LedgerRuntime.GetPendingCommitmentDeity()
-    if pending && !OriginRuntime.IsNordOfferEligibleDeity(pending)
+    if pending && !OriginRuntime.IsOfferEligibleDeity(pending)
         LedgerRuntime.ClearPendingCommitment()
     endIf
-    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity && !OriginRuntime.IsNordOfferEligibleDeity(_activeDeity)
+    if LedgerRuntime.GetPatronState() == LedgerRuntime.PATRON_STATE_ACTIVE && _activeDeity && !OriginRuntime.IsOfferEligibleDeity(_activeDeity)
         LedgerRuntime.SetBroadWorship()
     endIf
     LedgerRuntime.SyncFirstTierRaceRewardRuntime()

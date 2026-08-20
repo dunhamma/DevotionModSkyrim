@@ -4014,7 +4014,7 @@ Bool Function UsesFormalCommitmentOffersForDeity(PDV_DeityBase deity)
         return False
     endIf
 
-    return Manager.OriginRuntime.IsNordOfferEligibleDeity(deity) || Manager.OriginRuntime.IsImperialOfferEligibleDeity(deity) || Manager.OriginRuntime.IsDunmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsAltmerOfferEligibleDeity(deity) || Manager.OriginRuntime.IsRedguardOfferEligibleDeity(deity) || Manager.OriginRuntime.IsBretonOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
+    return Manager.OriginRuntime.IsOfferEligibleDeity(deity) || Manager.IsDaedricPactOfferEligibleDeity(deity)
 EndFunction
 
 Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
@@ -4024,7 +4024,7 @@ Bool Function IsGenericLikesDislikesDeityReachable(PDV_DeityBase deity)
 
     Int originRace = Manager.GetPlayerOriginRaceIndex()
     if originRace == Manager.ORIGIN_NORD
-        return Manager.OriginRuntime.IsNordOfferEligibleDeity(deity)
+        return Manager.OriginRuntime.IsOfferEligibleDeity(deity)
     endIf
 
     return deity.GetStanceForRace(originRace) == deity.STANCE_NATIVE
