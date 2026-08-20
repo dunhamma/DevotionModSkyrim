@@ -3588,54 +3588,23 @@ Function SyncFirstTierRaceRewardRuntime()
         StorageUtil.SetIntValue(None, "PDV.RaceReward.T1Origin", -1)
     endIf
 
-    ; Khajiit is a no-offer race: its emphasis rewards gate on the focused emphasis deity's
-    ; piety tier (not active-patron), and its broad lunar reward is the substrate boon layer.
-    Manager.OriginRuntime.SyncKhajiitEmphasisRewards(playerRef)
-    Manager.OriginRuntime.SyncKhajiitNeglectSpell(Manager.OriginRuntime.IsKhajiitLunarNeglected())
+    ; Reconcile every race lane through generic dispatch (v3 switchboard): the bound (player)
+    ; adapter grants its own lane; every other adapter's Sync runs the isX=false path and STRIPS
+    ; its lane -- the same one-race-active invariant the former per-lane calls enforced, now via
+    ; PDV_FLST_OriginAdapters instead of 10 hardcoded pairs. Adapters are Manager-wired even when
+    ; unbound (ESP fill verified 2026-08-20), and each SyncRaceRewards/SyncNeglectSpells override
+    ; mirrors its former per-lane call exactly. Nord's SyncNeglectSpells re-affirms the idempotent
+    ; Kyne/patron neglect already set at dawn (identical IsNeglectFlagActive(Kyne) arg).
+    Int adapterIndex = 0
+    while adapterIndex < Manager.PDV_FLST_OriginAdapters.GetSize()
+        PDV_OriginRuntimeBase laneAdapter = Manager.PDV_FLST_OriginAdapters.GetAt(adapterIndex) as PDV_OriginRuntimeBase
+        if laneAdapter
+            laneAdapter.SyncRaceRewards()
+            laneAdapter.SyncNeglectSpells()
+        endIf
+        adapterIndex += 1
+    endWhile
 
-    ; Altmer is an offer race: broad orthodoxy T1 remains on the existing first-tier path while
-    ; focused Auri-El/Magnus/Xarxes families gate on the active patron's tier.
-    Manager.OriginRuntime.SyncAltmerRewards(playerRef)
-    Manager.OriginRuntime.SyncAltmerNeglectSpell(Manager.OriginRuntime.IsAltmerCoherenceNeglected())
-
-    ; Bosmer is path-state gated: Y'ffre broad remains soft/capped, and the active path family
-    ; uses the path scoring deity tier while clearing every other path reward.
-    Manager.OriginRuntime.SyncBosmerRewards(playerRef)
-    Manager.OriginRuntime.SyncBosmerNeglectSpell(Manager.OriginRuntime.IsBosmerPathNeglected())
-
-    ; Breton is tradition-state gated. The chosen tradition selects exactly one focused family;
-    ; the broad tradition reward remains softer and capped at Faithful.
-    Manager.OriginRuntime.SyncBretonRewards(playerRef)
-    Manager.OriginRuntime.SyncBretonNeglectSpell(Manager.OriginRuntime.IsBretonTraditionNeglected())
-
-    ; Dunmer is hybrid: ancestor substrate is always-on identity, while the Reclamation foreground
-    ; remains an active-patron offer lane with one focused patron active at a time.
-    Manager.OriginRuntime.SyncDunmerRewards(playerRef)
-    Manager.OriginRuntime.SyncDunmerNeglectSpell(Manager.OriginRuntime.IsDunmerAncestorNeglected())
-
-    ; Orc is state-enum gated: one life-mode focused family can be active at a time, all under
-    ; Malacath as the single religious spine.
-    Manager.OriginRuntime.SyncOrcRewards(playerRef)
-    Manager.OriginRuntime.SyncOrcNeglectSpell(Manager.OriginRuntime.IsOrcCodeNeglected())
-
-    ; Redguard is state-enum gated: the sect filters the Yokudan lane, then exactly one focused
-    ; patron family can be active at a time.
-    Manager.OriginRuntime.SyncRedguardRewards(playerRef)
-    Manager.OriginRuntime.SyncRedguardNeglectSpell(Manager.OriginRuntime.IsRedguardAncestorDistanceNeglected())
-
-    ; Nord is state-enum gated: the baseline selects Old Ways or Nine Divines, and only a patron
-    ; from that baseline can carry focused rewards. Kyne neglect remains the existing Nord neglect.
-    Manager.OriginRuntime.SyncNordRewards(playerRef)
-
-    ; Argonian is the second no-offer race: rewards gate on the Hist substrate relations + People
-    ; focus + Void-active (not active-patron), so the broad Hist set runs without an offer.
-    Manager.OriginRuntime.SyncArgonianRewards(playerRef)
-    Manager.OriginRuntime.SyncArgonianNeglectSpell(Manager.OriginRuntime.IsArgonianHistNeglected())
-
-    ; Imperial is an offer race: broad civic T1 remains on the existing first-tier path while the
-    ; focused Divine/Talos families gate on the active patron's tier.
-    Manager.OriginRuntime.SyncImperialRewards(playerRef)
-    Manager.OriginRuntime.SyncImperialNeglectSpell(Manager.OriginRuntime.IsImperialCivicNeglected())
     SyncBroadPantheonRewards(playerRef)
 EndFunction
 

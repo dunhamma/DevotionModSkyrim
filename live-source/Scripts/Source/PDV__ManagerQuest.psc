@@ -2881,7 +2881,7 @@ Function DebugSeedArgonian(Float histValue, Float peopleValue, Float voidValue)
     StorageUtil.SetIntValue(PDV_ArgonianHistSubstrate.GetSubstrateForm(), "PDV.Substrate.ArgonianHist.SithisSignalCount", signals)
 
     OriginRuntime.RefreshArgonianHistPosture("debug_seed")
-    OriginRuntime.SyncArgonianRewards(Game.GetPlayer())
+    OriginRuntime.SyncRaceRewards()
 
     Bool voidActive = PDV_ArgonianHistSubstrate.IsVoidFullyActive()
     Debug.MessageBox("PDV relation seed applied. Hist " + histValue + ", People " + peopleValue + ", Void " + voidValue + ". Cultural practice remains " + PDV_ArgonianHistSubstrate.GetMetric() + "; Void active " + voidActive + ". Use Debug: Pacing & Pantheons seed 75 separately for adaptation-threshold proof.")
