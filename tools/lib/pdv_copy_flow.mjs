@@ -32,7 +32,7 @@ export function buildCopyFlowModel(census, manifest) {
         manual: attached.filter((row) => row.manualReview).length,
       },
     };
-  });
+  }).filter((node) => node.id !== "flow.unresolved" || node.counts.all > 0);
   return {
     schema: FLOW_SCHEMA,
     authority: manifest.authority,

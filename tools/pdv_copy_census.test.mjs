@@ -130,6 +130,7 @@ test("rendering is deterministic", () => {
   assert.equal(flow.summary.missingSurfaceRows, 0);
   assert.equal(renderFullFlowPenpotSvg(flow), renderFullFlowPenpotSvg(flow));
   assert.match(renderFullFlowPenpotSvg(flow), /PDV 2.0 Current In-Game UX Flow/);
+  assert.ok(!flow.nodes.some((node) => node.id === "flow.unresolved"), "zero-count unresolved node should not render");
 });
 
 test("full-flow assignment joins journey and surface without losing unclassified live copy", () => {
@@ -155,4 +156,5 @@ type=Message  formid=091513:Devotion.esp editorid=PDV_Msg_Other_PlayerThing winn
   const unresolved = flow.byCopyId.get(census.rows.find((row) => row.runtimeText === "A live but unclassified line.").copyId);
   assert.ok(unresolved.flowIds.includes("flow.unresolved"));
   assert.ok(unresolved.flowIds.includes("surface.message"));
+  assert.ok(flow.nodes.some((node) => node.id === "flow.unresolved" && node.counts.live === 1), "real unresolved copy should materialize its warning node");
 });
