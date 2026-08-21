@@ -32,6 +32,8 @@ import {
   readUxSurfaceCatalogue,
   renderUxSurfaceCatalogueCsv,
   renderUxSurfaceLibraryPenpotSvg,
+  renderPopupWritingLimitsCsv,
+  renderPopupWritingFramesPenpotSvg,
   validateUxSurfaceCatalogue,
 } from "./lib/pdv_ux_surface_catalogue.mjs";
 
@@ -50,6 +52,8 @@ const FLOW_MANIFEST = path.join(ROOT, "references", "authoring", "PDV_CopyFlowMa
 const UX_SURFACE_CATALOGUE = path.join(ROOT, "references", "authoring", "PDV_UXSurfaceCatalogue.json");
 const UX_SURFACE_CSV = path.join(OUTPUT_DIR, "PDV_UXSurfaceCatalogue.csv");
 const UX_SURFACE_PENPOT = path.join(OUTPUT_DIR, "PDV_UXSurfaceLibrary_Penpot.svg");
+const POPUP_WRITING_CSV = path.join(OUTPUT_DIR, "PDV_PopupWritingLimits.csv");
+const POPUP_WRITING_PENPOT = path.join(OUTPUT_DIR, "PDV_PopupWritingFrames_Penpot.svg");
 
 const argv = process.argv.slice(2);
 const knownFlags = new Set(["--check", "--help", "--json", "--output-dir", "--refresh-live", "--self-test"]);
@@ -76,6 +80,8 @@ const paths = {
   flowAssignments: path.join(outputDir, path.basename(FLOW_ASSIGNMENTS)),
   uxSurfaceCsv: path.join(outputDir, path.basename(UX_SURFACE_CSV)),
   uxSurfacePenpot: path.join(outputDir, path.basename(UX_SURFACE_PENPOT)),
+  popupWritingCsv: path.join(outputDir, path.basename(POPUP_WRITING_CSV)),
+  popupWritingPenpot: path.join(outputDir, path.basename(POPUP_WRITING_PENPOT)),
 };
 
 if (flags.has("--self-test")) {
@@ -159,6 +165,8 @@ function buildFromSources(snapshot) {
     flowAssignments: stableStringify(serializableFlow),
     uxSurfaceCsv: renderUxSurfaceCatalogueCsv(uxSurfaceCatalogue),
     uxSurfacePenpot: renderUxSurfaceLibraryPenpotSvg(uxSurfaceCatalogue),
+    popupWritingCsv: renderPopupWritingLimitsCsv(uxSurfaceCatalogue),
+    popupWritingPenpot: renderPopupWritingFramesPenpotSvg(uxSurfaceCatalogue),
   };
 }
 
@@ -249,6 +257,8 @@ function writeReports(result) {
   fs.writeFileSync(paths.flowAssignments, result.flowAssignments, "utf8");
   fs.writeFileSync(paths.uxSurfaceCsv, result.uxSurfaceCsv, "utf8");
   fs.writeFileSync(paths.uxSurfacePenpot, result.uxSurfacePenpot, "utf8");
+  fs.writeFileSync(paths.popupWritingCsv, result.popupWritingCsv, "utf8");
+  fs.writeFileSync(paths.popupWritingPenpot, result.popupWritingPenpot, "utf8");
 }
 
 function checkReports(result) {
@@ -263,6 +273,8 @@ function checkReports(result) {
     [paths.flowAssignments, result.flowAssignments],
     [paths.uxSurfaceCsv, result.uxSurfaceCsv],
     [paths.uxSurfacePenpot, result.uxSurfacePenpot],
+    [paths.popupWritingCsv, result.popupWritingCsv],
+    [paths.popupWritingPenpot, result.popupWritingPenpot],
   ]);
   for (const [file, content] of expected) {
     if (!fs.existsSync(file)) throw new Error(`Expected regenerable report is missing: ${file}`);

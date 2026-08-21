@@ -20,7 +20,57 @@ export function validateUxSurfaceCatalogue(catalogue) {
     if (!/^surface\.template\.[a-z0-9-]+$/.test(row.id ?? "")) errors.push(`${row.id}: invalid stable template id`);
     if (!/^https:\/\//.test(row.sourceUrl ?? "")) errors.push(`${row.id}: sourceUrl must be https`);
   }
+  const frameIds = new Set();
+  for (const [index, frame] of (catalogue?.writingFrames ?? []).entries()) {
+    for (const key of ["id", "templateId", "title", "basis", "viewport", "frame", "note"]) if (!frame[key]) errors.push(`writingFrames[${index}] missing ${key}`);
+    if (frameIds.has(frame.id)) errors.push(`duplicate writing frame id ${frame.id}`);
+    frameIds.add(frame.id);
+    if (!ids.has(frame.templateId)) errors.push(`${frame.id}: unknown templateId ${frame.templateId}`);
+    if (!Array.isArray(frame.fields) || !frame.fields.length) errors.push(`${frame.id}: fields must not be empty`);
+  }
   return errors;
+}
+
+export function renderPopupWritingLimitsCsv(catalogue) {
+  const keys = ["frame_id", "template_id", "surface", "measurement_basis", "reference_viewport", "frame_limit", "field", "recommended_characters", "visible_lines", "note", "owner_draft", "owner_notes"];
+  const rows = catalogue.writingFrames.flatMap((frame) => frame.fields.map((field) => ({
+    frame_id: frame.id, template_id: frame.templateId, surface: frame.title, measurement_basis: frame.basis,
+    reference_viewport: frame.viewport, frame_limit: frame.frame, field: field.name,
+    recommended_characters: field.recommendedChars, visible_lines: field.lines, note: frame.note,
+    owner_draft: "", owner_notes: "",
+  })));
+  return `${keys.map(csvCell).join(",")}\n${rows.map((row) => keys.map((key) => csvCell(row[key])).join(",")).join("\n")}\n`;
+}
+
+export function renderPopupWritingFramesPenpotSvg(catalogue) {
+  const canvasWidth = 1920;
+  const scale = 0.43;
+  const pageWidth = 900;
+  const pageHeight = 610;
+  const gap = 28;
+  const columns = 2;
+  const rows = Math.ceil(catalogue.writingFrames.length / columns);
+  const width = 40 + columns * pageWidth + (columns - 1) * gap + 40;
+  const height = 90 + rows * pageHeight + (rows - 1) * gap + 40;
+  const frames = catalogue.writingFrames.map((frame, index) => {
+    const x = 40 + (index % columns) * (pageWidth + gap);
+    const y = 72 + Math.floor(index / columns) * (pageHeight + gap);
+    const fields = frame.fields.map((field, fieldIndex) => {
+      const fy = y + 326 + fieldIndex * 57;
+      return `<g id="${esc(frame.id)}-${esc(field.name)}"><text x="${x + 24}" y="${fy}" fill="#7dd3fc" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="700">${esc(field.name.replace(/_/g, " "))} - aim for ${field.recommendedChars} characters / ${field.lines} visible line${field.lines === 1 ? "" : "s"}</text><rect x="${x + 24}" y="${fy + 10}" width="${pageWidth - 48}" height="34" rx="5" fill="#0f172a" stroke="#475569"/><text x="${x + 34}" y="${fy + 32}" fill="#94a3b8" font-family="Inter,Arial,sans-serif" font-size="12">Write ${esc(field.name.replace(/_/g, " "))} here...</text></g>`;
+    }).join("");
+    return `<g id="${esc(frame.id)}" data-template-id="${esc(frame.templateId)}"><rect x="${x}" y="${y}" width="${pageWidth}" height="${pageHeight}" rx="14" fill="#111827" stroke="#334155" stroke-width="2"/><text x="${x + 24}" y="${y + 30}" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700">${esc(frame.title)}</text><text x="${x + 24}" y="${y + 50}" fill="#93c5fd" font-family="Inter,Arial,sans-serif" font-size="11">${esc(frame.basis)} | ${esc(frame.viewport)} | ${esc(frame.frame)}</text><g transform="translate(${x + 24} ${y + 70}) scale(${scale})"><rect width="${canvasWidth}" height="520" fill="#0b1020" stroke="#64748b" stroke-width="3"/><text x="36" y="48" fill="#64748b" font-family="Inter,Arial,sans-serif" font-size="24">REFERENCE GAME VIEWPORT - wireframe safe area</text>${renderWritingFrameMock(frame)}</g><text x="${x + 24}" y="${y + 310}" fill="#cbd5e1" font-family="Inter,Arial,sans-serif" font-size="10">${esc(truncate(frame.note, 145))}</text>${fields}</g>`;
+  }).join("");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="${width}" height="${height}" fill="#070b16"/><text x="40" y="35" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="25" font-weight="700">PDV Popup Writing Frames</text><text x="390" y="34" fill="#94a3b8" font-family="Inter,Arial,sans-serif" font-size="12">Editable Penpot text fields. Character figures are writing budgets, not engine truncation limits.</text>${frames}</svg>\n`;
+}
+
+function renderWritingFrameMock(frame) {
+  const common = `fill="#172033" stroke="#38bdf8" stroke-width="3"`;
+  if (frame.id.endsWith("prisma-toast")) return `<rect x="1504" y="54" width="380" height="150" rx="12" ${common}/><text x="1530" y="100" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="28">Heading</text><text x="1530" y="140" fill="#cbd5e1" font-family="Inter,Arial,sans-serif" font-size="24">Body copy wraps inside 380px</text><text x="1530" y="174" fill="#cbd5e1" font-family="Inter,Arial,sans-serif" font-size="24">at the 1080p CSS breakpoint.</text>`;
+  if (frame.id.endsWith("messagebox")) return `<rect x="630" y="50" width="660" height="420" rx="8" ${common}/><text x="690" y="110" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="28">Body begins here - there is no visible MESG title.</text><rect x="700" y="385" width="150" height="44" rx="5" fill="#334155"/><rect x="885" y="385" width="150" height="44" rx="5" fill="#334155"/><rect x="1070" y="385" width="150" height="44" rx="5" fill="#334155"/>`;
+  if (frame.id.endsWith("prisma-choice")) return `<rect x="470" y="20" width="980" height="480" rx="12" ${common}/><text x="530" y="76" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="32">Choice heading</text><rect x="530" y="150" width="260" height="280" rx="8" fill="#1e293b"/><rect x="830" y="150" width="260" height="280" rx="8" fill="#1e293b"/><rect x="1130" y="150" width="260" height="280" rx="8" fill="#1e293b"/>`;
+  if (frame.id.endsWith("prisma-panel")) return `<rect x="540" y="20" width="840" height="480" rx="12" ${common}/><rect x="580" y="70" width="760" height="70" fill="#1e293b"/><rect x="580" y="170" width="360" height="270" fill="#1e293b"/><rect x="980" y="170" width="360" height="270" fill="#1e293b"/>`;
+  return `<rect x="370" y="20" width="1180" height="480" rx="12" ${common}/><line x1="960" y1="35" x2="960" y2="485" stroke="#64748b" stroke-width="5"/><rect x="430" y="80" width="450" height="340" fill="#27231d"/><rect x="1040" y="80" width="450" height="340" fill="#27231d"/>`;
 }
 
 export function renderUxSurfaceCatalogueCsv(catalogue) {

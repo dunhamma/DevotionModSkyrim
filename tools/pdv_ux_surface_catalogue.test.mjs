@@ -4,6 +4,8 @@ import test from "node:test";
 import {
   renderUxSurfaceCatalogueCsv,
   renderUxSurfaceLibraryPenpotSvg,
+  renderPopupWritingLimitsCsv,
+  renderPopupWritingFramesPenpotSvg,
   validateUxSurfaceCatalogue,
 } from "./lib/pdv_ux_surface_catalogue.mjs";
 
@@ -31,4 +33,17 @@ test("Penpot library exposes stable editable groups and mock variants", () => {
   assert.match(svg, /data-template-id="surface\.template\.messagebox"/);
   assert.match(svg, /id="mock-surface-template-uiextensions-wheel"/);
   assert.equal(svg, renderUxSurfaceLibraryPenpotSvg(catalogue));
+});
+
+test("popup writing frames expose measured dimensions and editable copy budgets", () => {
+  const csv = renderPopupWritingLimitsCsv(catalogue);
+  const svg = renderPopupWritingFramesPenpotSvg(catalogue);
+  assert.match(csv, /"measurement_basis"/);
+  assert.match(csv, /"measured-production-css"/);
+  assert.match(csv, /"owner_draft","owner_notes"/);
+  assert.match(svg, /PDV Popup Writing Frames/);
+  assert.match(svg, /Character figures are writing budgets, not engine truncation limits/);
+  assert.match(svg, /data-template-id="surface\.template\.prisma-toast"/);
+  assert.equal(csv, renderPopupWritingLimitsCsv(catalogue));
+  assert.equal(svg, renderPopupWritingFramesPenpotSvg(catalogue));
 });

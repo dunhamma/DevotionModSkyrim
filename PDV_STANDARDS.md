@@ -334,6 +334,8 @@ These rules apply to all player-facing surfaces listed in § 3.1. They are the b
 
 **UX surface planning boundary.** `references/authoring/PDV_UXSurfaceCatalogue.json` owns the stable surface-template catalogue and generated Penpot library. Owner annotations and mock changes are design evidence only: they do not authorize new dependencies, source changes, plugin writes, or wire-in. Exact player prose remains in the stable-ID prose exchange rather than being duplicated into the surface library.
 
+**Popup sizing claims.** Dimension-aware writing frames must label their basis. Production Prisma CSS measurements may be stated as measured for their named reference viewport; vanilla/third-party surfaces that vary by resolution, font, or UI replacer must be labelled as conservative design targets. Character and visible-line figures are editorial budgets unless a reproduced engine truncation boundary proves otherwise.
+
 **MessageBox headings.** A vanilla Skyrim MessageBox renders the MESG Description and eligible buttons, not the MESG Name. Treat Name as record metadata unless an enhanced surface deliberately presents it. PDV commitment offers may use the default-on Prisma choice channel to render an approved heading and body; missing, incomplete, wrong-version, or unavailable Prisma copy data must fall back to the vanilla MESG without reconstructing prose.
 
 **Name capitalisation.** Always capitalise:
