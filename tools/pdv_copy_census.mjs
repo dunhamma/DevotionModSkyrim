@@ -23,6 +23,11 @@ import {
   stableStringify,
   validateCensus,
 } from "./lib/pdv_copy_census.mjs";
+import {
+  buildCopyFlowModel,
+  readFlowManifest,
+  renderFullFlowPenpotSvg,
+} from "./lib/pdv_copy_flow.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUTPUT_DIR = path.join(ROOT, "generated", "pdv-copy-census");
@@ -33,6 +38,9 @@ const PILOT_PACKET = path.join(OUTPUT_DIR, "PDV_NordKyne_LearningPacket.md");
 const FORMAL_OFFER_UX = path.join(OUTPUT_DIR, "PDV_FormalOfferUX.json");
 const PIETY_VIABILITY = path.join(OUTPUT_DIR, "PDV_PietyNarrative_Viability.json");
 const PENPOT_MAP = path.join(OUTPUT_DIR, "PDV_CommitmentJourney_Penpot.svg");
+const FULL_PENPOT_MAP = path.join(OUTPUT_DIR, "PDV_FullJourney_Penpot.svg");
+const FLOW_ASSIGNMENTS = path.join(OUTPUT_DIR, "PDV_CopyFlowAssignments.json");
+const FLOW_MANIFEST = path.join(ROOT, "references", "authoring", "PDV_CopyFlowMap.json");
 
 const argv = process.argv.slice(2);
 const knownFlags = new Set(["--check", "--help", "--json", "--output-dir", "--refresh-live", "--self-test"]);
@@ -55,6 +63,8 @@ const paths = {
   formalOfferUx: path.join(outputDir, path.basename(FORMAL_OFFER_UX)),
   pietyViability: path.join(outputDir, path.basename(PIETY_VIABILITY)),
   penpotMap: path.join(outputDir, path.basename(PENPOT_MAP)),
+  fullPenpotMap: path.join(outputDir, path.basename(FULL_PENPOT_MAP)),
+  flowAssignments: path.join(outputDir, path.basename(FLOW_ASSIGNMENTS)),
 };
 
 if (flags.has("--self-test")) {
@@ -116,7 +126,21 @@ function buildFromSources(snapshot) {
       { source: "_retired, archives, scratch review packs", classification: "irrelevant archive/debug material", note: "Excluded from extraction." },
     ],
   });
-  return { census, csv: renderCsv(census), packet: renderNordKynePacket(census), formalOfferUx: stableStringify(renderFormalOfferUx(census)), pietyViability: stableStringify(renderPietyNarrativeViability()), penpotMap: renderPenpotUxMapSvg() };
+  const flow = buildCopyFlowModel(census, readFlowManifest(FLOW_MANIFEST));
+  if (flow.summary.missingSurfaceRows) throw new Error(`Flow assignment left ${flow.summary.missingSurfaceRows} live rows without a player surface.`);
+  const serializableFlow = { ...flow };
+  delete serializableFlow.byCopyId;
+  return {
+    census,
+    flow,
+    csv: renderCsv(census),
+    packet: renderNordKynePacket(census),
+    formalOfferUx: stableStringify(renderFormalOfferUx(census)),
+    pietyViability: stableStringify(renderPietyNarrativeViability()),
+    penpotMap: renderPenpotUxMapSvg(),
+    fullPenpotMap: renderFullFlowPenpotSvg(flow),
+    flowAssignments: stableStringify(serializableFlow),
+  };
 }
 
 function listFiles(relativeDir, predicate) {
@@ -202,6 +226,8 @@ function writeReports(result) {
   fs.writeFileSync(paths.formalOfferUx, result.formalOfferUx, "utf8");
   fs.writeFileSync(paths.pietyViability, result.pietyViability, "utf8");
   fs.writeFileSync(paths.penpotMap, result.penpotMap, "utf8");
+  fs.writeFileSync(paths.fullPenpotMap, result.fullPenpotMap, "utf8");
+  fs.writeFileSync(paths.flowAssignments, result.flowAssignments, "utf8");
 }
 
 function checkReports(result) {
@@ -212,6 +238,8 @@ function checkReports(result) {
     [paths.formalOfferUx, result.formalOfferUx],
     [paths.pietyViability, result.pietyViability],
     [paths.penpotMap, result.penpotMap],
+    [paths.fullPenpotMap, result.fullPenpotMap],
+    [paths.flowAssignments, result.flowAssignments],
   ]);
   for (const [file, content] of expected) {
     if (!fs.existsSync(file)) throw new Error(`Expected regenerable report is missing: ${file}`);

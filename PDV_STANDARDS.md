@@ -330,6 +330,8 @@ These rules apply to all player-facing surfaces listed in § 3.1. They are the b
 
 **Owner prose authority.** When the owner supplies or locks a draft, preserve it exactly. Agent review is limited to a mechanical contradiction, surface mismatch, encoding conflict, or implementation blocker unless the owner explicitly asks for wording alternatives. Do not silently apply general style guidance to an approved draft.
 
+**Copy workbench round trip.** The Penpot SVG owns flow, adjacency, and UX notes; the Excel-friendly exchange owns only `owner_status`, `owner_draft`, and `owner_note`, joined by stable `copy_id`. Import must produce a review-only plan. It must not write source files or plugin records, and protected runtime/context columns must match the current census fingerprint before an owner draft can be considered for wire-in.
+
 **MessageBox headings.** A vanilla Skyrim MessageBox renders the MESG Description and eligible buttons, not the MESG Name. Treat Name as record metadata unless an enhanced surface deliberately presents it. PDV commitment offers may use the default-on Prisma choice channel to render an approved heading and body; missing, incomplete, wrong-version, or unavailable Prisma copy data must fall back to the vanilla MESG without reconstructing prose.
 
 **Name capitalisation.** Always capitalise:

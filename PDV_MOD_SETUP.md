@@ -97,7 +97,8 @@ Work Rule".
 | `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket, and rotating Papyrus/temporary captures need an exact retained reference in the committed pantheon co-test evidence store |
 | `tools/pdv_patch.mjs` | Offline patcher for classification/distribution manifests and generated patch review/live artifacts |
 | `tools/pdv_content_verify.mjs` | Read-only verifier for the race/Daedric content manifests plus Phase 20 roster coverage (ASCII, budgets, slot IDs, voice, full roster gate) |
-| `tools/pdv_copy_census.mjs` | Read-only player-copy census: batches direct houseCARL reads of live `Devotion.esp`, inventories tracked Papyrus/MCM and Prisma strings, links race/Daedric manifest references without promoting them, and writes only ignored local census, formal-offer, dynamic-narrative viability, Nord/Kyne packet, and Penpot-importable UX-map artifacts |
+| `tools/pdv_copy_census.mjs` | Read-only player-copy census: batches direct houseCARL reads of live `Devotion.esp`, inventories tracked Papyrus/MCM and Prisma strings, links race/Daedric manifest references without promoting them, and writes only ignored local census, formal-offer, dynamic-narrative viability, Nord/Kyne packet, full Penpot-importable journey map, and stable copy-to-flow assignments |
+| `tools/pdv_copy_roundtrip.mjs` | Exports an Excel-friendly prose exchange keyed by census `copy_id`; validates an edited exchange into a review-only import plan and never writes game/source files |
 | `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, manager/module-family eligibility and source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
 | `tools/pdv_prisma_parity_unitd_check.mjs` | Read-only verifier for Prisma parity Unit D journal/toast wiring, carryover award funnel, director resolver preservation, and Daedric commitment-title readback |
 | `tools/pdv_prisma_to_oneoh_audit.mjs` | Read-only roll-up verifier for Prisma-to-1.0 wiring; checks current producer callsites, source/live parity, repo/live Prisma UI parity, and adversarial negative fixtures before runtime smoke |
@@ -451,7 +452,9 @@ node .\tools\pdv_content_verify.mjs --json
 node .\tools\pdv_content_verify.mjs --strict-phase20-roster
 node .\tools\pdv_copy_census.mjs --refresh-live --json
 node .\tools\pdv_copy_census.mjs --check --json
-node --test .\tools\pdv_copy_census.test.mjs
+node .\tools\pdv_copy_roundtrip.mjs --export .\outputs\PDV_Copy_Workboard\PDV_FullFlow_ProseExchange.csv
+node .\tools\pdv_copy_roundtrip.mjs --import .\outputs\PDV_Copy_Workboard\PDV_FullFlow_ProseExchange.csv --output .\outputs\PDV_Copy_Workboard\PDV_CopyImportPlan.json
+node --test .\tools\pdv_copy_census.test.mjs .\tools\pdv_copy_roundtrip.test.mjs
 node .\tools\pdv_prisma_ui_audit.mjs
 node .\tools\pdv_prisma_to_oneoh_audit.mjs
 node .\tools\pdv_dislike_consequence_audit.mjs --strict-dislike-consequence
