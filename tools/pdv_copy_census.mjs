@@ -28,6 +28,12 @@ import {
   readFlowManifest,
   renderFullFlowPenpotSvg,
 } from "./lib/pdv_copy_flow.mjs";
+import {
+  readUxSurfaceCatalogue,
+  renderUxSurfaceCatalogueCsv,
+  renderUxSurfaceLibraryPenpotSvg,
+  validateUxSurfaceCatalogue,
+} from "./lib/pdv_ux_surface_catalogue.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUTPUT_DIR = path.join(ROOT, "generated", "pdv-copy-census");
@@ -41,6 +47,9 @@ const PENPOT_MAP = path.join(OUTPUT_DIR, "PDV_CommitmentJourney_Penpot.svg");
 const FULL_PENPOT_MAP = path.join(OUTPUT_DIR, "PDV_FullJourney_Penpot.svg");
 const FLOW_ASSIGNMENTS = path.join(OUTPUT_DIR, "PDV_CopyFlowAssignments.json");
 const FLOW_MANIFEST = path.join(ROOT, "references", "authoring", "PDV_CopyFlowMap.json");
+const UX_SURFACE_CATALOGUE = path.join(ROOT, "references", "authoring", "PDV_UXSurfaceCatalogue.json");
+const UX_SURFACE_CSV = path.join(OUTPUT_DIR, "PDV_UXSurfaceCatalogue.csv");
+const UX_SURFACE_PENPOT = path.join(OUTPUT_DIR, "PDV_UXSurfaceLibrary_Penpot.svg");
 
 const argv = process.argv.slice(2);
 const knownFlags = new Set(["--check", "--help", "--json", "--output-dir", "--refresh-live", "--self-test"]);
@@ -65,6 +74,8 @@ const paths = {
   penpotMap: path.join(outputDir, path.basename(PENPOT_MAP)),
   fullPenpotMap: path.join(outputDir, path.basename(FULL_PENPOT_MAP)),
   flowAssignments: path.join(outputDir, path.basename(FLOW_ASSIGNMENTS)),
+  uxSurfaceCsv: path.join(outputDir, path.basename(UX_SURFACE_CSV)),
+  uxSurfacePenpot: path.join(outputDir, path.basename(UX_SURFACE_PENPOT)),
 };
 
 if (flags.has("--self-test")) {
@@ -131,6 +142,9 @@ function buildFromSources(snapshot) {
   });
   const flow = buildCopyFlowModel(census, readFlowManifest(FLOW_MANIFEST));
   if (flow.summary.missingSurfaceRows) throw new Error(`Flow assignment left ${flow.summary.missingSurfaceRows} live rows without a player surface.`);
+  const uxSurfaceCatalogue = readUxSurfaceCatalogue(UX_SURFACE_CATALOGUE);
+  const uxErrors = validateUxSurfaceCatalogue(uxSurfaceCatalogue);
+  if (uxErrors.length) throw new Error(`UX surface catalogue validation failed:\n- ${uxErrors.join("\n- ")}`);
   const serializableFlow = { ...flow };
   delete serializableFlow.byCopyId;
   return {
@@ -143,6 +157,8 @@ function buildFromSources(snapshot) {
     penpotMap: renderPenpotUxMapSvg(),
     fullPenpotMap: renderFullFlowPenpotSvg(flow),
     flowAssignments: stableStringify(serializableFlow),
+    uxSurfaceCsv: renderUxSurfaceCatalogueCsv(uxSurfaceCatalogue),
+    uxSurfacePenpot: renderUxSurfaceLibraryPenpotSvg(uxSurfaceCatalogue),
   };
 }
 
@@ -231,6 +247,8 @@ function writeReports(result) {
   fs.writeFileSync(paths.penpotMap, result.penpotMap, "utf8");
   fs.writeFileSync(paths.fullPenpotMap, result.fullPenpotMap, "utf8");
   fs.writeFileSync(paths.flowAssignments, result.flowAssignments, "utf8");
+  fs.writeFileSync(paths.uxSurfaceCsv, result.uxSurfaceCsv, "utf8");
+  fs.writeFileSync(paths.uxSurfacePenpot, result.uxSurfacePenpot, "utf8");
 }
 
 function checkReports(result) {
@@ -243,6 +261,8 @@ function checkReports(result) {
     [paths.penpotMap, result.penpotMap],
     [paths.fullPenpotMap, result.fullPenpotMap],
     [paths.flowAssignments, result.flowAssignments],
+    [paths.uxSurfaceCsv, result.uxSurfaceCsv],
+    [paths.uxSurfacePenpot, result.uxSurfacePenpot],
   ]);
   for (const [file, content] of expected) {
     if (!fs.existsSync(file)) throw new Error(`Expected regenerable report is missing: ${file}`);

@@ -332,6 +332,8 @@ These rules apply to all player-facing surfaces listed in § 3.1. They are the b
 
 **Copy workbench round trip.** The Penpot SVG owns flow, adjacency, and UX notes; the Excel-friendly exchange owns only `owner_status`, `owner_draft`, and `owner_note`, joined by stable `copy_id`. Import must produce a review-only plan. It must not write source files or plugin records, and protected runtime/context columns must match the current census fingerprint before an owner draft can be considered for wire-in.
 
+**UX surface planning boundary.** `references/authoring/PDV_UXSurfaceCatalogue.json` owns the stable surface-template catalogue and generated Penpot library. Owner annotations and mock changes are design evidence only: they do not authorize new dependencies, source changes, plugin writes, or wire-in. Exact player prose remains in the stable-ID prose exchange rather than being duplicated into the surface library.
+
 **MessageBox headings.** A vanilla Skyrim MessageBox renders the MESG Description and eligible buttons, not the MESG Name. Treat Name as record metadata unless an enhanced surface deliberately presents it. PDV commitment offers may use the default-on Prisma choice channel to render an approved heading and body; missing, incomplete, wrong-version, or unavailable Prisma copy data must fall back to the vanilla MESG without reconstructing prose.
 
 **Name capitalisation.** Always capitalise:
