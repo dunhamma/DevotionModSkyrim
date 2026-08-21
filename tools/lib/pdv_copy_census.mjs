@@ -237,7 +237,7 @@ export function extractPapyrusCopy(text, sourcePath) {
   let devFunction = false;
   for (const [index, raw] of text.split(/\r?\n/).entries()) {
     const fn = raw.match(/^\s*(?:[A-Za-z0-9_\[\]]+\s+)?Function\s+([A-Za-z0-9_]+)/i);
-    if (fn) { functionName = fn[1]; devFunction = DEV_ONLY.test(functionName); continue; }
+    if (fn) { functionName = fn[1]; devFunction = DEV_ONLY.test(functionName) || /^Debug[A-Z0-9_]/.test(functionName); continue; }
     if (/^\s*EndFunction\b/i.test(raw)) { functionName = "<global>"; devFunction = false; continue; }
     const call = raw.match(UI_CALL);
     if (!call) continue;

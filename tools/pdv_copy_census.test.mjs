@@ -16,7 +16,7 @@ import {
   stableStringify,
   validateCensus,
 } from "./lib/pdv_copy_census.mjs";
-import { buildCopyFlowModel, renderFullFlowPenpotSvg } from "./lib/pdv_copy_flow.mjs";
+import { assignFlowIds, buildCopyFlowModel, renderFullFlowPenpotSvg } from "./lib/pdv_copy_flow.mjs";
 
 const flowManifest = JSON.parse(fs.readFileSync(new URL("../references/authoring/PDV_CopyFlowMap.json", import.meta.url), "utf8"));
 
@@ -61,6 +61,31 @@ EndFunction`, "live-source/Scripts/Source/Test.psc");
   assert.equal(rows.length, 3);
   assert.equal(rows.filter((row) => row.dynamic).length, 1);
   assert.equal(rows.filter((row) => row.excluded).length, 1);
+  const debugOnly = extractPapyrusCopy(`Function DebugApplyTalosBetrayalCompliance()
+  Debug.Notification("Talos betrayal did not apply.")
+EndFunction`, "live-source/Scripts/Source/Test.psc");
+  assert.equal(debugOnly.length, 1);
+  assert.equal(debugOnly[0].excluded, true);
+});
+
+test("cross-cutting live reactions map to explicit journey families", () => {
+  const base = { copyId: "fixture", journey: "Nord", event: "unclassified", surface: "message-body", runtimeLocation: "Devotion.esp:MESG:1:Devotion.esp:PDV_MSG_StartupNordChoice:Description", runtimeText: "Choose.", gameplayContract: "", referenceLocation: "", referenceText: "" };
+  const cases = [
+    ["PDV_MSG_StartupNordChoice", "journey.origin-choice"],
+    ["HandleBosmerSuggestionPopup", "journey.origin-choice"],
+    ["PDV_Msg_Nord_CurseState_VampireCured", "journey.curse-transition"],
+    ["PDV_MESG_ArgonianAdaptRite", "journey.cultural-rite"],
+    ["PDV_MESG_KhajiitMoon_01_Khenarthi", "journey.lunar-focus"],
+    ["PDV_MSG_BosmerReckoning", "journey.reckoning"],
+    ["CheckPapyrusUtilDependency", "journey.system-ux"],
+    ["PDV_SurveyDevotionEffect.psc", "journey.system-ux"],
+    ["PDV_Notif_Altmer_Xarxes_ChampionAmbient_Record", "core.champion"],
+  ];
+  for (const [token, expected] of cases) {
+    const ids = assignFlowIds({ ...base, runtimeLocation: token });
+    assert.ok(ids.includes(expected), `${token} should map to ${expected}`);
+    assert.ok(!ids.includes("flow.unresolved"), `${token} should not remain unresolved`);
+  }
 });
 
 test("Nord offer branches use current mechanics instead of the older reference claim", () => {

@@ -84,9 +84,12 @@ try {
   const result = buildFromSources(JSON.parse(readUtf8(paths.snapshot)));
   const errors = validateCensus(result.census);
   if (errors.length) throw new Error(`Census schema validation failed:\n- ${errors.join("\n- ")}`);
+  if (flags.has("--check") && result.flow.summary.unresolvedLiveRows) {
+    throw new Error(`Flow classification has ${result.flow.summary.unresolvedLiveRows} unresolved live rows; regenerate for inspection and extend the reviewed flow map.`);
+  }
   if (flags.has("--check")) checkReports(result);
   else writeReports(result);
-  printSummary(result.census, flags.has("--json"), flags.has("--check"));
+  printSummary(result.census, result.flow, flags.has("--json"), flags.has("--check"));
 } catch (error) {
   console.error(`FAIL pdv_copy_census: ${error.message}`);
   process.exit(1);
@@ -247,7 +250,7 @@ function checkReports(result) {
   }
 }
 
-function printSummary(census, asJson, checked) {
+function printSummary(census, flow, asJson, checked) {
   const output = {
     verdict: "PASS",
     mode: checked ? "check" : "write",
@@ -255,6 +258,7 @@ function printSummary(census, asJson, checked) {
     dynamicManualReview: census.summary.dynamicManualReview,
     excludedDeveloperDebug: census.summary.excludedDeveloperDebug,
     byRisk: census.summary.byRisk,
+    unresolvedLiveRows: flow.summary.unresolvedLiveRows,
     outputDir,
   };
   if (asJson) console.log(JSON.stringify(output));

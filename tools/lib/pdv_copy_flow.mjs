@@ -76,6 +76,13 @@ export function assignFlowIds(row) {
 
 function eventFlowId(row, daedric, text) {
   const event = row.event;
+  if (/checkpapyrusutildependency|prepareforuninstall|ensureinfoonlystartup|recordcustomracefallback|show(?:altmer|khajiit|nord|orc|redguard)message|showtoastfallbacknotification|surveydevotioneffect/.test(text)) return "journey.system-ux";
+  if (/showcapstonenotice|championambient/.test(text)) return "core.champion";
+  if (/bosmerreckoning|evaluatebosmerforcedreckoning/.test(text)) return "journey.reckoning";
+  if (/setupchoice|startup(?:breton|nord|orc|redguard|confirm)choice|suggest(?:banditroad|exchange|livingstory|oldcontract)|handlebosmersuggestionpopup|confirm_(?:bosmer|breton|nord|orc|redguard)|altmerdisciplines/.test(text)) return "journey.origin-choice";
+  if (/cursestate|vampireexiledpath/.test(text)) return "journey.curse-transition";
+  if (/khajiitmoon_|khajiitfocus_|setkhajiitfocusedemphasis/.test(text)) return "journey.lunar-focus";
+  if (/adaptrite|markbed|markhearth|bosmernaming|markhome|trialofiron|fourholds|hearthheld|witnessed|ancestorspine|farshorestoken|sect_(?:ashabah|crown|forebear)|redguardremembering|calian|heritage|sacredwater|sapvision|awardbosmersong/.test(text)) return "journey.cultural-rite";
   if (daedric) {
     if (event === "commitment.offer") return "daedric.offer";
     if (event === "commitment.accept") return "daedric.active";
@@ -121,7 +128,7 @@ export function renderFullFlowPenpotSvg(model) {
   const esc = (value) => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const ids = new Map(model.nodes.map((node) => [node.id, node]));
   const width = 2400;
-  const height = 1660;
+  const height = 1960;
   const sections = model.sections.map((section) => `<g id="section-${esc(section.id)}"><rect x="${section.x}" y="${section.y}" width="${section.width}" height="${section.height}" rx="18" fill="#111827" stroke="#334155" stroke-width="2"/><text x="${section.x + 22}" y="${section.y + 34}" fill="#93c5fd" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700">${esc(section.title)}</text></g>`).join("");
   const edges = model.edges.map(([from, to]) => {
     const a = ids.get(from);
