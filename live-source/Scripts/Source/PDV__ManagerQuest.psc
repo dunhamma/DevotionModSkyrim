@@ -931,6 +931,9 @@ EndEvent
 Event OnUpdate()
     _optimizationTimerFires += 1
 
+    ; Non-pausing Prisma choices need this return-channel poll before menu early-out.
+    LedgerRuntime.ProcessPrismaCommitmentOffer()
+
     ; Bind the origin adapter as soon as the race is captured, and follow it if it changes.
     ; Two cheap reads; the work only happens on an actual change.
     if PDV_GLO_OriginRace && PDV_GLO_OriginRace.GetValueInt() != _boundOriginRace
@@ -4766,7 +4769,6 @@ EndFunction
 Function SetPdvCCFishingPresent(Bool value)
     _pdvCCFishingPresent = value
 EndFunction
-
 
 
 

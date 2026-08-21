@@ -23,6 +23,8 @@ const REPO_ROOT = process.cwd();
 const NATIVE_BRIDGE_SOURCE = path.join(REPO_ROOT, "native", "DevotionPrismaBridge", "src", "main.cpp");
 const MANAGER_SOURCE = path.join(DEVOTION_SOURCE, "PDV__ManagerQuest.psc");
 const PRESENTER_SOURCE = path.join(DEVOTION_SOURCE, "PDV_PrismaPresenter.psc");
+const LEDGER_SOURCE = path.join(DEVOTION_SOURCE, "PDV_DevotionLedger.psc");
+const DEBUG_SOURCE = path.join(DEVOTION_SOURCE, "PDV_DebugRuntime.psc");
 const MCM_SOURCE = path.join(DEVOTION_SOURCE, "PDV_MCM.psc");
 const MANAGER_PEX = path.join(DEVOTION_COMPILED, "PDV__ManagerQuest.pex");
 const PRESENTER_PEX = path.join(DEVOTION_COMPILED, "PDV_PrismaPresenter.pex");
@@ -2238,9 +2240,48 @@ if (!fs.existsSync(DEVOTION_PRISMA_VIEW)) {
   }
 }
 
+function verifyCommitmentChoiceContract() {
+  if (!exists(MANAGER_SOURCE) || !exists(LEDGER_SOURCE) || !exists(DEBUG_SOURCE) || !exists(DEVOTION_PRISMA_VIEW)) return;
+  const manager = read(MANAGER_SOURCE);
+  const ledger = read(LEDGER_SOURCE);
+  const debug = read(DEBUG_SOURCE);
+  const commitmentSources = `${manager}\n${ledger}\n${debug}`;
+  const app = read(DEVOTION_PRISMA_VIEW);
+  const required = [
+    "Bool Property PreferPrismaCommitmentOffers = True Auto",
+    'String Property COMMITMENT_OFFER_COPY_FILE = "PlayerDevotion/PDV_CommitmentOfferCopy" AutoReadOnly',
+    "Bool Function TryShowPrismaCommitmentOffer",
+    "PDV_PrismaBridge.SupportsChoice()",
+    "JsonUtil.GetPathStringValue(COMMITMENT_OFFER_COPY_FILE",
+    'if titleText == "" || bodyText == ""',
+    "PDV_PrismaBridge.ShowChoice(menuId, payload, false)",
+    "Function ProcessPrismaCommitmentOffer()",
+    "PDV_PrismaBridge.ConsumePendingChoice(_pendingPrismaCommitmentMenu)",
+    "PDV_PrismaBridge.CancelChoice()",
+    'StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 0)',
+    '"showCancel\\":false',
+    "Int Property COMMITMENT_MAX_DEFERRALS = 2 AutoReadOnly",
+    'StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.DeferralCount", deferralCount)',
+  ];
+  const missing = required.filter((token) => !commitmentSources.includes(token));
+  if (missing.length) {
+    fail(`Commitment choice surface is missing required fallback/consent/watchdog tokens: ${missing.join(", ")}.`, LEDGER_SOURCE);
+  } else if (manager.indexOf("LedgerRuntime.ProcessPrismaCommitmentOffer()") > manager.indexOf("if Utility.IsInMenuMode()")) {
+    fail("Prisma commitment result polling must run before the manager menu-mode early-out.", MANAGER_SOURCE);
+  } else {
+    pass("Commitment offers use the default-on headed Prisma choice when approved data exists, with vanilla fallback, bounded deferral, non-pausing result polling, and watchdog release.", LEDGER_SOURCE);
+  }
+  if (!app.includes("if (choice.showCancel !== false) card.appendChild(cancel);")) {
+    fail("Prisma choice payloads must be able to suppress the redundant visible cancel button while retaining Escape cancellation.", DEVOTION_PRISMA_VIEW);
+  } else {
+    pass("Prisma commitment payload can hide the redundant cancel button while Escape remains a no-decision exit.", DEVOTION_PRISMA_VIEW);
+  }
+}
+
 verifyJournalBytecodeFreshness();
 verifyPrismaAssetCacheContract();
 verifyDeityNameCasingContract();
+verifyCommitmentChoiceContract();
 verifyNpcRecognitionVisibilityContract();
 requireBridgeSourceParity();
 requireBridgeNativesDeclared();

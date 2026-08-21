@@ -97,7 +97,8 @@ Work Rule".
 | `tools/pdv_pantheon_substrate_runtime_evidence_check.mjs` | Fail-closed runtime/manual evidence checker for the 12 pantheon/substrate co-test cards; a static pass never closes an evidence bucket, and rotating Papyrus/temporary captures need an exact retained reference in the committed pantheon co-test evidence store |
 | `tools/pdv_patch.mjs` | Offline patcher for classification/distribution manifests and generated patch review/live artifacts |
 | `tools/pdv_content_verify.mjs` | Read-only verifier for the race/Daedric content manifests plus Phase 20 roster coverage (ASCII, budgets, slot IDs, voice, full roster gate) |
-| `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, live manager eligibility/source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
+| `tools/pdv_copy_census.mjs` | Read-only player-copy census: batches direct houseCARL reads of live `Devotion.esp`, inventories tracked Papyrus/MCM and Prisma strings, links race/Daedric manifest references without promoting them, and writes only ignored local census, formal-offer, dynamic-narrative viability, Nord/Kyne packet, and Penpot-importable UX-map artifacts |
+| `tools/pdv_formal_offer_check.mjs` | Read-only verifier for the formal-offer scale-out spec, manager/module-family eligibility and source flow, no-offer race exclusions, quiet-emergence cues, and delegated ESP/property readback |
 | `tools/pdv_prisma_parity_unitd_check.mjs` | Read-only verifier for Prisma parity Unit D journal/toast wiring, carryover award funnel, director resolver preservation, and Daedric commitment-title readback |
 | `tools/pdv_prisma_to_oneoh_audit.mjs` | Read-only roll-up verifier for Prisma-to-1.0 wiring; checks current producer callsites, source/live parity, repo/live Prisma UI parity, and adversarial negative fixtures before runtime smoke |
 | `tools/pdv_deity_stance_parity.mjs` | Cross-checks the three sources of a deity stance -- the matrix JSON `stance.<Race>.<Deity>` (wins at runtime), the ESP `Stance_<Race>` VMAD property (fallback), and `IsDashboardDeityInOriginRoster`. Also pins the shared production setter/debug reachability predicate and rejects any `SetActiveDeity(..., True)` bypass. Fails on ESP/JSON drift and on an off-roster deity reading NATIVE; warns where the JSON value cannot be expressed in the record at all. Derives rosters and canonical names from source rather than pinning them |
@@ -132,6 +133,7 @@ Work Rule".
 | `references/authoring/PDV_SignalFloorSmokeLedger.md` | Generated signal-floor smoke result ledger; backend PASS can leave runtime marker/manual slots OPEN without promoting the slice to runtime proof |
 | `references/authoring/PDV_1_0_CoTest_Runbook_2026-07-10.md` | Single co-testing runbook for the remaining 1.0 smoke closeout; use it for machine preflight, signal-floor smoke cards, exact evidence capture, stop conditions, and remaining 1.0 evidence sinks |
 | `native/DevotionPrismaBridge/` | C++ SKSE/Prisma bridge scaffold plus mirrored runtime Prisma panel assets |
+| `SKSE/Plugins/StorageUtilData/PlayerDevotion/PDV_CommitmentOfferCopy.json` | Owner-copy data boundary for headed Prisma commitment offers; incomplete or wrong-version entries deliberately fall back to the vanilla MESG. In 2.0, `PDV_DevotionLedger` owns the lookup and choice state; its new global property still requires direct plugin wiring/readback before runtime proof |
 | `references/PDV_Anvil_MO2_MCP_Intake.md` | Codex-facing intake for the Anvil MO2 MCP plugin and optional tool status |
 
 ---
@@ -447,6 +449,9 @@ node .\tools\pdv_verify.mjs --strict-phase7
 node .\tools\pdv_content_verify.mjs
 node .\tools\pdv_content_verify.mjs --json
 node .\tools\pdv_content_verify.mjs --strict-phase20-roster
+node .\tools\pdv_copy_census.mjs --refresh-live --json
+node .\tools\pdv_copy_census.mjs --check --json
+node --test .\tools\pdv_copy_census.test.mjs
 node .\tools\pdv_prisma_ui_audit.mjs
 node .\tools\pdv_prisma_to_oneoh_audit.mjs
 node .\tools\pdv_dislike_consequence_audit.mjs --strict-dislike-consequence

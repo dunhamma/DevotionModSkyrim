@@ -2594,7 +2594,7 @@
       "font-size:14px", "cursor:pointer"
     ].join(";"));
     cancel.addEventListener("click", () => finish("cancel"));
-    card.appendChild(cancel);
+    if (choice.showCancel !== false) card.appendChild(cancel);
 
     overlay.appendChild(card);
     document.body.appendChild(overlay);

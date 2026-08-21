@@ -296,6 +296,7 @@ Anything the player will read at any point is a description-engineering surface.
 5. **No version markers, no phase tags, no `[DEPRECATED]` left behind.** (See § 2.2, § 2.5.)
 6. **ASCII-only player-facing text.** Skyrim can mangle multibyte characters in UI/dialogue/message pipelines. Use straight quotes, `...`, `--`, `-`, and `*`; avoid curly quotes, em/en dashes, ellipses, bullets, and emojis.
 7. **Dialogue line discipline.** Keep spoken dialogue lines under 80 characters where possible, and prefer Skyrim-style full forms over modern contractions.
+8. **Separate the three copy authorities.** Before editing, record (a) the current runtime text, (b) the current gameplay contract, and (c) any prior writing reference. A manifest draft is not live-record proof, and a live string is not proof that it describes the mechanic correctly. Diagnose discrepancies before choosing which authority to change.
 
 ### 3.3 Worked examples
 
@@ -325,7 +326,11 @@ These rules apply to all player-facing surfaces listed in § 3.1. They are the b
 
 > **Section order.** 3.5 is placed before 3.4 in this file. Cite "§ 3.5" for grammar and style; "§ 3.4" is Papyrus trace messages.
 >
-> **Coverage limit.** `tools/pdv_content_verify.mjs` runs these checks over `race-sheets/PDV_RaceContent_Manifest.md` and `PDV_DaedricContent_Manifest.md` only. It does not read the `.psc` sources or the ESP, where most shipped player copy actually lives. A green content-verify is not evidence that shipped copy conforms.
+> **Coverage limit.** `tools/pdv_content_verify.mjs` runs these checks over `race-sheets/PDV_RaceContent_Manifest.md` and `PDV_DaedricContent_Manifest.md` only. It does not read the `.psc` sources or the ESP, where most shipped player copy actually lives. A green content-verify is not evidence that shipped copy conforms. Use `tools/pdv_copy_census.mjs --refresh-live` for the field-level runtime/reference map; its generated reports are local review aids, not committed project truth.
+
+**Owner prose authority.** When the owner supplies or locks a draft, preserve it exactly. Agent review is limited to a mechanical contradiction, surface mismatch, encoding conflict, or implementation blocker unless the owner explicitly asks for wording alternatives. Do not silently apply general style guidance to an approved draft.
+
+**MessageBox headings.** A vanilla Skyrim MessageBox renders the MESG Description and eligible buttons, not the MESG Name. Treat Name as record metadata unless an enhanced surface deliberately presents it. PDV commitment offers may use the default-on Prisma choice channel to render an approved heading and body; missing, incomplete, wrong-version, or unavailable Prisma copy data must fall back to the vanilla MESG without reconstructing prose.
 
 **Name capitalisation.** Always capitalise:
 - Deity and divine names: Kyne, Talos, Mara, Auri-El, Malacath, Hircine, Riddle'Thar.
@@ -339,7 +344,7 @@ Do not capitalise generic nouns: "the hall," "a shrine," "the temple," "a blessi
 
 **Stat notation format.** Mechanical stat changes use numeral + symbol with an explicit sign: "+10%", "-5%", "+15 stamina." Never spell out a stat change: write "+10%" not "ten percent more." Descriptive percentages inside a prose sentence that are not direct stat changes spell out: "five percent of your health." Do not mix conventions in a single string — if the string has a stat line, that line uses the numeral form.
 
-**Terminal punctuation.** Every player-facing *sentence* ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning. **Titles, labels, and MessageBox title fields are exempt** — this rule governs the body, not the heading. `tools/pdv_content_verify.mjs` implements the exemption in code (`checkTerminalPunctuation` is only ever called on body text) and no shipped title in the mod carries a terminal character. Do not "fix" them.
+**Terminal punctuation.** Every player-facing *sentence* ends with a full stop, exclamation mark, or question mark. No trailing space after the terminal character. The verifier flags missing terminal punctuation as a warning. **Titles, labels, and intended/enhanced MessageBox headings are exempt** — this rule governs the body, not the heading. `tools/pdv_content_verify.mjs` implements the exemption in code (`checkTerminalPunctuation` is only ever called on body text) and no shipped title in the mod carries a terminal character. Do not "fix" them.
 
 **Tense.** Present tense for active effect descriptions: "Kyne shelters the hunter." Timeless narrative for deity acknowledgment: "Kyne has noticed your steps." Do not switch tenses within a single string. **Journal and Book of Days entries are the documented exception:** they may pair a past-tense report of a completed act with a present-tense consequence — "You took up a discipline in the Trial of Iron. The Code is held in iron." That is one narrative frame, not a tense switch. The no-switching rule guards the choice between the two modes above; it does not forbid this shape.
 

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://playerdevotion.local/schemas/pdv-copy-census.schema.json",
+  "title": "PDV player-facing copy census",
+  "type": "object",
+  "required": ["schema", "scope", "authorities", "sourceClasses", "sourceFingerprint", "extractionCoverage", "summary", "rows"],
+  "properties": {
+    "schema": { "const": "pdv.copy-census.v1" },
+    "scope": { "type": "object", "required": ["included", "excluded"] },
+    "authorities": { "type": "object", "required": ["runtimeText", "gameplayContract", "writingReference"] },
+    "sourceClasses": { "type": "array" },
+    "sourceFingerprint": { "type": "object" },
+    "extractionCoverage": { "type": "object" },
+    "summary": { "type": "object", "required": ["rowCount", "dynamicManualReview", "excludedDeveloperDebug", "bySurface", "byParity", "byRisk"] },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "copyId", "journey", "event", "surface", "visibility", "runtimeLocation", "runtimeAuthority", "runtimeText",
+          "gameplayContractSource", "gameplayContract", "referenceLocation", "referenceText", "referenceAuthority",
+          "voice", "voiceProfileRef", "playerJob", "characterBudget", "parity", "risk", "riskBasis",
+          "researchNeeded", "editorialStatus", "ownerNote", "dynamic", "manualReview"
+        ],
+        "properties": {
+          "copyId": { "type": "string", "minLength": 1 },
+          "journey": { "type": "string", "minLength": 1 },
+          "event": { "type": "string", "minLength": 1 },
+          "surface": { "type": "string", "minLength": 1 },
+          "visibility": { "enum": ["player-visible", "record-metadata-not-rendered", "writing-reference-only"] },
+          "runtimeLocation": { "type": "string" },
+          "runtimeAuthority": { "type": "string" },
+          "runtimeText": { "type": "string" },
+          "gameplayContractSource": { "type": "string" },
+          "gameplayContract": { "type": "string" },
+          "referenceLocation": { "type": "string" },
+          "referenceText": { "type": "string" },
+          "referenceAuthority": { "type": "string" },
+          "voice": { "type": "string" },
+          "voiceProfileRef": { "type": "string" },
+          "playerJob": { "type": "string" },
+          "characterBudget": { "type": ["integer", "null"], "minimum": 1 },
+          "parity": { "enum": ["exact", "runtime-reference-differ", "runtime-only-no-reference", "reference-only-no-live-match"] },
+          "risk": { "enum": ["P0", "P1", "P2", "P3"] },
+          "riskBasis": { "type": "string" },
+          "researchNeeded": { "type": "boolean" },
+          "editorialStatus": { "type": "string" },
+          "ownerNote": { "type": "string" },
+          "dynamic": { "type": "boolean" },
+          "manualReview": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

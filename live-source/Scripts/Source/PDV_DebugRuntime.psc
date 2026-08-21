@@ -1499,10 +1499,15 @@ Function DebugDeclinePendingCommitment()
         return
     endIf
 
+    Int deferralCount = LedgerRuntime.GetCommitmentDeferralCount(pendingDeity)
+    if deferralCount < LedgerRuntime.COMMITMENT_MAX_DEFERRALS
+        deferralCount = deferralCount + 1
+    endIf
+    StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.DeferralCount", deferralCount)
     StorageUtil.SetIntValue(pendingDeity as Form, "PDV.Commitment.Offered", 0)
     StorageUtil.SetFloatValue(pendingDeity as Form, "PDV.Commitment.DeclinedAt", Utility.GetCurrentGameTime())
     LedgerRuntime.ClearPendingCommitment()
-    PDV_Manager.Trace(1, "Commitment declined/postponed.")
+    PDV_Manager.Trace(1, "Commitment postponed (deferral " + deferralCount + "/" + LedgerRuntime.COMMITMENT_MAX_DEFERRALS + ").")
 EndFunction
 
 Function DebugRefusePendingCommitment()

@@ -46,6 +46,7 @@ GlobalVariable Property PDV_GLO_ActiveDeityIndex Auto
 GlobalVariable Property PDV_GLO_PatronDeity Auto
 GlobalVariable Property PDV_GLO_PatronState Auto
 GlobalVariable Property PDV_GLO_DebugLevel Auto
+GlobalVariable Property PDV_GLO_CommitmentNotYetAvailable Auto
 PDV_ModePreset Property PDV_ModePresetRef Auto
 FormList Property PDV_FLST_AllDeities Auto
 Faction Property NecromancerFaction Auto
@@ -108,6 +109,7 @@ Int Property NEGLECT_ACTIVE_CAP = 3 AutoReadOnly
 Float Property NEGLECT_LAPSE_GRACE_DAYS = 3.0 AutoReadOnly
 Float Property COMMITMENT_OFFER_THRESHOLD = 50.0 AutoReadOnly
 Float Property COMMITMENT_DECLINE_DELAY_DAYS = 1.0 AutoReadOnly
+Int Property COMMITMENT_MAX_DEFERRALS = 2 AutoReadOnly
 Float Property COMMITMENT_REFUSE_COOLDOWN_DAYS = 3.0 AutoReadOnly
 Float Property COMMITMENT_CARRYOVER_MULTIPLIER = 1.0 AutoReadOnly
 Float Property BROAD_PANTHEON_SEEKER_THRESHOLD = 25.0 AutoReadOnly
@@ -140,6 +142,13 @@ Float _broadPantheonBestPositive = 0.0
 Float _broadPantheonWorstNegative = 0.0
 String _broadPantheonEventPool = ""
 Int _pendingLikesDislikesEventType = -1
+Bool Property PreferPrismaCommitmentOffers = True Auto
+String Property COMMITMENT_OFFER_COPY_FILE = "PlayerDevotion/PDV_CommitmentOfferCopy" AutoReadOnly
+Int Property COMMITMENT_OFFER_COPY_VERSION = 1 AutoReadOnly
+PDV_DeityBase _pendingPrismaCommitmentDeity = None
+String _pendingPrismaCommitmentMenu = ""
+Bool _pendingPrismaCommitmentAllowedNotYet = False
+Int _pendingPrismaCommitmentTicks = 0
 Bool _dawnRosterMissingLogged = false
 Bool _pdvSurvivalContextInit = False
 GlobalVariable _pdvSurvModeEnabled
@@ -3947,15 +3956,140 @@ Function ShowFormalCommitmentOffer(PDV_DeityBase deity)
         return
     endIf
 
+    Bool allowNotYet = IsCommitmentNotYetAvailable(deity)
+    SetCommitmentNotYetButtonState(allowNotYet)
+    if TryShowPrismaCommitmentOffer(deity, allowNotYet)
+        return
+    endIf
     Manager.Prisma.DispatchDiegeticCue("offer", deity.DeityName, "present", deity, "revelation")
     StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 1)
     Int choice = offerMessage.Show()
     if choice == 0
         Manager.DebugRuntime.DebugAcceptPendingCommitment()
-    elseIf choice == 1
+    elseIf allowNotYet && choice == 1
         Manager.DebugRuntime.DebugDeclinePendingCommitment()
-    elseIf choice == 2
+    elseIf (!allowNotYet && choice >= 1) || choice == 2
         Manager.DebugRuntime.DebugRefusePendingCommitment()
+    elseIf choice < 0
+        ; A dismissed or failed presentation is not consent, postponement, or refusal.
+        ; Clear the one-shot state so the normal evaluator can offer again later.
+        StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 0)
+        ClearPendingCommitment()
+        Manager.Trace(1, "Commitment offer closed without a player decision.")
+    endIf
+EndFunction
+
+Bool Function TryShowPrismaCommitmentOffer(PDV_DeityBase deity, Bool allowNotYet)
+    if !PreferPrismaCommitmentOffers || !PDV_PrismaBridge.IsAvailable() || !PDV_PrismaBridge.SupportsChoice()
+        return False
+    endIf
+    if JsonUtil.GetPathIntValue(COMMITMENT_OFFER_COPY_FILE, ".version", -1) != COMMITMENT_OFFER_COPY_VERSION
+        return False
+    endIf
+
+    String copyPath = GetPrismaCommitmentCopyPath(deity)
+    String titleText = JsonUtil.GetPathStringValue(COMMITMENT_OFFER_COPY_FILE, copyPath + ".title", "")
+    String bodyText = JsonUtil.GetPathStringValue(COMMITMENT_OFFER_COPY_FILE, copyPath + ".body", "")
+    if titleText == "" || bodyText == ""
+        ; Approved copy is data-owned. Never reconstruct missing prose.
+        return False
+    endIf
+
+    String menuId = "pdv_commitment_" + deity.DeityIndex
+    String optionsJson = "{\"index\":0,\"label\":\"Accept the bond.\"}"
+    if allowNotYet
+        optionsJson = optionsJson + ",{\"index\":1,\"label\":\"Not yet.\"},{\"index\":2,\"label\":\"Refuse the offer.\"}"
+    else
+        optionsJson = optionsJson + ",{\"index\":1,\"label\":\"Refuse the offer.\"}"
+    endIf
+    String payload = "{\"choice\":{\"menu\":\"" + menuId + "\",\"title\":\"" + PDV_DevotionRules.JsonSafeString(titleText) + "\",\"prompt\":\"" + PDV_DevotionRules.JsonSafeString(bodyText) + "\",\"options\":[" + optionsJson + "],\"showCancel\":false}}"
+    if !PDV_PrismaBridge.ShowChoice(menuId, payload, false)
+        return False
+    endIf
+
+    _pendingPrismaCommitmentDeity = deity
+    _pendingPrismaCommitmentMenu = menuId
+    _pendingPrismaCommitmentAllowedNotYet = allowNotYet
+    _pendingPrismaCommitmentTicks = 0
+    Manager.Prisma.DispatchDiegeticCue("offer", deity.DeityName, "present", deity, "revelation")
+    StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 1)
+    return True
+EndFunction
+
+String Function GetPrismaCommitmentCopyPath(PDV_DeityBase deity)
+    if deity as PDV_DaedricPathBase
+        return ".offers.daedric." + deity.DeityIndex
+    endIf
+    return ".offers.race." + Manager.GetPlayerOriginRaceIndex() + "." + deity.DeityIndex
+EndFunction
+
+Function ProcessPrismaCommitmentOffer()
+    if !_pendingPrismaCommitmentDeity || _pendingPrismaCommitmentMenu == ""
+        return
+    endIf
+
+    Int status = PDV_PrismaBridge.ConsumePendingChoice(_pendingPrismaCommitmentMenu)
+    if status == -2
+        _pendingPrismaCommitmentTicks += 1
+        if _pendingPrismaCommitmentTicks >= 20
+            PDV_PrismaBridge.CancelChoice()
+            ClosePrismaCommitmentWithoutDecision("watchdog timeout")
+        endIf
+        return
+    endIf
+
+    PDV_DeityBase deity = _pendingPrismaCommitmentDeity
+    Bool allowedNotYet = _pendingPrismaCommitmentAllowedNotYet
+    ClearPendingPrismaCommitmentState()
+    if status == 0
+        Manager.DebugRuntime.DebugAcceptPendingCommitment()
+    elseIf allowedNotYet && status == 1
+        Manager.DebugRuntime.DebugDeclinePendingCommitment()
+    elseIf (!allowedNotYet && status == 1) || status == 2
+        Manager.DebugRuntime.DebugRefusePendingCommitment()
+    else
+        StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 0)
+        ClearPendingCommitment()
+        Manager.Trace(1, "Prisma commitment offer closed without a player decision.")
+    endIf
+EndFunction
+
+Function ClosePrismaCommitmentWithoutDecision(String reason)
+    PDV_DeityBase deity = _pendingPrismaCommitmentDeity
+    ClearPendingPrismaCommitmentState()
+    if deity
+        StorageUtil.SetIntValue(deity as Form, "PDV.Commitment.Offered", 0)
+    endIf
+    ClearPendingCommitment()
+    Manager.Trace(1, "Prisma commitment offer closed without a player decision: " + reason)
+EndFunction
+
+Function ClearPendingPrismaCommitmentState()
+    _pendingPrismaCommitmentDeity = None
+    _pendingPrismaCommitmentMenu = ""
+    _pendingPrismaCommitmentAllowedNotYet = False
+    _pendingPrismaCommitmentTicks = 0
+EndFunction
+
+Int Function GetCommitmentDeferralCount(PDV_DeityBase deity)
+    if !deity
+        return 0
+    endIf
+    return StorageUtil.GetIntValue(deity as Form, "PDV.Commitment.DeferralCount")
+EndFunction
+
+Bool Function IsCommitmentNotYetAvailable(PDV_DeityBase deity)
+    return GetCommitmentDeferralCount(deity) < COMMITMENT_MAX_DEFERRALS
+EndFunction
+
+Function SetCommitmentNotYetButtonState(Bool available)
+    if !PDV_GLO_CommitmentNotYetAvailable
+        return
+    endIf
+    if available
+        PDV_GLO_CommitmentNotYetAvailable.SetValue(1.0)
+    else
+        PDV_GLO_CommitmentNotYetAvailable.SetValue(0.0)
     endIf
 EndFunction
 
@@ -4624,8 +4758,6 @@ Function ReapplyOneDisfavorSting(Actor playerRef, Int domainValue)
         playerRef.AddSpell(bandSpell, False)
     endIf
 EndFunction
-
-
 
 
 
