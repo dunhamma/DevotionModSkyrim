@@ -1,0 +1,403 @@
+<title>Devotion Race Atlas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#F2F3F1; --ink:#22262A; --ink-2:#4A5158; --ink-3:#79828A;
+  --card:#FFFFFF; --line:#D4D8D4; --accent:#3E5C76; --accent-soft:#E3EAF1;
+  --built:#2E7D4F; --built-bg:#E8F2EC;
+  --partial:#B07818; --partial-bg:#F7EFDE;
+  --designed:#7A5CC4; --designed-bg:#EFEAF9;
+  --unver:#79828A; --unver-bg:#ECEEEC;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#16191C; --ink:#E4E6E3; --ink-2:#AEB4B9; --ink-3:#7E858C;
+    --card:#1F2429; --line:#343B41; --accent:#8FB0CC; --accent-soft:#26313C;
+    --built:#67C08B; --built-bg:#1D2E24;
+    --partial:#D9A84E; --partial-bg:#332A18;
+    --designed:#AC93E8; --designed-bg:#292138;
+    --unver:#8B9299; --unver-bg:#23272B;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#16191C; --ink:#E4E6E3; --ink-2:#AEB4B9; --ink-3:#7E858C;
+  --card:#1F2429; --line:#343B41; --accent:#8FB0CC; --accent-soft:#26313C;
+  --built:#67C08B; --built-bg:#1D2E24;
+  --partial:#D9A84E; --partial-bg:#332A18;
+  --designed:#AC93E8; --designed-bg:#292138;
+  --unver:#8B9299; --unver-bg:#23272B;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Source Sans 3",system-ui,sans-serif;font-size:16px;line-height:1.55;margin:0;padding:0 24px 80px}
+.wrap{max-width:1240px;margin:0 auto}
+h1{font-family:"IM Fell English",Georgia,serif;font-weight:400;font-size:44px;margin:40px 0 4px;text-wrap:balance}
+.sub{color:var(--ink-2);font-size:17px;max-width:70ch;margin:0 0 8px}
+.meta{color:var(--ink-3);font-size:14px;font-family:"IBM Plex Mono",monospace}
+nav{position:sticky;top:0;background:var(--paper);padding:14px 0;margin:24px 0 8px;border-bottom:1px solid var(--line);z-index:5;display:flex;flex-wrap:wrap;gap:8px}
+nav a{color:var(--accent);text-decoration:none;font-size:15px;font-weight:600;padding:4px 12px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+h2{font-family:"IM Fell English",Georgia,serif;font-weight:400;font-size:34px;margin:56px 0 2px}
+h2 .tag{font-family:"Source Sans 3",sans-serif;font-size:14px;color:var(--ink-3);vertical-align:middle;margin-left:10px}
+.racesub{color:var(--ink-2);font-size:16px;max-width:78ch;margin:2px 0 18px}
+.lane{margin:18px 0}
+.lanehead{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+.lanehead b{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.lanehead span{font-size:14px;color:var(--ink-3)}
+.track{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:18px 2px 14px}
+.node{position:relative;flex:0 0 auto;width:216px;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px 10px;margin-right:34px}
+.node:not(:last-child)::after{content:"";position:absolute;right:-26px;top:50%;width:18px;height:2px;background:var(--ink-3)}
+.node:not(:last-child)::before{content:"";position:absolute;right:-12px;top:50%;margin-top:-4px;border:5px solid transparent;border-left-color:var(--ink-3)}
+.node h4{margin:0 0 3px;font-size:16px;font-weight:600;line-height:1.3}
+.node p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.45}
+.node .mid{display:inline-block;margin-top:7px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:1px 7px}
+.badge{position:absolute;top:-12px;right:10px;font-size:13px;font-weight:600;border-radius:11px;padding:1px 10px;border:1.5px solid;background:var(--card)}
+.s-built{border-color:var(--built)} .s-built>.badge{color:var(--built);border-color:var(--built);background:var(--built-bg)}
+.s-partial{border-color:var(--partial)} .s-partial>.badge{color:var(--partial);border-color:var(--partial);background:var(--partial-bg)}
+.s-designed{border-style:dashed;border-color:var(--designed)} .s-designed>.badge{color:var(--designed);border-color:var(--designed);background:var(--designed-bg)}
+.s-unver{border-style:dotted;border-color:var(--unver)} .s-unver>.badge{color:var(--unver);border-color:var(--unver);background:var(--unver-bg)}
+.s-none{border-color:var(--line)} .s-none>.badge{color:var(--ink-3);border-color:var(--line);background:var(--unver-bg)}
+.stubs{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 6px}
+.stub{font-size:14px;border:1.5px solid var(--line);border-radius:8px;background:var(--card);padding:6px 12px;color:var(--ink-2)}
+.stub b{color:var(--ink);font-weight:600}
+.stub.s-built{border-color:var(--built)} .stub.s-partial{border-color:var(--partial)}
+.stub.s-designed{border-style:dashed;border-color:var(--designed)} .stub.s-unver{border-style:dotted;border-color:var(--unver)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:20px 0 6px}
+.lg{display:flex;align-items:center;gap:9px;font-size:15px}
+.sw{width:34px;height:22px;border-radius:6px;border:2px solid;background:var(--card)}
+.note{border-left:3px solid var(--accent);background:var(--card);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;font-size:15px;color:var(--ink-2);max-width:86ch}
+.note b{color:var(--ink)}
+code{font-family:"IBM Plex Mono",monospace;font-size:.92em;background:var(--accent-soft);border-radius:4px;padding:0 5px}
+.ev{font-size:13px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;margin-top:6px;line-height:1.4;overflow-wrap:anywhere}
+.mtx{overflow-x:auto;margin:16px 0}
+table{border-collapse:collapse;font-size:14px;min-width:1100px}
+th{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);text-align:left;padding:8px 12px;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2);max-width:220px}
+td b{color:var(--ink)}
+td.race{font-family:"IM Fell English",Georgia,serif;font-size:17px;color:var(--ink);white-space:nowrap}
+.pill{display:inline-block;font-size:12.5px;font-weight:600;border-radius:9px;padding:0 8px;border:1.5px solid}
+.pill.b{color:var(--built);border-color:var(--built);background:var(--built-bg)}
+.pill.p{color:var(--partial);border-color:var(--partial);background:var(--partial-bg)}
+.pill.d{color:var(--designed);border-color:var(--designed);background:var(--designed-bg);border-style:dashed}
+.pill.n{color:var(--ink-3);border-color:var(--line);background:var(--unver-bg)}
+@media (prefers-reduced-motion: no-preference){ html{scroll-behavior:smooth} }
+</style>
+
+<div class="wrap">
+<h1>Devotion Race Atlas</h1>
+<p class="sub">Each race's devotion architecture from high altitude: the progression spine, the culture substrate, the curse layer, and the Daedric track — every node marked by how real it is today. Design intent from the race sheets; build status from <code>live-source</code> with file evidence.</p>
+<p class="meta">fix/2.0-copy-uplift · static evidence, 2026-08-24 · all 10 races verified (Papyrus source; MESG = declared property with a live show path)</p>
+
+<nav>
+<a href="#legend">Legend</a><a href="#daedric">Daedric track</a>
+<a href="#nord">Nord</a><a href="#imperial">Imperial</a><a href="#altmer">Altmer</a><a href="#bosmer">Bosmer</a><a href="#breton">Breton</a><a href="#dunmer">Dunmer</a><a href="#khajiit">Khajiit</a><a href="#argonian">Argonian</a><a href="#orc">Orc</a><a href="#redguard">Redguard</a><a href="#matrix">Matrix</a>
+</nav>
+
+<section id="legend">
+<h2>How to read a page</h2>
+<p class="racesub">Four lanes per race, left to right in time. <b>Spine</b> is the progression walk. <b>Substrate</b> is the always-on culture layer (three races run it inline without a metric). <b>Curse</b> shows how vampirism and lycanthropy land for that race. The <b>Daedric</b> progression is identical for all ten races, so it is drawn once below; each race page carries only its Daedric flavor.</p>
+<div class="legend">
+  <div class="lg"><span class="sw" style="border-color:var(--built)"></span> Built — verified in live source, evidence cited</div>
+  <div class="lg"><span class="sw" style="border-color:var(--partial)"></span> Partial — built, with a verified defect or gap</div>
+  <div class="lg"><span class="sw" style="border-style:dashed;border-color:var(--designed)"></span> Designed only — in the design docs, absent from source</div>
+  <div class="lg"><span class="sw" style="border-color:var(--line)"></span> Absent — nothing found in design or source</div>
+</div>
+<div class="note"><b>Vocabulary.</b> Chips carry the real moment IDs (<code>tier.reach</code>, <code>focus.emergence</code>, <code>dawn.digest</code>…). Piety thresholds: Seeker&nbsp;25 · Devoted&nbsp;50 · Champion&nbsp;85. Substrate metric 0–75, tiers at 1/25/75, one shared 4.0/day credit budget.</div>
+<div class="note"><b>Two findings that frame every page.</b> The <b>Marked surfacing rung</b> (arch 10.6: "moments the player should remember") has no implementation for any race — all contextual favor exits one generic toast call. And the coverage map's rule that the Devoted crossing surfaces via <code>emergence</code> is design intent only: <b>Khajiit is the sole race with a real emergence beat</b>; the only other <code>emergence.onset</code> emitter (Breton) is provably unreachable, and every other race rides the generic tier lane.</div>
+</section>
+
+<section id="daedric">
+<h2>The Daedric track <span class="tag">universal — all 16 Princes, every race</span></h2>
+<p class="racesub">Access is universal; race enters as flavor (legibility state, stigma and exit-difficulty multipliers per Prince). Pacts are exclusive among themselves. Committing a Divine patron severs the pact; taking a pact does not sever the patron.</p>
+<div class="lane"><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Silent accrual</h4><p>Prince acts credit stored piety; one signal per path per source per day.</p><div class="ev">PDV_DaedricRuntime.psc:130</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Notice at 20</h4><p>One-shot: "…has taken notice of you" — Book of Days + toast.</p><div class="ev">PDV_DaedricPathBase.psc:412</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Formal offer</h4><p>≥50 piety + 2 signal-days. Accept · Not&nbsp;yet&nbsp;(×2) · Refuse.</p><div class="ev">PDV_DevotionLedger.psc:3914</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Consent gate</h4><p>One global flag; piety parks at Champion−1 until consent.</p><div class="ev">PDV_DaedricPathBase.psc:666</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Pact tiers</h4><p>Seeker / Devoted / Champion; paired Boon + Price spells each.</p></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Lapse / severance</h4><p>Tier 0 → lapse surfaced; Divine commit severs the pact.</p><div class="ev">PDV_DevotionLedger.psc:997</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Race response</h4><p>Per-race response messages exist for all 16 Princes — debug-only, no organic trigger.</p><div class="ev">backlog ruling 2026-08-07</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Renounce</h4><p>No player-facing renounce; debug function only.</p></div>
+</div></div>
+</section>
+
+<section id="nord">
+<h2>Nord <span class="tag">13 deities · 2 broad lanes · NordAncestor substrate</span></h2>
+<p class="racesub">The canonical race: a real startup fork into two blended broad lanes, the full broad-to-patron offer arc, and a hearth-and-sky ancestor substrate under both. Orkey is Arkay's Old Ways display skin.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Baseline choice</h4><p>Old Ways or Nine Divines — explicit MESG fork with confirms.</p><div class="ev">MQ:398,3608 · Nord.psc</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Broad accrual</h4><p>Blended per-lane favors: hearth-defense, sky-road, Talos pressure.</p><span class="mid">favor.act</span><div class="ev">ContextualFavorRuntime:372</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Tier climbs</h4><p>Tier-2 cap while broad; dawn recompute.</p><span class="mid">tier.reach</span></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Commitment offer</h4><p>14 offer + 3 response MESG. Gap: 12 of 14 bodies omit the deity's name.</p><div class="ev">Ledger:4104 · wording backlog</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Champion entry</h4><p>Entry message for Kyne only — none of the other 12 deities has one.</p><span class="mid">tier.reach</span><div class="ev">Nord.psc:508 · Ledger:1164</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Champion life</h4><p>Ongoing acts; Long-Devotion marks past 100.</p><span class="mid">champion.act</span></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — per-patron spells (7 deities); flag AND matching patron, dawn-applied <span class="meta">Nord.psc:252</span></div>
+  <div class="stub s-built"><b>Daedric flavor</b> — StateByRace + Hircine ⇄ Sovngarde tension</div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — NordAncestor</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Sources</h4><p>Ancestor standing, ancestral rest, hearth return.</p><div class="ev">NordAncestor.psc:21</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Metric &amp; postures</h4><p>0–75; forgotten → remembered → honored.</p><span class="mid">substrate.act</span><div class="ev">NordAncestor.psc:149</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Boon spells</h4><p>Always/Mid/High swap on tier.</p><div class="ev">SubstrateBase:269 · 071595/98/9B</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Dawn decay</h4><p>3-day grace, −1/day, floor 20 (0 under curse).</p><div class="ev">ProcessAncestorDawn</div></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>State handling</h4><p>Curse dispatch wired with one-shot guards.</p><div class="ev">Nord.psc:45</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Player messages</h4><p>All four: vampire and werewolf, onset and cure.</p><div class="ev">Nord.psc:733–762</div></div>
+  <div class="node s-none"><span class="badge">—</span><h4>Race effect</h4><p>No special earn effect; standard substrate floor drop.</p></div>
+</div></div>
+</section>
+
+<section id="imperial">
+<h2>Imperial <span class="tag">9 Divines · 1 civic broad lane · ImperialAncestor substrate</span></h2>
+<p class="racesub">Auto-started civic lane, no setup choice by design. Talos is gated behind the Concordat standing track — compliance versus conscience — which also flexes Arkay and Stendarr at the extremes.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Info-only start</h4><p>No choice by design; civic lane auto-starts with an info line.</p><div class="ev">MQ:3754 · Imperial.psc:618</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Broad accrual</h4><p>Civic favors; Tier-2 cap → focused patron.</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Concordat gate</h4><p>Talos locked/unlocked by Concordat standing; Arkay/Stendarr flex at extremes.</p><div class="ev">PDV_RepTrack_ConcordatStanding</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Commitment offer</h4><p>9 offer + 3 response MESG. Gap: 4 bodies omit the deity's name.</p><div class="ev">Ledger:4106</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Champion entry</h4><p>No entry message for any deity; crossing rides the generic tier lane.</p><div class="ev">repo-wide: none found</div></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — civic metric &gt;0 AND &gt;3d since civic source <span class="meta">Imperial.psc:107</span></div>
+  <div class="stub s-designed"><b>Concordat state beats</b> — 5 stance notification rows in the audit queue, unbuilt</div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — ImperialAncestor</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Sources</h4><p>Civic service, honest work, craft.</p><div class="ev">RecordCivicStandingScaled</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Metric &amp; postures</h4><p>quiet → steady → disciplined; public labels up to Exemplar.</p><div class="ev">Base:6603</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Boon spells</h4><p>Three slots wired.</p><div class="ev">Imperial.psc:81,365 · 0715AF/B2/B5</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Dawn decay</h4><p>Standard 3-day grace ladder.</p><div class="ev">ProcessCivicDawn</div></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>State handling</h4><p>VampireHalt, history scar, substrate wipe + 20.0 cure seed, reward resync.</p><div class="ev">Imperial.psc:250–273</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Player messages</h4><p>No CurseState MESG at all — only dashboard prose. The player is halted without being told.</p><div class="ev">Imperial.psc:518–523</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Race effect</h4><p>Vampire halt zeroes civic gain at dawn while cursed.</p><div class="ev">VampireHalt</div></div>
+</div></div>
+</section>
+
+<section id="altmer">
+<h2>Altmer <span class="tag">5 focus deities · faction alignment · AltmerAncestor substrate</span></h2>
+<p class="racesub">No generic broad lane: a faction alignment (Thalmor Orthodox / Divine Body / Psijic) over an always-on Auri-El foundation plus one focused secondary. Carries the orthodoxy-coherence crisis loop and the Lorkhan adjacency penalty.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Info-only start</h4><p>Auto-start with Altmer followup; alignment set through play, not a startup MESG.</p><div class="ev">MQ:3758</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Foundation + focus</h4><p>Auri-El always-on; one focused secondary from five.</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Crisis loop</h4><p>Orthodoxy-coherence crisis onset and resolve.</p><span class="mid">crisis.onset</span></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Commitment offer</h4><p>5 offer + 3 response MESG. Gap: 3 bodies omit the deity's name.</p><div class="ev">Ledger:4110</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Champion entry</h4><p>No entry message for any deity; generic tier lane only.</p></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — &gt;3d since last Altmer favor <span class="meta">Altmer.psc:1310</span></div>
+  <div class="stub s-built"><b>Lorkhan adjacency</b> — penalty lane, built</div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — AltmerAncestor</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Source</h4><p>Single allowlisted heritage practice.</p><div class="ev">altmer_heritage</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Metric &amp; postures</h4><p>quiet → ordered → exemplar; public labels to Exemplar Heritage.</p><div class="ev">Base:1819</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Boon spells</h4><p>Three slots wired.</p><div class="ev">Altmer.psc:1274 · 0715A7/A9/AB</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Dawn decay</h4><p>Standard ladder.</p><div class="ev">ProcessHeritageDawn</div></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>State handling</h4><p>Werewolf halt latch; cure branch clears the halt and its one-shot — the old "terminal, no cure lane" claim is disproven.</p><div class="ev">Altmer.psc:1381–1394</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Player messages</h4><p>Werewolf hard-halt onset only. No cure-side message; no vampire messages.</p><div class="ev">MQ:420 (sole record)</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Race effect</h4><p>Halt zeroes every Altmer earn lane while active.</p><div class="ev">Altmer.psc:171</div></div>
+</div></div>
+</section>
+
+<section id="bosmer">
+<h2>Bosmer <span class="tag">4 setup paths · no substrate quest · Green Pact meter</span></h2>
+<p class="racesub">Four-way path choice (Old Contract / Living Story / Exchange / Bandit Road); "broad" means breadth within your path. The only race whose reckoning can force a Renounce/Recommit decision — and the only race with no curse handling at all.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Path choice</h4><p>4 paths, confirm MESG each; destination-gated switching.</p><div class="ev">MQ:3599–3641 · Bosmer.psc:911</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Path accrual</h4><p>Per-path favors; Tier-2 cap.</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Green Pact meter</h4><p>5 violations in 2 days latches a penalty; −15 compliance + Y'ffre violation signal.</p><div class="ev">Bosmer.psc:1355–1394</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Forced reckoning</h4><p>3 apostate dawns → Recommit or Renounce, dawn-driven.</p><div class="ev">Bosmer.psc:1069–1113</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Formal offer</h4><p>No offer records, no race branch — reckoning stands in, but no deity ever formally asks.</p><div class="ev">Ledger:4103–4118</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Champion entry</h4><p>No entry message for Y'ffre, Z'en, or Baan Dar.</p></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — path-patron flag: Z'en / Baan Dar / else Y'ffre <span class="meta">Bosmer.psc:860</span></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — inline (no quest)</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Path state</h4><p>Path, PactBound, GreenPactCompliance, Lapsed, per-favor counts persisted.</p><div class="ev">Bosmer.psc:932–985</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Panel surfacing</h4><p>Path + pact-bound + evidence days on the Prisma panel.</p><div class="ev">Presenter:642,704</div></div>
+  <div class="node s-none"><span class="badge">—</span><h4>Metric / boons</h4><p>No metric, tiers, or boon spells — by design, outside the substrate roster.</p></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-none"><span class="badge">absent</span><h4>State handling</h4><p>No curse handler at all — falls to the base no-op.</p><div class="ev">Base:7689</div></div>
+  <div class="node s-none"><span class="badge">absent</span><h4>Player messages</h4><p>None exist.</p></div>
+  <div class="node s-none"><span class="badge">absent</span><h4>Race effect</h4><p>None — a cursed Bosmer's gods do not react.</p></div>
+</div></div>
+</section>
+
+<section id="breton">
+<h2>Breton <span class="tag">3 traditions · 12 deities · substrate retired</span></h2>
+<p class="racesub">Three-way tradition choice (Knight's Road / Hidden Art / Green Way) filtering a 12-deity roster, with three parallel meters. The substrate is retired and confirmed unfed; champion tier surfacing is deliberately suppressed.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Tradition choice</h4><p>3 traditions, confirm MESG each.</p><div class="ev">MQ:395,3602 · Breton.psc:646</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Tradition accrual</h4><p>Tradition breadth; asymmetric cross-tradition pressure via three meters.</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Commitment offer</h4><p>Offer MESG present; all 11 descriptions already name their deity — the only fully compliant race.</p><div class="ev">Ledger:4112</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Emergence</h4><p>The codebase's only <code>emergence.onset</code> emitter — provably unreachable (inside the quiet-presentation window) and keyed to tradition-set, not Devoted.</p><div class="ev">Breton.psc:669 · Presenter:181</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Champion entry</h4><p>None exists; focused champion tier surfacing actively suppressed.</p><div class="ev">ShouldSuppressBretonFocusedChampionTierSurface</div></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — &gt;5d since tradition signal (only non-standard grace with Orc/Redguard) <span class="meta">Breton.psc:503</span></div>
+  <div class="stub s-built"><b>Daedric flavor</b> — Hidden Art waives price + stigma for Mora/Hircine/Namira/Nocturnal <span class="meta">PathBase:573</span></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — retired</b></div><div class="track">
+  <div class="node s-designed"><span class="badge">designed</span><h4>Unfed shell</h4><p>ClearSubstrateBoons runs unconditionally; the spine pulse is a trace-only no-op; boon records exist but are never granted.</p><div class="ev">Breton.psc:87–96,741–755 · 0715B8/BA/BC</div></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-partial"><span class="badge">partial</span><h4>State handling</h4><p>RestorationState plus the Green Way ⇄ Werewolf druidic fork flip — state only.</p><div class="ev">Breton.psc:627–644</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Player messages</h4><p>No CurseState MESG; sole artifact is one Book of Days line. 5 curse-state rows sit in the audit queue.</p><div class="ev">Breton.psc:452</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Race effect</h4><p>Werewolf flips the druidic fork — a real mechanical response, silently.</p></div>
+</div></div>
+</section>
+
+<section id="dunmer">
+<h2>Dunmer <span class="tag">3 Reclamations · layered lanes · DunmerAncestor substrate</span></h2>
+<p class="racesub">No setup choice: ancestor ash-prayer always on, Good Daedra broad capped at Tier 2, one focused Reclamation on top. The focus never displaces the ancestors. Azura, Boethiah and Mephala are simultaneously patrons here and Princes on the Daedric track — the unified worship model.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Info-only start</h4><p>Layers auto-start; info box with Dunmer followup.</p><div class="ev">MQ:3756</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Layered accrual</h4><p>Ash-prayer + broad Good Daedra (non-focus ×0.75).</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Commitment offer</h4><p>Azura/Boethiah/Mephala offers in the ESP. Gap: 3 bodies omit the deity's name.</p><div class="ev">Ledger:4108 · Dunmer.psc:528</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Champion entry</h4><p>Fires live per Reclamation — but Prisma toast only; no message record exists.</p><div class="ev">Dunmer.psc:475 · Ledger:3790</div></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — basis is CURSE posture (1 or 2), not the substrate <span class="meta">Dunmer.psc:478</span></div>
+  <div class="stub s-designed"><b>Tribunal memory beats</b> — 3 notification rows in the audit queue, unbuilt</div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — DunmerAncestor</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Sources</h4><p>Portable and home prayer; the one substrate passing a fractional curse credit multiplier.</p><div class="ev">DunmerAncestor.psc:30–32</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Metric</h4><p>beginning → steady → strong. No posture layer.</p><div class="ev">Dunmer.psc:902</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Boon spells</h4><p>Three slots wired.</p><div class="ev">census:14847–14867</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>No decay</h4><p>The only metric substrate with no decay function — deliberate or missing? Owner call.</p></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-partial"><span class="badge">partial</span><h4>State handling</h4><p>Reachable and live — but sets curse posture only.</p><div class="ev">Dunmer.psc:552–562</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Player messages</h4><p>No CurseState MESG; 4 rows in the audit queue (AshSilenced, Scarred…).</p></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Race effect</h4><p>Curse posture drives the neglect basis and reduces substrate credit.</p></div>
+</div></div>
+</section>
+
+<section id="khajiit">
+<h2>Khajiit <span class="tag">5 focus deities · Broad Lunar Lattice · KhajiitLunar substrate</span></h2>
+<p class="racesub">Automatic lattice lane; focus emerges behaviorally instead of by offer — and Khajiit is the only race where that emergence beat is actually built. The moon cycle reads the game's real lunar phase into an 8-slot god alignment.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Auto lattice</h4><p>No choice by design; "path will emerge" info box.</p><div class="ev">MQ:3760</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Lattice accrual</h4><p>Lunar favors; Lattice Resonance +20%.</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>No formal offer</h4><p>Deliberate — enforced in two independent places; emergence substitutes.</p><div class="ev">Ledger:4103 · Base:7778</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Focus emergence</h4><p>First-emergence one-shot: per-focus MESG (all five in the ESP) + Book of Days entry. The only real emergence beat in the mod.</p><span class="mid">focus.emergence</span><div class="ev">Khajiit.psc:1603–1634</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Champion entry</h4><p>Fires per focus deity — Prisma only, no message record.</p><div class="ev">Khajiit.psc:1717–1732</div></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — &gt;3d since lunar source; night stamina debuff, currently unexplained to the player <span class="meta">Khajiit.psc:1735</span></div>
+  <div class="stub s-designed"><b>Act-specific signals</b> — 4 favor-noted/marked rows in the audit queue</div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — KhajiitLunar</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Sources</h4><p>7: moon observance, road-home, caravan defense, Baan Dar reversal, Rajhin theft, Alkosh milestone…</p><div class="ev">KhajiitLunar.psc:18</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Moon cycle</h4><p>8-slot god alignment from the real game phase.</p><div class="ev">ObserveMoonPhase</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Boon spells</h4><p>Always/High dedicated; Mid deliberately re-homed to the T1 blessing (spec-confirmed).</p><div class="ev">MQ:290 · census:14157</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>No dawn decay</h4><p>The metric never decays — sanctioned in the decay audit; neglect is the separate channel.</p><div class="ev">DecayAudit:94</div></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>State handling</h4><p>Live dispatch + dawn posture refresh.</p><div class="ev">Khajiit.psc:1474–1495</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Player messages</h4><p>Vampire/werewolf onset + cure, plus the ShadowDrift entry message.</p><div class="ev">Khajiit.psc:1398–1406</div></div>
+  <div class="node s-none"><span class="badge">—</span><h4>Race effect</h4><p>No earn halt; standard handling.</p></div>
+</div></div>
+</section>
+
+<section id="argonian">
+<h2>Argonian <span class="tag">Hist + Sithis · 3 always-on layers · ArgonianHist substrate</span></h2>
+<p class="racesub">No choices anywhere: Hist relation, People, and Void run from the first minute. The only multi-ledger substrate — a practice metric plus three relation ledgers with two separate dawn decays. Sithis wakes only after three void signals.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Info-only start</h4><p>Hist / people / borrowed gods / Void followup box.</p><div class="ev">MQ:3762</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Layered accrual</h4><p>Hist maintenance, people support, void signals.</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>No formal offer</h4><p>Deliberate — two-place enforcement, same as Khajiit.</p><div class="ev">Ledger:4103 · Base:7778</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Sithis activation</h4><p>3-signal gate opens a scoring lane. Announced by accident: "crossing a Void threshold" fires on every later signal too, toast context empty, no Book of Days entry.</p><div class="ev">ArgonianHist.psc:352 · Presenter:1507</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Champion entry</h4><p>No champion presentation call; no Hist or Sithis entry message.</p><div class="ev">Argonian.psc:993–1048</div></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — basis is Hist posture SILENCED/CORRUPTED + grace <span class="meta">Argonian.psc:1058</span></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — ArgonianHist (multi-ledger)</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Sources</h4><p>Hist maintenance, people support, bed-of-choice, void signal, cooked meal, sacred water.</p></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Metric + 3 ledgers</h4><p>Shared practice metric, plus Hist / People / Void relations (deltas 5/4/3/2).</p><span class="mid">substrate.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Postures</h4><p>Normal → Distant → Strained → Silenced → Corrupted; drives dream text.</p><div class="ev">ArgonianHist.psc:360</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Boon spells</h4><p>Three slots wired.</p><div class="ev">census:14627–14647</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Two dawn decays</h4><p>Hist relation decay and practice-metric decay, separately.</p></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>State handling</h4><p>Live dispatch, one-shot feedback flags.</p><div class="ev">Argonian.psc:1096–1124</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Player messages</h4><p>All four onset/cure messages exist and show.</p></div>
+  <div class="node s-none"><span class="badge">—</span><h4>Race effect</h4><p>Standard substrate floor behavior.</p></div>
+</div></div>
+</section>
+
+<section id="orc">
+<h2>Orc <span class="tag">Malacath only · 3 life-modes · inline substrate</span></h2>
+<p class="racesub">One god, three lives: Stronghold, City, or Legion/Exile, chosen at setup with Malacath set as innate patron — no offer arc at all. Conduct is observed, never petitioned. "Mode ceilings" turn out to be gain-rate multipliers, not piety caps.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Life-mode choice</h4><p>3 modes with confirm MESG; Malacath activated as patron at setup.</p><div class="ev">MQ:3605–3647 · Orc.psc:920–936</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Conduct accrual</h4><p>Per-mode favors at rate multipliers 1.0 / 0.75 / 0.6 — rates, not ceilings.</p><span class="mid">favor.act</span><div class="ev">Orc.psc:1186</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Blood-Kin gate</h4><p>One-shot latch, immediate mode switch; built and reachable.</p><div class="ev">Orc.psc:291–307</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>No formal offer</h4><p>Deliberate — innate patron replaces the arc.</p><div class="ev">Orc.psc:930</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Champion entry</h4><p>No origin-lane entry message; only the separate Malacath Prince path has one.</p><div class="ev">DaedricPath_Malacath.psc:13</div></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — CodePressure OR &gt;5d since mode signal; onset fires a HearthHeld notice <span class="meta">Orc.psc:801</span></div>
+  <div class="stub s-designed"><b>Malacath neglect textures</b> — 4 notification rows in the audit queue</div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — inline (no quest)</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Mode state</h4><p>Per-mode weight keys, evidence days, AncestorSpine float.</p><div class="ev">Orc.psc:410–448,562</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Surfacing</h4><p>Substrate toast + Book of Days + panel forge instrument.</p><div class="ev">Presenter:638,700</div></div>
+  <div class="node s-none"><span class="badge">—</span><h4>Metric / boons</h4><p>No metric or boon spells — by design.</p></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-partial"><span class="badge">partial</span><h4>State handling</h4><p>Wired: CodePressure, werewolf-onset Malacath minus. VampireScar is written and never read — a dead key.</p><div class="ev">Orc.psc:873–887</div></div>
+  <div class="node s-designed"><span class="badge">designed</span><h4>Player messages</h4><p>No CurseState MESG — the Malacath minus lands silently.</p></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Race effect</h4><p>CodePressure feeds the neglect basis; werewolf costs Malacath favor.</p></div>
+</div></div>
+</section>
+
+<section id="redguard">
+<h2>Redguard <span class="tag">7 deities · 3 sects · inline substrate</span></h2>
+<p class="racesub">Sect choice (Crown / Forebear / Ash'abah) with an always-on ancestor-reverence layer. The Ash'abah mid-game entry gap is confirmed closed — a unique-undead killing blow now routes the burden. The vampire earn-halt remains specced, not built.</p>
+<div class="lane"><div class="lanehead"><b>Spine</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Sect choice</h4><p>3 sects with confirm MESG.</p><div class="ev">MQ:3603–3645 · Redguard.psc:929</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Sect accrual</h4><p>Separate broad lane per sect; Tier-2 cap.</p><span class="mid">favor.act</span></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Ash'abah entry</h4><p>Mid-game entry closed: unique-undead kill route + contextual route, both gated.</p><div class="ev">ActionRouter:198 · Redguard.psc:474–497</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Commitment offer</h4><p>Only 3 of 7 deities have offer records (Tu'whacca/Leki/HoonDing); eligibility returns false for the other four. Intent or unfinished — owner call.</p><div class="ev">Ledger:4114 · Redguard.psc:824</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Champion entry</h4><p>Built and reachable — but keyed to the 3 sects, not the 7 deities.</p><div class="ev">Redguard.psc:655–698</div></div>
+</div>
+<div class="stubs">
+  <div class="stub s-built"><b>Neglect</b> — CyclePressure OR &gt;5d since sect signal; onset emits a Tu'whacca abandonment minus <span class="meta">Redguard.psc:763</span></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Substrate — inline (no quest)</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>Sect state</h4><p>Sect weights, evidence days, AncestorSpine pulses.</p><div class="ev">Redguard.psc:436–467</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Surfacing</h4><p>Sect-entry notif + toast + panel sects instrument — but the spine value itself never reaches the panel.</p><div class="ev">Presenter:640,702</div></div>
+</div></div>
+<div class="lane"><div class="lanehead"><b>Curse</b></div><div class="track">
+  <div class="node s-built"><span class="badge">built</span><h4>State handling</h4><p>Live dispatch; all transitions tracked.</p><div class="ev">Redguard.psc:848–888</div></div>
+  <div class="node s-built"><span class="badge">built</span><h4>Player messages</h4><p>All four onset/cure messages exist and show.</p><div class="ev">MQ:464–467</div></div>
+  <div class="node s-partial"><span class="badge">partial</span><h4>Race effect</h4><p>Earn-halt NOT built: VampireScar written, read nowhere; ReentryNeeded only ever cleared; CyclePressure feeds neglect only.</p><div class="ev">Redguard.psc:853,389,453</div></div>
+</div></div>
+</section>
+
+<section id="matrix">
+<h2>Comparison matrix</h2>
+<p class="racesub">The unevenness at a glance. Pills: <span class="pill b">built</span> <span class="pill p">partial</span> <span class="pill d">designed</span> <span class="pill n">absent / deliberate none</span></p>
+<div class="mtx"><table>
+<tr><th>Race</th><th>Setup choice</th><th>Substrate</th><th>Substrate decay</th><th>Neglect basis (grace)</th><th>Formal offer</th><th>Emergence beat</th><th>Champion entry</th><th>Curse messages</th><th>Curse earn effect</th></tr>
+<tr><td class="race">Nord</td><td><b>2 lanes</b></td><td><span class="pill b">quest</span></td><td>standard</td><td>patron flag (3d)</td><td><span class="pill p">14, 12 unnamed</span></td><td><span class="pill n">generic tier</span></td><td><span class="pill p">Kyne only</span></td><td><span class="pill b">4/4</span></td><td><span class="pill n">none</span></td></tr>
+<tr><td class="race">Imperial</td><td>auto (civic)</td><td><span class="pill b">quest</span></td><td>standard</td><td>civic source (3d)</td><td><span class="pill p">9, 4 unnamed</span></td><td><span class="pill n">generic tier</span></td><td><span class="pill d">none</span></td><td><span class="pill d">none</span></td><td><span class="pill b">civic halt</span></td></tr>
+<tr><td class="race">Altmer</td><td>auto (alignment)</td><td><span class="pill b">quest</span></td><td>standard</td><td>favor time (3d)</td><td><span class="pill p">5, 3 unnamed</span></td><td><span class="pill n">generic tier</span></td><td><span class="pill d">none</span></td><td><span class="pill p">were-onset only</span></td><td><span class="pill b">full halt</span></td></tr>
+<tr><td class="race">Bosmer</td><td><b>4 paths</b></td><td><span class="pill n">inline</span></td><td>—</td><td>path patron (3d)</td><td><span class="pill d">none (reckoning)</span></td><td><span class="pill n">generic tier</span></td><td><span class="pill d">none</span></td><td><span class="pill n">no handler</span></td><td><span class="pill n">none</span></td></tr>
+<tr><td class="race">Breton</td><td><b>3 traditions</b></td><td><span class="pill d">retired, unfed</span></td><td>—</td><td>tradition signal (5d)</td><td><span class="pill b">all named</span></td><td><span class="pill p">dead emitter</span></td><td><span class="pill d">suppressed</span></td><td><span class="pill d">none</span></td><td><span class="pill b">druidic fork</span></td></tr>
+<tr><td class="race">Dunmer</td><td>auto (layers)</td><td><span class="pill b">quest</span></td><td><span class="pill p">none — owner call</span></td><td>curse posture</td><td><span class="pill p">3, 3 unnamed</span></td><td><span class="pill n">generic tier</span></td><td><span class="pill p">Prisma only</span></td><td><span class="pill d">none</span></td><td><span class="pill b">credit cut</span></td></tr>
+<tr><td class="race">Khajiit</td><td>auto (lattice)</td><td><span class="pill b">quest</span></td><td>none (sanctioned)</td><td>lunar time (3d)</td><td><span class="pill n">deliberate none</span></td><td><span class="pill b">real beat</span></td><td><span class="pill p">Prisma only</span></td><td><span class="pill b">full + drift</span></td><td><span class="pill n">none</span></td></tr>
+<tr><td class="race">Argonian</td><td>auto (3 layers)</td><td><span class="pill b">multi-ledger</span></td><td>two decays</td><td>Hist posture</td><td><span class="pill n">deliberate none</span></td><td><span class="pill n">N/A by design</span></td><td><span class="pill d">none</span></td><td><span class="pill b">4/4</span></td><td><span class="pill n">none</span></td></tr>
+<tr><td class="race">Orc</td><td><b>3 life-modes</b></td><td><span class="pill n">inline</span></td><td>—</td><td>mode signal (5d)</td><td><span class="pill n">innate patron</span></td><td><span class="pill n">generic tier</span></td><td><span class="pill d">none</span></td><td><span class="pill d">none</span></td><td><span class="pill p">dead scar key</span></td></tr>
+<tr><td class="race">Redguard</td><td><b>3 sects</b></td><td><span class="pill n">inline</span></td><td>—</td><td>sect signal (5d)</td><td><span class="pill p">3 of 7 deities</span></td><td><span class="pill n">generic tier</span></td><td><span class="pill p">sects, not deities</span></td><td><span class="pill b">4/4</span></td><td><span class="pill p">halt unbuilt</span></td></tr>
+</table></div>
+<div class="note"><b>What the matrix says.</b> The spine and substrates are solidly built everywhere they're meant to exist. The unevenness is concentrated in the announcement layer: champion entry is a Kyne-only feature shown through the standard path, emergence is Khajiit-only, and five races handle curses correctly while telling the player nothing. Two dead state keys (Orc and Redguard VampireScar) and the Dunmer no-decay question are the loose bolts. This matches the tranche's running theme: the mod computes state transitions reliably and announces them inconsistently.</div>
+</section>
+
+</div>

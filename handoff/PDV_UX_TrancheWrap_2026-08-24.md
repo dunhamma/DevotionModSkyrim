@@ -104,6 +104,25 @@ transitions reliably and announces them inconsistently. About 19 of the audit's 
 `Consider new implementation` rows are that single missing capability rather than 19
 separate features.
 
+## 3b. Race Architecture Atlas (added later the same day)
+
+All ten races' architecture was mapped and node-verified with file evidence by three
+parallel source sweeps, then published as a wireframe atlas: shared Daedric track drawn
+once, and per race a Spine, Substrate, and expanded Curse lane with built / partial /
+designed-only / absent markings, plus a comparison matrix.
+
+Durable copy: `handoff/PDV_RaceArchitectureAtlas_2026-08-24.html` (live artifact link in
+the session). Headline cross-race findings: champion-entry is effectively a Kyne-only
+feature (Redguard has sect-keyed entries; Dunmer/Khajiit fire it Prisma-only; six races
+none — Breton's actively suppressed); Khajiit has the mod's only real emergence beat (the
+sole other emitter, Breton, is provably unreachable); five races handle curses correctly
+but show the player no message (Bosmer has no curse handler at all); Redguard's formal
+offers cover only 3 of 7 deities; two dead state keys (Orc/Redguard VampireScar written,
+never read); Dunmer is the only metric substrate with no decay function (owner call
+whether deliberate). The Altmer "terminal curse, no cure lane" claim was disproven — the
+cure clears the halt; only the cure-side message is missing. The Ash'abah mid-game entry
+gap is confirmed closed in current source.
+
 ## 4. Backlog queue for the next tranches
 
 Ranked, from `PDV_WordingRevisionBacklog.md`, `PDV_V2_Backlog.md`,
