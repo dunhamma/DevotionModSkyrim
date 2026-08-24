@@ -47,9 +47,39 @@ Three consequences, in descending order of how much they matter:
    and misleading on every subsequent void signal for the rest of the save. This is a live
    copy defect, not a missing feature.
 2. **The toast drops the only explanatory text there is.** `SendPrismaEventToast` is
-   called with an empty context argument, so the good phrase reaches the Ledger driver
-   record but never the toast the player actually sees. The player gets a generic Sithis
-   favor toast; the sentence that would explain it exists and is discarded at the surface.
+   called with an empty context argument, so the good phrase never reaches the toast the
+   player actually sees. The player gets a generic Sithis favor toast; the sentence that
+   would explain it exists and is discarded at the surface.
+
+**Where the phrase does render — the Dashboard, and nowhere else.** Traced in full:
+`RecordDeityDriver` (`PDV_DevotionLedger.psc:3309-3320`) humanizes the reason and pushes
+it onto a **rolling 6-entry FIFO** on the deity form (`PDV.Driver.Reasons` / `.Deltas` /
+`.Days`). Its only reader is `GetDeityDriversJson` (`:660-680`), whose only caller is
+`AppendDashboardGod` (`PDV_PrismaPresenter.psc:532`), which embeds it as `"drivers":[…]`
+in the per-god **Dashboard** payload. The view renders it through `groupDrivers()`
+(`native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/app.js:1869`) into a
+`god__drivers` list whose empty state reads "Recent acts will show here."
+
+Two consequences follow from that specific instrument:
+
+- **`groupDrivers` aggregates by reason string**, summing counts. So the repeated
+  post-activation signals collapse into a single Dashboard row reading *"crossing a Void
+  threshold"* with a count of 2, 3, 4… A threshold crossing is by definition a one-time
+  event; presenting it with a multiplier is self-evidently wrong to a player, and the
+  grouping makes the defect more visible rather than less.
+- **The 6-entry cap makes even the true instance transient.** Six further Sithis driver
+  events push the activation out of the buffer. This is a recent-acts window, not a
+  record — the wrong instrument for a once-per-save threshold.
+
+**The Book of Days receives nothing.** It is a separate mechanism,
+`Manager.Prisma.AppendBookOfDaysEntry(text, day, category, lane, …)`. The Argonian runtime
+makes exactly two such calls — the Hist adaptation at `:476` and "A water that remembers."
+at `:569`, both on the `hist` lane. Searching every `AppendBookOfDaysEntry` call in
+`live-source` for Sithis or Void returns nothing. Sithis activation is chronicled nowhere.
+
+That is the actual shape of the gap: the permanent instrument (Book of Days) is unused for
+a permanent event, while the transient instrument (Dashboard recent-acts) carries
+threshold wording it cannot honour.
 3. **The run-up is silent, and that is correct.** Signals 1 and 2 produce nothing because
    `:840`'s comment states the rule deliberately: "Void piety belongs to Sithis only after
    the relation is explicitly active." Pre-activation silence is design, not a gap.
