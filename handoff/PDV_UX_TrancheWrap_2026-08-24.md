@@ -90,10 +90,17 @@ current runtime` against records that are demonstrably different moments, so the
 "311 reconciled" is over-counted for this tier. Five owner decisions are parked in the
 brief's section 8. Nothing is approved for implementation.
 
-The two manual-review contradictions were **not** resolved this tranche — the Marked-tier
-finding took the sitting. They remain first up:
-`PDV_Notif_Argonian_SithisActivation_FullActivation` and
-`PDV_Notif_Khajiit_NeglectTexture_SubstrateThinning`.
+Both manual-review contradictions were then resolved — see
+`handoff/PDV_UX_ManualReviewResolutions_2026-08-24.md`. The Argonian Sithis row is a real
+gap: the three-signal threshold is live but nothing detects the crossing, so a scoring
+lane opens silently. The Khajiit row is not a contradiction at all — "the substrate does
+not decay" governs the lunar metric, while the neglect spell is the separate lane-neglect
+channel the same design document specifies; it needs reclassifying, not fixing.
+
+Those two plus the Marked-tier finding converged on one shape: PDV computes state
+transitions reliably and announces them inconsistently. About 19 of the audit's 45
+`Consider new implementation` rows are that single missing capability rather than 19
+separate features.
 
 ## 4. Backlog queue for the next tranches
 
