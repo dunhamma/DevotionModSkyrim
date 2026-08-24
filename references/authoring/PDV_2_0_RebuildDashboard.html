@@ -2,335 +2,568 @@
   LIVING source for the published Artifact "Devotion 2.0 Rebuild":
   https://claude.ai/code/artifact/a5ac703a-c086-4929-9181-0ecb1572ee73
 
-  This supersedes the old convention recorded in the 2026-08-18 ARCHIVE snapshot
-  (PDV_2_0_RebuildDashboard_2026-08-18.html), which said "the living version is the
-  claude.ai artifact." That let the two drift: the artifact was last hand-updated Aug 19
-  (stamped feature/v3-origin-extraction @ e790c492), while the branch has since landed
-  Phase C waves 1/2a/2b (empty-body dedup) past that point. This file is now the source
-  of truth; the artifact is a published mirror of it.
+  This file is the source of truth; the artifact is a published mirror of it. It
+  supersedes the convention recorded in the 2026-08-18 ARCHIVE snapshot
+  (PDV_2_0_RebuildDashboard_2026-08-18.html), which named the artifact as living and let
+  the two drift.
 
-  To update: pull current figures from git log on the active V3 branch (currently
-  feature/v3-origin-extraction), the finish-plan phase state (A-I below), and the
-  gate/audit docs in this folder; edit the KPIs / modules / timeline / phase list to
-  match; then republish this exact file to the URL above (Artifact tool, action
-  publish, url=<the URL above>) to refresh the link. Keep this a bare content fragment
-  (no <!DOCTYPE>/<html>/<head>/<body> -- the publish step wraps it) so it stays
-  publish-ready as-is.
+  INTEGRATION BASELINE: feature/v3-big-update. Work on a descendant branch is pending
+  integration until it lands there; report its commits and evidence separately rather
+  than folding it into the baseline figures.
 
-  To freeze a point-in-time record instead of updating in place, copy this file to
-  PDV_2_0_RebuildDashboard_<date>.html, wrap it in a standalone <html><head>...
-  document (see the 2026-08-18 archive for the pattern), mark it ARCHIVE in the
-  eyebrow/footer, and leave this file to keep moving.
+  EVIDENCE RULE for this page: every figure carries its bucket. "re-run" means a gate was
+  executed for this revision and its EXIT CODE read; "readback" means a direct count off
+  the live tree or the ESP; "doc" means a claim carried from a handoff or closeout and not
+  re-derived. Never promote a doc claim to a re-run by restating it.
+
+  TO UPDATE: re-run the gates named in the Evidence section, re-count the module census,
+  reconcile the phase strip (A-I), edit the figures to match, then republish this exact
+  file to the URL above (Artifact tool, action publish, url=<the URL above>). Keep it a
+  bare content fragment -- no <!DOCTYPE>/<html>/<head>/<body>, the publish step wraps it.
+
+  TO FREEZE a point-in-time record instead: copy to PDV_2_0_RebuildDashboard_<date>.html,
+  wrap it in a standalone document, mark it ARCHIVE in the eyebrow and footer, and leave
+  this file to keep moving.
 -->
 <title>Devotion 2.0 Rebuild</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
 <style>
   :root{
-    --ground:#F5F3EF; --surface:#FBFAF7; --surface-2:#EEEBE4;
-    --ink:#211E2A; --ink-soft:#57525F; --ink-mute:#8B8792;
-    --border:#E4E0D7; --accent:#6B5CA5; --accent-soft:#ECE8F5;
-    --done:#1D8F6B; --active:#B77A22; --pending:#9A96A0;
-    --estimate:#C0563B; --actual:#6B5CA5; --grid:#E7E3DA;
-    --serif:Iowan Old Style,"Palatino Linotype",Palatino,Georgia,serif;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --ground:#F4F2EC;
+    --surface:#FCFBF8;
+    --sunken:#EBE7DE;
+    --line:#DFDACE;
+    --line-soft:#EAE6DC;
+    --ink:#1F1C26;
+    --ink-2:#54505F;
+    --ink-3:#8A8595;
+    --accent:#5B4B96;
+    --accent-wash:#EDEAF6;
+    --good:#1B7F5E;
+    --good-wash:#E3F0EA;
+    --warn:#A9701A;
+    --warn-wash:#F5EBDA;
+    --bad:#AB4529;
+    --bad-wash:#F6E6E0;
+    --idle:#8A8595;
+    --idle-wash:#EDEAE3;
+
+    --display:"Spectral","Palatino Linotype",Palatino,Georgia,serif;
+    --body:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   }
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-    --ground:#16151B; --surface:#1E1C24; --surface-2:#262430;
-    --ink:#EAE7F0; --ink-soft:#B7B2C1; --ink-mute:#847F8E;
-    --border:#2E2B38; --accent:#9A8BD6; --accent-soft:#2A2540;
-    --done:#3FB88C; --active:#D69A3E; --pending:#7C7886;
-    --estimate:#E07254; --actual:#9A8BD6; --grid:#2A2734;
-  }}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#141319;
+      --surface:#1C1A23;
+      --sunken:#26232F;
+      --line:#332F3D;
+      --line-soft:#282531;
+      --ink:#EAE7F1;
+      --ink-2:#B3AEBF;
+      --ink-3:#7E7989;
+      --accent:#A192DE;
+      --accent-wash:#282243;
+      --good:#4CBE93;
+      --good-wash:#193227;
+      --warn:#D8A046;
+      --warn-wash:#332813;
+      --bad:#E0765A;
+      --bad-wash:#37201A;
+      --idle:#7E7989;
+      --idle-wash:#26232C;
+    }
+  }
   :root[data-theme="dark"]{
-    --ground:#16151B; --surface:#1E1C24; --surface-2:#262430;
-    --ink:#EAE7F0; --ink-soft:#B7B2C1; --ink-mute:#847F8E;
-    --border:#2E2B38; --accent:#9A8BD6; --accent-soft:#2A2540;
-    --done:#3FB88C; --active:#D69A3E; --pending:#7C7886;
-    --estimate:#E07254; --actual:#9A8BD6; --grid:#2A2734;
+    --ground:#141319;
+    --surface:#1C1A23;
+    --sunken:#26232F;
+    --line:#332F3D;
+    --line-soft:#282531;
+    --ink:#EAE7F1;
+    --ink-2:#B3AEBF;
+    --ink-3:#7E7989;
+    --accent:#A192DE;
+    --accent-wash:#282243;
+    --good:#4CBE93;
+    --good-wash:#193227;
+    --warn:#D8A046;
+    --warn-wash:#332813;
+    --bad:#E0765A;
+    --bad-wash:#37201A;
+    --idle:#7E7989;
+    --idle-wash:#26232C;
   }
+
   *{box-sizing:border-box}
-  body{background:var(--ground); color:var(--ink); font-family:var(--sans);
-    line-height:1.6; margin:0; padding:32px 20px 56px;
-    -webkit-font-smoothing:antialiased; font-variant-numeric:tabular-nums;}
-  .wrap{max-width:860px; margin:0 auto;}
-  .eyebrow{font-size:12px; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--accent); font-weight:600; margin:0 0 8px;}
-  h1{font-family:var(--serif); font-weight:600; font-size:34px; line-height:1.1;
-    margin:0 0 8px; letter-spacing:-.01em; text-wrap:balance;}
-  .lede{color:var(--ink-soft); font-size:16px; margin:0 0 6px; max-width:60ch;}
-  .stamp{color:var(--ink-mute); font-size:13px; font-family:var(--mono); margin:0; line-height:1.6;}
-  h2{font-family:var(--serif); font-weight:600; font-size:19px; margin:38px 0 14px;
-    letter-spacing:-.01em;}
-  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-    gap:12px; margin-top:24px;}
-  .kpi{background:var(--surface); border:1px solid var(--border); border-radius:12px;
-    padding:14px 16px;}
-  .kpi .lbl{font-size:12.5px; color:var(--ink-soft); margin:0 0 4px;}
-  .kpi .val{font-family:var(--serif); font-size:27px; font-weight:600; line-height:1;}
-  .kpi .val small{font-size:15px; color:var(--ink-mute); font-weight:400;}
-  .kpi .sub{font-size:11.5px; color:var(--ink-mute); margin:5px 0 0;}
-  .steps{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px;}
-  .step{font-size:13px; padding:6px 12px; border-radius:999px; border:1px solid var(--border);
-    color:var(--ink-mute); display:inline-flex; align-items:center; gap:6px;}
-  .step.done{background:var(--accent-soft); color:var(--accent); border-color:transparent;}
-  .step.now{background:var(--surface); color:var(--active); border:1.5px solid var(--active);}
-  .sep{color:var(--ink-mute); font-size:12px;}
-  .card{background:var(--surface); border:1px solid var(--border); border-radius:14px;
-    padding:18px 18px 14px;}
-  svg{display:block; width:100%; height:auto;}
-  .lg{display:flex; gap:18px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-soft);
-    margin-top:10px;}
-  .lg span{display:inline-flex; align-items:center; gap:7px;}
-  .swatch{width:22px; height:0; border-top-width:3px; border-top-style:solid; display:inline-block;}
-  .take{font-size:14px; color:var(--ink-soft); margin:12px 2px 0; border-left:2px solid var(--accent);
-    padding-left:12px;}
-  .mod{display:grid; grid-template-columns:104px 1fr auto; align-items:center; gap:12px;
-    padding:5px 0;}
-  .mod .nm{font-size:13.5px; font-weight:500;}
-  .track{height:20px; background:var(--surface-2); border-radius:5px; overflow:hidden;}
-  .fill{height:100%; border-radius:5px;}
-  .mod .meta{font-size:12px; color:var(--ink-soft); min-width:186px; text-align:right;}
-  .modlegend{display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); margin-top:12px;}
-  .modlegend span{display:inline-flex; align-items:center; gap:6px;}
-  .dot{width:10px; height:10px; border-radius:3px; display:inline-block;}
-  .gm{margin:2px 0 16px;}
-  .gm:last-of-type{margin-bottom:4px;}
-  .gm .glbl{font-size:13.5px; font-weight:500; margin:0 0 7px;}
-  .grow{display:grid; grid-template-columns:46px 1fr 118px; align-items:center; gap:10px; padding:2px 0;}
-  .grow .tag{font-size:11.5px; color:var(--ink-mute); font-family:var(--mono);}
-  .gtrack{height:13px; background:var(--surface-2); border-radius:4px; overflow:hidden;}
-  .gfill{height:100%; border-radius:4px;}
-  .grow .num{font-size:12px; color:var(--ink-soft); text-align:right;}
-  /* segmented bar */
-  .seg{display:flex; height:30px; border-radius:6px; overflow:hidden; border:1px solid var(--border);}
-  .seg > span{display:flex; align-items:center; justify-content:center; font-size:11px;
-    color:#fff; font-weight:600; min-width:0;}
-  .seglg{display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); margin-top:11px;}
-  .seglg span{display:inline-flex; align-items:center; gap:6px;}
-  /* property per-race rows */
-  .prow{display:grid; grid-template-columns:78px 1fr 40px; align-items:center; gap:10px; padding:2.5px 0;}
-  .prow .rlbl{font-size:12.5px; color:var(--ink-soft);}
-  .ptrack{height:12px; background:var(--surface-2); border-radius:4px; overflow:hidden;}
-  .pfill{height:100%; border-radius:4px; background:var(--accent);}
-  .prow .pn{font-size:11.5px; color:var(--ink-mute); text-align:right; font-family:var(--mono);}
-  /* finish plan phases */
-  .ph{display:grid; grid-template-columns:34px 1fr; gap:12px; padding:9px 0; border-bottom:1px solid var(--border);}
-  .ph:last-child{border-bottom:none;}
-  .ph .code{font-family:var(--serif); font-size:20px; font-weight:600; color:var(--accent); line-height:1.2;}
-  .ph .body .pt{font-size:14px; font-weight:600; margin:0 0 2px;}
-  .ph .body .pd{font-size:12.8px; color:var(--ink-soft); margin:0;}
-  .ph .body .dep{font-size:11px; color:var(--ink-mute); font-family:var(--mono); margin-top:3px; display:inline-block;}
-  .ph.blk{background:var(--accent-soft); border-radius:8px; padding:9px 10px; border-bottom:1px solid transparent;}
-  /* findings list */
-  .find{display:grid; grid-template-columns:auto 1fr; gap:11px; padding:7px 0; align-items:baseline;}
-  .find .q{font-family:var(--serif); font-size:17px; font-weight:600; color:var(--estimate); min-width:58px; text-align:right; white-space:nowrap;}
-  .find .txt{font-size:13px; color:var(--ink-soft);}
-  .find .txt b{color:var(--ink); font-weight:600;}
-  .tl{border-left:2px solid var(--border); margin-left:6px; padding-left:20px;
-    display:flex; flex-direction:column; gap:15px;}
-  .ev{position:relative;}
-  .ev::before{content:""; position:absolute; left:-27px; top:4px; width:11px; height:11px;
-    border-radius:50%; background:var(--done); border:2px solid var(--ground);}
-  .ev.pre::before{background:var(--accent);}
-  .ev.last::before{background:var(--active);}
-  .ev .t{font-family:var(--mono); font-size:12px; color:var(--ink-mute);}
-  .ev .d{font-size:14px;}
-  footer{margin-top:40px; padding-top:16px; border-top:1px solid var(--border);
-    font-size:12.5px; color:var(--ink-mute); font-family:var(--mono); line-height:1.7;}
+
+  body{
+    margin:0;
+    padding:40px 22px 64px;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:15px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .page{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+
+  /* ---- masthead ---- */
+  .mast{display:flex;flex-direction:column;gap:14px}
+  .eyebrow{
+    margin:0;font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--accent);font-weight:500;
+  }
+  h1{
+    font-family:var(--display);font-weight:600;font-size:clamp(38px,6vw,54px);
+    line-height:1.02;letter-spacing:-.02em;margin:0;text-wrap:balance;
+  }
+  .lede{margin:0;max-width:62ch;font-size:16.5px;color:var(--ink-2)}
+  .lede b{color:var(--ink);font-weight:600}
+  .stamp{
+    margin:0;font-family:var(--mono);font-size:12px;line-height:1.75;color:var(--ink-3);
+    padding-top:12px;border-top:1px solid var(--line);
+  }
+  .stamp b{color:var(--ink-2);font-weight:500}
+
+  /* ---- section scaffolding ---- */
+  section{display:flex;flex-direction:column;gap:16px}
+  .head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  h2{
+    font-family:var(--display);font-weight:600;font-size:23px;letter-spacing:-.01em;
+    margin:0;text-wrap:balance;
+  }
+  .bucket{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:2px 7px;
+    white-space:nowrap;
+  }
+  .note{margin:0;font-size:14px;color:var(--ink-2);max-width:70ch}
+  .note b{color:var(--ink);font-weight:600}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+
+  /* ---- kpi strip ---- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .kpi{background:var(--surface);padding:16px 18px 15px;display:flex;flex-direction:column;gap:3px}
+  .kpi .k{font-size:12px;color:var(--ink-2);letter-spacing:.01em}
+  .kpi .v{font-family:var(--display);font-size:33px;font-weight:600;line-height:1.05;letter-spacing:-.015em}
+  .kpi .v em{font-style:normal;font-size:16px;color:var(--ink-3);font-weight:400}
+  .kpi .s{font-size:11.5px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.01em}
+
+  /* ---- before / after ---- */
+  .shrink{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:620px){.shrink{grid-template-columns:1.15fr .85fr;align-items:center}}
+  .bars{display:flex;flex-direction:column;gap:14px}
+  .bar-row{display:flex;flex-direction:column;gap:5px}
+  .bar-lbl{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+  .bar-lbl strong{color:var(--ink);font-weight:500;font-size:12px}
+  .bar{height:26px;background:var(--sunken);border-radius:4px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:4px}
+  .metrics{display:flex;flex-direction:column;gap:0;border-left:2px solid var(--accent);padding-left:16px}
+  .metric{display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px solid var(--line-soft);font-size:13px}
+  .metric:last-child{border-bottom:none}
+  .metric span{color:var(--ink-2)}
+  .metric b{font-family:var(--mono);font-weight:500;font-size:12.5px}
+
+  /* ---- ledger table ---- */
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+  th{
+    text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--ink-3);font-weight:500;
+    padding:12px 16px;border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  td{padding:9px 16px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tr.host td{background:var(--accent-wash)}
+  .own{font-weight:600}
+  .own small{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3);font-family:var(--body)}
+  td.n{font-family:var(--mono);font-size:12.5px;text-align:right;white-space:nowrap}
+  td.split{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+  .prop{width:120px}
+  .prop i{display:block;height:8px;border-radius:2px;background:var(--accent)}
+  tr.host .prop i{background:var(--ink-2)}
+
+  /* ---- state chips ---- */
+  .chip{
+    display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;
+    text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;font-weight:500;
+  }
+  .chip.done{background:var(--good-wash);color:var(--good)}
+  .chip.part{background:var(--warn-wash);color:var(--warn)}
+  .chip.open{background:var(--idle-wash);color:var(--idle)}
+  .chip.red{background:var(--bad-wash);color:var(--bad)}
+
+  /* ---- phase strip ---- */
+  .phases{display:flex;flex-direction:column;gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .phase{background:var(--surface);display:grid;grid-template-columns:36px 1fr;gap:14px;padding:14px 18px}
+  @media(min-width:660px){.phase{grid-template-columns:36px 1fr 108px;align-items:start}}
+  .phase .id{font-family:var(--display);font-size:24px;font-weight:600;line-height:1;color:var(--accent)}
+  .phase.is-open .id{color:var(--ink-3)}
+  .phase .t{font-weight:600;font-size:14.5px;margin:0 0 2px}
+  .phase .d{margin:0;font-size:13px;color:var(--ink-2)}
+  .phase .st{grid-column:2;justify-self:start}
+  @media(min-width:660px){.phase .st{grid-column:3;justify-self:end;padding-top:2px}}
+
+  /* ---- evidence ---- */
+  .evid{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:660px){.evid{grid-template-columns:1fr 1fr}}
+  .col{display:flex;flex-direction:column;gap:10px}
+  .col h3{
+    margin:0;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    font-weight:500;display:flex;align-items:center;gap:8px;
+  }
+  .col h3 i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .item{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:13px 15px;
+    display:flex;flex-direction:column;gap:5px}
+  .item .cmd{font-family:var(--mono);font-size:12px;color:var(--ink);word-break:break-all}
+  .item .res{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+  .item .why{font-size:12.8px;color:var(--ink-2);margin:0}
+  .item.g{border-left:3px solid var(--good)}
+  .item.r{border-left:3px solid var(--bad)}
+
+  /* ---- open list ---- */
+  .open-list{display:flex;flex-direction:column;gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .open-item{background:var(--surface);padding:14px 18px;display:flex;flex-direction:column;gap:4px}
+  .open-item .h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .open-item .h b{font-size:14px;font-weight:600}
+  .open-item p{margin:0;font-size:13px;color:var(--ink-2);max-width:74ch}
+
+  /* ---- side branch ---- */
+  .census{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .census div{background:var(--surface);padding:13px 15px;display:flex;flex-direction:column;gap:2px}
+  .census .cv{font-family:var(--display);font-size:24px;font-weight:600;line-height:1.1}
+  .census .ck{font-size:11.5px;color:var(--ink-3);font-family:var(--mono)}
+
+  /* ---- timeline ---- */
+  .tl{display:flex;flex-direction:column;gap:0;border-left:1px solid var(--line);margin-left:6px;padding-left:22px}
+  .beat{position:relative;padding:9px 0;border-bottom:1px solid var(--line-soft);display:grid;
+    grid-template-columns:1fr;gap:2px}
+  @media(min-width:620px){.beat{grid-template-columns:78px 1fr;gap:16px;align-items:baseline}}
+  .beat:last-child{border-bottom:none}
+  .beat::before{content:"";position:absolute;left:-27px;top:16px;width:9px;height:9px;border-radius:50%;
+    background:var(--accent);border:2px solid var(--ground)}
+  .beat.now::before{background:var(--warn)}
+  .beat .when{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+  .beat .what{font-size:13.5px;color:var(--ink-2)}
+  .beat .what b{color:var(--ink);font-weight:600}
+
+  footer{
+    border-top:1px solid var(--line);padding-top:18px;font-family:var(--mono);font-size:11.5px;
+    line-height:1.85;color:var(--ink-3);
+  }
+  footer b{color:var(--ink-2);font-weight:500}
+
+  a{color:var(--accent)}
+  a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
-<div class="wrap">
-  <p class="eyebrow">Ground-up rebuild &middot; behavior held constant</p>
-  <h1>Devotion 2.0</h1>
-  <p class="lede">Splitting one 1,351-function monolith into eight deep modules, with strict behavior parity gated at every step. Six modules wired; a nine-phase plan now carries the last two &mdash; and the hidden debt &mdash; to a shippable 2.0.0.</p>
-  <p class="stamp">branch feature/v3-origin-extraction since Jul 28 &middot; Origin + Daedric wired live Aug 19<br>race binding confirmed in-game @ e790c492 &middot; finish plan agreed Aug 19</p>
+<div class="page">
+
+  <header class="mast">
+    <p class="eyebrow">Ground-up rebuild &middot; checkpoint 2026-08-24</p>
+    <h1>Devotion 2.0</h1>
+    <p class="lede">One 29,476-line manager script ran this mod. It is now <b>ten owners</b> &mdash; nine runtime modules plus ten race adapters &mdash; and the manager that survived them holds <b>6.9% of the code it used to</b>. Every module is extracted, wired into the live plugin, and standing on a green machine suite. What 2.0 still owes is proof from a running game.</p>
+    <p class="stamp">
+      baseline <b>feature/v3-big-update @ d95775db</b> &middot; 202 commits since Jul 28 &middot; live build <b>Devotion-V3Dev</b><br>
+      figures below are re-runs and readbacks taken 2026-08-24 18:30, after the tip was deployed
+    </p>
+  </header>
 
   <div class="kpis">
-    <div class="kpi"><p class="lbl">Functions mapped</p><div class="val">1,351</div></div>
-    <div class="kpi"><p class="lbl">Modules wired</p><div class="val">6<small> / 8</small></div><p class="sub">Prisma + Recognition remain</p></div>
-    <div class="kpi"><p class="lbl">Still owe a module</p><div class="val">146</div><p class="sub">was 217 &middot; QUESTREACTION cleared</p></div>
-    <div class="kpi"><p class="lbl">Phases to ship</p><div class="val">9<small> A&ndash;I</small></div><p class="sub">A &amp; B done &middot; C next</p></div>
-  </div>
-
-  <h2>Phase</h2>
-  <div class="steps">
-    <span class="step done">&#10003; Groundwork</span><span class="sep">&rsaquo;</span>
-    <span class="step done">&#10003; Pilot</span><span class="sep">&rsaquo;</span>
-    <span class="step done">&#10003; Fan-out</span><span class="sep">&rsaquo;</span>
-    <span class="step now">&#9656; Finish &amp; integrate</span><span class="sep">&rsaquo;</span>
-    <span class="step">Release</span>
-  </div>
-
-  <h2>Burn &mdash; the finish date moves with the scope</h2>
-  <div class="card">
-    <svg viewBox="0 0 800 300" role="img" aria-label="Rescoped burndown. The vertical axis is remaining work, not module count. The original estimate line declines from full to zero at August 25. The actual line burns down fast as six modules were wired, reaching about a quarter remaining by August 19 — but then jumps back up to about sixty percent when the finish-plan review uncovered the backlog: base dedup, twenty-eight QuestReaction functions, five hundred properties, a debug module, per-module optimize, and a ten-race runtime pass. A revised estimate line then declines from that higher point to zero around September 10, a later finish than originally drawn.">
-      <line x1="50" y1="24" x2="50" y2="268" stroke="var(--border)" stroke-width="1"/>
-      <line x1="50" y1="268" x2="760" y2="268" stroke="var(--border)" stroke-width="1"/>
-      <line x1="50" y1="146" x2="760" y2="146" stroke="var(--grid)" stroke-width="1"/>
-      <text x="42" y="28" text-anchor="end" font-size="11" fill="var(--ink-mute)" font-family="var(--mono)">100%</text>
-      <text x="42" y="150" text-anchor="end" font-size="11" fill="var(--ink-mute)" font-family="var(--mono)">50%</text>
-      <text x="42" y="271" text-anchor="end" font-size="11" fill="var(--ink-mute)" font-family="var(--mono)">0</text>
-      <text x="50" y="286" text-anchor="middle" font-size="11" fill="var(--ink-mute)" font-family="var(--mono)">Aug 13</text>
-      <text x="183" y="286" text-anchor="middle" font-size="11" fill="var(--active)" font-family="var(--mono)">Aug 19</text>
-      <text x="316" y="286" text-anchor="middle" font-size="11" fill="var(--ink-mute)" font-family="var(--mono)">Aug 25</text>
-      <text x="671" y="286" text-anchor="middle" font-size="11" fill="var(--estimate)" font-family="var(--mono)">~Sep 10</text>
-
-      <!-- original target + today guides -->
-      <line x1="316" y1="40" x2="316" y2="268" stroke="var(--ink-mute)" stroke-width="1" stroke-dasharray="2 4" opacity="0.5"/>
-      <text x="316" y="52" text-anchor="middle" font-size="10" fill="var(--ink-mute)" font-family="var(--mono)">orig finish</text>
-      <line x1="183" y1="24" x2="183" y2="268" stroke="var(--active)" stroke-width="1" stroke-dasharray="2 4"/>
-      <text x="188" y="36" font-size="11" fill="var(--active)" font-family="var(--mono)">today</text>
-      <line x1="671" y1="110" x2="671" y2="268" stroke="var(--estimate)" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/>
-      <text x="671" y="104" text-anchor="middle" font-size="10" fill="var(--estimate)" font-family="var(--mono)">revised finish</text>
-
-      <!-- original estimate: full -> 0 at Aug 25 (what was drawn before the review) -->
-      <polyline points="50,24 316,268" fill="none" stroke="var(--estimate)" stroke-width="1.6"
-        stroke-dasharray="6 5" opacity="0.45" stroke-linejoin="round"/>
-      <text x="150" y="120" font-size="10.5" fill="var(--estimate)" font-family="var(--mono)" opacity="0.7">original estimate</text>
-
-      <!-- actual remaining: burns down as modules wired, to ~28% by Aug 19 -->
-      <polyline points="50,24 120,92 161,150 183,200" fill="none" stroke="var(--actual)"
-        stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="50" cy="24" r="3.4" fill="var(--actual)"/>
-      <circle cx="161" cy="150" r="3.4" fill="var(--actual)"/>
-      <circle cx="183" cy="200" r="3.4" fill="var(--actual)"/>
-
-      <!-- scope-discovery jump: remaining work rises when the backlog is found -->
-      <line x1="183" y1="200" x2="183" y2="122" stroke="var(--active)" stroke-width="2.5" stroke-dasharray="4 3"/>
-      <polygon points="183,116 179,126 187,126" fill="var(--active)"/>
-      <circle cx="183" cy="122" r="4.4" fill="var(--active)" stroke="var(--surface)" stroke-width="2"/>
-      <text x="196" y="150" font-size="10.5" fill="var(--active)" font-family="var(--mono)">backlog found</text>
-      <text x="196" y="164" font-size="9.5" fill="var(--ink-mute)" font-family="var(--mono)">dedup &middot; 28 QR fns &middot; 557 props</text>
-      <text x="196" y="176" font-size="9.5" fill="var(--ink-mute)" font-family="var(--mono)">debug module &middot; optimize &middot; 10-race</text>
-
-      <!-- revised estimate: from the raised remaining down to 0 at ~Sep 10 -->
-      <polyline points="183,122 671,268" fill="none" stroke="var(--estimate)" stroke-width="2.5" stroke-linejoin="round"/>
-      <text x="470" y="205" font-size="10.5" fill="var(--estimate)" font-family="var(--mono)">revised estimate</text>
-    </svg>
-    <div class="lg">
-      <span><i class="swatch" style="border-color:var(--actual)"></i>Actual remaining (git-tracked)</span>
-      <span><i class="swatch" style="border-color:var(--estimate)"></i>Revised estimate</span>
-      <span><i class="swatch" style="border-color:var(--estimate); border-top-style:dashed; opacity:.5"></i>Original estimate</span>
-      <span style="color:var(--ink-mute)">Y: remaining work &middot; X: calendar</span>
+    <div class="kpi">
+      <p class="k">Manager declarations</p>
+      <div class="v">102 <em>&larr; 1,388</em></div>
+      <p class="s">&minus;93% &middot; readback</p>
     </div>
-    <p class="take">The earlier version of this chart counted <em>modules</em> and always landed on the same date &mdash; which meant discovering more work couldn&rsquo;t move the finish, and &ldquo;two modules left&rdquo; hid a large tail. This version burns down <em>work</em>, and the line does what real scope does: it fell fast while six modules were wired, then <b style="color:var(--active)">jumped back up on Aug 19</b> when the finish-plan review surfaced the backlog &mdash; the 627 base duplicates, 28 QuestReaction functions, 557 properties, the debug module, per-module optimize, and a ten-race runtime pass. The original finish (Aug 25) is left faded where it was; the revised finish sits later because the work is genuinely larger. <b>The revised date is a rough placeholder</b> &mdash; give me a target or a per-week pace and this line becomes real rather than illustrative.</p>
-  </div>
-
-  <h2>What&rsquo;s really left in the manager</h2>
-  <div class="card">
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 12px">The manager file now holds <b style="color:var(--ink)">371</b> function declarations (was 407) &mdash; <b style="color:var(--ink)">226</b> genuine orchestration and <b style="color:var(--ink)">146</b> that still belong to an unfinished module. Of the 226 that stay, <b style="color:var(--ink)">136 are debug</b> &mdash; which is why the plan gives debug its own ninth module. QUESTREACTION (green below) is <b style="color:var(--done)">gone from the manager</b> as of Phase B.</p>
-    <div class="seg" role="img" aria-label="Segmented bar of the 371 declarations still in the manager file: 226 belong to Manager (of which 136 are debug), 114 to Prisma, 31 to Recognition. QuestReaction, previously 28, is now zero.">
-      <span style="width:60.9%;background:var(--accent)" title="Manager 226">Manager 226</span>
-      <span style="width:30.7%;background:var(--pending)" title="Prisma 114">Prisma 114</span>
-      <span style="width:8.4%;background:var(--estimate)" title="Recognition 31">Recog 31</span>
+    <div class="kpi">
+      <p class="k">Modules extracted &amp; wired</p>
+      <div class="v">9 <em>/ 9</em></div>
+      <p class="s">+ 10 race adapters</p>
     </div>
-    <div class="seglg">
-      <span><i class="dot" style="background:var(--accent)"></i>Manager 226 <span style="color:var(--ink-mute)">(136 debug &rarr; 9th module)</span></span>
-      <span><i class="dot" style="background:var(--pending)"></i>Prisma 114</span>
-      <span><i class="dot" style="background:var(--estimate)"></i>Recognition 31</span>
-      <span style="color:var(--done)">QuestReaction 28 &rarr; 0 &check;</span>
+    <div class="kpi">
+      <p class="k">Full verifier</p>
+      <div class="v">0 <em>fail</em></div>
+      <p class="s">4,106 pass &middot; re-run</p>
     </div>
-    <p class="take">QuestReaction was on the board as <em>done</em> but wasn&rsquo;t &mdash; 28 real-bodied functions plus their queue state were still in the manager. The call graph then contradicted the planned split: the resolution primitives are a shared service ORIGIN uses as much as Ledger, and the two halves are bidirectionally coupled. So the whole cohesive subsystem (28 fns + 4 queue accessors + 28 private vars) moved into its module in one piece &mdash; compile 0/0, parity requalify-only (44 changed, 0 lost), its performance gate reconciled.</p>
-  </div>
-
-  <h2>Modules</h2>
-  <div class="card">
-    <div class="mod"><span class="nm">Rules</span><div class="track"><div class="fill" style="width:3%; background:var(--done)"></div></div><span class="meta">19 fns &middot; done (Aug 18)</span></div>
-    <div class="mod"><span class="nm">QuestReaction</span><div class="track"><div class="fill" style="width:11%; background:var(--done)"></div></div><span class="meta">74 fns &middot; whole subsystem in module (done)</span></div>
-    <div class="mod"><span class="nm">Favor</span><div class="track"><div class="fill" style="width:5%; background:var(--done)"></div></div><span class="meta">33 fns &middot; done + runtime-verified</span></div>
-    <div class="mod"><span class="nm">Ledger</span><div class="track"><div class="fill" style="width:33%; background:var(--done)"></div></div><span class="meta">220 fns &middot; done + wired live</span></div>
-    <div class="mod"><span class="nm">Origin</span><div class="track"><div class="fill" style="width:100%; background:var(--done)"></div></div><span class="meta">685 fns &middot; 10 adapters wired &middot; 627 dupes to cut</span></div>
-    <div class="mod"><span class="nm">Daedric</span><div class="track"><div class="fill" style="width:7%; background:var(--done)"></div></div><span class="meta">48 fns &middot; extracted + wired live</span></div>
-    <div class="mod"><span class="nm">Prisma</span><div class="track"><div class="fill" style="width:17%; background:var(--pending)"></div></div><span class="meta">114 fns &middot; needs presentation hook first</span></div>
-    <div class="mod"><span class="nm">Recognition</span><div class="track"><div class="fill" style="width:5%; background:var(--active)"></div></div><span class="meta">31 fns &middot; next (feeds Prisma)</span></div>
-    <div class="mod"><span class="nm">Debug</span><div class="track"><div class="fill" style="width:20%; background:var(--active)"></div></div><span class="meta">136 fns &middot; new 9th module (planned)</span></div>
-    <div class="mod"><span class="nm">Manager</span><div class="track"><div class="fill" style="width:8%; background:var(--accent)"></div></div><span class="meta">~54 fns after debug leaves &middot; host</span></div>
-    <div class="modlegend">
-      <span><i class="dot" style="background:var(--done)"></i>done</span>
-      <span><i class="dot" style="background:var(--active)"></i>in flight / planned</span>
-      <span><i class="dot" style="background:var(--pending)"></i>pending</span>
-      <span><i class="dot" style="background:var(--accent)"></i>stays as host</span>
-      <span style="color:var(--ink-mute)">bar width = function count</span>
+    <div class="kpi">
+      <p class="k">Runtime acceptance</p>
+      <div class="v">0 <em>/ 144</em></div>
+      <p class="s">slots recorded</p>
     </div>
   </div>
 
-  <h2>Debt surfaced this session</h2>
-  <div class="card">
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 8px">Reading the tree rather than the handoff summary turned up five accounting gaps &mdash; none a live bug today, all of which would bite at release if left. <b style="color:var(--done)">Four are now closed</b> (Phases A&ndash;B); the base dedup is next (Phase C).</p>
-    <div class="find"><span class="q">627</span><span class="txt"><b>duplicate function bodies</b> in the Origin base &mdash; ~11k dead lines shipped in the .pex, and a shadowed-variable landmine for anyone who edits the base. Deleting them is a hard prerequisite for the property work (with the dupes present, zero properties measure as race-exclusive). <b style="color:var(--active)">Phase C, next.</b></span></div>
-    <div class="find"><span class="q" style="color:var(--done)">&check;</span><span class="txt"><b>manager decls owing a module: 217 &rarr; 146</b> &mdash; QUESTREACTION&rsquo;s share cleared; Prisma + Recognition remain.</span></div>
-    <div class="find"><span class="q" style="color:var(--done)">&check;</span><span class="txt"><s>28 QuestReaction fns marked done but still in the manager</s> &mdash; whole subsystem moved into its module (Phase B).</span></div>
-    <div class="find"><span class="q" style="color:var(--done)">&check;</span><span class="txt"><s>14 scripts missing from the release manifest</s> &mdash; reconciled to 116, inventory gate 7/7 (Phase A1). The silent-skip trap is closed.</span></div>
-    <div class="find"><span class="q" style="color:var(--done)">&check;</span><span class="txt"><s>gain multipliers never left the manager</s> &mdash; the 3 bodies moved to their Origin homes; the provider no longer calls back through the manager (Phase A3).</span></div>
-  </div>
-
-  <h2>The finish plan &mdash; nine phases to ship</h2>
-  <div class="card">
-    <div class="ph"><div class="code" style="color:var(--done)">A&check;</div><div class="body"><p class="pt">Debt closeout &amp; truth-up <span style="color:var(--done);font-weight:600">&mdash; done</span></p><p class="pd">Manifest reconciled to 116 (gate 7/7); region map rebuilt to reality (1449 fns, 0 missing/dup); provider-seam multiplier bodies moved to their Origin homes; parity re-established as a run. Four commits, no behavior change.</p></div></div>
-    <div class="ph"><div class="code" style="color:var(--done)">B&check;</div><div class="body"><p class="pt">QuestReaction completion <span style="color:var(--done);font-weight:600">&mdash; done</span></p><p class="pd">The call graph overrode the planned split: the whole cohesive subsystem (28 fns + 4 accessors + 28 vars) moved into its module in one piece rather than being cut across QR and Ledger. Compile 0/0, parity requalify-only, performance gate reconciled, contract + region map trued up.</p></div></div>
-    <div class="ph blk"><div class="code">C</div><div class="body"><p class="pt">Origin base dedup &mdash; the unlock <span style="color:var(--active);font-weight:600">&mdash; next</span></p><p class="pd">Delete the 627 duplicate bodies, leaving ~58 base fns + the virtual surface. <b>Prerequisite for Prisma/Recognition and every property wave.</b></p><span class="dep">blocks D, E, F</span></div></div>
-    <div class="ph"><div class="code">D</div><div class="body"><p class="pt">Design gates (supervised)</p><p class="pd">Prisma presentation hook (the one true blocker for E), Debug module boundary, Breton stigma split. Serial + owner-in-the-loop.</p></div></div>
-    <div class="ph"><div class="code">E</div><div class="body"><p class="pt">Recognition, then Prisma</p><p class="pd">Producer-first: Recognition (31 fns) feeds Prisma&rsquo;s panel, so its call site is remapped once. Prisma (114 fns) last &mdash; the real race-leak cost centre.</p></div></div>
-    <div class="ph"><div class="code">F</div><div class="body"><p class="pt">Debug module + MCM + properties</p><p class="pd">9th module for the 136 debug fns; MCM by-module rebuild; the 387 race-exclusive properties in ten per-race waves, then adjudicate the 221 that aren&rsquo;t race-clean.</p></div></div>
-    <div class="ph"><div class="code">G</div><div class="body"><p class="pt">Behavior-finding triage</p><p class="pd">Per-finding in/out ruling on the seven the repaired gates surfaced &mdash; data fixes land, feature gaps get a mini-design or a logged deviation.</p></div></div>
-    <div class="ph"><div class="code">H</div><div class="body"><p class="pt">Per-module optimize + profiler</p><p class="pd">The optimize pass the plan owes every module, then an idle/active profiler comparison against the 1.5 baseline.</p></div></div>
-    <div class="ph"><div class="code">I</div><div class="body"><p class="pt">Runtime regression + release</p><p class="pd">10-race scripted runbook (8 adapters have had zero runtime), drop <span style="font-family:var(--mono)">-dev</span>, package 2.0.0, refresh docs, re-verify compat patches.</p></div></div>
-  </div>
-
-  <h2>Property consolidation &mdash; race-exclusive, once the dupes are gone</h2>
-  <div class="card">
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 12px">557 Origin property declarations still sit on the manager quest. With the 627 base duplicates present, none look race-exclusive; simulate the dedup (Phase C) and <b style="color:var(--ink)">387 of 608</b> resolve to a single race &mdash; each movable to its own host quest in a small, independently provable write. The other 221 need individual calls: 91 stay on the manager, 34 go to their owning module, 59 need a Ledger/MCM reference, 37 stay shared.</p>
-    <div class="prow"><span class="rlbl">Khajiit</span><div class="ptrack"><div class="pfill" style="width:100%"></div></div><span class="pn">55</span></div>
-    <div class="prow"><span class="rlbl">Nord</span><div class="ptrack"><div class="pfill" style="width:100%"></div></div><span class="pn">55</span></div>
-    <div class="prow"><span class="rlbl">Altmer</span><div class="ptrack"><div class="pfill" style="width:96%"></div></div><span class="pn">53</span></div>
-    <div class="prow"><span class="rlbl">Breton</span><div class="ptrack"><div class="pfill" style="width:80%"></div></div><span class="pn">44</span></div>
-    <div class="prow"><span class="rlbl">Redguard</span><div class="ptrack"><div class="pfill" style="width:73%"></div></div><span class="pn">40</span></div>
-    <div class="prow"><span class="rlbl">Orc</span><div class="ptrack"><div class="pfill" style="width:69%"></div></div><span class="pn">38</span></div>
-    <div class="prow"><span class="rlbl">Argonian</span><div class="ptrack"><div class="pfill" style="width:64%"></div></div><span class="pn">35</span></div>
-    <div class="prow"><span class="rlbl">Bosmer</span><div class="ptrack"><div class="pfill" style="width:53%"></div></div><span class="pn">29</span></div>
-    <div class="prow"><span class="rlbl">Dunmer</span><div class="ptrack"><div class="pfill" style="width:35%"></div></div><span class="pn">19</span></div>
-    <div class="prow"><span class="rlbl">Imperial</span><div class="ptrack"><div class="pfill" style="width:35%"></div></div><span class="pn">19</span></div>
-    <p class="take">The blast radius here isn&rsquo;t the design &mdash; it&rsquo;s in-place ESP editing, where a later write once silently reverted an earlier one and file size was the only tell. Small per-race writes keep that hazard scoped and diff-detectable; a single 557-property batch would arm it at full width.</p>
-  </div>
-
-  <h2>Gate health &mdash; the extraction blinded the audit suite</h2>
-  <div class="card">
-    <div class="gm">
-      <p class="glbl">Gates failing, of 41 that pinned the manager file</p>
-      <div class="grow"><span class="tag">before</span><div class="gtrack"><div class="gfill" style="width:100%; background:var(--estimate)"></div></div><span class="num">24 failing</span></div>
-      <div class="grow"><span class="tag">after</span><div class="gtrack"><div class="gfill" style="width:50%; background:var(--done)"></div></div><span class="num">12 failing</span></div>
+  <section>
+    <div class="head">
+      <h2>The monolith is gone</h2>
+      <span class="bucket">readback &middot; live tree</span>
     </div>
-    <div class="gm">
-      <p class="glbl">Individual failing checks across those gates</p>
-      <div class="grow"><span class="tag">before</span><div class="gtrack"><div class="gfill" style="width:100%; background:var(--estimate)"></div></div><span class="num">100 checks</span></div>
-      <div class="grow"><span class="tag">after</span><div class="gtrack"><div class="gfill" style="width:18%; background:var(--done)"></div></div><span class="num">18 checks</span></div>
+    <p class="note">A single file held every system: piety, ten races, sixteen Daedric princes, the ledger, the panel, the debug harness. Editing one race meant opening all of them. The 2.0 manager keeps only orchestration &mdash; lifecycle, bindings, and the one tick cadence &mdash; and hands the rest to typed modules it owns references to.</p>
+    <div class="card shrink">
+      <div class="bars">
+        <div class="bar-row">
+          <div class="bar-lbl"><strong>1.5 &middot; PDV__ManagerQuest.psc</strong><span>29,476 lines</span></div>
+          <div class="bar"><i style="width:100%;background:var(--idle)"></i></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-lbl"><strong>2.0 &middot; PDV__ManagerQuest.psc</strong><span>4,990 lines</span></div>
+          <div class="bar"><i style="width:16.9%;background:var(--accent)"></i></div>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span>Function &amp; event declarations</span><b>1,388 &rarr; 102</b></div>
+        <div class="metric"><span>File size</span><b>1.29 MB &rarr; 229 KB</b></div>
+        <div class="metric"><span>Share of all module code</span><b>100% &rarr; 6.9%</b></div>
+        <div class="metric"><span>Scripts in the build</span><b>120 psc / 120 pex</b></div>
+      </div>
     </div>
-    <p class="take">Moving functions out of the manager broke every gate that read only the manager file: positive checks failed and negated ones passed <em>vacuously</em>, so gates reported red about code that was present and correct, just elsewhere. One shared resolver now reads the whole module family &mdash; strictly additive, and automatically correct for the three extractions still to come. The reference case, the substrate-pacing gate, went from 28 failures to zero. One gate had been worse than red: it was blind <em>and</em> generative, quietly writing 35 fabricated &ldquo;under-floor&rdquo; rows into a tracked ledger. The 12 gates still failing need the live game tree, or are real findings kept red on purpose rather than papered over.</p>
-  </div>
+  </section>
 
-  <h2>Rebuild timeline</h2>
-  <div class="tl">
-    <div class="ev pre"><div class="t">Jul 28</div><div class="d">V3 branch + isolated build workspace stood up (feature/v3-big-update)</div></div>
-    <div class="ev pre"><div class="t">Aug 13</div><div class="d">QuestReaction catalog/queue service extracted &mdash; Slice 1, first module out</div></div>
-    <div class="ev pre"><div class="t">Aug 18 &middot; 14:13</div><div class="d">2.0 decomposition push &mdash; parity harness, region map + ledger (all 1,351 fns), Rules extracted</div></div>
-    <div class="ev pre"><div class="t">Aug 18 &middot; 16:57</div><div class="d">Favor extracted &mdash; first stateful module, pattern proven</div></div>
-    <div class="ev pre"><div class="t">Aug 18 &middot; 18:16</div><div class="d">Favor runtime smoke PASSED (fresh Altmer) &mdash; GATE 0.5 green, pilot complete</div></div>
-    <div class="ev"><div class="t">Aug 18 &middot; late</div><div class="d">Ledger extracted &mdash; 220 fns + props, reconstruction parity proven at zero logic change</div></div>
-    <div class="ev"><div class="t">Aug 19 &middot; overnight</div><div class="d">Ledger wired live into Devotion.esp &mdash; host quest, property fills, SEQ regenerated</div></div>
-    <div class="ev"><div class="t">Aug 19 &middot; overnight</div><div class="d">Origin extracted &mdash; 6 parity-clean tranches; module inert by design until the adapter split</div></div>
-    <div class="ev"><div class="t">Aug 19</div><div class="d">GATE 0.5 runtime green in-game for Ledger <em>and</em> Favor together &mdash; piety accrues, commits at dawn</div></div>
-    <div class="ev"><div class="t">Aug 19</div><div class="d">Provider seam settled &mdash; the Origin runtime owns the gain provider, decay joins the same path (bodies still owe a move, Phase A)</div></div>
-    <div class="ev"><div class="t">Aug 19</div><div class="d">Audit suite repaired &mdash; 24 failing gates down to 12, 100 failing checks down to 18</div></div>
-    <div class="ev"><div class="t">Aug 19</div><div class="d">Origin split into ten race adapters &mdash; one adapter per race, no race switchboard at the boundary</div></div>
-    <div class="ev"><div class="t">Aug 19</div><div class="d">Daedric extracted and wired &mdash; 48 functions, host quest live</div></div>
-    <div class="ev"><div class="t">Aug 19</div><div class="d">Origin wired and confirmed in game &mdash; the adapter binds to the character&rsquo;s actual race, after two fixes (bound before the race existed; a call through an unbound reference silently returned Nord)</div></div>
-    <div class="ev"><div class="t">Aug 19</div><div class="d">Finish plan agreed &mdash; nine phases (A&ndash;I) to a shippable 2.0.0; five accounting gaps surfaced by reading the tree; full plan, no cleanup deferred</div></div>
-    <div class="ev"><div class="t">Aug 19 &middot; Phase A</div><div class="d">Debt closeout &mdash; release manifest reconciled to 116 scripts (silent-skip trap closed); region map rebuilt to reality; the 3 gain multipliers moved out of the manager (provider seam finished); parity re-established as a live run</div></div>
-    <div class="ev last"><div class="t">Aug 19 &middot; Phase B</div><div class="d">QuestReaction completed &mdash; the whole subsystem (28 fns + 4 accessors + 28 vars) moved into its module after the call graph overrode the planned Ledger split; compile 0/0, parity requalify-only (44 changed, 0 lost), performance gate reconciled</div></div>
-  </div>
+  <section>
+    <div class="head">
+      <h2>Where the code lives now</h2>
+      <span class="bucket">gate &middot; module-contract census</span>
+    </div>
+    <p class="note">Counts come from <span style="font-family:var(--mono);font-size:12.5px">pdv_module_contract_sync</span>, which derives each owner from the current source call graph rather than from a hand-kept list. All ten owners pass their census; the drift flag it also raises is in the reds below.</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Owner</th><th class="prop">Share</th><th style="text-align:right">Decls</th><th>Public / private</th><th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="own">Origin<small>base + 10 race adapters</small></td>
+            <td class="prop"><i style="width:100%"></i></td>
+            <td class="n">698</td><td class="split">277 / 421</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr>
+            <td class="own">Ledger<small>piety, standing, Book of Days</small></td>
+            <td class="prop"><i style="width:32%"></i></td>
+            <td class="n">224</td><td class="split">133 / 91</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr>
+            <td class="own">Debug<small>ninth module, out of the payload path</small></td>
+            <td class="prop"><i style="width:19.5%"></i></td>
+            <td class="n">136</td><td class="split">111 / 25</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr>
+            <td class="own">Prisma<small>presenter &mdash; envelope only</small></td>
+            <td class="prop"><i style="width:17%"></i></td>
+            <td class="n">120</td><td class="split">51 / 69</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr class="host">
+            <td class="own">Manager<small>host &mdash; lifecycle, bindings, cadence</small></td>
+            <td class="prop"><i style="width:14.5%"></i></td>
+            <td class="n">102</td><td class="split">59 / 43</td><td><span class="chip done">host</span></td>
+          </tr>
+          <tr>
+            <td class="own">QuestReaction<small>catalog, queue, resolution</small></td>
+            <td class="prop"><i style="width:10.7%"></i></td>
+            <td class="n">75</td><td class="split">24 / 51</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr>
+            <td class="own">Daedric<small>sixteen princes, one pact</small></td>
+            <td class="prop"><i style="width:7%"></i></td>
+            <td class="n">49</td><td class="split">32 / 17</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr>
+            <td class="own">Favor<small>contextual favor lanes</small></td>
+            <td class="prop"><i style="width:4.7%"></i></td>
+            <td class="n">33</td><td class="split">17 / 16</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr>
+            <td class="own">Recognition<small>NPC reaction, default off</small></td>
+            <td class="prop"><i style="width:4.4%"></i></td>
+            <td class="n">31</td><td class="split">9 / 22</td><td><span class="chip done">live</span></td>
+          </tr>
+          <tr>
+            <td class="own">Rules<small>pure scoring predicates</small></td>
+            <td class="prop"><i style="width:2.7%"></i></td>
+            <td class="n">19</td><td class="split">15 / 4</td><td><span class="chip done">live</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Origin is the largest owner because it is polymorphic, not because it is a second monolith: a base of 569 declarations carries the shared shape, and each race adapter overrides only what its race actually changes &mdash; Altmer 111, Khajiit 110, Bosmer 101, Breton 90, Orc 88, Redguard 83, Nord 72, Argonian 68, Dunmer 59, Imperial 58. The manager binds one adapter from the character's real race at init; there is no race switchboard left at the boundary.</p>
+    <p class="note" style="color:var(--ink-3);font-size:13px">The census and a direct declaration count of the file now agree on the manager at 102. They disagreed on the previous revision, before the branch tip was deployed; where a figure on this page rests on one method, it says which.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>Nine phases to a shippable 2.0.0</h2>
+      <span class="bucket">plan state &middot; reconciled</span>
+    </div>
+    <div class="phases">
+      <div class="phase">
+        <div class="id">A</div>
+        <div><p class="t">Debt closeout and truth-up</p><p class="d">Release manifest reconciled to the real script inventory, closing the silent-skip trap. Region map rebuilt to reality. The three gain multipliers moved out of the manager, finishing the provider seam.</p></div>
+        <div class="st"><span class="chip done">done</span></div>
+      </div>
+      <div class="phase">
+        <div class="id">B</div>
+        <div><p class="t">QuestReaction completion</p><p class="d">The call graph overrode the planned split &mdash; the resolution primitives are a shared service, not Ledger's. The whole cohesive subsystem moved into its module in one piece: 28 functions, 4 queue accessors, 28 private vars.</p></div>
+        <div class="st"><span class="chip done">done</span></div>
+      </div>
+      <div class="phase">
+        <div class="id">C</div>
+        <div><p class="t">Origin base dedup &mdash; the unlock</p><p class="d">73 provably-dead duplicates deleted, 166 bodies emptied across three waves, then 52 dead per-lane declarations removed by migrating five switchboard lanes to a per-cycle loop over the adapter FormList. Three lanes deliberately deferred; the empty-body approach is recorded as having hit its ceiling.</p></div>
+        <div class="st"><span class="chip done">done</span></div>
+      </div>
+      <div class="phase">
+        <div class="id">D</div>
+        <div><p class="t">Design gates, supervised</p><p class="d">Prisma presentation hook (Origin owns content, Prisma owns the envelope), Debug module boundary, MCM scope. Owner sign-off recorded before any of it was built.</p></div>
+        <div class="st"><span class="chip done">done</span></div>
+      </div>
+      <div class="phase">
+        <div class="id">E</div>
+        <div><p class="t">Recognition, then Prisma</p><p class="d">Producer first, so the call site was remapped once. Prisma's eight load-bearing per-race content switches now dispatch through seven named Origin virtuals implemented by all ten adapters.</p></div>
+        <div class="st"><span class="chip done">done</span></div>
+      </div>
+      <div class="phase">
+        <div class="id">F</div>
+        <div><p class="t">Debug module, MCM, properties</p><p class="d">The ninth module landed and no debug function is console-reachable. Manager quest properties consolidated to 455 with zero undeclared fills and zero duplicate names. The MCM rebuild itself is deliberately held behind runtime Gate 2.</p></div>
+        <div class="st"><span class="chip part">part</span></div>
+      </div>
+      <div class="phase">
+        <div class="id">G</div>
+        <div><p class="t">Behavior-finding triage</p><p class="d">Per-finding rulings on what the repaired gates surfaced. Requiem penalty readback and the deity display-name regression closed; formal-offer copy is reserved by the owner and sits in the wording backlog rather than being invented here.</p></div>
+        <div class="st"><span class="chip part">part</span></div>
+      </div>
+      <div class="phase">
+        <div class="id">H</div>
+        <div><p class="t">Per-module optimize and profiler</p><p class="d">The trigger-first pass kept the single manager cadence and landed four behavior-preserving reductions at the module boundaries. The idle/active profiler comparison against the 1.5 baseline is still owed.</p></div>
+        <div class="st"><span class="chip part">part</span></div>
+      </div>
+      <div class="phase is-open">
+        <div class="id">I</div>
+        <div><p class="t">Runtime regression and release</p><p class="d">The acceptance harness exists: three gates, 17 cases, 144 evidence slots, a tool that refuses bulk promotion and invalidates evidence when runtime-sensitive files change. Nothing has been recorded into it yet. 2.0 is new-game-only.</p></div>
+        <div class="st"><span class="chip open">open</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>Evidence, by exit code</h2>
+      <span class="bucket">re-run 2026-08-24</span>
+    </div>
+    <p class="note">Every line below was executed for this revision against the live <span style="font-family:var(--mono);font-size:12.5px">Devotion-V3Dev</span> tree and read by its exit code, not by grepping its output. A gate's verdict is its exit status.</p>
+    <div class="evid">
+      <div class="col">
+        <h3><i style="background:var(--good)"></i>Green</h3>
+        <div class="item g">
+          <span class="cmd">pdv_verify.mjs</span>
+          <span class="res">exit 0 &middot; FAIL 0 &middot; WARN 0 &middot; TODO 0 &middot; PASS 4,106 &middot; INFO 100</span>
+          <p class="why">The umbrella suite, extraction-aware. It reads the whole module family through one shared resolver, so a function that moved out of the manager no longer reports red from its new home.</p>
+        </div>
+        <div class="item g">
+          <span class="cmd">pdv_module_contract_sync &mdash; census</span>
+          <span class="res">10 / 10 owners PASS</span>
+          <p class="why">Each owner's declaration count and public/private split match the source call graph and the region map.</p>
+        </div>
+        <div class="item g">
+          <span class="cmd">live deploy vs branch mirror</span>
+          <span class="res">120 / 120 scripts match</span>
+          <p class="why">The branch tip is deployed. An earlier check today found four scripts behind; the resync at 18:21 cleared it, so runtime observation is now allowed to count.</p>
+        </div>
+        <div class="item g">
+          <span class="cmd">pdv_module_contract_sync &mdash; retirement</span>
+          <span class="res">2,073 rows &middot; 0 unresolved &middot; 0 live</span>
+          <p class="why">Every retired symbol is adjudicated by name, and none is still declared in live source.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3><i style="background:var(--bad)"></i>Red</h3>
+        <div class="item r">
+          <span class="cmd">pdv_formal_offer_check.mjs</span>
+          <span class="res">exit 1 &middot; PASS 409 &middot; FAIL 3</span>
+          <p class="why">Stale needles, not lost behaviour. All three calls exist in their new module homes, wrapped in <span style="font-family:var(--mono);font-size:12px">GetCanonicalDeityDisplayName()</span> &mdash; which is the fix for the lowercase-deity-name bug. The gate pins the old literal argument. The repair belongs to the gate.</p>
+        </div>
+        <div class="item r">
+          <span class="cmd">pdv_module_contract_sync --check</span>
+          <span class="res">exit 1 &middot; drift = true</span>
+          <p class="why">The stored manifest lags the call graph after the Aug 21&ndash;24 harness work. Needs a reviewed <span style="font-family:var(--mono);font-size:12px">--write</span>, not a code change.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>What 2.0 still owes</h2>
+      <span class="bucket">open scope</span>
+    </div>
+    <div class="open-list">
+      <div class="open-item">
+        <div class="h"><b>Gate 1 &mdash; runtime acceptance</b><span class="chip open">0 / 144 slots</span></div>
+        <p>Ten cases across fresh Nord, Khajiit, Imperial and Altmer sessions, race-change reconciliation, presentation cardinality, recognition silence, compatibility adapters, save/load and deterministic performance. Eight adapters have had zero runtime. This is the real bar, and no static evidence can fill one of its slots.</p>
+      </div>
+      <div class="open-item">
+        <div class="h"><b>Gate 2 &mdash; MCM rebuild</b><span class="chip open">not started</span></div>
+        <p>The four-page revamp is scoped and owner-ratified but deliberately unbuilt: no implementation is authorised until Gate 1 passes. 39 slots reserved.</p>
+      </div>
+      <div class="open-item">
+        <div class="h"><b>Profiler comparison</b><span class="chip part">owed</span></div>
+        <p>Idle and active Papyrus cost measured against the 1.5 baseline. The optimization pass landed on static review alone; the number that proves it has not been taken.</p>
+      </div>
+      <div class="open-item">
+        <div class="h"><b>Release pass</b><span class="chip open">untouched</span></div>
+        <p>Drop the <span style="font-family:var(--mono);font-size:12px">-dev</span> suffix, package 2.0.0 as the single core-plus-patches FOMOD, refresh the docs, and re-verify every compatibility patch against the rebuilt runtime.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>Running alongside: the prose uplift</h2>
+      <span class="bucket">branch fix/2.0-copy-uplift</span>
+    </div>
+    <p class="note">A parallel branch, seven commits, pending integration into the baseline. It builds an offline workbench for every word the mod shows a player &mdash; a census straight off the live plugin and tracked runtime source, a flow map, a Skyrim UX surface catalogue with real popup writing limits, and a CSV/SVG exchange so the rewriting happens outside the game and lands back through a round-trip tool.</p>
+    <div class="census">
+      <div><span class="cv">5,166</span><span class="ck">copy rows</span></div>
+      <div><span class="cv">0</span><span class="ck">P0 risk</span></div>
+      <div><span class="cv">749</span><span class="ck">P1 risk</span></div>
+      <div><span class="cv">865</span><span class="ck">text differs</span></div>
+      <div><span class="cv">3,180</span><span class="ck">runtime-only</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <h2>How it got here</h2>
+      <span class="bucket">git log &middot; feature/v3-big-update</span>
+    </div>
+    <div class="tl">
+      <div class="beat"><span class="when">Jul 28</span><span class="what">V3 branch and an isolated build workspace stood up, so the rebuild never touched the shipped 1.5 tree</span></div>
+      <div class="beat"><span class="when">Aug 13</span><span class="what">QuestReaction catalog and queue extracted &mdash; the first module out, and the proof that a slice could leave without behaviour moving</span></div>
+      <div class="beat"><span class="when">Aug 18</span><span class="what"><b>Parity harness, region map and ledger built over all 1,351 mapped functions.</b> Rules and Favor extracted; Favor's runtime smoke passed on a fresh Altmer &mdash; pilot complete</span></div>
+      <div class="beat"><span class="when">Aug 19</span><span class="what"><b>67 commits.</b> Ledger extracted and wired live; Origin extracted, split into ten race adapters, wired, and confirmed in game after two binding fixes; Daedric extracted; the provider seam settled; the audit suite repaired from 24 failing gates to 12; the nine-phase finish plan agreed with five accounting gaps surfaced by reading the tree instead of the handoff</span></div>
+      <div class="beat"><span class="when">Aug 20</span><span class="what"><b>Recognition, Prisma and Debug all extracted the same day</b>, closing the module tranche. Post-module integration retired 37 decomposition-era verifier failures, consolidated the manager quest properties, and regenerated the 58-quest SEQ</span></div>
+      <div class="beat"><span class="when">Aug 21</span><span class="what">Runtime acceptance harness authored &mdash; three gates, a manifest, an evidence ledger and a tool that will not let a slot be promoted without an observation</span></div>
+      <div class="beat now"><span class="when">Aug 22&ndash;24</span><span class="what">Presentation and test-harness hardening; a runtime-readiness lifecycle added to the manager so work cannot route through unbound services. <b>Next: deploy the tip, then start recording Gate 1.</b></span></div>
+    </div>
+  </section>
 
   <footer>
-    feature/v3-origin-extraction @ e790c492 &middot; branch since Jul 28 &middot; Origin race binding confirmed in game Aug 19<br>
-    module &amp; gap figures are live-tree readbacks; phase order past &ldquo;finish &amp; integrate&rdquo; is planned, not tracked.
+    Source of truth: <b>references/authoring/PDV_2_0_RebuildDashboard.html</b> &middot; this page is its published mirror.<br>
+    Companion: <a href="https://claude.ai/code/artifact/08fda520-cc2c-4df3-911d-8c47665b2e89">Devotion Architecture Shift</a> &mdash; the before/after architecture reference.<br>
+    Evidence classes are not interchangeable. <b>Re-run</b> = a gate executed for this revision, verdict read from its exit code. <b>Readback</b> = a direct count off the live tree. <b>Plan state</b> = reconciled against the finish plan, not machine-proven.<br>
+    Runtime, player-surface, save/load, performance and release-package proof are open and tracked separately in the acceptance ledger.
   </footer>
+
 </div>
