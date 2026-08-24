@@ -192,3 +192,9 @@ generated/pdv-copy-census/
 outputs/**
 !outputs/PDV_Accessible_Prose_Workbook_2026-08-24/
 !outputs/PDV_Accessible_Prose_Workbook_2026-08-24/*.xlsx
+
+# Race Architecture Atlas: the JSON in references/authoring/ is the authority and the
+# HTML is a generated report (tools/pdv_atlas_render.mjs). Committing the render would
+# give one data item two backends and let a hand-edit silently diverge from the source.
+generated/PDV_RaceArchitectureAtlas.html
+handoff/PDV_RaceArchitectureAtlas_*.html
