@@ -91,9 +91,11 @@ current runtime` against records that are demonstrably different moments, so the
 brief's section 8. Nothing is approved for implementation.
 
 Both manual-review contradictions were then resolved — see
-`handoff/PDV_UX_ManualReviewResolutions_2026-08-24.md`. The Argonian Sithis row is a real
-gap: the three-signal threshold is live but nothing detects the crossing, so a scoring
-lane opens silently. The Khajiit row is not a contradiction at all — "the substrate does
+`handoff/PDV_UX_ManualReviewResolutions_2026-08-24.md`. The Argonian Sithis row is a live
+copy defect rather than a missing beat: a toast and a driver record do fire, but the
+phrase "crossing a Void threshold" is attached to every post-activation signal instead of
+to the crossing, so it is true once and wrong thereafter — and the toast is called with an
+empty context, discarding that phrase before the player ever sees it. The Khajiit row is not a contradiction at all — "the substrate does
 not decay" governs the lunar metric, while the neglect spell is the separate lane-neglect
 channel the same design document specifies; it needs reclassifying, not fixing.
 

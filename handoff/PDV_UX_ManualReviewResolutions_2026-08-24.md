@@ -10,31 +10,59 @@ readback, no runtime route exercised, no in-game proof.
 
 ## 1. Argonian — `PDV_Notif_Argonian_SithisActivation_FullActivation`
 
-**Resolved: the audit row was right. The threshold is live; the crossing is silent.**
+> **CORRECTION (2026-08-24, same day).** An earlier revision of this section claimed the
+> crossing was silent. **That was wrong**, and the error was scope: the check stopped at
+> `PDV_Substrate_ArgonianHist.psc`, which indeed contains no surfacing call, while the
+> award path runs through the Ledger. A toast and a driver record both fire. The corrected
+> finding is below and is sharper, not softer — the copy is wrong rather than absent.
+
+**Resolved: the threshold is live and it IS announced — but by accident, with copy that
+is true exactly once.**
 
 `VoidActivationSignalsRequired = 3` (`PDV_Substrate_ArgonianHist.psc:25`), and
-`IsVoidFullyActive()` (`:352-354`) gates on a `SithisSignalCount` accumulator.
-`RecordVoidSignalScaled` (`:115-128`) increments that counter with
-`AdjustIntValue(..., 1)` at `:124` and traces — it never reads the prior value, so
-nothing detects the 2→3 crossing. The only other writes to the counter are a debug
-setter (`PDV_DebugRuntime.psc:206`) and a reset to zero (`:392`). The substrate script
-contains no Notification, MESG, or Prisma call at all; the count appears only inside a
-developer trace string as `sithis=N/3` (`:376`).
+`IsVoidFullyActive()` (`:352-354`) gates on a `SithisSignalCount` accumulator that
+`RecordVoidSignalScaled` (`:124`) increments without ever reading the prior value. So the
+2→3 crossing is genuinely **not detected** as an event.
 
-The flip is not cosmetic. When it happens, void piety begins scoring to Sithis
-(`PDV_OriginRuntime_Argonian.psc:841-842`). An entire scoring lane opens unannounced.
+What happens instead is a side effect. `HandleArgonianVoidSignal`
+(`PDV_OriginRuntime_Argonian.psc:829-843`) records the signal, then awards Sithis piety
+**only if** `IsVoidFullyActive()` (`:841`) — and that award runs
+`AwardCuratedSignalScaled` → `AwardPiety(..., CuratedSignalDriverReason(...))` →
+`AwardPietyInternal`, which calls `RecordDeityDriver(deity, reason, amount)` and
+`SendPrismaEventToast("favor", deity, "", "", "")`. `SIGNAL_VOID_THRESHOLD` is wired in
+the driver table at `PDV_PrismaPresenter.psc:1507` as **"crossing a Void threshold"**.
 
-This is the strongest beat candidate found so far, ahead of the two Talos moments. The
-Talos acts are self-evidently memorable — the player knows they hid a worshipper. This
-one is a hidden accumulator: three is a small number, the player cannot see 2/3, and
-Sithis can enter their story entirely unremarked. The historical draft already works
-("a third way to make meaning in exile" is doing real work, since Hist, People and Void
-are literally the three lanes), and the owner writes the final wording.
+Tracing the player's actual experience:
 
-Implementation notes for whoever builds it, not design decisions: crossing detection must
-compare before and after the increment rather than test the post-state, or it re-fires on
-every later signal; and the reset path at `:392` must clear whatever "already announced"
-flag is added, or the beat never fires again after a reset.
+| Signal | Piety awarded | Toast | Driver record |
+|---|---|---|---|
+| 1st, 2nd | none — `:841` guard blocks it | none | none |
+| 3rd (the crossing) | 2.0 to Sithis | yes | "crossing a Void threshold" |
+| 4th onward | 2.0 to Sithis | yes | "crossing a Void threshold" |
+
+Three consequences, in descending order of how much they matter:
+
+1. **The threshold phrase never stops firing.** "Crossing a Void threshold" is attached to
+   a repeating post-activation signal, not to the crossing. It is accurate exactly once
+   and misleading on every subsequent void signal for the rest of the save. This is a live
+   copy defect, not a missing feature.
+2. **The toast drops the only explanatory text there is.** `SendPrismaEventToast` is
+   called with an empty context argument, so the good phrase reaches the Ledger driver
+   record but never the toast the player actually sees. The player gets a generic Sithis
+   favor toast; the sentence that would explain it exists and is discarded at the surface.
+3. **The run-up is silent, and that is correct.** Signals 1 and 2 produce nothing because
+   `:840`'s comment states the rule deliberately: "Void piety belongs to Sithis only after
+   the relation is explicitly active." Pre-activation silence is design, not a gap.
+
+So the activation *is* marked — the player's first-ever Sithis toast coincides with it —
+but incidentally rather than by design, and the marking degrades into a false statement
+immediately afterwards. The fix is smaller than a new feature: distinguish the crossing
+from the signals that follow it, and let the toast carry the reason it already has.
+
+Implementation notes for whoever builds it: crossing detection must compare before and
+after the increment rather than test the post-state; the reset path at `:392` must clear
+whatever "already announced" flag is added; and the post-crossing signals need their own
+driver phrase, since reusing the threshold wording is what makes it wrong.
 
 ## 2. Khajiit — `PDV_Notif_Khajiit_NeglectTexture_SubstrateThinning`
 
