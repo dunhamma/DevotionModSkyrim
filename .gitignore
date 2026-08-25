@@ -178,6 +178,7 @@ _parity_*.json
 
 # Regenerable player-facing copy census, live record snapshot, and pilot packet.
 generated/pdv-copy-census/
+generated/pdv-race-implementation-audit/
 
 # === UX workbench outputs (added 2026-08-24) ===
 # outputs/ is workbench scratch: generated boards, compile logs, and the
