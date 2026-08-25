@@ -17,24 +17,19 @@
       "intro": "No setup choice by design. The civic Nine Divines lane auto-starts and the Concordat tension is named immediately.",
       "beats": [
         {
-          "id": "first-load",
-          "title": "First load",
+          "id": "origin-start",
+          "title": "Origin start",
           "status": "built",
-          "trigger": "Origin capture on game start",
+          "trigger": "Origin captured on first load of a new character",
           "channel": "push",
           "lines": [
             {
-              "text": "You begin in the broad embrace of the Nine Divines, even as the White-Gold Concordat presses down on the open worship of Talos.",
-              "surface": "Info box",
-              "source": "PDV__ManagerQuest.psc:3727"
-            },
-            {
-              "text": "Live under the Divines. Your choices will decide how Talos, law, and public duty weigh on you.",
-              "surface": "Info box",
-              "source": "PDV__ManagerQuest.psc:3755"
+              "text": "You begin in the broad embrace of the Nine Divines, even as the White-Gold Concordat presses down on the open worship of Talos.\n\nLive under the Divines. Your choices will decide how Talos, law, and public duty weigh on you.",
+              "surface": "One MessageBox, two paragraphs",
+              "source": "PDV__ManagerQuest.psc:3586, assembled at :3750 from :3727 + :3755"
             }
           ],
-          "note": "Strong framing - the tension is named in the first thing an Imperial reads. Papyrus-emitted; no Imperial startup MESG exists in the ESP."
+          "note": "ONE box, not two: GetStartupInfoOnlyText joins the canonical summary and the Imperial followup with a blank line. Strong framing - the Concordat tension is named in the first thing an Imperial reads. Papyrus-emitted; no Imperial startup MESG exists in the ESP."
         },
         {
           "id": "civic-acts",
@@ -64,8 +59,9 @@
               "source": "MGEF 071070"
             }
           ],
-          "gap": "FIVE civic families exist (public_service, mercy, lawful_order, honest_work, death_duty) but their labels are internal tokens the player never sees, and all five emit the same sentence. Sparing a life reports as 'public service'.",
-          "note": "Repeat and capped acts are correctly silent (suppressed when grantedMetric <= 0)."
+          "gap": "WIRING then WRITING. Five civic families exist in code (public_service, mercy, lawful_order, honest_work, death_duty) but PDV_OriginRuntime_Imperial.psc:367 passes one hardcoded context string for all of them, so a mercy act reports as 'public service'. The families are wired for SCORING but not for TEXT. Fix needs both: a code change to select the line by family, then five lines written. Neither alone is enough.",
+          "note": "Repeat and capped acts are correctly silent (suppressed when grantedMetric <= 0).",
+          "gapKind": "wiring + writing"
         },
         {
           "id": "substrate",
@@ -90,8 +86,9 @@
               "source": "SPEL 0715B5"
             }
           ],
-          "gap": "The Imperial substrate script emits NO player string at all - every string in it is a trace or a storage key. A tier crossing reaches the player only as the 'deepen' phase of the next favor toast.",
-          "note": "Player-facing ladder: Civic practice quiet -> Civic Steadiness -> Civic Discipline -> Civic Exemplar. Decays at 3-day grace, -1/day, floor 20 (floor 0 while cursed)."
+          "gap": "DESIGN, not a defect. The substrate script is deliberately quiet - every string in it is a trace or a storage key - so a tier crossing reaches the player only as the 'deepen' phase of the next favor toast, plus the new blessing appearing. That may be exactly right for an always-on cultural layer. The open question is whether crossing into Civic Discipline or Civic Exemplar deserves a beat of its own, or whether quiet is the point.",
+          "note": "Player-facing ladder: Civic practice quiet -> Civic Steadiness -> Civic Discipline -> Civic Exemplar. Decays at 3-day grace, -1/day, floor 20 (floor 0 while cursed).",
+          "gapKind": "design"
         }
       ]
     },
@@ -138,8 +135,9 @@
               "source": "PDV_PrismaPresenter.psc:292"
             }
           ],
-          "gap": "TWO tier vocabularies run in parallel and disagree: the journal says Seeker/Devoted/Champion, the toast band says Distant/Observant/Faithful/Devoted. The word 'Devoted' means different positions in each.",
-          "note": "Design question: is the double vocabulary intended?"
+          "gap": "DESIGN. Two tier vocabularies run in parallel and disagree: the journal line says Seeker/Devoted/Champion, the toast band says Distant/Observant/Faithful/Devoted. 'Devoted' means a different position in each. Decide one vocabulary before writing anything that uses either.",
+          "note": "Design question: is the double vocabulary intended?",
+          "gapKind": "design"
         },
         {
           "id": "talos-silence",
@@ -148,8 +146,9 @@
           "trigger": "Any Talos tier crossing while Concordat standing is above 50",
           "channel": "none",
           "lines": [],
-          "gap": "Imperial Talos tier crossings are SUPPRESSED ENTIRELY while Concordat standing is above 50. A compliant Imperial quietly keeping faith with Talos climbs Seeker, Devoted and Champion and is told NOTHING at any of them.",
-          "note": "The Concordat does not merely gate the offer - it makes the whole Talos relationship invisible. Evidence: PDV_DevotionLedger.psc:1155-1157 with PDV_OriginRuntime_Imperial.psc:238-248. The sharpest experiential hole in the Imperial journey."
+          "gap": "DESIGN, and it cuts both ways. Imperial Talos tier crossings are suppressed entirely while Concordat standing is above 50, so a compliant Imperial climbs Seeker, Devoted and Champion with Talos and is told nothing. Read one way this is a hole - a whole relationship progresses invisibly. Read the other way it is thematically exact: you are hiding this faith, so the game hides it too. Needs an owner ruling before any wiring or writing.",
+          "note": "The Concordat does not merely gate the offer - it makes the whole Talos relationship invisible. Evidence: PDV_DevotionLedger.psc:1155-1157 with PDV_OriginRuntime_Imperial.psc:238-248. The sharpest experiential hole in the Imperial journey.",
+          "gapKind": "design"
         }
       ]
     },
@@ -187,7 +186,8 @@
             }
           ],
           "gap": "Every line RESTATES THE LABEL and none names the cost. The transition beat does fire at dawn - what is missing is content, not the beat.",
-          "note": "States: Openly Defiant / Privately Defiant / Uncommitted / Publicly Compliant / Concordat Enforcer. Record layer is entirely empty: the QUST has no Name, 0 stages, 0 objectives; the GLOB is a bare float."
+          "note": "States: Openly Defiant / Privately Defiant / Uncommitted / Publicly Compliant / Concordat Enforcer. Record layer is entirely empty: the QUST has no Name, 0 stages, 0 objectives; the GLOB is a bare float.",
+          "gapKind": "writing"
         },
         {
           "id": "concordat-cost",
@@ -197,7 +197,8 @@
           "channel": "none",
           "lines": [],
           "gap": "Nothing anywhere states the cost. High compliance CLOSES Talos, blunts Stendarr and Arkay daily shift, and silences Talos tier crossings. The track is wired as Talos's GainModifyingTrack AND DecayModifyingTrack, so Talos piety gains slower and decays faster while you comply.",
-          "note": "Locked 2026-08-25: Talos offers fail gracefully, no offer-time rejection. State copy is therefore the ONLY channel carrying this - and it currently carries nothing. Owner copy in progress on the workbook's Concordat Writing sheet. Evidence: PDV__ManagerQuest.psc:1164-1168."
+          "note": "Locked 2026-08-25: Talos offers fail gracefully, no offer-time rejection. State copy is therefore the ONLY channel carrying this - and it currently carries nothing. Owner copy in progress on the workbook's Concordat Writing sheet. Evidence: PDV__ManagerQuest.psc:1164-1168.",
+          "gapKind": "writing"
         }
       ]
     },
@@ -264,7 +265,8 @@
             }
           ],
           "gap": "FOUR offers never name their god in the description - Akatosh ('the god of time'), Talos ('the Empire's own god'), Mara ('the mother of the people'), Zenithar ('the trade-god'). Since the Name field is not displayed, an Imperial offered Akatosh is never told it is Akatosh.",
-          "note": "Buttons on every offer, in order: Accept / Not yet / Refuse. Independently reproduces the wording backlog's Imperial count of four."
+          "note": "Buttons on every offer, in order: Accept / Not yet / Refuse. Independently reproduces the wording backlog's Imperial count of four.",
+          "gapKind": "writing"
         },
         {
           "id": "the-answers",
@@ -340,8 +342,9 @@
               "source": "PDV_PrismaPresenter.psc:292"
             }
           ],
-          "gap": "NO Imperial champion-entry record exists in any type. 'Champion' appears solely as a blessing tier suffix. The apotheosis moment gets the same sentence as every other tier crossing.",
-          "note": "This is the shared champion-entry gap: only Nord/Kyne has a real entry message anywhere in the mod."
+          "gap": "DESIGN first, then wiring and writing. No Imperial champion-entry record exists in any type - 'Champion' appears solely as a blessing tier suffix, so the apotheosis moment gets the same sentence as every other tier crossing. Only Nord/Kyne has a real entry message anywhere in the mod, so the decision is the shared architecture: one parameterised transition for all races and deities, or bespoke moments.",
+          "note": "This is the shared champion-entry gap: only Nord/Kyne has a real entry message anywhere in the mod.",
+          "gapKind": "design"
         }
       ]
     }
@@ -370,8 +373,9 @@
           "source": "PDV_PrismaPresenter.psc:264"
         }
       ],
-      "gap": "No Imperial-specific push at all. SyncImperialNeglectSpell emits no toast, no Book entry, no message. The generic dawn 'Devotion quiet' toast is GATED TO NORD (PDV_DevotionLedger.psc:2212), so a broad-worship Imperial gets nothing whatsoever.",
-      "note": "The pull text is good and explains the mechanic honestly."
+      "gap": "WIRING then WRITING. No Imperial-specific push exists: SyncImperialNeglectSpell emits no toast, no Book entry, no message, and the generic dawn 'Devotion quiet' toast is gated to Nord (PDV_DevotionLedger.psc:2212), so a broad-worship Imperial gets nothing at all at onset or recovery. The pull text is good and honest; only the moment is missing.",
+      "note": "The pull text is good and explains the mechanic honestly.",
+      "gapKind": "wiring + writing"
     },
     {
       "id": "curse",
@@ -406,8 +410,9 @@
           "source": "PDV_PrismaPresenter.psc:260"
         }
       ],
-      "gap": "GetCurseContextForRace has branches for Nord, Altmer, Bosmer, Argonian and Orc but NO Imperial branch, so an Imperial gets only the bare generic lines at the moment it happens. No Imperial CurseState record exists in the ESP.",
-      "note": "Mechanically the curse halts civic devotion, wipes the substrate and seeds recovery at 20 on cure - all correct, all announced only if the player opens the Survey."
+      "gap": "WIRING then WRITING. GetCurseContextForRace (PDV_OriginRuntimeBase.psc:7504-7538) has branches for Nord, Altmer, Bosmer, Argonian and Orc but NO Imperial branch, so at the moment a curse halts civic devotion the player gets only the bare generic line. No Imperial CurseState record exists. The Survey posture sentences are Imperial-specific and well written - they just require the player to go looking.",
+      "note": "Mechanically the curse halts civic devotion, wipes the substrate and seeds recovery at 20 on cure - all correct, all announced only if the player opens the Survey.",
+      "gapKind": "wiring + writing"
     },
     {
       "id": "daedric",
@@ -422,8 +427,9 @@
           "source": "PDV_DaedricRuntime.psc:418"
         }
       ],
-      "gap": "16 PDV_Msg_Daedric_*_Response_Imperial records exist - one per Prince, the Imperial cultural reaction to that contact - and they are DEBUG-ONLY with no organic call site. Written, race-specific content no player has ever seen.",
-      "note": "Universal track: silent accrual -> notice at 20 -> three commitment signals -> formal offer -> global consent -> Seeker/Devoted/Champion with paired Boon and Price spells. Owner-ruled backlog 2026-08-07."
+      "gap": "WIRING ONLY - the writing is already done. 16 PDV_Msg_Daedric_*_Response_Imperial records exist, one per Prince, carrying the Imperial cultural reaction to that contact. They have no organic call site and fire only from debug. Written, race-specific content that no player has ever seen; nothing needs authoring, only a trigger.",
+      "note": "Universal track: silent accrual -> notice at 20 -> three commitment signals -> formal offer -> global consent -> Seeker/Devoted/Champion with paired Boon and Price spells. Owner-ruled backlog 2026-08-07.",
+      "gapKind": "wiring"
     }
   ],
   "survey": {

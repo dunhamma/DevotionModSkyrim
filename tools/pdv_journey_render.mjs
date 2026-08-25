@@ -29,6 +29,13 @@ const OUTDIR = path.join(REPO, "generated");
 const STATUS = new Set(["built", "partial", "gap"]);
 const CHANNEL = new Set(["push", "pull", "both", "none"]);
 const CHANNEL_LABEL = { push: "push", pull: "pull", both: "push + pull", none: "nothing fires" };
+const GAPKIND = new Set(["wiring", "writing", "design", "wiring + writing"]);
+const GAPKIND_HELP = {
+  "wiring": "code change - nothing to write until it exists",
+  "writing": "it fires; the words are missing or thin",
+  "design": "a decision is needed before wiring or writing",
+  "wiring + writing": "needs a code change AND new words",
+};
 
 function parseArgs(argv) {
   const o = { race: null, out: null, check: false, all: false };
@@ -63,6 +70,7 @@ function validate(j, file) {
     }
     if (b.channel === "none" && (b.lines || []).length) e.push(`${where}/${b.id}: channel "none" but lines are present`);
     if (b.status === "gap" && !b.gap) e.push(`${where}/${b.id}: status gap but no gap statement`);
+    if (b.gap && !GAPKIND.has(b.gapKind)) e.push(`${where}/${b.id}: a gap must say what KIND it is - gapKind must be one of ${[...GAPKIND].join(", ")}, got "${b.gapKind}"`);
   };
   for (const act of j.acts || []) {
     if (!act.title) e.push(`${file}: act with no title`);
@@ -124,6 +132,13 @@ h2{font-family:"IM Fell English",Georgia,serif;font-weight:400;font-size:34px;ma
 .flag{display:inline-block;font-size:12.5px;font-weight:600;color:var(--gap);background:var(--gap-bg);border-radius:5px;padding:1px 8px;margin-left:8px}
 .gapbox{background:var(--gap-bg);border-radius:10px;padding:12px 16px;margin:14px 0 0;font-size:16px;color:var(--ink)}
 .gapbox b{color:var(--gap)}
+.kindrow{margin-bottom:8px}
+.kind{display:inline-block;font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:2px 10px;color:#fff;background:var(--gap)}
+.kind.kwiring{background:#1F6F8B}
+.kind.kwriting{background:#7A4E36}
+.kind.kdesign{background:#6B6382}
+.kind.kwiringwriting{background:#8A5A2B}
+.kindhelp{font-size:14px;color:var(--ink-2);margin-left:10px;font-style:italic}
 .note{font-size:15px;color:var(--ink-2);margin:12px 0 0;font-style:italic}
 .silent{font-family:"IM Fell English",Georgia,serif;font-size:19px;color:var(--ink-3);font-style:italic;padding:8px 0 2px}
 ul.find{max-width:88ch;padding-left:22px}
@@ -145,7 +160,10 @@ function beat(b) {
   const lines = (b.lines || []).length
     ? (b.lines || []).map(line).join("\n")
     : `<div class="silent">Nothing is shown to the player here.</div>`;
-  const gap = b.gap ? `<div class="gapbox"><b>Gap.</b> ${esc(b.gap)}</div>` : "";
+  const kind = b.gapKind
+    ? `<span class="kind k-${b.gapKind.replace(/[^a-z]/g, "")}">${esc(b.gapKind)}</span><span class="kindhelp">${esc(GAPKIND_HELP[b.gapKind] || "")}</span>`
+    : "";
+  const gap = b.gap ? `<div class="gapbox"><div class="kindrow">${kind}</div>${esc(b.gap)}</div>` : "";
   const note = b.note ? `<p class="note">${esc(b.note)}</p>` : "";
   return `<div class="beat ${b.status}">
 <div class="bhead"><h3>${esc(b.title)}</h3><span class="chan ${b.channel}">${CHANNEL_LABEL[b.channel]}</span></div>
@@ -189,6 +207,11 @@ ${(j.meta.caveats || []).map((c) => `<div class="caveat">${esc(c)}</div>`).join(
   <div class="k"><span class="dot" style="background:var(--gap)"></span> gap &mdash; the player is told nothing</div>
   <div class="k"><span class="chan push">push</span> the game speaks</div>
   <div class="k"><span class="chan pull">pull</span> the player looks</div>
+</div>
+<div class="key">
+  <div class="k"><span class="kind kwiring">wiring</span> code change needed</div>
+  <div class="k"><span class="kind kwriting">writing</span> it fires, the words need work</div>
+  <div class="k"><span class="kind kdesign">design</span> a decision comes first</div>
 </div>
 ${(j.acts || []).map(act).join("\n")}
 ${(j.branches || []).length ? `<section id="branches"><h2>Branches</h2>` + j.branches.map(beat).join("\n") + `</section>` : ""}
