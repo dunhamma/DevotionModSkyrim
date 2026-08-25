@@ -3183,6 +3183,24 @@
         "espResult": "Not applicable.",
         "implementationRoute": "Owner ruling, then either add the decay pass or record the sanction in the decay audit the way Khajiit's is recorded.",
         "runtimeProof": "None until the ruling."
+      },
+      {
+        "auditId": "shared.copy-census.papyrus-runtime-lines",
+        "kind": "audit-tooling",
+        "race": "Shared",
+        "moment": "Census coverage of Papyrus-emitted player text",
+        "playerImpact": "Moderate",
+        "gapClass": "audit-tooling",
+        "status": "Open",
+        "question": "Which Papyrus-emitted player-facing strings is the census sweep missing, and can the workbook be called a complete live-copy inventory until that is known?",
+        "nodeIds": [
+          "race.imperial.spine.concordat-gate"
+        ],
+        "copyIds": [],
+        "papyrusResult": "BuildImperialConcordatSurveySentence and BuildImperialConcordatBookLine (PDV_OriginRuntime_Imperial.psc:37-42,551) emit live player-facing text for all five Concordat states across the Survey readout and Book of Days surfaces. Grepping canonical-roundtrip-source.csv for that text returns ZERO matches, so these lines are absent from the census and therefore from the workbook. The census does carry other psc: runtime lines (342 Runtime line plus 146 Survey readout rows in Journey & Reactions), so this is a coverage hole in the sweep rather than an unsupported surface type.",
+        "espResult": "Not applicable -- these are Papyrus-emitted strings, not MESG records.",
+        "implementationRoute": "Extend the census sweep to cover these emitters, regenerate, then retire the provisional IDs on the workbook Concordat Writing sheet in favour of real psc:<path>:<line>:<index>:<hash> IDs. Distinct from shared.copy-census.message-page, which is a 500-record MESG paging defect; this one is about Papyrus string coverage. Until both are closed the workbook is not a complete global live-copy inventory.",
+        "runtimeProof": "Not applicable -- tooling coverage, provable by regenerating the census and finding the lines present."
       }
     ],
     "auditProfiles": {
