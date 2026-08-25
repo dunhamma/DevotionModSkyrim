@@ -190,9 +190,13 @@ generated/pdv-race-implementation-audit/
 # by design -- so untracked was a disappearance risk, not a space saving. The
 # pattern must be outputs/** rather than outputs/: a negation cannot re-include
 # anything inside an already-excluded directory.
+# The prose workbook now lives at a STABLE, undated path:
+#   references/authoring/prose-workbook/
+# A dated re-include here broke the moment the workbook was revised - the new
+# dated folder fell straight through to outputs/** and the authority went
+# untracked while git kept only the superseded copy. Paths that carry a date
+# break every rule that names them, so outputs/ is now ignored outright.
 outputs/**
-!outputs/PDV_Accessible_Prose_Workbook_2026-08-24/
-!outputs/PDV_Accessible_Prose_Workbook_2026-08-24/*.xlsx
 
 # Race Architecture Atlas: the JSON in references/authoring/ is the authority and the
 # HTML is a generated report (tools/pdv_atlas_render.mjs). Committing the render would

@@ -169,8 +169,9 @@ what should happen; it does not prove that the current game does it.
 
 ### Exact prose
 
-- Current workbook:
-  `outputs/PDV_Accessible_Prose_Workbook_2026-08-25/PDV_Accessible_Prose_Editing_Workbook_v3.xlsx`.
+- Current workbook: `references/authoring/prose-workbook/PDV_ProseWorkbook.xlsx` (stable,
+  undated, version-controlled; its round-trip inputs sit beside it). Dated copies under
+  `outputs/` are local history only and are not the authority.
 - The visible writing sheets own the user's review statuses, wording, and notes.
 - Stable copy IDs preserve the round trip. Technical columns or sheets are traceability support,
   not a writing surface.
