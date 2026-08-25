@@ -1,0 +1,454 @@
+<!--
+  Devotion architecture snapshots -- 1.5 shipped shape vs 2.0 rebuilt shape.
+  Two standalone reference figures, one per architecture, plus a delta table.
+
+  Published Artifact:
+  https://claude.ai/code/artifact/08fda520-cc2c-4df3-911d-8c47665b2e89
+
+  FIGURES ARE HAND-AUTHORED SVG. Counts come from a direct readback of the two live
+  script trees and from tools/pdv_module_contract_sync.mjs, taken 2026-08-24 18:30
+  after the branch tip was deployed to Devotion-V3Dev. Re-derive before reusing:
+    1.5 tree  D:/Wabbajack/modlists/Anvil/mods/Devotion/Scripts/Source
+    2.0 tree  D:/Wabbajack/modlists/Anvil/mods/Devotion-V3Dev/Scripts/Source
+
+  Keep this a bare content fragment -- no <!DOCTYPE>/<html>/<head>/<body>, the
+  publish step wraps it.
+-->
+<title>Devotion Architecture Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+  :root{
+    --ground:#F4F2EC;
+    --surface:#FCFBF8;
+    --sunken:#EBE7DE;
+    --line:#DFDACE;
+    --line-soft:#EAE6DC;
+    --ink:#1F1C26;
+    --ink-2:#54505F;
+    --ink-3:#8A8595;
+    --accent:#5B4B96;
+    --accent-wash:#EAE6F5;
+    --accent-line:#B7ACDC;
+    --heavy:#9E4A2E;
+    --heavy-wash:#F5E7E1;
+    --heavy-line:#DDA994;
+    --display:"Spectral","Palatino Linotype",Palatino,Georgia,serif;
+    --body:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#141319; --surface:#1C1A23; --sunken:#26232F;
+      --line:#332F3D; --line-soft:#282531;
+      --ink:#EAE7F1; --ink-2:#B3AEBF; --ink-3:#7E7989;
+      --accent:#A192DE; --accent-wash:#272141; --accent-line:#5A4E8C;
+      --heavy:#E08A6C; --heavy-wash:#33201A; --heavy-line:#7A4433;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#141319; --surface:#1C1A23; --sunken:#26232F;
+    --line:#332F3D; --line-soft:#282531;
+    --ink:#EAE7F1; --ink-2:#B3AEBF; --ink-3:#7E7989;
+    --accent:#A192DE; --accent-wash:#272141; --accent-line:#5A4E8C;
+    --heavy:#E08A6C; --heavy-wash:#33201A; --heavy-line:#7A4433;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;padding:40px 22px 64px;
+    background:var(--ground);color:var(--ink);
+    font-family:var(--body);font-size:15px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;
+  }
+  .page{max-width:940px;margin:0 auto;display:flex;flex-direction:column;gap:46px}
+
+  .mast{display:flex;flex-direction:column;gap:12px}
+  .eyebrow{margin:0;font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--accent);font-weight:500}
+  h1{font-family:var(--display);font-weight:600;font-size:clamp(36px,5.6vw,50px);
+    line-height:1.04;letter-spacing:-.02em;margin:0;text-wrap:balance}
+  .lede{margin:0;max-width:64ch;font-size:16.5px;color:var(--ink-2)}
+  .lede b{color:var(--ink);font-weight:600}
+  .stamp{margin:0;padding-top:12px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:12px;line-height:1.75;color:var(--ink-3)}
+  .stamp b{color:var(--ink-2);font-weight:500}
+
+  section{display:flex;flex-direction:column;gap:14px}
+  .head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  h2{font-family:var(--display);font-weight:600;font-size:24px;letter-spacing:-.01em;margin:0}
+  .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-3);border:1px solid var(--line);border-radius:4px;padding:2px 8px;white-space:nowrap}
+  .note{margin:0;font-size:14.5px;color:var(--ink-2);max-width:72ch}
+  .note b{color:var(--ink);font-weight:600}
+
+  figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:22px 20px 16px;overflow-x:auto}
+  figure svg{display:block;width:100%;min-width:660px;max-width:100%;height:auto;color:var(--ink-2)}
+  figcaption{margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft);
+    font-size:13px;color:var(--ink-3);max-width:76ch}
+  figcaption b{color:var(--ink-2);font-weight:600}
+
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+  th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--ink-3);font-weight:500;padding:12px 16px;
+    border-bottom:1px solid var(--line);white-space:nowrap}
+  th.r,td.r{text-align:right}
+  td{padding:10px 16px;border-bottom:1px solid var(--line-soft)}
+  tbody tr:last-child td{border-bottom:none}
+  td.q{font-weight:600}
+  td.n{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+  td.was{color:var(--ink-3)}
+  td.now{color:var(--ink)}
+
+  footer{border-top:1px solid var(--line);padding-top:18px;font-family:var(--mono);
+    font-size:11.5px;line-height:1.85;color:var(--ink-3)}
+  footer b{color:var(--ink-2);font-weight:500}
+  a{color:var(--accent)}
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="page">
+
+  <header class="mast">
+    <p class="eyebrow">Architecture reference &middot; 2026-08-24</p>
+    <h1>Devotion Architecture Shift</h1>
+    <p class="lede">Two snapshots of the same mod. <b>1.5 ships one script that holds every system.</b> <b>2.0 splits that script into nine owners</b> the host binds at startup, with the ten race systems behind a single interface. Each figure stands alone as a reference.</p>
+    <p class="stamp">
+      1.5 read from the shipped <b>Devotion</b> tree &middot; 2.0 read from <b>Devotion-V3Dev</b> at branch tip<br>
+      counts are direct readbacks and one module-census gate, taken after deployment
+    </p>
+  </header>
+
+  <!-- ============================ BEFORE ============================ -->
+  <section>
+    <div class="head">
+      <h2>Before &mdash; Devotion 1.5</h2>
+      <span class="tag">shipped</span>
+    </div>
+    <p class="note">Every runtime system lives in one file. The four entry points all call into it, and the deity, prince and substrate records around it carry data only. There is no seam between a race behaviour and the panel that displays it &mdash; <b>changing one means opening the file that holds both</b>.</p>
+
+    <figure>
+      <svg viewBox="0 0 900 546" role="img" aria-label="Devotion 1.5 architecture. Four entry points -- player alias events, action router, event bus, and the settings menu -- all send every call into a single script, PDV__ManagerQuest, of 29,476 lines and 1,388 functions. Inside that one script sit fourteen separate systems: the ten race systems, sixteen Daedric princes, the piety ledger, Book of Days, panel and toasts, the Survey readout, NPC recognition, quest reactions, scoring rules, contextual favor, neglect and curses, tier rewards, startup and save reconciliation, and the debug harness. Below it, deity records, Daedric path shells and race substrates supply data only and hold no behaviour.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+          </marker>
+        </defs>
+
+        <!-- entry points -->
+        <text x="40" y="20" font-family="var(--mono)" font-size="10" letter-spacing="1.4" fill="var(--ink-3)">ENTRY POINTS</text>
+        <g font-family="var(--body)" font-size="12" fill="var(--ink-2)" text-anchor="middle">
+          <rect x="40"  y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="135" y="50">Player alias events</text>
+          <rect x="250" y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="345" y="50">Action router</text>
+          <rect x="460" y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="555" y="50">Event bus</text>
+          <rect x="670" y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="765" y="50">Settings menu</text>
+        </g>
+
+        <!-- converging arrows -->
+        <g stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#a1)" fill="none">
+          <line x1="135" y1="62" x2="135" y2="106"/>
+          <line x1="345" y1="62" x2="345" y2="106"/>
+          <line x1="555" y1="62" x2="555" y2="106"/>
+          <line x1="765" y1="62" x2="765" y2="106"/>
+        </g>
+        <text x="450" y="82" font-family="var(--mono)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">every call lands in the same script</text>
+
+        <!-- the monolith -->
+        <rect x="40" y="112" width="820" height="300" rx="10" fill="var(--heavy-wash)" stroke="var(--heavy-line)" stroke-width="1.5"/>
+        <text x="64" y="140" font-family="var(--mono)" font-size="14" font-weight="500" fill="var(--heavy)">PDV__ManagerQuest.psc</text>
+        <text x="64" y="160" font-family="var(--body)" font-size="11.5" fill="var(--ink-2)">29,476 lines &#183; 1,388 functions &#183; one address space</text>
+        <text x="836" y="140" font-family="var(--mono)" font-size="10.5" fill="var(--heavy)" text-anchor="end">NO INTERNAL BOUNDARY</text>
+
+        <g font-family="var(--body)" font-size="11.5" fill="var(--ink-2)" text-anchor="middle">
+          <rect x="64"  y="182" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="188" y="204">Ten race systems</text>
+          <rect x="326" y="182" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="450" y="204">Sixteen Daedric princes</text>
+          <rect x="588" y="182" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="712" y="204">Piety ledger</text>
+
+          <rect x="64"  y="224" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="188" y="246">Book of Days</text>
+          <rect x="326" y="224" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="450" y="246">Panel and toasts</text>
+          <rect x="588" y="224" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="712" y="246">Survey readout</text>
+
+          <rect x="64"  y="266" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="188" y="288">NPC recognition</text>
+          <rect x="326" y="266" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="450" y="288">Quest reactions</text>
+          <rect x="588" y="266" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="712" y="288">Scoring rules</text>
+
+          <rect x="64"  y="308" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="188" y="330">Contextual favor</text>
+          <rect x="326" y="308" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="450" y="330">Neglect and curses</text>
+          <rect x="588" y="308" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="712" y="330">Tier rewards</text>
+
+          <rect x="64"  y="350" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="188" y="372">Startup and save repair</text>
+          <rect x="326" y="350" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="450" y="372">Debug harness</text>
+          <rect x="588" y="350" width="248" height="34" rx="5" fill="var(--surface)" stroke="var(--heavy-line)" stroke-dasharray="3 3"/>
+          <text x="712" y="372">Compatibility handling</text>
+        </g>
+
+        <!-- data shells -->
+        <g stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#a1)" fill="none">
+          <line x1="188" y1="452" x2="188" y2="418"/>
+          <line x1="450" y1="452" x2="450" y2="418"/>
+          <line x1="712" y1="452" x2="712" y2="418"/>
+        </g>
+        <text x="450" y="440" font-family="var(--mono)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">read for data only</text>
+
+        <g font-family="var(--body)" font-size="12" fill="var(--ink-2)" text-anchor="middle">
+          <rect x="64"  y="456" width="248" height="34" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="188" y="478">Deity records</text>
+          <rect x="326" y="456" width="248" height="34" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="450" y="478">Daedric path shells</text>
+          <rect x="588" y="456" width="248" height="34" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="712" y="478">Race substrates</text>
+        </g>
+        <text x="450" y="512" font-family="var(--body)" font-size="11.5" fill="var(--ink-3)" text-anchor="middle">These hold values and thin helpers. All behaviour lives above.</text>
+      </svg>
+      <figcaption><b>One script, fourteen systems, no seam.</b> The manager is 6.8&#215; larger than the next biggest script in the build. Any change is a change to the file that runs everything, so the blast radius of an edit is the whole mod and nothing can be tested in isolation.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================ AFTER ============================ -->
+  <section>
+    <div class="head">
+      <h2>After &mdash; Devotion 2.0</h2>
+      <span class="tag">rebuilt</span>
+    </div>
+    <p class="note">The same four entry points now reach a host that does three things: start the systems, hold a typed reference to each, and run the one shared tick. Behaviour sits in nine owners beside it. The ten race systems share one interface, and <b>the host binds exactly one race adapter per character at startup</b> &mdash; so a race change is a rebind, not a branch.</p>
+
+    <figure>
+      <svg viewBox="0 0 900 660" role="img" aria-label="Devotion 2.0 architecture. The same four entry points -- player alias events, action router, event bus, and the settings menu -- reach a slim host script, PDV__ManagerQuest, of 4,990 lines and 102 functions, which handles lifecycle, bindings and one shared tick. Through typed references the host reaches nine owners: Origin with 698 functions, Ledger 224, Debug 136, Prisma 120, Quest Reactions 75, Daedric 49, Favor 33, Recognition 31, and Rules 19 as a shared library. Origin expands into a shared base of 569 functions plus ten race adapters -- Altmer 111, Khajiit 110, Bosmer 101, Breton 90, Orc 88, Redguard 83, Nord 72, Argonian 68, Dunmer 59, Imperial 58 -- of which exactly one is bound per character.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-3)"/>
+          </marker>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <!-- entry points -->
+        <text x="40" y="20" font-family="var(--mono)" font-size="10" letter-spacing="1.4" fill="var(--ink-3)">ENTRY POINTS &#8212; UNCHANGED</text>
+        <g font-family="var(--body)" font-size="12" fill="var(--ink-2)" text-anchor="middle">
+          <rect x="40"  y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="135" y="50">Player alias events</text>
+          <rect x="250" y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="345" y="50">Action router</text>
+          <rect x="460" y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="555" y="50">Event bus</text>
+          <rect x="670" y="28" width="190" height="34" rx="6" fill="var(--sunken)" stroke="var(--line)"/>
+          <text x="765" y="50">Settings menu</text>
+        </g>
+        <g stroke="var(--ink-3)" stroke-width="1.3" marker-end="url(#a2)" fill="none">
+          <line x1="135" y1="62" x2="135" y2="98"/>
+          <line x1="345" y1="62" x2="345" y2="98"/>
+          <line x1="555" y1="62" x2="555" y2="98"/>
+          <line x1="765" y1="62" x2="765" y2="98"/>
+        </g>
+
+        <!-- host -->
+        <rect x="40" y="104" width="820" height="60" rx="9" fill="var(--accent-wash)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="64" y="129" font-family="var(--mono)" font-size="13" font-weight="500" fill="var(--accent)">PDV__ManagerQuest.psc</text>
+        <text x="64" y="149" font-family="var(--body)" font-size="11.5" fill="var(--ink-2)">4,990 lines &#183; 102 functions &#8212; starts the systems, holds the references, runs one tick</text>
+        <text x="836" y="129" font-family="var(--mono)" font-size="10.5" fill="var(--accent)" text-anchor="end">HOST</text>
+
+        <!-- fan out -->
+        <g stroke="var(--accent)" stroke-width="1.3" marker-end="url(#a3)" fill="none" opacity="0.85">
+          <line x1="117" y1="164" x2="117" y2="212"/>
+          <line x1="283" y1="164" x2="283" y2="212"/>
+          <line x1="450" y1="164" x2="450" y2="212"/>
+          <line x1="616" y1="164" x2="616" y2="212"/>
+          <line x1="783" y1="164" x2="783" y2="212"/>
+        </g>
+        <text x="450" y="186" font-family="var(--mono)" font-size="10.5" fill="var(--accent)" text-anchor="middle">typed references &#8212; no name lookup, no switchboard</text>
+
+        <!-- module grid row 1 -->
+        <g font-family="var(--body)" text-anchor="middle">
+          <rect x="40"  y="216" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="117" y="240" font-size="13" font-weight="600" fill="var(--ink)">Origin</text>
+          <text x="117" y="258" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">698 fns</text>
+          <text x="117" y="271" font-size="9.5" fill="var(--ink-3)">race behaviour</text>
+
+          <rect x="206" y="216" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="283" y="240" font-size="13" font-weight="600" fill="var(--ink)">Ledger</text>
+          <text x="283" y="258" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">224 fns</text>
+          <text x="283" y="271" font-size="9.5" fill="var(--ink-3)">piety and standing</text>
+
+          <rect x="373" y="216" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="450" y="240" font-size="13" font-weight="600" fill="var(--ink)">Debug</text>
+          <text x="450" y="258" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">136 fns</text>
+          <text x="450" y="271" font-size="9.5" fill="var(--ink-3)">test harness</text>
+
+          <rect x="539" y="216" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="616" y="240" font-size="13" font-weight="600" fill="var(--ink)">Prisma</text>
+          <text x="616" y="258" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">120 fns</text>
+          <text x="616" y="271" font-size="9.5" fill="var(--ink-3)">panel and toasts</text>
+
+          <rect x="706" y="216" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="783" y="240" font-size="13" font-weight="600" fill="var(--ink)">Quest Reactions</text>
+          <text x="783" y="258" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">75 fns</text>
+          <text x="783" y="271" font-size="9.5" fill="var(--ink-3)">deed responses</text>
+
+          <!-- row 2 -->
+          <rect x="40"  y="288" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="117" y="312" font-size="13" font-weight="600" fill="var(--ink)">Daedric</text>
+          <text x="117" y="330" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">49 fns</text>
+          <text x="117" y="343" font-size="9.5" fill="var(--ink-3)">sixteen princes</text>
+
+          <rect x="206" y="288" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="283" y="312" font-size="13" font-weight="600" fill="var(--ink)">Favor</text>
+          <text x="283" y="330" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">33 fns</text>
+          <text x="283" y="343" font-size="9.5" fill="var(--ink-3)">contextual lanes</text>
+
+          <rect x="373" y="288" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--accent-line)" stroke-width="1.4"/>
+          <text x="450" y="312" font-size="13" font-weight="600" fill="var(--ink)">Recognition</text>
+          <text x="450" y="330" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">31 fns</text>
+          <text x="450" y="343" font-size="9.5" fill="var(--ink-3)">NPC reaction</text>
+
+          <rect x="539" y="288" width="154" height="62" rx="7" fill="var(--surface)" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="4 3"/>
+          <text x="616" y="312" font-size="13" font-weight="600" fill="var(--ink)">Rules</text>
+          <text x="616" y="330" font-size="10.5" font-family="var(--mono)" fill="var(--ink-3)">19 fns</text>
+          <text x="616" y="343" font-size="9.5" fill="var(--ink-3)">shared library</text>
+        </g>
+        <text x="783" y="311" font-family="var(--body)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">Eight owners each start on</text>
+        <text x="783" y="326" font-family="var(--body)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">their own quest. Rules is</text>
+        <text x="783" y="341" font-family="var(--body)" font-size="10.5" fill="var(--ink-3)" text-anchor="middle">stateless, called directly.</text>
+
+        <!-- origin expansion -->
+        <path d="M 117 350 L 117 380 L 450 380 L 450 404" stroke="var(--accent)" stroke-width="1.4" fill="none" marker-end="url(#a3)"/>
+        <text x="470" y="384" font-family="var(--mono)" font-size="10.5" fill="var(--accent)">inside Origin</text>
+
+        <rect x="40" y="410" width="820" height="196" rx="10" fill="none" stroke="var(--accent-line)" stroke-width="1.4" stroke-dasharray="5 4"/>
+
+        <rect x="64" y="432" width="772" height="42" rx="7" fill="var(--accent-wash)" stroke="var(--accent-line)"/>
+        <text x="84" y="450" font-family="var(--body)" font-size="12.5" font-weight="600" fill="var(--ink)">Shared base</text>
+        <text x="84" y="466" font-family="var(--body)" font-size="11" fill="var(--ink-2)">569 functions &#8212; the parts of a devotion path every race has</text>
+        <text x="816" y="459" font-family="var(--mono)" font-size="10.5" fill="var(--ink-3)" text-anchor="end">one interface</text>
+
+        <text x="64" y="498" font-family="var(--body)" font-size="11.5" fill="var(--ink-2)">Ten adapters override only what their race actually changes</text>
+
+        <g font-family="var(--body)" text-anchor="middle">
+          <rect x="64"  y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="99"  y="528" font-size="10" fill="var(--ink-2)">Altmer</text>
+          <text x="99"  y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">111</text>
+
+          <rect x="142" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="177" y="528" font-size="10" fill="var(--ink-2)">Khajiit</text>
+          <text x="177" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">110</text>
+
+          <rect x="220" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="255" y="528" font-size="10" fill="var(--ink-2)">Bosmer</text>
+          <text x="255" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">101</text>
+
+          <rect x="298" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="333" y="528" font-size="10" fill="var(--ink-2)">Breton</text>
+          <text x="333" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">90</text>
+
+          <rect x="376" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="411" y="528" font-size="10" fill="var(--ink-2)">Orc</text>
+          <text x="411" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">88</text>
+
+          <rect x="454" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="489" y="528" font-size="10" fill="var(--ink-2)">Redguard</text>
+          <text x="489" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">83</text>
+
+          <rect x="532" y="510" width="70" height="42" rx="5" fill="var(--accent-wash)" stroke="var(--accent)" stroke-width="1.6"/>
+          <text x="567" y="528" font-size="10" font-weight="600" fill="var(--accent)">Nord</text>
+          <text x="567" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--accent)">72</text>
+
+          <rect x="610" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="645" y="528" font-size="10" fill="var(--ink-2)">Argonian</text>
+          <text x="645" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">68</text>
+
+          <rect x="688" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="723" y="528" font-size="10" fill="var(--ink-2)">Dunmer</text>
+          <text x="723" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">59</text>
+
+          <rect x="766" y="510" width="70" height="42" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+          <text x="801" y="528" font-size="10" fill="var(--ink-2)">Imperial</text>
+          <text x="801" y="543" font-size="9.5" font-family="var(--mono)" fill="var(--ink-3)">58</text>
+        </g>
+
+        <path d="M 567 584 L 567 558" stroke="var(--accent)" stroke-width="1.5" fill="none" marker-end="url(#a3)"/>
+        <text x="567" y="598" font-family="var(--body)" font-size="11.5" fill="var(--accent)" text-anchor="middle">Exactly one adapter is bound per character, chosen at start-up from the character&#8217;s race</text>
+
+        <text x="450" y="638" font-family="var(--body)" font-size="11.5" fill="var(--ink-3)" text-anchor="middle">Changing a race means editing one adapter. Nothing else opens.</text>
+      </svg>
+      <figcaption><b>One host, nine owners, one adapter per character.</b> The host keeps only lifecycle, bindings and the shared tick &#8212; 6.9% of the code it used to hold. Every other system can be read, changed and gated on its own, and the race layer is polymorphic rather than a chain of conditionals.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================ DELTA ============================ -->
+  <section>
+    <div class="head">
+      <h2>What changed, in numbers</h2>
+      <span class="tag">readback &amp; census</span>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Measure</th><th class="r">Devotion 1.5</th><th class="r">Devotion 2.0</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="q">Lines in the main script</td>
+            <td class="n r was">29,476</td><td class="n r now">4,990</td>
+            <td>The file you open to change anything is now readable end to end.</td>
+          </tr>
+          <tr>
+            <td class="q">Functions in the main script</td>
+            <td class="n r was">1,388</td><td class="n r now">102</td>
+            <td>What remains is lifecycle, bindings and the tick &mdash; no domain logic.</td>
+          </tr>
+          <tr>
+            <td class="q">Share of all runtime code</td>
+            <td class="n r was">100%</td><td class="n r now">6.9%</td>
+            <td>The rest moved to owners that can be changed independently.</td>
+          </tr>
+          <tr>
+            <td class="q">Independently owned systems</td>
+            <td class="n r was">0</td><td class="n r now">9</td>
+            <td>Each has a defined boundary and its own gate.</td>
+          </tr>
+          <tr>
+            <td class="q">Race behaviour</td>
+            <td class="n r was">inline branches</td><td class="n r now">10 adapters</td>
+            <td>One interface, one implementation bound per character.</td>
+          </tr>
+          <tr>
+            <td class="q">Scripts in the build</td>
+            <td class="n r was">100</td><td class="n r now">120</td>
+            <td>More files, each far smaller and single-purpose.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Behaviour was held constant throughout. The rebuild moved code between owners under a parity harness &mdash; it did not change what the mod does for a player.</p>
+  </section>
+
+  <footer>
+    Sources: direct readback of both live script trees, and the module census from <b>pdv_module_contract_sync</b>, 2026-08-24.<br>
+    Both methods agree on the host script at 102 declarations for this revision; the 1.5 figure of 1,388 is the same direct count taken against the shipped tree.<br>
+    Companion page: the <b>Devotion 2.0 Rebuild</b> dashboard carries phase state, gate results and open runtime proof.
+  </footer>
+
+</div>
