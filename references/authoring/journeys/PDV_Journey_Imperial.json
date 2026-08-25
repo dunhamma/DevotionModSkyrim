@@ -1,0 +1,456 @@
+{
+  "schema": "pdv.race-journey.v1",
+  "race": "Imperial",
+  "meta": {
+    "title": "The Imperial Journey",
+    "subtitle": "What an Imperial player actually experiences, in order, with the exact words the game shows today.",
+    "statusLine": "Devotion.esp via houseCARL (Anvil / Devotion Dev / Devotion-V3Dev) + live-source Papyrus - 2026-08-25 - no runtime observation",
+    "caveats": [
+      "PDV is NOT silent about state changes. Active Effects and the Survey carry a lot of good writing. The open question is which moments deserve a PUSH as well as the PULL that already exists.",
+      "Text below is a snapshot with provenance. Every line names its source so it can be re-checked; the ESP and Papyrus remain the authority."
+    ]
+  },
+  "acts": [
+    {
+      "id": "act1",
+      "title": "Act 1 - Becoming an Imperial",
+      "intro": "No setup choice by design. The civic Nine Divines lane auto-starts and the Concordat tension is named immediately.",
+      "beats": [
+        {
+          "id": "first-load",
+          "title": "First load",
+          "status": "built",
+          "trigger": "Origin capture on game start",
+          "channel": "push",
+          "lines": [
+            {
+              "text": "You begin in the broad embrace of the Nine Divines, even as the White-Gold Concordat presses down on the open worship of Talos.",
+              "surface": "Info box",
+              "source": "PDV__ManagerQuest.psc:3727"
+            },
+            {
+              "text": "Live under the Divines. Your choices will decide how Talos, law, and public duty weigh on you.",
+              "surface": "Info box",
+              "source": "PDV__ManagerQuest.psc:3755"
+            }
+          ],
+          "note": "Strong framing - the tension is named in the first thing an Imperial reads. Papyrus-emitted; no Imperial startup MESG exists in the ESP."
+        },
+        {
+          "id": "civic-acts",
+          "title": "Civic acts",
+          "status": "partial",
+          "trigger": "Public service, mercy, lawful order, honest work, death duty",
+          "channel": "both",
+          "lines": [
+            {
+              "text": "Your public service steadies your devotion.",
+              "surface": "Prisma toast",
+              "source": "PDV_OriginRuntime_Imperial.psc:367"
+            },
+            {
+              "text": "Completed craft strengthened civic practice.",
+              "surface": "Prisma toast",
+              "source": "PDV_OriginRuntime_Imperial.psc:785"
+            },
+            {
+              "text": "Civic Steadiness: Your public service steadies your devotion.",
+              "surface": "Book of Days",
+              "source": "PDV_PrismaPresenter.psc:1918"
+            },
+            {
+              "text": "Civic duty lends order to your worship, even where public and private loyalties diverge.",
+              "surface": "Active Effect - Imperial Civic Duty",
+              "source": "MGEF 071070"
+            }
+          ],
+          "gap": "FIVE civic families exist (public_service, mercy, lawful_order, honest_work, death_duty) but their labels are internal tokens the player never sees, and all five emit the same sentence. Sparing a life reports as 'public service'.",
+          "note": "Repeat and capped acts are correctly silent (suppressed when grantedMetric <= 0)."
+        },
+        {
+          "id": "substrate",
+          "title": "The civic substrate",
+          "status": "partial",
+          "trigger": "Same civic acts, one shared 4.0/day credit",
+          "channel": "pull",
+          "lines": [
+            {
+              "text": "Civic practice steadies body and road. Maximum Health +5, Maximum Stamina +5.",
+              "surface": "Active Effect - Civic Steadiness",
+              "source": "SPEL 0715AF"
+            },
+            {
+              "text": "The Empire's practiced disciplines hold under pressure. Maximum Health +10, Maximum Stamina +10.",
+              "surface": "Active Effect - Civic Discipline",
+              "source": "SPEL 0715B2"
+            },
+            {
+              "text": "Civic duty has become settled practice. Maximum Health +15, Maximum Stamina +15.",
+              "surface": "Active Effect - Civic Exemplar",
+              "source": "SPEL 0715B5"
+            }
+          ],
+          "gap": "The Imperial substrate script emits NO player string at all - every string in it is a trace or a storage key. A tier crossing reaches the player only as the 'deepen' phase of the next favor toast.",
+          "note": "Player-facing ladder: Civic practice quiet -> Civic Steadiness -> Civic Discipline -> Civic Exemplar. Decays at 3-day grace, -1/day, floor 20 (floor 0 while cursed)."
+        }
+      ]
+    },
+    {
+      "id": "act2",
+      "title": "Act 2 - Being noticed",
+      "intro": "Tier crossings DO push - a Book of Days journal line. But one whole relationship can climb in total silence.",
+      "beats": [
+        {
+          "id": "broad-tiers",
+          "title": "Broad tier crossings",
+          "status": "built",
+          "trigger": "Broad civic piety crossing a tier",
+          "channel": "both",
+          "lines": [
+            {
+              "text": "The Divines' Regard has reached Observant.",
+              "surface": "Book of Days (no toast)",
+              "source": "PDV_OriginRuntimeBase.psc:7225"
+            },
+            {
+              "text": "The Divines regard your shared worship. Poison Resistance +10%.",
+              "surface": "Active Effect - The Divines' Regard - Observant",
+              "source": "SPEL 071071"
+            },
+            {
+              "text": "The Divines deepen their regard for your shared worship. Poison Resistance +10%, Disease Resistance +10%.",
+              "surface": "Active Effect - Faithful",
+              "source": "SPEL 0710BB"
+            }
+          ],
+          "note": "Imperial's broad lane display name is 'The Divines' Regard'. Labels: Distant / Observant / Faithful. Caps at Tier 2 - a patron is required to go further."
+        },
+        {
+          "id": "patron-tiers",
+          "title": "Patron tier crossings",
+          "status": "partial",
+          "trigger": "Patron piety crossing Seeker 25 / Devoted 50 / Champion 85",
+          "channel": "push",
+          "lines": [
+            {
+              "text": "Your devotion to <Deity> has reached <Seeker | Devoted | Champion>.",
+              "surface": "Book of Days journal line",
+              "source": "PDV_PrismaPresenter.psc:292"
+            }
+          ],
+          "gap": "TWO tier vocabularies run in parallel and disagree: the journal says Seeker/Devoted/Champion, the toast band says Distant/Observant/Faithful/Devoted. The word 'Devoted' means different positions in each.",
+          "note": "Design question: is the double vocabulary intended?"
+        },
+        {
+          "id": "talos-silence",
+          "title": "Talos climbs in silence",
+          "status": "gap",
+          "trigger": "Any Talos tier crossing while Concordat standing is above 50",
+          "channel": "none",
+          "lines": [],
+          "gap": "Imperial Talos tier crossings are SUPPRESSED ENTIRELY while Concordat standing is above 50. A compliant Imperial quietly keeping faith with Talos climbs Seeker, Devoted and Champion and is told NOTHING at any of them.",
+          "note": "The Concordat does not merely gate the offer - it makes the whole Talos relationship invisible. Evidence: PDV_DevotionLedger.psc:1155-1157 with PDV_OriginRuntime_Imperial.psc:238-248. The sharpest experiential hole in the Imperial journey."
+        }
+      ]
+    },
+    {
+      "id": "act3",
+      "title": "Act 3 - The Concordat, underneath everything",
+      "intro": "A parallel track that moves whenever the player acts politically. Zero text at the record layer.",
+      "beats": [
+        {
+          "id": "concordat-state",
+          "title": "Where you stand",
+          "status": "partial",
+          "trigger": "Political acts adjust the standing track",
+          "channel": "both",
+          "lines": [
+            {
+              "text": "Under the Concordat, you are <label>.",
+              "surface": "Survey readout",
+              "source": "PDV_OriginRuntime_Imperial.psc:551"
+            },
+            {
+              "text": "Under the White-Gold Concordat, you are <label>.",
+              "surface": "Book of Days, on dawn mode change, pinned",
+              "source": "PDV_OriginRuntime_Imperial.psc:37 / Presenter:1083"
+            },
+            {
+              "text": "Imperial | <label> | <standing>",
+              "surface": "MCM",
+              "source": "PDV_OriginRuntime_Imperial.psc:676"
+            },
+            {
+              "text": "Civic faith, Divines, and Concordat pressure leave their marks here.",
+              "surface": "Book of Days summary",
+              "source": "PDV_OriginRuntime_Imperial.psc:668"
+            }
+          ],
+          "gap": "Every line RESTATES THE LABEL and none names the cost. The transition beat does fire at dawn - what is missing is content, not the beat.",
+          "note": "States: Openly Defiant / Privately Defiant / Uncommitted / Publicly Compliant / Concordat Enforcer. Record layer is entirely empty: the QUST has no Name, 0 stages, 0 objectives; the GLOB is a bare float."
+        },
+        {
+          "id": "concordat-cost",
+          "title": "What compliance actually costs",
+          "status": "gap",
+          "trigger": "High compliance",
+          "channel": "none",
+          "lines": [],
+          "gap": "Nothing anywhere states the cost. High compliance CLOSES Talos, blunts Stendarr and Arkay daily shift, and silences Talos tier crossings. The track is wired as Talos's GainModifyingTrack AND DecayModifyingTrack, so Talos piety gains slower and decays faster while you comply.",
+          "note": "Locked 2026-08-25: Talos offers fail gracefully, no offer-time rejection. State copy is therefore the ONLY channel carrying this - and it currently carries nothing. Owner copy in progress on the workbook's Concordat Writing sheet. Evidence: PDV__ManagerQuest.psc:1164-1168."
+        }
+      ]
+    },
+    {
+      "id": "act4",
+      "title": "Act 4 - The offer",
+      "intro": "Dawn-only gate: 50 piety plus qualifying signals on two separate days within seven. A vanilla MessageBox never shows the MESG Name - only the Description is read.",
+      "beats": [
+        {
+          "id": "the-offers",
+          "title": "Nine offers",
+          "status": "partial",
+          "trigger": "Commitment gate opens for an eligible Divine",
+          "channel": "push",
+          "lines": [
+            {
+              "text": "Your devotion has not wavered through upheaval. Carry the god of time as your own, and the long order becomes your faith. Will you?",
+              "surface": "MessageBox - Akatosh",
+              "source": "MESG 0715E8",
+              "flag": "never names Akatosh"
+            },
+            {
+              "text": "You kept faith with me where the law forbade it. Carry the old breath openly, and the Empire's own god answers a treason of conscience. Will you?",
+              "surface": "MessageBox - Talos",
+              "source": "MESG 0715E9",
+              "flag": "never names Talos"
+            },
+            {
+              "text": "You have built and mended where you could. Carry the mother of the people as your own, and the civic heart is yours to keep. Will you?",
+              "surface": "MessageBox - Mara",
+              "source": "MESG 0715EB",
+              "flag": "never names Mara"
+            },
+            {
+              "text": "Your work is honest and your weight is true. Carry the trade-god as your own, and the day's labor becomes worship. Will you?",
+              "surface": "MessageBox - Zenithar",
+              "source": "MESG 0715EC",
+              "flag": "never names Zenithar"
+            },
+            {
+              "text": "The open way has been kind to you. Carry Kynareth as your own, and the road and the sky answer. Will you?",
+              "surface": "MessageBox - Kynareth",
+              "source": "MESG 0715EA"
+            },
+            {
+              "text": "You have kept the rites the war neglected. Carry Arkay as your own, and the death-cycle is your charge. Will you?",
+              "surface": "MessageBox - Arkay",
+              "source": "MESG 0715ED"
+            },
+            {
+              "text": "You have stayed the killing hand where the province wanted it loosed. Carry Stendarr as your own. Will you?",
+              "surface": "MessageBox - Stendarr",
+              "source": "MESG 0715EE"
+            },
+            {
+              "text": "You study, you weigh, you judge with care. Carry Julianos as your own, and the written truth is your devotion. Will you?",
+              "surface": "MessageBox - Julianos",
+              "source": "MESG 0715EF"
+            },
+            {
+              "text": "You make beauty and speak well where it matters most. Carry Dibella as your own. Will you?",
+              "surface": "MessageBox - Dibella",
+              "source": "MESG 0715F0"
+            }
+          ],
+          "gap": "FOUR offers never name their god in the description - Akatosh ('the god of time'), Talos ('the Empire's own god'), Mara ('the mother of the people'), Zenithar ('the trade-god'). Since the Name field is not displayed, an Imperial offered Akatosh is never told it is Akatosh.",
+          "note": "Buttons on every offer, in order: Accept / Not yet / Refuse. Independently reproduces the wording backlog's Imperial count of four."
+        },
+        {
+          "id": "the-answers",
+          "title": "The three answers",
+          "status": "built",
+          "trigger": "Player picks a button",
+          "channel": "push",
+          "lines": [
+            {
+              "text": "You take this patron. The broad faith narrows to one, and the order keeps you as its own.",
+              "surface": "Notification - Accept",
+              "source": "MESG 0715F1"
+            },
+            {
+              "text": "Not yet. Broad worship holds, and the patron waits on your word.",
+              "surface": "Notification - Not Yet",
+              "source": "MESG 0715F2"
+            },
+            {
+              "text": "You keep to broad worship. The patronage is declined, and will not be offered again soon.",
+              "surface": "Notification - Refuse",
+              "source": "MESG 0715F3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "act5",
+      "title": "Act 5 - The patron road",
+      "intro": "Nine three-rung blessing ladders, all pull, all written. The Talos ladder tracks secrecy into openness - the only place the political arc is currently written.",
+      "beats": [
+        {
+          "id": "ladders",
+          "title": "The ladders",
+          "status": "built",
+          "trigger": "Seeker 25 / Devoted 50 / Champion 85",
+          "channel": "pull",
+          "lines": [
+            {
+              "text": "Defiance held in secret hardens you. Armor +15.",
+              "surface": "Active Effect - Talos's Resolve - Seeker",
+              "source": "SPEL 0710FD"
+            },
+            {
+              "text": "Open faith in the Ninth steels your arm. Armor +30, One-Handed +8.",
+              "surface": "Active Effect - Talos - Devoted",
+              "source": "SPEL 071100"
+            },
+            {
+              "text": "The Hero-God of Man stands with the faithful. Armor +50, One-Handed +20.",
+              "surface": "Active Effect - Talos's Triumph - Champion",
+              "source": "SPEL 071103"
+            },
+            {
+              "text": "Arkay's ward stands between you and the grave. Disease Resistance +27%, Maximum Health +30.",
+              "surface": "Active Effect - Arkay's Ward - Champion",
+              "source": "SPEL 0710D3"
+            }
+          ],
+          "note": "All nine Divines have full Seeker/Devoted/Champion ladders with written descriptions."
+        },
+        {
+          "id": "champion",
+          "title": "Champion",
+          "status": "gap",
+          "trigger": "Patron piety reaches 85",
+          "channel": "push",
+          "lines": [
+            {
+              "text": "Your devotion to <Deity> has reached Champion.",
+              "surface": "Book of Days journal line (generic)",
+              "source": "PDV_PrismaPresenter.psc:292"
+            }
+          ],
+          "gap": "NO Imperial champion-entry record exists in any type. 'Champion' appears solely as a blessing tier suffix. The apotheosis moment gets the same sentence as every other tier crossing.",
+          "note": "This is the shared champion-entry gap: only Nord/Kyne has a real entry message anywhere in the mod."
+        }
+      ]
+    }
+  ],
+  "branches": [
+    {
+      "id": "neglect",
+      "title": "Neglect",
+      "status": "partial",
+      "trigger": "Civic metric above 0 AND more than 3 days since a civic source",
+      "channel": "pull",
+      "lines": [
+        {
+          "text": "You have let civic faith lapse. The Divines' ward against sickness thins -- Disease Resistance -5% until you return to public service. The real bite comes only at rupture or curse.",
+          "surface": "Active Effect - The Divines Grow Distant",
+          "source": "SPEL 0710B7 / MGEF 0710B6"
+        },
+        {
+          "text": "A rite has grown quiet and needs attention.",
+          "surface": "Generic line, patron only",
+          "source": "PDV_PrismaPresenter.psc:262"
+        },
+        {
+          "text": "You return to a rite you had let fall silent.",
+          "surface": "Generic line, patron only",
+          "source": "PDV_PrismaPresenter.psc:264"
+        }
+      ],
+      "gap": "No Imperial-specific push at all. SyncImperialNeglectSpell emits no toast, no Book entry, no message. The generic dawn 'Devotion quiet' toast is GATED TO NORD (PDV_DevotionLedger.psc:2212), so a broad-worship Imperial gets nothing whatsoever.",
+      "note": "The pull text is good and explains the mechanic honestly."
+    },
+    {
+      "id": "curse",
+      "title": "Curse - vampirism and lycanthropy",
+      "status": "partial",
+      "trigger": "Vampirism or lycanthropy contracted or cured",
+      "channel": "pull",
+      "lines": [
+        {
+          "text": "Curse posture: the civic faith is halted while the undeath holds.",
+          "surface": "Survey readout",
+          "source": "PDV_OriginRuntime_Imperial.psc:519"
+        },
+        {
+          "text": "Curse posture: the civic faith runs strained while the beast is in you.",
+          "surface": "Survey readout",
+          "source": "PDV_OriginRuntime_Imperial.psc:521"
+        },
+        {
+          "text": "Curse posture: the civic faith is whole again, but the community religion remembers the absence.",
+          "surface": "Survey readout",
+          "source": "PDV_OriginRuntime_Imperial.psc:523"
+        },
+        {
+          "text": "A curse changes the shape of devotion.",
+          "surface": "Generic line",
+          "source": "PDV_PrismaPresenter.psc:256"
+        },
+        {
+          "text": "The curse lifts, and devotion may answer again.",
+          "surface": "Generic line",
+          "source": "PDV_PrismaPresenter.psc:260"
+        }
+      ],
+      "gap": "GetCurseContextForRace has branches for Nord, Altmer, Bosmer, Argonian and Orc but NO Imperial branch, so an Imperial gets only the bare generic lines at the moment it happens. No Imperial CurseState record exists in the ESP.",
+      "note": "Mechanically the curse halts civic devotion, wipes the substrate and seeds recovery at 20 on cure - all correct, all announced only if the player opens the Survey."
+    },
+    {
+      "id": "daedric",
+      "title": "The Daedric track",
+      "status": "partial",
+      "trigger": "Acts a Prince cares about; notice at piety 20, offer at 50",
+      "channel": "push",
+      "lines": [
+        {
+          "text": "<Prince> has taken notice of you.",
+          "surface": "Book of Days, heading 'A Prince takes notice'",
+          "source": "PDV_DaedricRuntime.psc:418"
+        }
+      ],
+      "gap": "16 PDV_Msg_Daedric_*_Response_Imperial records exist - one per Prince, the Imperial cultural reaction to that contact - and they are DEBUG-ONLY with no organic call site. Written, race-specific content no player has ever seen.",
+      "note": "Universal track: silent accrual -> notice at 20 -> three commitment signals -> formal offer -> global consent -> Seeker/Devoted/Champion with paired Boon and Price spells. Owner-ruled backlog 2026-08-07."
+    }
+  ],
+  "survey": {
+    "title": "The full Survey readout",
+    "intro": "Assembled at PDV_OriginRuntime_Imperial.psc:489-527. The richest Imperial surface by a wide margin, and entirely pull.",
+    "base": [
+      "<Deity> holds your focus among the Nine. Standing: <band>. <Concordat sentence>",
+      "You worship the Nine Divines broadly, and your standing is <band>. <Concordat sentence>"
+    ],
+    "conditional": [
+      "The commitment remains, but its boon is suspended until 50 piety.",
+      "You have kept Talos at hidden shrines, away from watching eyes.",
+      "You have honored Talos in the open, where the Concordat forbids it.",
+      "Your patron has taken note of the civic good you have done in their name.",
+      "Civic practice: <tier name>.",
+      "You have drifted far enough on the Talos question that a deliberate change of course could now bring you back.",
+      "<curse posture sentence>"
+    ]
+  },
+  "findings": [
+    "Pull is strong, push is thin. Blessings, neglect, curse posture and the Survey are well written; the push layer is the startup box, favor toasts, tier journal lines, the offer and its answers.",
+    "Talos tier crossings are silenced while Concordat standing is above 50 - a whole relationship can reach Champion invisibly. The sharpest finding, and it was not previously in the audit queue.",
+    "Five civic families report as one string, and a mercy act reports as 'public service'.",
+    "Two tier vocabularies run in parallel and disagree on what 'Devoted' means.",
+    "The Concordat has zero record-layer text; its transition beat fires but only restates the label.",
+    "Champion gets the generic tier sentence - no Imperial recognition of any kind.",
+    "Broad-worship Imperials get no neglect push at all; that dawn toast is Nord-gated.",
+    "16 written Imperial Daedric responses are unreachable."
+  ]
+}
