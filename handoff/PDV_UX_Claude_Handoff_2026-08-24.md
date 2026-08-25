@@ -20,6 +20,10 @@ The user owns artistic direction and exact prose. Claude's role is to map the ex
   - It does not own final prose or authorize implementation.
 - **Surface constraints:** `references/authoring/PDV_UXSurfaceCatalogue.json`.
 - **Stable flow map:** `references/authoring/PDV_CopyFlowMap.json` plus regenerable census material under `generated/pdv-copy-census/`.
+- **Race implementation audit:** `references/authoring/PDV_RaceArchitectureAtlas.json`, rendered locally by `node tools/pdv_atlas_render.mjs`.
+  - Stable node IDs keep Papyrus, ESP, reachability, copy, and runtime-proof evidence separate.
+  - The compact queue is regenerable with `node tools/pdv_implementation_audit_export.mjs --write` under `generated/pdv-race-implementation-audit/`.
+  - Direct ESP readback establishes record presence and property values; it is not in-game route or presentation proof.
 
 Do not copy exact prose into a second authority. Penpot should show representative text and stable copy IDs; the workbook remains the editable source for exact owner wording.
 
@@ -44,7 +48,7 @@ The 45 `Consider new implementation` rows are the useful UX opportunity queue. T
 
 ## Recommended UX working loop
 
-1. Pick one race journey or one tightly related surface cluster. Nord/Kyne remains the established pilot.
+1. Pick one race journey or one tightly related surface cluster. The current queue deliberately moves to Imperial rather than requiring more Nord work.
 2. In Penpot, verify the full player sequence and neighbouring surfaces before changing a module.
 3. In the workbook, filter by race, deity/prince, event, and surface. Read exact current wording and gameplay context there.
 4. Discuss the decision with the user using neutral labels:
@@ -76,16 +80,18 @@ Freeform arrows, moved components, sketches, and comments are evidence, not requ
 
 ## Good first Claude session
 
-- Open the `Disposition Audit` sheet and filter `Proposed disposition` to `Manual review` and `Consider new implementation`.
-- Resolve the two manual-review contradictions with the user first.
-- Then choose one Nord candidate cluster that already appears in the Nord studio—prefer the two Talos “Marked” beats or a neglect presentation—rather than expanding all races.
-- Review the affected Penpot sequence beside its actual current workbook lines.
+- Open `generated/pdv-race-implementation-audit/PDV_ImplementationAudit.csv` and filter `kind` to `ux-decision` and `race` to `Imperial`.
+- Work through exactly one of the three current Imperial questions: curse rupture/recovery communication, Champion entry recognition, or Concordat threshold beats.
+- Use `PDV_ImplementationAuditCopyLinks.csv` to locate the 4, 9, or 5 relevant reference rows in the workbook's `Disposition Audit`; these are references, not approved live copy.
+- Review the chosen moment against its stable atlas node and current runtime context. Do not turn the two shared technical blockers into UX questions.
 - End with either an explicit parked decision or one small approved implementation packet.
 
 ## Proof and change boundary
 
 - No game files were modified during the workbook or disposition work.
+- No game files or owner prose were modified during the race implementation audit.
+- Direct readback confirmed the Imperial offers/responses, Concordat track, substrate, civic rewards, runtime quest, extracted service bindings, and ten-member origin-adapter list. The active source tree still differs from the repo mirror in 26 shared scripts and contains one additional test script, so source-route claims remain version-qualified until reconciled.
+- Direct PEX review classified Manager `OriginRuntime`, Imperial Akatosh `HealSpell`, and Concordat `ExtremeStateIndexes` findings as intentional or inactive, not defects.
 - The audit used the current census plus tracked race design, reward specs, transition coverage, and origin-runtime source. It is not fresh in-game presentation proof.
 - Historical rows are not deleted from `PDV_RaceContent_Manifest.md` until the user records owner decisions and a separate cleanup is approved.
 - The current branch is `fix/2.0-copy-uplift`; unrelated worktrees and dirty/untracked output files remain out of scope.
-

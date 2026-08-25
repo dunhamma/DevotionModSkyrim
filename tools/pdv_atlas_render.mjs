@@ -27,6 +27,10 @@ const DATA = path.join(REPO, "references", "authoring", "PDV_RaceArchitectureAtl
 const DEFAULT_OUT = path.join(REPO, "generated", "PDV_RaceArchitectureAtlas.html");
 
 const STATUS = new Set(["built", "partial", "designed", "absent", "na"]);
+const AUDIT_VERDICT = new Set([
+  "record-layer-reconciled", "partial-reconciliation", "missing-player-communication",
+  "design-decision-required", "not-applicable", "verified",
+]);
 const BADGE = { built: "built", partial: "partial", designed: "designed", absent: "absent", na: "&mdash;" };
 const PILL = { b: "b", p: "p", d: "d", n: "n" };
 
@@ -47,6 +51,21 @@ function validate(atlas) {
   if (!atlas.meta || !atlas.meta.title) errs.push("meta.title missing");
   if (!Array.isArray(atlas.races) || atlas.races.length === 0) errs.push("races[] missing or empty");
   const seen = new Set();
+  const nodeIds = new Set();
+  const auditProfiles = atlas.implementationAudit?.auditProfiles || {};
+  const checkAudit = (item, context) => {
+    if (!item.nodeId) errs.push(`${context}: nodeId missing`);
+    else if (nodeIds.has(item.nodeId)) errs.push(`${context}: duplicate nodeId "${item.nodeId}"`);
+    else nodeIds.add(item.nodeId);
+    if (!item.audit) { errs.push(`${context}: audit missing`); return; }
+    const profile = auditProfiles[item.audit.profile];
+    if (!profile) errs.push(`${context}: unknown audit profile "${item.audit.profile}"`);
+    if (!AUDIT_VERDICT.has(item.audit.verdict)) errs.push(`${context}: bad audit verdict "${item.audit.verdict}"`);
+    if (!profile?.papyrus?.status) errs.push(`${context}: Papyrus audit status missing from profile`);
+    if (!profile?.esp?.status && !item.audit.espOverride?.status) errs.push(`${context}: ESP audit status missing from profile/override`);
+    if (!profile?.reachability?.status) errs.push(`${context}: reachability audit status missing from profile`);
+    if (item.audit.copy && !Array.isArray(item.audit.copy.copyIds)) errs.push(`${context}: copyIds must be an array`);
+  };
   for (const race of atlas.races || []) {
     if (!race.id) { errs.push(`race "${race.name || "?"}" has no id`); continue; }
     if (seen.has(race.id)) errs.push(`duplicate race id "${race.id}"`);
@@ -55,14 +74,26 @@ function validate(atlas) {
       for (const node of lane.nodes || []) {
         if (!node.title) errs.push(`${race.id}/${lane.name}: node with no title`);
         if (!STATUS.has(node.status)) errs.push(`${race.id}/${lane.name}/${node.title}: bad status "${node.status}"`);
+        checkAudit(node, `${race.id}/${lane.name}/${node.title}`);
       }
       for (const stub of lane.stubs || []) {
         if (!STATUS.has(stub.status)) errs.push(`${race.id}/${lane.name}: stub "${stub.label}" bad status "${stub.status}"`);
+        checkAudit(stub, `${race.id}/${lane.name}/stub/${stub.label}`);
       }
     }
   }
   for (const node of (atlas.daedric && atlas.daedric.nodes) || []) {
     if (!STATUS.has(node.status)) errs.push(`daedric/${node.title}: bad status "${node.status}"`);
+    checkAudit(node, `daedric/${node.title}`);
+  }
+  if (atlas.implementationAudit?.schema !== "pdv.race-implementation-audit.v1") errs.push("implementationAudit schema missing or unsupported");
+  const queueIds = new Set();
+  for (const row of atlas.implementationAudit?.queue || []) {
+    if (!row.auditId) errs.push("implementationAudit queue row has no auditId");
+    else if (queueIds.has(row.auditId)) errs.push(`duplicate queue auditId "${row.auditId}"`);
+    else queueIds.add(row.auditId);
+    if (!row.playerImpact || !row.question || !row.gapClass) errs.push(`${row.auditId || "queue row"}: incomplete visible queue contract`);
+    for (const nodeId of row.nodeIds || []) if (!nodeIds.has(nodeId)) errs.push(`${row.auditId}: unknown nodeId "${nodeId}"`);
   }
   const cols = ((atlas.matrix && atlas.matrix.columns) || []).length;
   for (const row of (atlas.matrix && atlas.matrix.rows) || []) {
@@ -131,6 +162,11 @@ h2 .tag{font-family:"Source Sans 3",sans-serif;font-size:14px;color:var(--ink-3)
 .note b{color:var(--ink)}
 code{font-family:"IBM Plex Mono",monospace;font-size:.92em;background:var(--accent-soft);border-radius:4px;padding:0 5px}
 .ev{font-size:13px;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;margin-top:6px;line-height:1.4;overflow-wrap:anywhere}
+.auditline{font-size:12.5px;color:var(--accent);font-family:"IBM Plex Mono",monospace;margin-top:7px;line-height:1.35;overflow-wrap:anywhere}
+.auditline.major,.auditline.blocking{color:var(--partial);font-weight:600}
+.auditgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:16px 0}
+.auditcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.auditcard h4{margin:0 0 4px;font-size:16px}.auditcard p{margin:4px 0;color:var(--ink-2);font-size:14px}.auditcard .meta{font-size:12.5px}
 .mtx{overflow-x:auto;margin:16px 0}
 table{border-collapse:collapse;font-size:14px;min-width:1100px}
 th{font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);text-align:left;padding:8px 12px;border-bottom:2px solid var(--line);white-space:nowrap}
@@ -147,13 +183,26 @@ td.race{font-family:"IM Fell English",Georgia,serif;font-size:17px;color:var(--i
 function node(n) {
   const mid = n.moment ? `<span class="mid">${n.moment}</span>` : "";
   const ev = n.evidence ? `<div class="ev">${n.evidence}</div>` : "";
+  const impact = n.audit?.playerImpact ? ` · ${n.audit.playerImpact}` : "";
+  const audit = n.audit ? `<div class="auditline ${(n.audit.playerImpact || "").toLowerCase()}">${n.audit.verdict}${impact}</div>` : "";
   return `  <div class="node s-${n.status}"><span class="badge">${BADGE[n.status]}</span>` +
-    `<h4>${n.title}</h4><p>${n.body || ""}</p>${mid}${ev}</div>`;
+    `<h4>${n.title}</h4><p>${n.body || ""}</p>${mid}${ev}${audit}</div>`;
 }
 
 function stub(s) {
   const ev = s.evidence ? ` <span class="meta">${s.evidence}</span>` : "";
-  return `  <div class="stub s-${s.status}"><b>${s.label}</b> &mdash; ${s.text}${ev}</div>`;
+  const impact = s.audit?.playerImpact ? ` · ${s.audit.playerImpact}` : "";
+  const audit = s.audit ? ` <span class="auditline ${(s.audit.playerImpact || "").toLowerCase()}">${s.audit.verdict}${impact}</span>` : "";
+  return `  <div class="stub s-${s.status}"><b>${s.label}</b> &mdash; ${s.text}${ev}${audit}</div>`;
+}
+
+function implementationAudit(audit) {
+  const rows = (audit.queue || []).map((q) => `<article class="auditcard"><h4>${q.race} · ${q.moment}</h4>` +
+    `<div class="meta">${q.playerImpact} · ${q.gapClass} · ${q.status}</div><p>${q.question}</p>` +
+    `<p><b>ESP:</b> ${q.espResult}</p></article>`).join("\n");
+  return `<section id="implementation-audit"><h2>Implementation audit</h2>` +
+    `<p class="racesub">Actionable discrepancies only. Verified nodes stay in the race lanes; runtime and player-surface proof remain separate.</p>` +
+    `<div class="note"><b>Shared blocker:</b> ${audit.sourceDrift.detail}</div><div class="auditgrid">${rows}</div></section>`;
 }
 
 function lane(l) {
@@ -187,7 +236,7 @@ function matrix(m) {
 }
 
 function render(atlas) {
-  const navLinks = [`<a href="#legend">Legend</a>`, `<a href="#daedric">Daedric track</a>`]
+  const navLinks = [`<a href="#legend">Legend</a>`, `<a href="#implementation-audit">Implementation audit</a>`, `<a href="#daedric">Daedric track</a>`]
     .concat(atlas.races.map((r) => `<a href="#${r.id}">${r.name}</a>`))
     .concat([`<a href="#matrix">Matrix</a>`]).join("");
   const legend = atlas.legend.map((l) => {
@@ -218,6 +267,8 @@ ${legend}
 </div>
 ${atlas.notes.map((n) => `<div class="note">${n}</div>`).join("\n")}
 </section>
+
+${implementationAudit(atlas.implementationAudit)}
 
 <section id="daedric">
 <h2>${atlas.daedric.title} <span class="tag">${atlas.daedric.tag}</span></h2>
