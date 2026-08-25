@@ -55,8 +55,15 @@ This satisfies both constraints: the player is never interrupted with a "blocked
 offer time, but the consequence is surfaced at the moment the **standing** changes and remains
 readable in status. The Talos gate stays graceful; the political cost stops being invisible.
 
-**Author may flip** to an explicit offer-time rejection if the preference is for louder
-feedback; if so, gate it behind a first-time-only one-shot so it never repeats.
+**LOCKED 2026-08-25 (owner).** The lock stands: graceful Talos failure, no offer-time
+rejection. The offer simply does not surface, and the cost is learned from state. The
+author-flip option below is CLOSED and should not be re-opened without a new owner
+decision. Confidence in the lock increased because the state copy is being rewritten to
+actually name the cost -- the original discomfort with silence came from the state saying
+nothing, not from the absence of a popup.
+
+~~**Author may flip** to an explicit offer-time rejection if the preference is for louder
+feedback; if so, gate it behind a first-time-only one-shot so it never repeats.~~
 
 ## Net
 

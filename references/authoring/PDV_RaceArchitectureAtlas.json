@@ -3201,6 +3201,22 @@
         "espResult": "Not applicable -- these are Papyrus-emitted strings, not MESG records.",
         "implementationRoute": "Extend the census sweep to cover these emitters, regenerate, then retire the provisional IDs on the workbook Concordat Writing sheet in favour of real psc:<path>:<line>:<index>:<hash> IDs. Distinct from shared.copy-census.message-page, which is a 500-record MESG paging defect; this one is about Papyrus string coverage. Until both are closed the workbook is not a complete global live-copy inventory.",
         "runtimeProof": "Not applicable -- tooling coverage, provable by regenerating the census and finding the lines present."
+      },
+      {
+        "auditId": "shared.bookofdays.heading-body-redundancy",
+        "kind": "copy-authoring",
+        "race": "Shared",
+        "moment": "Book of Days entry heading and body",
+        "playerImpact": "Minor",
+        "gapClass": "copy-pending-owner",
+        "status": "Open",
+        "question": "None for design -- owner rewording. The rule is settled: the heading names the KIND of moment, the body carries the specifics; they must not share their key noun.",
+        "nodeIds": [],
+        "copyIds": [],
+        "papyrusResult": "AppendBookOfDaysEntry(line, gameDay, tone, symbol, headlinePinned, magnitude, titleText, ...) takes an optional titleText heading (PDV_PrismaPresenter.psc:2167). Five distinct heading/body pairs restate each other, so the player reads the same fact twice in one entry: PDV_DaedricRuntime.psc:219 and PDV_DevotionLedger.psc:902 -- heading \"Shrine prayer answered\" over body \"You offered prayer at the shrine of <X>\" (shares prayer, shrine); PDV_DaedricRuntime.psc:418 -- \"A Prince takes notice\" over \"<Prince> has taken notice of you.\" (shares notice); PDV_DevotionLedger.psc:1213 -- \"Long devotion\" over \"<Deity> marks devotion held long past the day it was proven.\" (shares long, devotion); PDV_QuestReactionRuntime.psc:1166 -- \"A deed marked\" over \"<Deity> marked your deed.\" (shares deed, marked); PDV_QuestReactionRuntime.psc:1175 -- \"A deed ill-received\" over \"<Deity> took offense at your deed.\" (shares deed). Two further candidates were checked and CLEARED as parser artifacts: the lowercase \"hircine\" at PDV_DevotionLedger.psc:4458 is the symbol argument on a call that passes no heading, and \"Your calian\" at PDV_OriginRuntimeBase.psc:1008 shares only the word \"your\" with its body.",
+        "espResult": "Not applicable -- these are Papyrus string literals, not MESG records.",
+        "implementationRoute": "Owner rewords the heading, the body, or both. NOT a removal: the heading is the scannable title in the Book of Days and carries structural value. Rule to write to: the heading names the KIND of moment so the entry can be scanned in a list; the body carries who, what and the consequence. They must not share their key noun. Note that several bodies are assembled by concatenation around a deity name, so a rewrite must keep the fragment grammatical in place.",
+        "runtimeProof": "Not required beyond reading the entries in game after the change."
       }
     ],
     "auditProfiles": {
