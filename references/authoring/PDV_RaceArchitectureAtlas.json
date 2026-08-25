@@ -2962,6 +2962,227 @@
         "espResult": "Direct MCP reports 515 MESG records; the refresh snapshot captured 500. All ten race-scoped counts agree exactly.",
         "implementationRoute": "Change the census refresh to partition Message queries deterministically rather than relying on an unpaged global query.",
         "runtimeProof": "Not applicable."
+      },
+      {
+        "auditId": "shared.surfacing.marked-tier",
+        "kind": "ux-decision",
+        "race": "Shared",
+        "moment": "Costly-but-faithful acts (Marked rung)",
+        "playerImpact": "Major",
+        "gapClass": "missing-player-communication",
+        "status": "Open",
+        "question": "Should the Marked surfacing rung be built as a real capability, or should the 19 historical Marked-tier beats be deliberately retired?",
+        "nodeIds": [
+          "race.nord.spine.champion-life"
+        ],
+        "copyIds": [
+          "reference:PDV_Msg_Nord_FavorMarked_TalosDefiance",
+          "reference:PDV_Msg_Nord_FavorMarked_NineTalosOpenDefiance"
+        ],
+        "papyrusResult": "Architecture v3 section 10.6 defines a three-rung ladder Quiet/Noted/Marked, Marked being a named notification or message reserved for moments the player should remember, and permits costly-but-faithful events to surface one level above their duration bucket. Quiet and Noted are live. Marked has NO implementation for any race: no identifier matching FavorMarked/_Marked/MarkedSurfac exists in live-source/Scripts/Source; PDV_ContextualFavorRuntime.psc models no surfacing-level constant (MARKED and QUIET appear only inside favor FAMILY names such as FAVOR_FAMILY_KYNE_WIND_MARKED_PASSAGE); and every contextual favor exits through one call at PDV_ContextualFavorRuntime.psc:177 -- SendPrismaEventToast('favor', favorDeity, contextText, '', ''). A cheap favor and a costly one are surfaced identically. Route claims are repo-mirror-derived and remain version-qualified until shared.runtime-wiring.version-drift is resolved.",
+        "espResult": "19 historical FavorMarked rows exist in the disposition audit; 4 are classified 'Reconcile to current runtime' against records that are demonstrably different moments (Imperial Talos defiance mapped to a Hermaeus Mora scholarship response; Breton irreversible rupture mapped to the origin-choice confirm prompt; Redguard hard passage mapped to Ash'abah entry/survey lines), so that bucket is over-counted for this tier. ESP readback NOT performed -- Papyrus-source verified only; direct houseCARL readback owed, Codex-owned.",
+        "implementationRoute": "New event name on the already-wired typed payload: SendPrismaEventToast(eventName, deity, context, tierLabel, rival, allowFallback) builds JSON keyed on the event and already degrades via BuildPrismaEventFallbackText to a vanilla notification. Pair with a Book of Days entry for permanence. Constraints: the Prisma index.html cache key must be bumped or the view change never reaches the running game; the heading must resolve GetPublicDeityDisplayName rather than the symbol; diegetic channels are D0-gated and the fallback loses the title; the one-per-event cooldown belongs on the pulse, not only on the presentation.",
+        "runtimeProof": "Required: new event dispatched from the high-cost branch; toast seen in game with the public deity name; the same beat with the Prisma bridge down; per-event cooldown observed across repeated qualifying acts; one-shot state surviving reload."
+      },
+      {
+        "auditId": "argonian.sithis.threshold-copy",
+        "kind": "implementation-gap",
+        "race": "Argonian",
+        "moment": "Sithis activation (three-signal threshold)",
+        "playerImpact": "Major",
+        "gapClass": "incorrect-player-communication",
+        "status": "Open",
+        "question": "How should the Sithis activation crossing be distinguished from the post-activation signals that currently reuse its wording?",
+        "nodeIds": [
+          "race.argonian.spine.sithis-activation"
+        ],
+        "copyIds": [
+          "reference:PDV_Notif_Argonian_SithisActivation_FullActivation"
+        ],
+        "papyrusResult": "THREE distinct defects, not one. (i) The crossing is never detected as an event: VoidActivationSignalsRequired = 3 at PDV_Substrate_ArgonianHist.psc:25; IsVoidFullyActive() at :352-354 gates on a SithisSignalCount accumulator; RecordVoidSignalScaled at :115-128 increments with AdjustIntValue(...,1) at :124 and never reads the prior value. The only other writes are a debug setter (PDV_DebugRuntime.psc:206) and a reset to zero (:392). (ii) The threshold phrase never stops firing: HandleArgonianVoidSignal (PDV_OriginRuntime_Argonian.psc:829-843) awards only when already active (:841), and that award routes AwardCuratedSignalScaled to AwardPiety(..., CuratedSignalDriverReason(...)) to AwardPietyInternal, which calls RecordDeityDriver and SendPrismaEventToast. SIGNAL_VOID_THRESHOLD is wired at PDV_PrismaPresenter.psc:1507 as 'crossing a Void threshold' -- accurate on the 3rd signal, false on every one after; and groupDrivers (native/DevotionPrismaBridge/mod/PrismaUI/views/Devotion/app.js:1869) aggregates by reason string, so the Dashboard renders it with a multiplier. (iii) The explanatory phrase never reaches the player: SendPrismaEventToast is called with an empty context argument, so the reason lands only in RecordDeityDriver's rolling 6-entry FIFO (PDV_DevotionLedger.psc:3309-3320), read solely by GetDeityDriversJson (:660-680) for the Dashboard, and the 6-entry cap pushes even the true instance out after six further Sithis events. No AppendBookOfDaysEntry call anywhere in live-source mentions Sithis or Void. Pre-activation silence IS deliberate per the comment at PDV_OriginRuntime_Argonian.psc:840. Route claims remain version-qualified until the drift row is resolved.",
+        "espResult": "ESP readback NOT performed -- Papyrus-source verified only; direct houseCARL readback owed, Codex-owned.",
+        "implementationRoute": "Three small fixes, not a new feature: (a) detect the crossing by comparing before and after the increment rather than testing the post-state, and clear the announce flag on the :392 reset path or the beat never fires again; (b) give post-activation signals their own driver phrase so the threshold wording is used once; (c) pass the reason into the toast context, which already has the slot. Book of Days is the right home for the one-time activation -- it persists, whereas the Dashboard drivers buffer is a recent-acts window.",
+        "runtimeProof": "Required: crossing fires once; a later signal shows the new phrase and not the threshold phrase; Dashboard shows no multiplier on the threshold row; Book of Days entry present after activation; behaviour survives reload."
+      },
+      {
+        "auditId": "shared.surfacing.neglect-transitions",
+        "kind": "ux-decision",
+        "race": "Shared",
+        "moment": "Neglect onset and recovery",
+        "playerImpact": "Major",
+        "gapClass": "missing-player-communication",
+        "status": "Open",
+        "question": "Should one shared neglect-transition surface be built, reading each race's own neglect basis?",
+        "nodeIds": [
+          "race.altmer.spine.stub.neglect",
+          "race.argonian.spine.stub.neglect",
+          "race.bosmer.spine.stub.neglect",
+          "race.imperial.spine.stub.neglect",
+          "race.orc.spine.stub.neglect",
+          "race.khajiit.spine.stub.neglect",
+          "race.orc.spine.stub.malacath-neglect-textures"
+        ],
+        "copyIds": [
+          "reference:PDV_Notif_Khajiit_NeglectTexture_SubstrateThinning"
+        ],
+        "papyrusResult": "About 19 audit rows are ONE missing capability: 18 neglect.lapse notification rows (Altmer 3, Argonian 3, Bosmer 4, Imperial 4, Orc 4) plus the Khajiit substrate-thinning row. Neglect is a separate channel from substrate decay for every race (IsRaceLaneNeglected plus PDV_SPEL_Neglect_<Race>), and both the grace period and the BASIS differ per race: Nord patron-flag-and-matching-patron (PDV_OriginRuntime_Nord.psc:252); Imperial civic metric greater than 0 AND more than 3 days since a civic source (:107-122); Altmer more than 3 days since last favor (:1310-1315); Khajiit more than 3 days since a lunar source (:1735-1746); Argonian Hist posture SILENCED or CORRUPTED (:1058-1073); Dunmer curse posture 1 or 2 (:478); Bosmer path-patron flag (:860-872); Breton more than 5 days (:503-508); Orc CodePressure or more than 5 days (:801-837); Redguard CyclePressure or more than 5 days (:763-805). Khajiit is the clearest player-facing symptom: a night stamina debuff is applied with no text, so the likeliest player conclusion is a mod conflict. Route claims remain version-qualified until the drift row is resolved.",
+        "espResult": "Zero occurrences of SubstrateThinning or the phrase 'more thinly' in live-source or ESP data, and SyncKhajiitNeglectSpell fires no notification. ESP readback NOT performed -- Papyrus-source verified only; direct houseCARL readback owed, Codex-owned.",
+        "implementationRoute": "One shared transition surface that reads the per-race basis rather than assuming a single rule; about 19 backlog rows then become owner copy against an existing mechanism rather than 19 separate features. Recovery (neglect lifted) must be designed with the same care as onset.",
+        "runtimeProof": "Required per race: onset fires once at that race's real basis; recovery fires; no repeat spam across consecutive dawns; survives reload."
+      },
+      {
+        "auditId": "shared.champion-entry.coverage",
+        "kind": "ux-decision",
+        "race": "Shared",
+        "moment": "Champion entry recognition",
+        "playerImpact": "Major",
+        "gapClass": "missing-player-communication",
+        "status": "Open",
+        "question": "What is the smallest shared champion-recognition architecture that keeps deity-specific content without cloning a flow per deity?",
+        "nodeIds": [
+          "race.nord.spine.champion-entry",
+          "race.imperial.spine.champion-entry",
+          "race.altmer.spine.champion-entry",
+          "race.bosmer.spine.champion-entry",
+          "race.breton.spine.champion-entry",
+          "race.dunmer.spine.champion-entry",
+          "race.khajiit.spine.champion-entry",
+          "race.argonian.spine.champion-entry",
+          "race.orc.spine.champion-entry",
+          "race.redguard.spine.champion-entry"
+        ],
+        "copyIds": [],
+        "papyrusResult": "Champion entry shown through the standard path exists for Nord/Kyne ONLY (PDV_OriginRuntime_Nord.psc:508,535; queued from tier-up at PDV_DevotionLedger.psc:1164; presented off the 1s tick at PDV__ManagerQuest.psc:973). Redguard has three but keyed to SECTS rather than its seven deities (PDV_OriginRuntime_Redguard.psc:655-698). Dunmer (:475) and Khajiit (:1717-1732) fire the moment but present Prisma-only with no message record. Imperial, Altmer, Breton, Argonian, Bosmer and Orc have none -- and Breton's focused champion tier surfacing is ACTIVELY suppressed by ShouldSuppressBretonFocusedChampionTierSurface. This row subsumes the handoff's imperial.champion-entry row: the shared architecture that row asks for is this one. Route claims remain version-qualified until the drift row is resolved.",
+        "espResult": "Only Nord/Kyne and the separate Daedric Msg_ChampionEntry family were found by repo-wide search. ESP readback NOT performed -- Papyrus-source verified only; direct houseCARL readback owed, Codex-owned.",
+        "implementationRoute": "One shared transition architecture parameterised by deity content, not nine independent flows. Decide whether Redguard's sect-keyed entries are the intended shape or a partial implementation of the per-deity one.",
+        "runtimeProof": "Required: entry fires once per deity at the Champion crossing; correct deity content; no double-fire alongside the generic tier lane; survives reload."
+      },
+      {
+        "auditId": "shared.curse.message-coverage",
+        "kind": "ux-decision",
+        "race": "Shared",
+        "moment": "Curse onset and cure",
+        "playerImpact": "Major",
+        "gapClass": "missing-player-communication",
+        "status": "Open",
+        "question": "Which curse transitions must speak, given five races currently change the player's mechanics with no text at all?",
+        "nodeIds": [
+          "race.imperial.curse.player-messages",
+          "race.breton.curse.player-messages",
+          "race.dunmer.curse.player-messages",
+          "race.orc.curse.player-messages",
+          "race.bosmer.curse.player-messages",
+          "race.altmer.curse.player-messages",
+          "race.bosmer.curse.state-handling"
+        ],
+        "copyIds": [
+          "reference:PDV_Msg_Breton_CurseState_VampireCured",
+          "reference:PDV_Msg_Breton_CurseState_VampireOnset",
+          "reference:PDV_Msg_Breton_CurseState_WerewolfCured",
+          "reference:PDV_Msg_Dunmer_CurseState_VampireCured_Scarred",
+          "reference:PDV_Msg_Dunmer_CurseState_VampireOnset_AshSilenced",
+          "reference:PDV_Msg_Dunmer_CurseState_WerewolfCured",
+          "reference:PDV_Msg_Dunmer_CurseState_WerewolfOnset"
+        ],
+        "papyrusResult": "Full onset and cure coverage: Nord (PDV_OriginRuntime_Nord.psc:733-762), Argonian (:1096-1124), Redguard (:848-888), Khajiit (:1474-1495 plus a ShadowDrift entry). Altmer has werewolf hard-halt ONSET only -- and the long-held 'terminal curse, no cure lane' belief is DISPROVEN: the cure branch at PDV_OriginRuntime_Altmer.psc:1381-1394 clears WerewolfHalt AND its one-shot, so only the cure-side message is missing. NONE at all: Imperial (state fully handled at :250-273 including VampireHalt, history scar, substrate wipe and a 20.0 cure seed, but no CurseState record exists -- the player is halted without being told, with only dashboard prose at :518-523), Breton (state only at :627-644 including the Green Way to Werewolf druidic fork flip; the sole player-facing artifact is one Book of Days line at :452), Dunmer (:552-562 sets curse posture only), Orc (:873-887 wired including a werewolf-onset Malacath minus, but no record). Bosmer has NO curse handler at all and falls to the base no-op at PDV_OriginRuntimeBase.psc:7689. This row subsumes the handoff's imperial.curse.player-messages row. Route claims remain version-qualified until the drift row is resolved.",
+        "espResult": "No Imperial, Breton, Dunmer or Orc CurseState Message records were found, and Bosmer has neither records nor a handler. ESP readback NOT performed -- Papyrus-source verified only; direct houseCARL readback owed, Codex-owned.",
+        "implementationRoute": "Reuse the shared transition architecture from shared.champion-entry.coverage once proven. Asymmetric vampire and werewolf mechanics, cure recovery and save/load risk make this the later slice. Bosmer needs a prior decision: silent by design, or an omission.",
+        "runtimeProof": "Required: onset and cure each fire once per cycle per race; correct vampire/werewolf asymmetry; state and message agree after cure; survives reload."
+      },
+      {
+        "auditId": "shared.emergence.coverage",
+        "kind": "design-question",
+        "race": "Shared",
+        "moment": "Devoted crossing (emergence)",
+        "playerImpact": "Moderate",
+        "gapClass": "design-vs-implementation-drift",
+        "status": "Open",
+        "question": "Is 'the Devoted crossing surfaces via emergence' still the intended rule, given only Khajiit implements it and the one other emitter is dead code?",
+        "nodeIds": [
+          "race.khajiit.spine.focus-emergence",
+          "race.breton.spine.emergence"
+        ],
+        "copyIds": [],
+        "papyrusResult": "The transition coverage map states the Devoted crossing is surfaced by 'emergence' rather than 'tier'. In source that is design intent only. Khajiit is the ONLY race with a real emergence beat: a first-emergence one-shot showing the per-focus message plus a focus.emergence Book of Days entry (PDV_OriginRuntime_Khajiit.psc:1603-1634, reached from ProcessDawn to EvaluateKhajiitFocusedEmphasis). The only other emergence.onset emitter in the codebase, PDV_OriginRuntime_Breton.psc:669, is PROVABLY UNREACHABLE: it sits between BeginRaceSetupQuietPresentation (:648) and its End (:674), and SurfaceTransition early-returns while quiet presentation is active (PDV_PrismaPresenter.psc:181-183) -- and it fires on tradition-set rather than on a Devoted crossing. Every other race rides the generic tier lane (PDV_DevotionLedger.psc:1154-1166).",
+        "espResult": "All five Khajiit focus emergence messages are present. ESP readback NOT performed -- Papyrus-source verified only; direct houseCARL readback owed, Codex-owned.",
+        "implementationRoute": "Owner ruling first: either the coverage map is aspirational and should be corrected, or emergence is the intended Devoted treatment and belongs inside the shared transition architecture. Breton's dead emitter should be removed or repaired either way.",
+        "runtimeProof": "Required only after the ruling."
+      },
+      {
+        "auditId": "shared.offer-copy.deity-naming",
+        "kind": "copy-authoring",
+        "race": "Shared",
+        "moment": "Formal commitment offer wording",
+        "playerImpact": "Moderate",
+        "gapClass": "copy-pending-owner",
+        "status": "Open",
+        "question": "None outstanding for design -- this is owner writing, with supports already supplied.",
+        "nodeIds": [
+          "race.nord.spine.commitment-offer",
+          "race.imperial.spine.commitment-offer",
+          "race.altmer.spine.commitment-offer",
+          "race.dunmer.spine.commitment-offer",
+          "race.redguard.spine.commitment-offer",
+          "race.breton.spine.commitment-offer"
+        ],
+        "copyIds": [],
+        "papyrusResult": "Offer dispatch reaches Nord (14 records), Imperial (9), Altmer (5), Breton, Dunmer (3) and Redguard (3 of 7) from EvaluateFormalCommitmentOffer (PDV_DevotionLedger.psc:3914). Khajiit, Argonian and Orc have no formal offer, enforced deliberately in two independent places each.",
+        "espResult": "houseCARL readback on 2026-08-20 found 45 offer records: every Name field names the deity, but 23 descriptions do not contain the deity's explicit public name (Nord 12, Dunmer 3, Altmer 3, Imperial 4, Redguard 1, Breton 0). Breton is the only fully compliant race.",
+        "implementationRoute": "Owner writes the copy (standing rule from 2026-08-24: all player-facing copy is owner-written; model text appears only as explicitly marked placeholders). Supports live in the workbook's 'Offer Writing Worksheet' sheet: 29 targets ordered so the 14 with a same-deity compliant twin come first, the house four-move pattern, and the roughly 140-character median against the 500 ceiling. Codex applies approved wording and reads the records back.",
+        "runtimeProof": "Record readback after application; no runtime route change."
+      },
+      {
+        "auditId": "shared.dead-state-keys",
+        "kind": "cleanup",
+        "race": "Shared",
+        "moment": "Code hygiene (no player moment)",
+        "playerImpact": "Minor",
+        "gapClass": "dead-code",
+        "status": "Open",
+        "question": "None -- Codex-owned cleanup, recorded so it is not rediscovered as a finding.",
+        "nodeIds": [
+          "race.orc.curse.state-handling",
+          "race.redguard.curse.race-effect"
+        ],
+        "copyIds": [],
+        "papyrusResult": "PDV.Curse.Orc.VampireScar is written at PDV_OriginRuntime_Orc.psc:873-887 and read nowhere in live-source. The Redguard VampireScar is set at PDV_OriginRuntime_Redguard.psc:853 and read nowhere; VampireReentryNeeded is only ever cleared (:389 and :453) and gates no earning; CyclePressure feeds only the neglect predicate (:768). Together these confirm the Redguard vampire earn-halt is specced but not built.",
+        "espResult": "Not applicable -- these are StorageUtil keys, not records.",
+        "implementationRoute": "Codex: either wire the earn-halt the spec describes or delete the dead keys. Do not leave a written-never-read key, which reads as an implemented feature to the next audit.",
+        "runtimeProof": "If the halt is built: prove earning is actually zeroed while cursed and restored after cure."
+      },
+      {
+        "auditId": "redguard.offer.deity-coverage",
+        "kind": "design-question",
+        "race": "Redguard",
+        "moment": "Formal commitment offer coverage",
+        "playerImpact": "Moderate",
+        "gapClass": "design-decision-required",
+        "status": "Open",
+        "question": "Is offering only 3 of the 7 Redguard deities deliberate scope, or an unfinished tranche?",
+        "nodeIds": [
+          "race.redguard.spine.commitment-offer"
+        ],
+        "copyIds": [],
+        "papyrusResult": "Offer records exist for Tu'whacca, Leki and HoonDing with matching Accept/NotYet/Refuse responses (PDV_OriginRuntime_Redguard.psc:824-846); IsRedguardOfferEligibleDeity returns False for the other four roster deities (:1211). The exclusion is enforced deliberately enough that it does not look accidental, but no design note states the intent.",
+        "espResult": "3 offer records observed against a 7-deity roster. ESP readback NOT performed -- Papyrus-source verified only; direct houseCARL readback owed, Codex-owned.",
+        "implementationRoute": "Owner ruling. If deliberate, record the reason in the race packet so the next audit does not reopen it; if unfinished, it joins the offer-copy row.",
+        "runtimeProof": "None until the ruling."
+      },
+      {
+        "auditId": "dunmer.substrate.no-decay",
+        "kind": "design-question",
+        "race": "Dunmer",
+        "moment": "Ancestor substrate decay",
+        "playerImpact": "Minor",
+        "gapClass": "design-decision-required",
+        "status": "Open",
+        "question": "Is the Dunmer ancestor substrate's absence of a decay function deliberate?",
+        "nodeIds": [],
+        "copyIds": [],
+        "papyrusResult": "PDV_Substrate_DunmerAncestor is the only metric substrate with no Process-dawn decay function. Every other metric substrate writes its own (3-day grace, -1.0 per day, floor 20.0, floor dropping to 0 under an active curse). Khajiit also does not decay, but that is explicitly sanctioned in references/authoring/PDV_DecayAudit.md:94; no equivalent note exists for Dunmer. Dunmer is also the one substrate passing a fractional curse credit multiplier (PDV_Substrate_DunmerAncestor.psc:30-32).",
+        "espResult": "Not applicable.",
+        "implementationRoute": "Owner ruling, then either add the decay pass or record the sanction in the decay audit the way Khajiit's is recorded.",
+        "runtimeProof": "None until the ruling."
       }
     ],
     "auditProfiles": {
