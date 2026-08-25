@@ -1,4 +1,11 @@
-# PDV UX Workstream Handoff for Claude — 2026-08-24
+# PDV UX Workstream Handoff for Claude -- 2026-08-24
+
+> **SUPERSEDED for workflow (2026-08-25).** Use
+> `handoff/PDV_UX_NextSession_Handoff_2026-08-25.md` for the operating pattern
+> (recover -> reconcile -> implement). This file is kept as historical context and
+> has been partially updated since; its discovery-first framing and its workbook
+> path are both superseded. The prose authority is now
+> `references/authoring/prose-workbook/PDV_ProseWorkbook.xlsx`.
 
 ## Purpose
 

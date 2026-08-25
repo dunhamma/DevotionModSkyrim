@@ -129,10 +129,17 @@ Ranked, from `PDV_WordingRevisionBacklog.md`, `PDV_V2_Backlog.md`,
 `PDV_DaedricRaceResponse_Backlog_2026-08-07.md`, `PDV_PrismaUXEquityAudit.md`, and the
 ImmersiveUX docs. Nothing here is started.
 
+> **Stale as of 2026-08-25.** This queue predates the consolidation plan
+> (`handoff/PDV_UX_ConsolidationPlan_2026-08-25.md`), which migrates these items into the
+> single atlas `implementationAudit.queue`. Items 1-2 below are already resolved or
+> reclassified: the offer copy is now owner-written (see the workbook's Offer Writing
+> Worksheet), and both manual-review contradictions were closed the same day.
+
 1. **Formal commitment offer copy.** 23 of 45 offer `MESG` descriptions never name their
-   deity; the per-record inventory is already complete in the wording backlog. Owner
-   drafts, Codex applies and reads back. Fully scoped, high value.
-2. **The two manual-review contradictions.** Small, and they unblock the audit.
+   deity; the per-record inventory is already complete in the wording backlog. **Owner
+   writes the copy** (2026-08-24 rule); Claude supplies worksheets and conformance checks.
+2. ~~The two manual-review contradictions.~~ **Closed 2026-08-24** -- see
+   `handoff/PDV_UX_ManualReviewResolutions_2026-08-24.md`.
 3. **Long Devotion mark wording.** One owner pick among four drafted candidates.
 4. **PLACEHOLDER copy sweep.** Five self-marked live placeholder surfaces: Daedric survey
    text, pact switch/severance, pact lapse, generic curse toast, generic curse Book of
