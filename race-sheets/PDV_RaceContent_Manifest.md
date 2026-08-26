@@ -1234,7 +1234,7 @@ Tier-up notifications: one per save per deity per direction; Faithful entry supp
 Implementation-locked. Sect-divergent (Crown, Forebear, Ash'abah) within one Yokudan religious universe; ancestor reverence always active. `PDV_State_RedguardSect` with `Crown = 0`, `Forebear = 1`, `AshAbah = 2`.
 
 **Slot-frame corrections:**
-- **Blessings: Tier 1 shared, Tier 2 sect-shaped, Tier 3 per focused deity.** The locked `RaceDesign_Redguard` "Tier Rewards" gives Tier 1 a single all-sect record, Tier 2 three sect-shaped records, and Tier 3 per focused deity. The corrected set is ten blessing records: `PDV_Bless_Redguard_Yokudan_T1`, `_Crown_T2` / `_Forebear_T2` / `_AshAbah_T2`, and `_Satakal_T3` / `_Tuwhacca_T3` / `_Ruptga_T3` / `_Leki_T3` / `_Tava_T3` / `_HoonDing_T3`. Onsi and Zeht are minor and have no focused Tier 3 per the locked Tier 3 list.
+- **Blessings: Tier 1 shared, Tier 2 sect-shaped, Tier 3 per focused deity.** The locked `RaceDesign_Redguard` "Tier Rewards" gives Tier 1 a single all-sect record, Tier 2 three sect-shaped records, and Tier 3 per focused deity. The corrected set is seven blessing records: `PDV_Bless_Redguard_Yokudan_T1`, `_Crown_T2` / `_Forebear_T2` / `_AshAbah_T2`, and `_Tuwhacca_T3` / `_Leki_T3` / `_HoonDing_T3`. Onsi and Zeht are minor and have no focused Tier 3 per the locked Tier 3 list. Removed 2026-08-26: the Satakal/Ruptga/Tava entries for never-built focusable records. The three-god roster and the reasoning live in `references/authoring/PDV_RedguardLoreBaseline.md` (considered and rejected).
 - **HoonDing make-way folded into contextual favor.** The planning-pass frame listed separate `PDV_Msg_Redguard_HoonDingMakeWay_*` rows. Make-way is authored as the Marked make-way favor rows in Section 16.9 (Crown, Forebear, Ash'abah); the curated milestone hooks (dragon, named boss, final boss, weekly cap) live in those rows' dep-notes.
 
 ### 16.1 Tone profiles
@@ -1242,12 +1242,11 @@ Implementation-locked. Sect-divergent (Crown, Forebear, Ash'abah) within one Yok
 | Voice | Tone profile |
 |---|---|
 | Ancestors (Redguard) | The watching dead; a gravity rather than a voice; present at tombs and death; speak rarely, of how you lived and whether the Far Shores will have you. |
-| Satakal | The Worldskin; vast, cyclical; speaks of the shedding, of creation and destruction as one motion, of death as correct when its time has come. |
 | Tu'whacca | The guide of souls to the Far Shores; quiet, grave, grateful to those who tend the dead; the gentlest Yokudan voice. |
-| Ruptga | Tall Papa, the pathfinder; the first to find the Far Shores; speaks of the way charted and of survival as a sacred achievement. |
 | Leki | Saint of the Spirit Sword; disciplined, exact; speaks of the blade as devotion, the honorable cut, the art learned with patience. |
-| Tava | The bird-god of wind and passage; speaks of safe arrival, the road carried, the storm steered through. |
 | HoonDing | The Make-Way God; surges and does not linger; speaks only in the moment a way is forced where there was none. |
+
+> Removed 2026-08-26: rows for never-built Satakal/Ruptga/Tava focusable records. The three-god roster and the reasoning live in `references/authoring/PDV_RedguardLoreBaseline.md` (considered and rejected).
 
 ### 16.2 Blessing descriptions (`PDV_Bless_Redguard_*`)
 
@@ -1259,12 +1258,11 @@ Narrator voice. Budget 200 hard / 140 target. Tier 1 shared; Tier 2 sect-shaped;
 | PDV_Bless_Redguard_Crown_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Crown" | Passive SPEL; Crown sect | The Yokudan gods recognize a kept orthodoxy. Honorable combat sharpens your blade for a time; tomb sites draw the ancestors near. |
 | PDV_Bless_Redguard_Forebear_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Forebear" | Passive SPEL; Forebear sect | The Yokudan gods recognize the way made in exile. Surviving hard odds or a long road returns stamina; honored contracts earn Tava's favor. |
 | PDV_Bless_Redguard_AshAbah_T2 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tier 2 -- Ash'abah" | Passive SPEL; Ash'abah sect | The Yokudan gods recognize the unclean duty borne. Cleansing a tomb restores full health on next rest; undead deal 15% less harm. |
-| PDV_Bless_Redguard_Satakal_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Satakal Champion" | Passive SPEL; Satakal focus | Satakal sheds the Worldskin around you. A quest of cosmic or generational stakes returns a day of fear resistance and health regeneration. |
 | PDV_Bless_Redguard_Tuwhacca_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tu'whacca Champion" | Passive SPEL; Tu'whacca focus | Tu'whacca draws the Far Shores nearer. Undead deal up to 25% less harm; a completed death-rite restores full health, and the dead feel present at the tombs. |
-| PDV_Bless_Redguard_Ruptga_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Ruptga Champion" | Passive SPEL; Ruptga focus | Ruptga charts your way. Making a path through the impossible returns a day of steady bonus across your disciplines. |
 | PDV_Bless_Redguard_Leki_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Leki Champion" | Passive SPEL; Leki focus | Leki makes the blade discipline holy. Your one-handed attacks strike 8% harder, and honorable sword-work returns power-attack stamina. |
-| PDV_Bless_Redguard_Tava_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "Tava Champion" | Passive SPEL; Tava focus | Tava rides the wind with you. Storms no longer penalize the open road; sprinting drains 15% less stamina; a long journey's end restores health and stamina. |
 | PDV_Bless_Redguard_HoonDing_T3 | Blessing description | Quiet | Narrator | 200/140 | RaceDesign_Redguard "HoonDing Champion" | Passive SPEL; HoonDing focus | HoonDing makes the way. Once a week, an impossible-odds victory returns a day-long surge of combat strength. |
+
+> Removed 2026-08-26: rows for never-built Satakal/Ruptga/Tava focusable records. The three-god roster and the reasoning live in `references/authoring/PDV_RedguardLoreBaseline.md` (considered and rejected).
 
 ### 16.3 Tier-up notifications (`PDV_Notif_Redguard_*`)
 
@@ -1319,15 +1317,14 @@ God-voice on offer bodies; player-second-person on responses. MessageBox. Body b
 
 | Slot ID | Surface | Surfacing | Voice | Budget | Source | Anti-farm / dep notes | Draft prose |
 |---|---|---|---|---|---|---|---|
-| PDV_Msg_Redguard_Satakal_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Satakal's Cycle" Body: "You have lived as one who knows the Worldskin sheds. Carry Satakal as your own, and the great cycle becomes your devotion. Will you?" |
 | PDV_Msg_Redguard_Tuwhacca_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Tu'whacca's Charge" Body: "You tend the dead and turn back the undead. Carry Tu'whacca as your own, and the guidance of souls to the Far Shores is your charge. Will you?" |
-| PDV_Msg_Redguard_Ruptga_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Ruptga's Path" Body: "You have made ways and charted survival. Carry Ruptga, Tall Papa, as your own, and the path itself becomes your faith. Will you?" |
 | PDV_Msg_Redguard_Leki_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Leki's Blade" Body: "Your sword-work is disciplined and honest. Carry Leki as your own, and the blade becomes devotion made exact. Will you?" |
-| PDV_Msg_Redguard_Tava_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "Tava's Wind" Body: "The road has carried you far, and you have carried it well. Carry Tava as your own, and the wind of good passage is yours. Will you?" |
 | PDV_Msg_Redguard_HoonDing_Offer | MessageBox | Marked | God-voice | 500/280 | RaceDesign_Redguard "Focused deity gate" | Dawn-fire; per-deity cooldown | Title: "HoonDing's Call" Body: "Again and again you have made a way where there was none. Carry the Make-Way God as your own, and the impossible passage becomes your devotion. Will you?" |
 | PDV_Msg_Redguard_OfferResponse_Accept | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Shared across Redguard offers | Walk under this god. |
 | PDV_Msg_Redguard_OfferResponse_NotYet | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Sets per-deity cooldown only | Not yet. |
 | PDV_Msg_Redguard_OfferResponse_Refuse | MessageBox | Marked | Player-2nd | 40/30 | Architecture v3 Section 12.3 | Broad sect worship continues | Keep to the sect's broad worship. |
+
+> Removed 2026-08-26: rows for never-built Satakal/Ruptga/Tava focusable records. The three-god roster and the reasoning live in `references/authoring/PDV_RedguardLoreBaseline.md` (considered and rejected).
 
 ### 16.8 Survey Devotion readouts (`PDV_Msg_Redguard_Survey_*`)
 
@@ -2055,7 +2052,7 @@ drawn from that race's roster:
 | Dunmer | Azura, Boethiah, Mephala (focused Reclamation) |
 | Altmer | Auri-El, Magnus, Trinimac, Xarxes, Syrabane |
 | Khajiit | Khenarthi, Azurah, Baan Dar, Rajhin, Alkosh |
-| Redguard | Satakal, Tu'whacca, Ruptga, Leki, Tava, HoonDing |
+| Redguard | Tu'whacca, Leki, HoonDing (focusable); Satakal/Ruptga/Tava/Onsi and others remain broad-lane texture |
 | Bosmer | Y'ffre, Z'en, Baan Dar (the active path's deity) |
 | Breton | Stendarr, Akatosh, Mara, Hermaeus Mora, Hircine, Nocturnal, Namira, Y'ffre, Magnus, Phynaster |
 | Orc | Malacath only -- named literally in prose, never via `%s` |

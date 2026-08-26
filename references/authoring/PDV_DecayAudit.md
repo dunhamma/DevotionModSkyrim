@@ -90,7 +90,7 @@ piety exceptions):
 | Daedric stigma | −1/day toward 0 | **Relief**, not loss |
 | Breton WitchcraftExposure | −1/day toward Hidden | **Relief**, not loss |
 | Bosmer GreenPactCompliance | **no passive decay** (act-driven) (`Bosmer:54`) | **Sanctioned** |
-| Dunmer ancestor | **no passive decay** (infrastructure ceiling LOCKED) (`Dunmer:61`) | **Sanctioned** |
+| Dunmer ancestor | **no passive decay** (infrastructure ceiling LOCKED) (`Dunmer:61`) | **Sanctioned** (reconfirmed by owner 2026-08-26: lapse pressure is carried by curse posture, not time; wider decay-removal question is GitHub #108) |
 | Khajiit lunar substrate | never decays severely | **Sanctioned** |
 
 ## Decisions (all locked)

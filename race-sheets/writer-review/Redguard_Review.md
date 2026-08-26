@@ -26,16 +26,15 @@ _3 rows._
 
 ## Devoted blessing (Tier 3)
 
-_6 rows._
+_3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Satakal: The Worldskin; vast, cyclical; speaks of the shedding, of creation and destruction as one motion, of death as correct when its time has come. | `PDV_Bless_Redguard_Satakal_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 138 / 200 |  | Satakal sheds the Worldskin around you. A quest of cosmic or generational stakes returns a day of fear resistance and health regeneration. |  |
 | _(no tone match)_ | `PDV_Bless_Redguard_Tuwhacca_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 156 / 200 |  | Tu'whacca draws the Far Shores nearer. Undead deal up to 25% less harm; a completed death-rite restores full health, and the dead feel present at the tombs. |  |
-| Ruptga: Tall Papa, the pathfinder; the first to find the Far Shores; speaks of the way charted and of survival as a sacred achievement. | `PDV_Bless_Redguard_Ruptga_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 115 / 200 |  | Ruptga charts your way. Making a path through the impossible returns a day of steady bonus across your disciplines. |  |
 | Leki: Saint of the Spirit Sword; disciplined, exact; speaks of the blade as devotion, the honorable cut, the art learned with patience. | `PDV_Bless_Redguard_Leki_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 134 / 200 |  | Leki makes the blade discipline holy. Your one-handed attacks strike 8% harder, and honorable sword-work returns power-attack stamina. |  |
-| Tava: The bird-god of wind and passage; speaks of safe arrival, the road carried, the storm steered through. | `PDV_Bless_Redguard_Tava_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 155 / 200 |  | Tava rides the wind with you. Storms no longer penalize the open road; sprinting drains 15% less stamina; a long journey's end restores health and stamina. |  |
 | HoonDing: The Make-Way God; surges and does not linger; speaks only in the moment a way is forced where there was none. | `PDV_Bless_Redguard_HoonDing_T3` | Passive blessing description; visible whenever the player views active effects. | Narrator | 108 / 200 |  | HoonDing makes the way. Once a week, an impossible-odds victory returns a day-long surge of combat strength. |  |
+
+> Removed 2026-08-26: rows for never-built Satakal/Ruptga/Tava focusable records. The three-god roster and the reasoning live in `references/authoring/PDV_RedguardLoreBaseline.md` (considered and rejected).
 
 ## Champion ambient line
 
@@ -60,16 +59,15 @@ _4 rows._
 
 ## Commitment offer (the god asks)
 
-_6 rows._
+_3 rows._
 
 | Deity / tone | Slot ID | Trigger | Voice | Chars / cap | ! | Draft prose | Edit |
 |---|---|---|---|---|---|---|---|
-| Satakal: The Worldskin; vast, cyclical; speaks of the shedding, of creation and destruction as one motion, of death as correct when its time has come. | `PDV_Msg_Redguard_Satakal_Offer` | MessageBox. Dawn-fire; per-deity cooldown. | God-voice | 15+132 / 40+500 |  | Title: "Satakal's Cycle"   Body: "You have lived as one who knows the Worldskin sheds. Carry Satakal as your own, and the great cycle becomes your devotion. Will you?" |  |
 | _(no tone match)_ | `PDV_Msg_Redguard_Tuwhacca_Offer` | MessageBox. Dawn-fire; per-deity cooldown. | God-voice | 18+142 / 40+500 |  | Title: "Tu'whacca's Charge"   Body: "You tend the dead and turn back the undead. Carry Tu'whacca as your own, and the guidance of souls to the Far Shores is your charge. Will you?" |  |
-| Ruptga: Tall Papa, the pathfinder; the first to find the Far Shores; speaks of the way charted and of survival as a sacred achievement. | `PDV_Msg_Redguard_Ruptga_Offer` | MessageBox. Dawn-fire; per-deity cooldown. | God-voice | 13+128 / 40+500 |  | Title: "Ruptga's Path"   Body: "You have made ways and charted survival. Carry Ruptga, Tall Papa, as your own, and the path itself becomes your faith. Will you?" |  |
 | Leki: Saint of the Spirit Sword; disciplined, exact; speaks of the blade as devotion, the honorable cut, the art learned with patience. | `PDV_Msg_Redguard_Leki_Offer` | MessageBox. Dawn-fire; per-deity cooldown. | God-voice | 12+119 / 40+500 |  | Title: "Leki's Blade"   Body: "Your sword-work is disciplined and honest. Carry Leki as your own, and the blade becomes devotion made exact. Will you?" |  |
-| Tava: The bird-god of wind and passage; speaks of safe arrival, the road carried, the storm steered through. | `PDV_Msg_Redguard_Tava_Offer` | MessageBox. Dawn-fire; per-deity cooldown. | God-voice | 11+132 / 40+500 |  | Title: "Tava's Wind"   Body: "The road has carried you far, and you have carried it well. Carry Tava as your own, and the wind of good passage is yours. Will you?" |  |
 | HoonDing: The Make-Way God; surges and does not linger; speaks only in the moment a way is forced where there was none. | `PDV_Msg_Redguard_HoonDing_Offer` | MessageBox. Dawn-fire; per-deity cooldown. | God-voice | 15+153 / 40+500 |  | Title: "HoonDing's Call"   Body: "Again and again you have made a way where there was none. Carry the Make-Way God as your own, and the impossible passage becomes your devotion. Will you?" |  |
+
+> Removed 2026-08-26: rows for never-built Satakal/Ruptga/Tava focusable records. The three-god roster and the reasoning live in `references/authoring/PDV_RedguardLoreBaseline.md` (considered and rejected).
 
 ## Commitment reply (player answers)
 

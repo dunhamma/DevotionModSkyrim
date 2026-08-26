@@ -45,7 +45,7 @@ and the breakage is invisible because the gate still exits 0.
 rows, Imperial-focused. Six finding clusters from 2026-08-24 live only in markdown briefs:
 the Marked-tier rung, the Sithis threshold copy defect, the ~19 neglect-transition rows,
 champion-entry coverage, curse-message coverage, and the loose bolts (two dead
-`VampireScar` keys, Redguard offers covering 3 of 7 deities, Dunmer's decay-free
+`VampireScar` keys, Redguard offers covering 3 of 7 deities [corrected 2026-08-26: no 7-roster exists -- see PDV_RedguardLoreBaseline.md], Dunmer's decay-free
 substrate). The queue therefore understates real scope, and prioritising from it alone
 would work the wrong things first.
 
@@ -113,7 +113,7 @@ Rows to create, with the evidence each must carry:
 | `shared.emergence.coverage` | Khajiit is the only race with a real emergence beat (per-focus MESG + Book of Days entry). The sole other `emergence.onset` emitter, `PDV_OriginRuntime_Breton.psc:669`, is provably unreachable - it sits inside the quiet-presentation window that `PDV_PrismaPresenter.psc:181-183` early-returns during, and fires on tradition-set rather than the Devoted crossing. The coverage map's "Devoted surfaces via emergence" is design intent, not build state. |
 | `shared.offer-copy.deity-naming` | 23 of 45 offer descriptions do not contain the deity's explicit public name; per-record inventory already complete in the wording backlog. Breton is the only fully compliant race. Owner writes; supports exist in the workbook's Offer Writing Worksheet (14 targets have a same-deity compliant twin; house pattern is four moves at a ~140-char median against a 500 ceiling). |
 | `shared.dead-state-keys` | `PDV.Curse.Orc.VampireScar` and the Redguard `VampireScar` are written and read nowhere. Redguard `VampireReentryNeeded` is only ever cleared and gates no earning. Confirms the Redguard vampire earn-halt is specced, not built. Codex-owned cleanup. |
-| `redguard.offer.deity-coverage` | Offer records exist for 3 of 7 deities (Tu'whacca/Leki/HoonDing); `IsRedguardOfferEligibleDeity` returns false for the other four. Owner decision: deliberate scope or unfinished tranche. |
+| `redguard.offer.deity-coverage` | Offer records exist for 3 of 7 deities (Tu'whacca/Leki/HoonDing); `IsRedguardOfferEligibleDeity` returns false for the other four. Owner decision: deliberate scope or unfinished tranche. [RESOLVED 2026-08-26: the roster IS three; the 7 figure was documentation drift. PDV_RedguardLoreBaseline.md] |
 | `dunmer.substrate.no-decay` | The only metric substrate with no decay function. Owner decision: deliberate or missing. |
 
 After migration, **re-prioritise the combined queue by player impact**, not by which system

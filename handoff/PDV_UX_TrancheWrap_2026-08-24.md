@@ -117,7 +117,7 @@ feature (Redguard has sect-keyed entries; Dunmer/Khajiit fire it Prisma-only; si
 none — Breton's actively suppressed); Khajiit has the mod's only real emergence beat (the
 sole other emitter, Breton, is provably unreachable); five races handle curses correctly
 but show the player no message (Bosmer has no curse handler at all); Redguard's formal
-offers cover only 3 of 7 deities; two dead state keys (Orc/Redguard VampireScar written,
+offers cover only 3 of 7 deities [corrected 2026-08-26: no 7-roster exists; roster is three by design -- PDV_RedguardLoreBaseline.md]; two dead state keys (Orc/Redguard VampireScar written,
 never read); Dunmer is the only metric substrate with no decay function (owner call
 whether deliberate). The Altmer "terminal curse, no cure lane" claim was disproven — the
 cure clears the halt; only the cure-side message is missing. The Ash'abah mid-game entry

@@ -107,10 +107,10 @@ Suggested order: Nord (most content, the established pilot), then a substrate ra
 
 1. Talos silence - intended or a hole? (#104) - blocks the Concordat slice's shape.
 2. Tier vocabulary - one set or a deliberate split? (#105) - blocks any copy naming a tier.
-3. Substrate tier crossings - beat, or is quiet the point?
-4. Champion recognition - one shared parameterised transition, or bespoke per race?
-5. Redguard offers cover 3 of 7 deities - deliberate or unfinished?
-6. Dunmer substrate has no decay function - deliberate or missing?
+3. ~~Substrate tier crossings~~ RESOLVED 2026-08-25/26: journal entry on every crossing; a toast on reaching the top tier or dropping a tier (MCM visibility options planned so players choose how much they see).
+4. ~~Champion recognition~~ RESOLVED 2026-08-25/26: ONE shared moment dressed per deity - 3-4 sentences in the deity's own voice, owner-written (~50 deities). Redguard instance re-keys from sect to DEITY with sect flavouring the dressing (mechanical change owed).
+5. ~~Redguard offers cover 3 of 7 deities~~ RESOLVED 2026-08-26: there is no 7-roster; exactly three focusable gods exist and a gate (pdv_formal_offer_check forbidden tokens) enforces it. See references/authoring/PDV_RedguardLoreBaseline.md.
+6. ~~Dunmer decay~~ RESOLVED 2026-08-26: no-decay is deliberate - Dunmer's lapse pressure is carried by curse posture, not time. Sanction recorded. The wider question (remove decay everywhere; what moves culture standing down) is research issue #108.
 
 ## 8. What is NOT proven
 

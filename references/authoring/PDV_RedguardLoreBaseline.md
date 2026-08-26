@@ -337,17 +337,20 @@ pending a visual architecture walkthrough (see below).
 - [x] **RaceDesign :84-vs-:179 HoonDing contradiction: RESOLVED by (a).** Neither line wins:
       the sect assignment itself is removed. Make-way favor is pan-sect; the sheet is
       reconciled to that framing in the cleanup sweep.
-- [ ] **Texture-gods wording: OPEN, paused with deletions.** The owner asked whether, under
-      the pan-sect reframe, the texture gods should be made explicit citizens of the cultural
-      lane (broad sect worship) - which is where they already live mechanically - and requested
-      a visual of how a Redguard is built under the reframe before ruling.
+- [x] **Texture-gods wording: LOCKED - "culture credits the god."** The lane speaks and names
+      the god as the culture's interpretation ("the caravans thank Tava for the crossing").
+      The god never acts, never notices, never grants - the CULTURE attributes. Extends the
+      2026-07-08 no-scoring-actor ruling into a repeatable writing pattern. The texture gods
+      are explicit citizens of the cultural lane; that is their recorded home.
 - [x] **Champion-entry sect-keying: LOCKED - keyed to the DEITY, sect flavours the dressing.**
       The champion beat fires for your patron regardless of sect (per the standing 2026-08-25
       ruling that all champions are marked); the sect chooses the cultural presentation. Joins
       the shared champion architecture as the Redguard instance. Mechanical change owed.
-- [ ] **Deletions go-ahead: OPEN, paused.** Approved in principle (2026-08-25) but the final
-      go waits on the visual walkthrough above, so the owner can see what the docs describe
-      before the stale rows are removed.
+- [x] **Deletions go-ahead: LOCKED - go, with one upgrade.** Phantom rows (never-built
+      Satakal/Ruptga/Tava records, six/seven-god rosters, their writer-review rows) are
+      deleted with one-line tombstones pointing here. The player-facing companion sheet
+      (race-sheets/Race_Redguard.md) is not trimmed but REWRITTEN in prose to the three-layer
+      framing - it is what players read and deserves better than tombstones.
 - [x] **Prisma display-key pruning: KEEP the four keys** (satakal/ruptga/tava/onsi,
       app.js:66-69). Harmless while unreachable, and wanted the moment any texture god gets a
       surfaced broad-lane moment.

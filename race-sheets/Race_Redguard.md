@@ -40,7 +40,7 @@ All three remain inside the same Yokudan religious universe. They differ by emph
 - **What you do:** Maintain Yokudan tradition. Honor martial discipline. Preserve identity against assimilation. Make sect-defining quest choices that reinforce orthodoxy.
 - **What you get:** Strong ancestor layer blessings. Recognition of preserved lineage.
 - **The feel:** A Redguard whose exile strengthens rather than weakens their identity.
-- **Focused deity options:** Satakal, Tu'whacca, Ruptga, Leki, Onsi, HoonDing (situational)
+- **Focused deities:** Tu'whacca, Leki, or HoonDing - the same three in every sect. A Crown focus wears the covenant as sacred inheritance.
 
 ### Forebear — Adaptive Survivor
 *Living Redguard identity in the world as it is, not as Yokuda was.*
@@ -48,7 +48,7 @@ All three remain inside the same Yokudan religious universe. They differ by emph
 - **What you do:** Take mercenary contracts. Negotiate mixed-society survival. Maintain Redguard identity while engaging with foreign institutions. Complete service and diplomacy quests.
 - **What you get:** Blessings of adaptive strength — favor for surviving well in foreign spaces.
 - **The feel:** A Redguard who carries the gods forward by living among outsiders without losing themselves.
-- **Focused deity options:** Satakal, Tu'whacca, Tava, Leki, Zeht, HoonDing, Morwha (social option)
+- **Focused deities:** Tu'whacca, Leki, or HoonDing - the same three in every sect. A Forebear focus wears the covenant as pragmatic dignity; the culture credits Tava on the road and Zeht at the table, but no offer ever comes from them.
 - **Note:** Forebear allows syncretic reading of Imperial parallels (Arkay/Tu'whacca, etc.) but Yokudan names remain primary.
 
 ### Ash'abah — Bearer of the Unclean Duty
@@ -57,48 +57,53 @@ All three remain inside the same Yokudan religious universe. They differ by emph
 - **What you do:** Cleanse undead. Honor burial rites. Complete Hall of the Dead and anti-necromancy quests. Carry the funerary duty that others won't touch.
 - **What you get:** The strongest devotion potential around death and funerary duty of any Redguard sect. But lowered social standing — the duty costs you.
 - **The feel:** A Redguard whose holiness looks like pollution to everyone else. The truest servant of Tu'whacca, bearing the disgust of those they protect.
-- **Focused deity options:** Tu'whacca, Satakal, HoonDing, Ruptga (harder/less common)
+- **Focused deities:** Tu'whacca, Leki, or HoonDing - the same three in every sect. An Ash'abah focus wears the covenant as burden carried; Tu'whacca is its natural heart.
 - **Note:** Available at setup AND as a later drift/unlock path. A Redguard can become Ash'abah through sustained funerary action.
 
-## Paths of Devotion (Focused Deities)
+## Paths of Devotion (The Three Focusable Gods)
 
-### Tu'whacca — Guardian of the Far Shores
-*The death-keeper. Not Arkay — older, deeper, Yokudan.*
+Three Yokudan gods can take a Redguard as their own - Tu'whacca, Leki, and HoonDing - and
+they are the same three for every sect. The sect never gates the god; it dresses the
+covenant. A Crown Tu'whacca champion and an Ash'abah Tu'whacca champion hold the same
+covenant in different cloth. (The lore itself refuses one-god-per-sect: the sect-split
+editions of Varieties of Faith seat Tava in both the Crown and Forebear pantheons, and
+list Leki and HoonDing in both.)
+
+### Tu'whacca - Guardian of the Far Shores
+*The death-keeper. Not Arkay - older, deeper, Yokudan.*
 
 - **What you do:** Cleanse undead. Maintain tomb order. Complete anti-necromancy quests. Honor proper burial wherever you encounter death.
-- **What you get:** Religious privileges tied to death-duty — recognition in sacred spaces, protection from corruption.
+- **What you get:** Religious privileges tied to death-duty - recognition in sacred spaces, protection from corruption.
 - **The feel:** A Redguard who makes sure the dead reach the Far Shores.
-- **Strongest for:** Ash'abah, but valid across all sects.
+- **Sect dressing:** most at home in Ash'abah, where the duty is lived daily - but a Crown or Forebear who keeps the rites is answered just the same.
 
-### Leki / Onsi — The Blade Saints
+### Leki - The Blade Saint
 *Martial discipline as divine practice.*
 
 - **What you do:** Fight with discipline, not desperation. Complete honorable martial quest resolutions. Refuse cowardly advantage. Prove blade-grace through skill rather than body count.
-- **What you get:** Blessings of martial virtue — combat conduct recognized as worship.
+- **What you get:** Blessings of martial virtue - combat conduct recognized as worship.
 - **The feel:** A Redguard whose sword-arm is a prayer and whose discipline is devotion.
-- **Note:** This is *not* a generic combat farming path. Body count doesn't matter. Conduct does.
+- **Note:** This is *not* a generic combat farming path. Body count doesn't matter. Conduct does. In martial copy the culture names Onsi, the Boneshaver, in the same breath - he taught men to draw swords - but the covenant is Leki's.
 
-### HoonDing — The Make-Way God
+### HoonDing - The Make-Way God
 *For impossible odds. For moments when no path exists and one must be carved.*
 
 - **What you do:** Overcome impossible situations. Complete breakthrough quests where everything was stacked against you. Make the way where there was none.
-- **What you get:** Rare, powerful favors — strongest in moments of genuine breakthrough.
+- **What you get:** Rare, powerful favors - strongest in moments of genuine breakthrough.
 - **The feel:** A Redguard who invokes the path-maker only at the threshold of the impossible.
-- **Note:** Intentionally narrow and dramatic, but attainable for active adventurers. Dragon fights, named creature victories, major quest climaxes, and other "big win" moments can all count when they truly read as clearing an impossible obstacle. HoonDing doesn't notice ordinary victories.
+- **Note:** Intentionally narrow and dramatic, but attainable for active adventurers. Dragon fights, named creature victories, major quest climaxes, and other "big win" moments can all count when they truly read as clearing an impossible obstacle. HoonDing doesn't notice ordinary victories. No sect owns him - he is the god of all Redguards making a way, and each sect reads the way differently: sacred survival (Crown), passage through a mixed world (Forebear), the path cut through the unclean (Ash'abah).
 
-### Satakal — The Worldskin
-*The great cycle. Creation and destruction as a single breath.*
+### The gods you will hear, not follow
 
-- **What you do:** Acknowledge the cycle. Accept change without fighting it. Complete quests that involve endings becoming beginnings.
-- **What you get:** Blessings tied to cosmic awareness — protection during transition, steadiness during upheaval.
-- **The feel:** A Redguard who sees the wheel turning and doesn't flinch.
+The rest of the pantheon stays alive in Redguard play as **the culture crediting its
+gods** - in blessing text, road copy, and rite names - never as patrons, meters, or offers:
 
-### Tava — The Wind
-*Movement, wayfinding, the breath between places.*
-
-- **What you do:** Travel with purpose. Complete journey and discovery quests. Follow the wind rather than fighting it.
-- **What you get:** Travel-facing blessings — favor in motion, guidance toward what matters.
-- **The feel:** A Redguard carried by purpose across foreign lands.
+- **Satakal**, the Worldskin: the cycle everything sits inside. Blessing copy acknowledges it; nobody "follows" the skin of the world.
+- **Ruptga** (Tall Papa): the chief god, above sect politics. Invoked, not focused.
+- **Tava**, the bird-goddess of good passage: "the caravans thank Tava for the crossing." Strongest in Forebear voice.
+- **Onsi**, the Boneshaver: named beside Leki in martial copy.
+- **Morwha** (hearth), **Zeht** (harvest - warily; the disowned son), **Diagna** (war memory, HoonDing's orichalc avatar).
+- **Sep**, the cautionary error, and **Malooc**, the enemy at the gates: heard only as what Redguards stand against.
 
 ## The Daedric Question
 

@@ -1,4 +1,6 @@
 # PDV Race Design — Redguard
+
+> **Lore authority:** `references/authoring/PDV_RedguardLoreBaseline.md` (LIVING, sourced). Roster: exactly three focusable gods - Tu'whacca, Leki, HoonDing - pan-sect, with the sect flavouring presentation. Texture gods appear only as the culture crediting them.
 **Last updated:** 2026-06-12
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.8)
@@ -98,7 +100,7 @@ Step 4: Focused primary deity commitment → Tier 3 unlocked
 
 | Lane | Trigger family | Hook candidates | Favor bucket | Surfacing | Notes |
 |---|---|---|---|---|---|
-| Forebear broad worship | Road passage and adaptation | Long on-foot travel check; major location transition without fast travel; survival/weather travel state; caravan/road quest beats | Environmental | Noted | Tava leads. Must reject fast travel and short local movement. |
+| Forebear broad worship | Road passage and adaptation | Long on-foot travel check; major location transition without fast travel; survival/weather travel state; caravan/road quest beats | Environmental | Noted | The culture credits Tava here. Must reject fast travel and short local movement. |
 | Forebear broad worship | Honored contract and mixed-society work | Mercenary/contract quest completion; bounty or delivery quest with honest completion; merchant/trade quest stages; payment accepted without betrayal | After-act | Quiet / Noted | Zeht/Tava/HoonDing texture. Reward pragmatic honor, not generic gold-making. |
 | Forebear broad worship | Make-way under pressure | Outnumbered or overleveled combat win; difficult escape/survival quest beat; hard negotiated success in foreign society | Momentary combat / Rare major | Quiet / Marked if major | HoonDing can flicker here even before focused commitment. Major make-way events stay rare. |
 | Forebear broad worship | Respectful bridge without surrender | Forebear-appropriate Imperial-parallel shrine/proxy use; mixed-culture aid quests; Redguard dignity dialogue choices that preserve identity while cooperating | After-act | Noted | Imperial parallels are interpretive background only; Yokudan names remain primary. |
@@ -112,7 +114,7 @@ Step 4: Focused primary deity commitment → Tier 3 unlocked
 | Ash'abah broad worship | Impurity borne for others | Clearing death content no one else will handle; protecting graveyards; accepting socially uncomfortable death-duty outcomes | After-act / Rare major | Noted / Marked if costly | Custom/post-1.0 dialogue may be needed for full social stigma. Mark only costly burden moments. |
 | Ash'abah broad worship | Hard passage through the unclean | Major draugr tomb clear under difficult conditions; lich/named undead boss defeat; outnumbered undead fight win | Rare major | Marked | HoonDing applies as making a way through ritual uncleanness, not generic heroism. Naturally scarce. |
 
-**Focused contrast note:** Focused Redguard devotion should later sharpen one theological center: focused Leki turns Crown martial bearing into blade discipline made personal; focused Tava or HoonDing turns Forebear adaptation into guided passage or impossible-odds recognition; focused Tu'whacca turns Ash'abah burden into direct Far Shores acknowledgment. Broad Redguard worship remains sect-shaped, shared-spine, and capped at Faithful.
+**Focused contrast note:** Focused Redguard devotion should later sharpen one theological center: focused Leki turns Crown martial bearing into blade discipline made personal; focused HoonDing turns Forebear adaptation into impossible-odds recognition (Tava stays the culture's voice for guided passage, never a focus); focused Tu'whacca turns Ash'abah burden into direct Far Shores acknowledgment. Broad Redguard worship remains sect-shaped, shared-spine, and capped at Faithful.
 
 ---
 
@@ -156,8 +158,8 @@ All Redguards maintain this layer. It doesn't replace sect scoring — it modula
 
 **Forebear:**
 - After surviving an outnumbered situation or long journey under difficulty, brief stamina regen (HoonDing acknowledges the way-making)
-- Traveling between major areas or completing significant mercenary/contract work generates Tava piety (Tava is the bird-god of good passage)
-- Trade and fair exchange with various cultures generates modest Zeht/Zenithar piety (Forebear pragmatic syncretism in action)
+- Traveling between major areas or completing significant mercenary/contract work generates Forebear passage favor; the culture credits Tava, the bird-god of good passage (voice, not a scoring actor)
+- Trade and fair exchange with various cultures generates modest exchange favor; Forebear syncretism credits Zeht and Zenithar in the same breath (voice, not scoring actors)
 - Mercenary and contract completion generates piety when the contract was honored even under pressure
 
 **Ash'abah:**
@@ -169,24 +171,40 @@ All Redguards maintain this layer. It doesn't replace sect scoring — it modula
 ### Tier 3 — Devoted (focused primary deity committed)
 *The gods of the Far Shores know your name. Your ancestors speak of you.*
 
-**Crown — Satakal / Tu'whacca / Ruptga / Leki:**
+**The three focusable gods are pan-sect** (lore baseline ruling, 2026-08-26): any sect can
+carry any of the three, and the sect flavours the presentation, never the access. The old
+per-sect god lists implied sect-gated rosters and named Satakal/Ruptga/Tava champions that
+were never buildable under the locked three-god roster.
 
-- *Satakal Champion:* The Worldskin is always shedding. After completing a quest with cosmic or generational stakes, the shedding is acknowledged: 24-hour resist fear + health regen bonus. Satakal's cycle doesn't mean death is bad — it means death is correct when it comes at the right time and after the right life.
-- *Tu'whacca Champion:* Sacred Inheritance — the Far Shores draw nearer. After completing a death-rites quest or defeating a draugr boss, 24-hour undead damage resist 20%. Visiting tomb sites gives Tu'whacca's recognition: ancestors feel present (flavor privilege + modest health boost). Hall of the Dead priests treat you with maximum recognition privilege.
-- *Leki Champion:* Blade discipline made holy. One-handed damage +8% cumulative (Tier 1 + Devoted bonus). After sword-discipline combat (one-handed, no heavy exploitation of range or crowd control), brief power-attack stamina recovery. Martial-honor quest choices generate extra piety.
-- *Ruptga Champion (Tall Papa):* The first to find the Far Shores — achievement and survival as devotional acts. After completing a quest where you made a way through something that should have been impossible (thematically — HoonDing and Ruptga share this quality), 24-hour minor stat bonus across disciplines.
+> Removed 2026-08-26: Satakal, Ruptga, and Tava focused-champion reward prose (never-built
+> under spec rule R5). The reasoning lives in `references/authoring/PDV_RedguardLoreBaseline.md`
+> (considered and rejected). Their voices remain in the cultural lane per the
+> culture-credits-the-god rule.
 
-**Forebear — Tava / HoonDing / Leki:**
-
-- *Tava Champion:* Wind-rider's grace. Open road travel has near-zero weather penalty (Survival Mode). After arriving at a new location from a significant journey, brief health and stamina restore (Tava brought you). Sprint stamina drain -15% (wind at your back). Storms outdoors no longer penalize — Tava's wind knows where you are.
-- *HoonDing Champion:* *Champion moment:* Once per in-game week, after winning a battle that was genuinely impossible-odds (severely outnumbered or outleveled), HoonDing's brief acknowledgment fires: 24-hour bonus pulse of minor combat stats. This is the make-way moment — the Forebear who survived Skyrim by making a way when there wasn't one. The god who helped the Redguard hold against the Dominion is noticing similar quality in your struggles.
-- *Leki Champion:* Same as Crown Leki, different framing — Forebear Leki devotion is less orthodox and more lived. The blade discipline is the same; the context is pragmatic survival rather than sacred martial inheritance.
-
-**Ash'abah — Tu'whacca / Satakal:**
-
-- *Champion moment:* Tu'whacca's Champion: Burden-Bearer's Grace. After defeating a draugr boss, completing a Hall of the Dead quest, or clearing an active necromancer operation, 48-hour Tu'whacca blessing fires: +5 health/stamina/magicka regeneration per hour (modest, meaningful over time). This is the emotional peak of the Ash'abah path — Tu'whacca's personal acknowledgment of the work you've done that your own people would not thank you for. The god of the Far Shores is grateful.
-- *Additional payoff:* Tomb sites give Tu'whacca's presence (flavor privilege — brief ancestor-presence notification when entering major draugr tombs). Hall of the Dead NPCs treat you with recognition privilege (special dialogue, free services). Ash'abah Champion at full commitment: undead deal 25% less damage cumulative.
-- *HoonDing (Ash'abah):* The Ash'abah who makes a way through the ritual uncleanness — HoonDing applies here too. After completing a particularly difficult Ash'abah-duty quest (clearing a major draugr tomb, defeating a lich), HoonDing's brief acknowledgment fires.
+- *Tu'whacca (focused) — the Far Shores:* Sacred Inheritance — the Far Shores draw nearer.
+  After completing a death-rites quest or defeating a draugr boss, 24-hour undead damage
+  resist 20%. Visiting tomb sites gives Tu'whacca's recognition: ancestors feel present
+  (flavor privilege + modest health boost). Hall of the Dead priests treat you with maximum
+  recognition privilege. *Champion moment (Ash'abah-flavoured dressing): Burden-Bearer's
+  Grace — after defeating a draugr boss, completing a Hall of the Dead quest, or clearing an
+  active necromancer operation, a 48-hour blessing fires: +5 health/stamina/magicka
+  regeneration per hour. The emotional peak of the Ash'abah dressing — Tu'whacca's personal
+  acknowledgment of work your own people would not thank you for. A Crown or Forebear
+  Tu'whacca champion receives the same covenant in their sect's cloth.* Ash'abah dressing at
+  full commitment: undead deal 25% less damage cumulative.
+- *Leki (focused) — the Spirit Sword:* Blade discipline made holy. One-handed damage +8%
+  cumulative (Tier 1 + Devoted bonus). After sword-discipline combat (one-handed, no heavy
+  exploitation of range or crowd control), brief power-attack stamina recovery.
+  Martial-honor quest choices generate extra piety. *Sect dressing: Crown Leki is sacred
+  martial inheritance; Forebear Leki is the same discipline lived pragmatically. The blade
+  is the same; the context differs.*
+- *HoonDing (focused) — the Make Way:* *Champion moment:* Once per in-game week, after
+  winning a battle that was genuinely impossible-odds (severely outnumbered or outleveled),
+  HoonDing's brief acknowledgment fires: 24-hour bonus pulse of minor combat stats. The
+  make-way moment. *Sect dressing: for a Forebear, the way made through a mixed society's
+  hard passages; for a Crown, Ruptga/HoonDing-adjacent sacred survival through honorable
+  adversity; for an Ash'abah, the way made through ritual uncleanness — a tomb cleared, a
+  lich destroyed. No sect owns him; he is the pan-Redguard god.*
 
 ---
 
