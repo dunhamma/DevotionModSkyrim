@@ -3157,8 +3157,8 @@
         "moment": "Formal commitment offer coverage",
         "playerImpact": "Moderate",
         "gapClass": "design-decision-required",
-        "status": "Open",
-        "question": "Is offering only 3 of the 7 Redguard deities deliberate scope, or an unfinished tranche?",
+        "status": "Resolved",
+        "question": "RESOLVED 2026-08-25: there is no 7-deity roster. Exactly three Yokudan patrons exist (Tu'whacca/Leki/HoonDing) per spec rule R5 and the 2026-07-08 divergence ledger; the '3 of 7' framing was documentation drift. Owner locked option (a): HoonDing reframed pan-Redguard, sects flavour presentation. See references/authoring/PDV_RedguardLoreBaseline.md.",
         "nodeIds": [
           "race.redguard.spine.commitment-offer"
         ],
