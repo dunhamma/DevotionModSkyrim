@@ -57,6 +57,12 @@ String Property PAGE_STATUS = "Status" AutoReadOnly
 String Property PAGE_DEBUG = "Debug: State & Rewards" AutoReadOnly
 String Property PAGE_DEBUG2 = "Debug: Daedric & Curse" AutoReadOnly
 String Property PAGE_PACING = "Debug: Pacing & Pantheons" AutoReadOnly
+String Property PAGE_RUNBOOK = "Debug: Test Runbook" AutoReadOnly
+
+Int _runbookSuite = 1
+Int _runbookStep = 0
+Int _originRedetectRetriesRemaining = 0
+Int Property ORIGIN_REDETECT_RETRY_MAX = 5 AutoReadOnly
 
 Int _oidSurveyDevotion = -1
 Int _oidExportReport = -1
@@ -64,6 +70,13 @@ Int _oidModeToggle = -1
 Int _oidNpcRecognition = -1
 Int _oidNpcHostileRecognition = -1
 Int _oidToastSize = -1
+Int _oidRunbookSuite = -1
+Int _oidRunbookPrevious = -1
+Int _oidRunbookNext = -1
+Int _oidRunbookRun = -1
+Int _oidRunbookShowState = -1
+Int _oidRunbookReset = -1
+Int _oidRunbookRefresh = -1
 Int _oidSelectedDeity = -1
 Int _oidDebugPatronOverride = -1
 Int _oidDebugClearPatron = -1
@@ -366,6 +379,15 @@ Function OnPageReset(String a_page)
             return
         endIf
         BuildPacingPantheonsPage()
+        return
+    endIf
+
+    if a_page == PAGE_RUNBOOK
+        if !DeveloperOptionsEnabled()
+            BuildDeveloperLockedPage("Debug: Test Runbook")
+            return
+        endIf
+        BuildTestRunbookPage()
     endIf
 EndFunction
 
@@ -553,7 +575,7 @@ Function OnOptionHighlight(Int a_option)
     elseIf a_option == _oidDunmerHomeBonus
         SetInfoText("Records one player-home ancestor bonus on the Dunmer substrate.")
     elseIf a_option == _oidKhajiitMoonObservance
-        SetInfoText("Records one Khajiit moon observance and advances the observed phase for proving.")
+        SetInfoText("Advances the Khajiit lunar substrate through the same phase-recording authority used by Observe the Moons. It does not simulate the full delayed rite.")
     elseIf a_option == _oidKhajiitRoadHome
         SetInfoText("Records one Khajiit road-home cadence event.")
     elseIf a_option == _oidKhajiitPostureCycle
@@ -702,6 +724,47 @@ Function OnOptionHighlight(Int a_option)
 EndFunction
 
 Function OnOptionSelect(Int a_option)
+    if a_option == _oidRunbookSuite
+        _runbookSuite += 1
+        if _runbookSuite >= PDV_TestRunbook.GetSuiteCount()
+            _runbookSuite = 0
+        endIf
+        _runbookStep = 0
+        ForcePageReset()
+        return
+    elseIf a_option == _oidRunbookPrevious
+        _runbookStep -= 1
+        if _runbookStep < 0
+            _runbookStep = 0
+        endIf
+        ForcePageReset()
+        return
+    elseIf a_option == _oidRunbookNext
+        _runbookStep += 1
+        Int runbookStepCount = PDV_TestRunbook.GetStepCount(_runbookSuite)
+        if _runbookStep >= runbookStepCount
+            _runbookStep = runbookStepCount - 1
+        endIf
+        ForcePageReset()
+        return
+    elseIf a_option == _oidRunbookRun
+        ShowMessage(PDV_TestRunbook.RunAction(PDV_Manager, GetSelectedDeity(), _runbookSuite, _runbookStep), False, "$OK", "")
+        ForcePageReset()
+        return
+    elseIf a_option == _oidRunbookShowState
+        ShowMessage(PDV_TestRunbook.GetLiveState(PDV_Manager, GetSelectedDeity()), False, "$OK", "")
+        return
+    elseIf a_option == _oidRunbookReset
+        if ShowMessage("Reset only the selected deity state for this runbook step?", True, "$Yes", "$No")
+            ShowMessage(PDV_TestRunbook.ResetCurrent(PDV_Manager, GetSelectedDeity(), _runbookSuite, _runbookStep), False, "$OK", "")
+            ForcePageReset()
+        endIf
+        return
+    elseIf a_option == _oidRunbookRefresh
+        ForcePageReset()
+        return
+    endIf
+
     if a_option == _oidSurveyDevotion
         if EnsureManagerBinding("survey_devotion")
             ShowMessage(PDV_Manager.Prisma.GetSurveyDevotionText(), False, "$OK", "")
@@ -1314,7 +1377,7 @@ Function OnOptionSelect(Int a_option)
     endIf
 
     if a_option == _oidKhajiitMoonObservance
-        RunPatternAction("Record one Khajiit moon observance?", 9)
+        RunPatternAction("Advance the Khajiit lunar phase once?", 9)
         return
     endIf
 
@@ -1720,12 +1783,12 @@ Function OnOptionSelect(Int a_option)
             ; a lapse stamp of exactly the grace boundary -- neither flags neglect.
             primeNeglectManager.LedgerRuntime.SetActiveDeity(primeNeglectDeity)
             primeNeglectManager.DebugRuntime.DebugForceSetPietyByIndex(primeNeglectDeity.DeityIndex, 0.0)
-            Debug.Notification("PDV: neglect eligible primed (active + piety 0).")
+            ShowCriticalDeityState("Neglect primed", primeNeglectDeity)
             ForcePageReset()
         elseIf primeNeglectDeity
-            Debug.Notification("PDV: selected deity is not reachable for this origin.")
+            ShowMessage("Selected deity is not reachable for this origin.", False, "$OK", "")
         else
-            Debug.Notification("PDV: select a deity first.")
+            ShowMessage("Select a deity first.", False, "$OK", "")
         endIf
         return
     endIf
@@ -1734,9 +1797,9 @@ Function OnOptionSelect(Int a_option)
         PDV__ManagerQuest neglectManager = GetManagerService()
         if neglectManager
             neglectManager.DebugRuntime.DebugRunNeglectPass()
-            Debug.Notification("PDV: neglect pass run.")
+            ShowCriticalDeityState("Neglect pass complete", GetSelectedDeity())
         else
-            Debug.Notification("PDV: manager is not assigned.")
+            ShowMessage("Devotion is still starting up.", False, "$OK", "")
         endIf
         return
     endIf
@@ -2240,14 +2303,45 @@ Function ReDetectOrigin()
     PDV_Origin originService = GetOriginService()
     if originService
         originService.InitializeOrigin()
-        Debug.Notification("Devotion origin: " + GetCompatRaceReadout())
+        _originRedetectRetriesRemaining = ORIGIN_REDETECT_RETRY_MAX
+        if StorageUtil.GetIntValue(None, "PDV.Origin.ForceRedetect", 0) == 1
+            RegisterForSingleUpdate(2.0)
+        endIf
+        ShowMessage("Origin capture requested. Close the MCM, wait a few seconds, then reopen Status to verify the new origin.", False, "$OK", "")
     else
         TraceMcm(1, "Origin re-detect failed: PDV_Origin service unavailable.")
-        Debug.Notification("Devotion origin re-detect could not start.")
+        ShowMessage("Origin re-detect could not start because the origin service is unavailable.", False, "$OK", "")
     endIf
 
     ForcePageReset()
 EndFunction
+
+Event OnUpdate()
+    if _originRedetectRetriesRemaining <= 0
+        return
+    endIf
+    if StorageUtil.GetIntValue(None, "PDV.Origin.ForceRedetect", 0) == 0
+        _originRedetectRetriesRemaining = 0
+        return
+    endIf
+
+    PDV_Origin originService = GetOriginService()
+    if !originService
+        _originRedetectRetriesRemaining = 0
+        TraceMcm(1, "Origin re-detect retry stopped: PDV_Origin service unavailable.")
+        return
+    endIf
+
+    _originRedetectRetriesRemaining -= 1
+    originService.InitializeOrigin()
+    if StorageUtil.GetIntValue(None, "PDV.Origin.ForceRedetect", 0) == 1
+        if _originRedetectRetriesRemaining > 0
+            RegisterForSingleUpdate(2.0)
+        else
+            TraceMcm(1, "Origin re-detect retry window exhausted; capture remains pending for the next player-load ingress.")
+        endIf
+    endIf
+EndEvent
 
 Bool Function SurvivalContextEnabled()
     return StorageUtil.GetIntValue(None, "PDV.Compat.SurvivalContextEnabled", 1) != 0
@@ -2310,12 +2404,14 @@ Function BuildStatusPage()
     SetCursorFillMode(TOP_TO_BOTTOM)
     SetCursorPosition(0)
     AddHeaderOption("Current state", OPTION_FLAG_NONE)
+    AddTextOption("Lifecycle", GetRuntimeLifecycleLabel(), OPTION_FLAG_DISABLED)
     AddTextOption("Active patron", GetActivePatronLabel(), OPTION_FLAG_DISABLED)
     AddTextOption("Patron state", GetPatronStateLabel(), OPTION_FLAG_DISABLED)
     AddTextOption("Active piety", FormatFloat(GetActivePietyValue()), OPTION_FLAG_DISABLED)
     AddTextOption("Active tier", TierToLabel(GetActiveTierValue()), OPTION_FLAG_DISABLED)
     AddTextOption("Active deity index", GetIndexLabel(activeDeityIndex), OPTION_FLAG_DISABLED)
-    AddTextOption("Origin diagnostic", GetOriginDiagnosticLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Origin", GetActiveOriginLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Custom-race fallback", GetOriginDiagnosticLabel(), OPTION_FLAG_DISABLED)
     AddEmptyOption()
     AddHeaderOption("Phase 8 Concordat", OPTION_FLAG_NONE)
     AddTextOption("Raw value", GetConcordatRawLabel(), OPTION_FLAG_DISABLED)
@@ -2345,7 +2441,7 @@ Function BuildStatusPage()
             if deity.DeityIndex == activeDeityIndex
                 rowValue = rowValue + " | active"
             endIf
-            AddTextOption(deity.DeityName, rowValue, OPTION_FLAG_DISABLED)
+            AddTextOption(GetDebugDeityDisplayName(deity), rowValue, OPTION_FLAG_DISABLED)
             rosterRowsShown += 1
         endIf
         i += 1
@@ -2538,7 +2634,7 @@ Function BuildDaedricPage()
     _oidBosmerConfirmRite = AddTextOption("Bosmer confirm rite", "Finalize pending", OPTION_FLAG_NONE)
     _oidDunmerPrayer = AddTextOption("Dunmer ancestor prayer", "Substrate pilot", OPTION_FLAG_NONE)
     _oidDunmerHomeBonus = AddTextOption("Dunmer home bonus", "Substrate pilot", OPTION_FLAG_NONE)
-    _oidKhajiitMoonObservance = AddTextOption("Khajiit moon observance", "Emergent lane", OPTION_FLAG_NONE)
+    _oidKhajiitMoonObservance = AddTextOption("Advance Khajiit lunar phase", "Shared substrate route", OPTION_FLAG_NONE)
     _oidKhajiitRoadHome = AddTextOption("Khajiit road-home cadence", "Emergent lane", OPTION_FLAG_NONE)
     _oidKhajiitPostureCycle = AddTextOption("Khajiit lunar posture", "Cycle posture", OPTION_FLAG_NONE)
     _oidKhajiitLunarSeedT2 = AddTextOption("Seed lunar metric 25", "Tier 2 boundary", OPTION_FLAG_NONE)
@@ -2635,6 +2731,54 @@ Function BuildPacingPantheonsPage()
     SetCursorFillMode(LEFT_TO_RIGHT)
 EndFunction
 
+Function BuildTestRunbookPage()
+    SetCursorFillMode(TOP_TO_BOTTOM)
+    SetCursorPosition(0)
+    AddHeaderOption("Guided runtime acceptance", OPTION_FLAG_NONE)
+    _oidRunbookSuite = AddTextOption("Suite", PDV_TestRunbook.GetSuiteLabel(_runbookSuite), OPTION_FLAG_NONE)
+    AddTextOption("Stable step", PDV_TestRunbook.GetStepId(_runbookSuite, _runbookStep), OPTION_FLAG_DISABLED)
+    AddTextOption("Action", PDV_TestRunbook.GetStepTitle(_runbookSuite, _runbookStep), OPTION_FLAG_DISABLED)
+    AddTextOption("Surface", GetRunbookSurfaceLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Prerequisites", PDV_TestRunbook.GetPrerequisites(PDV_Manager, GetSelectedDeity(), _runbookSuite, _runbookStep), OPTION_FLAG_DISABLED)
+    AddTextOption("Selected deity", GetSelectedDeityLabel(), OPTION_FLAG_DISABLED)
+    AddTextOption("Active patron", GetRunbookActivePatronLabel(), OPTION_FLAG_DISABLED)
+    _oidRunbookShowState = AddTextOption("Show live state", "Open readout", OPTION_FLAG_NONE)
+    _oidRunbookRun = AddTextOption("Run action", "One mutation maximum", OPTION_FLAG_NONE)
+
+    SetCursorPosition(1)
+    AddHeaderOption("Expected observation", OPTION_FLAG_NONE)
+    AddTextOption(PDV_TestRunbook.GetExpectedObservation(_runbookSuite, _runbookStep), "", OPTION_FLAG_DISABLED)
+    AddEmptyOption()
+    AddHeaderOption("Navigation", OPTION_FLAG_NONE)
+    _oidRunbookPrevious = AddTextOption("Previous", "Never auto-passes", OPTION_FLAG_NONE)
+    _oidRunbookNext = AddTextOption("Next", "Never auto-passes", OPTION_FLAG_NONE)
+    _oidRunbookRefresh = AddTextOption("Refresh state", "No mutation", OPTION_FLAG_NONE)
+    _oidRunbookReset = AddTextOption("Scoped reset", "Selected deity only", OPTION_FLAG_NONE)
+    AddTextOption("Evidence", "Record observations outside Skyrim", OPTION_FLAG_DISABLED)
+    SetCursorFillMode(LEFT_TO_RIGHT)
+EndFunction
+
+String Function GetRunbookSurfaceLabel()
+    String exactSurface = PDV_TestRunbook.GetSurfaceName(_runbookSuite, _runbookStep)
+    if exactSurface == "MCM confirmation or named game surface"
+        return "MCM / named surface"
+    elseIf exactSurface == "Survey, Prisma panel, Book, toast, Active Effects"
+        return "Multiple; see expected"
+    elseIf exactSurface == "toast and Active Effects"
+        return "Toast / Active Effects"
+    elseIf exactSurface == "Active Effects and Survey"
+        return "Active Effects / Survey"
+    endIf
+    return exactSurface
+EndFunction
+
+String Function GetRunbookActivePatronLabel()
+    if !PDV_Manager || !PDV_Manager.GetActiveDeity()
+        return "No active patron"
+    endIf
+    return GetDebugDeityDisplayName(PDV_Manager.GetActiveDeity())
+EndFunction
+
 String Function GetSubstratePacingSourceLabel()
     if _selectedSubstratePacingSource == 0
         return "Primary approved"
@@ -2651,13 +2795,14 @@ Function InitializePages()
     ; only when the owner has unlocked Developer Options from the console, so a
     ; shipped copy never renders a debug tab at all (not even a locked stub).
     if DeveloperOptionsEnabled()
-        String[] devPages = new String[6]
+        String[] devPages = new String[7]
         devPages[0] = PAGE_PLAYER
         devPages[1] = PAGE_COMPAT
         devPages[2] = PAGE_STATUS
         devPages[3] = PAGE_DEBUG
         devPages[4] = PAGE_DEBUG2
         devPages[5] = PAGE_PACING
+        devPages[6] = PAGE_RUNBOOK
         Pages = devPages
     else
         String[] userPages = new String[2]
@@ -2975,8 +3120,9 @@ Function DebugOverridePatron()
         return
     endIf
 
-    if ShowMessage("Apply a debug patron override to " + deity.DeityName + "?", True, "$Yes", "$No")
+    if ShowMessage("Apply a debug patron override to " + GetDebugDeityDisplayName(deity) + "?", True, "$Yes", "$No")
         PDV_Manager.LedgerRuntime.ForceSetActiveDeityByIndex(deity.DeityIndex)
+        ShowCriticalDeityState("Patron override applied", deity)
         ForcePageReset()
     endIf
 EndFunction
@@ -2984,6 +3130,7 @@ EndFunction
 Function DebugClearPatron()
     if ShowMessage("Clear the current debug patron override?", True, "$Yes", "$No")
         PDV_Manager.DebugRuntime.DebugClearActiveDeity()
+        ShowCriticalDeityState("Patron override cleared", GetSelectedDeity())
         ForcePageReset()
     endIf
 EndFunction
@@ -2995,9 +3142,14 @@ Function DebugResetSelectedDeity()
         return
     endIf
 
-    if ShowMessage("Reset " + deity.DeityName + " to zero piety and tier 0?", True, "$Yes", "$No")
-        PDV_Manager.DebugRuntime.DebugResetDeityByIndex(deity.DeityIndex)
-        ForcePageReset()
+    if ShowMessage("Reset " + GetDebugDeityDisplayName(deity) + " to zero piety and tier 0?", True, "$Yes", "$No")
+        if PDV_Manager.DebugRuntime.DebugResetDeityByIndexChecked(deity.DeityIndex)
+            ShowCriticalDeityState("Selected deity reset", deity)
+            ForcePageReset()
+        else
+            TraceMcm(1, "Selected deity reset refused; state remains unchanged for deity index " + deity.DeityIndex + ".")
+            ShowMessage("Selected deity reset was refused. State remains unchanged; open the readout before retrying.", False, "$OK", "")
+        endIf
     endIf
 EndFunction
 
@@ -3011,8 +3163,9 @@ Function DebugApplySelectedPiety()
         return
     endIf
 
-    if ShowMessage("Force " + deity.DeityName + " piety to " + FormatFloat(_pendingPiety) + "?", True, "$Yes", "$No")
+    if ShowMessage("Force " + GetDebugDeityDisplayName(deity) + " piety to " + FormatFloat(_pendingPiety) + "?", True, "$Yes", "$No")
         PDV_Manager.DebugRuntime.DebugForceSetPietyByIndex(deity.DeityIndex, _pendingPiety)
+        ShowCriticalDeityState("Piety target applied", deity)
         ForcePageReset()
     endIf
 EndFunction
@@ -3027,8 +3180,9 @@ Function DebugApplySelectedPietyToday()
         return
     endIf
 
-    if ShowMessage("Force " + deity.DeityName + " scratch piety to " + FormatFloat(_pendingPietyToday) + "?", True, "$Yes", "$No")
+    if ShowMessage("Force " + GetDebugDeityDisplayName(deity) + " scratch piety to " + FormatFloat(_pendingPietyToday) + "?", True, "$Yes", "$No")
         PDV_Manager.DebugRuntime.DebugForceSetPietyTodayByIndex(deity.DeityIndex, _pendingPietyToday)
+        ShowCriticalDeityState("Scratch piety applied", deity)
         ForcePageReset()
     endIf
 EndFunction
@@ -3043,7 +3197,7 @@ Function DebugApplyCuratedSignal()
         return
     endIf
 
-    if ShowMessage("Apply curated signal " + _pendingSignalType + " to " + deity.DeityName + "?", True, "$Yes", "$No")
+    if ShowMessage("Apply curated signal " + _pendingSignalType + " to " + GetDebugDeityDisplayName(deity) + "?", True, "$Yes", "$No")
         PDV_Manager.DebugRuntime.DebugAwardCuratedSignalByIndex(deity.DeityIndex, _pendingSignalType)
         ForcePageReset()
     endIf
@@ -3062,7 +3216,7 @@ Function DebugFireSelectedDislike()
         return
     endIf
 
-    if ShowMessage("Fire dislike event " + _pendingDisfavorEventId + " vs " + deity.DeityName + "? Set Target piety >= 25 first (or make it your patron) so the disfavor standing gate passes; below standing it applies the piety loss only.", True, "$Yes", "$No")
+    if ShowMessage("Fire dislike event " + _pendingDisfavorEventId + " vs " + GetDebugDeityDisplayName(deity) + "? Set Target piety >= 25 first (or make it your patron) so the disfavor standing gate passes; below standing it applies the piety loss only.", True, "$Yes", "$No")
         PDV_Manager.DebugRuntime.DebugFireDislike(deity, _pendingDisfavorEventId)
         ShowMessage(PDV_Manager.LedgerRuntime.GetActiveDisfavorSummary(), False, "$OK", "")
         ForcePageReset()
@@ -3135,7 +3289,7 @@ Bool Function RequireEligibleDebugDeity(PDV_DeityBase deity, String actionName)
     if PDV_Manager.IsDebugDeityTargetEligible(deity, actionName)
         return True
     endIf
-    ShowMessage(deity.DeityName + " is not reachable for the current origin. Switch to an eligible origin before using this control.", False, "$OK", "")
+    ShowMessage(GetDebugDeityDisplayName(deity) + " is not reachable for the current origin. Switch to an eligible origin before using this control.", False, "$OK", "")
     return False
 EndFunction
 
@@ -3152,9 +3306,40 @@ EndFunction
 String Function GetSelectedDeityLabel()
     PDV_DeityBase deity = GetSelectedDeity()
     if !deity
-        return "None"
+        return "No deity selected"
     endIf
-    return deity.DeityName + " [" + deity.DeityIndex + "]"
+    return GetDebugDeityDisplayName(deity) + " [" + deity.DeityIndex + "]"
+EndFunction
+
+String Function GetDebugDeityDisplayName(PDV_DeityBase deity)
+    if !deity || !PDV_Manager || !PDV_Manager.Prisma
+        return "Unknown deity"
+    endIf
+    return PDV_Manager.Prisma.GetCanonicalDeityDisplayName(deity)
+EndFunction
+
+Function ShowCriticalDeityState(String actionLabel, PDV_DeityBase deity)
+    if !PDV_Manager
+        ShowMessage(actionLabel + ". Devotion is still starting up.", False, "$OK", "")
+        return
+    endIf
+
+    String selectedLabel = "No deity selected"
+    String pietyLabel = "n/a"
+    String scratchLabel = "n/a"
+    String tierLabel = "n/a"
+    String neglectLabel = "No"
+    if deity
+        selectedLabel = GetDebugDeityDisplayName(deity) + " [" + deity.DeityIndex + "]"
+        pietyLabel = FormatFloat(PDV_Manager.LedgerRuntime.GetPiety(deity))
+        scratchLabel = FormatFloat(PDV_Manager.LedgerRuntime.GetPietyToday(deity))
+        tierLabel = "" + PDV_Manager.LedgerRuntime.GetTier(deity)
+        if PDV_Manager.LedgerRuntime.IsNeglectFlagActive(deity)
+            neglectLabel = "Yes"
+        endIf
+    endIf
+
+    ShowMessage(actionLabel + ". Selected deity: " + selectedLabel + "; active patron: " + GetActivePatronLabel() + " (" + GetPatronStateLabel() + "); piety: " + pietyLabel + "; scratch: " + scratchLabel + "; tier: " + tierLabel + "; neglect active: " + neglectLabel + ".", False, "$OK", "")
 EndFunction
 
 Int Function GetDaedricPathCount()
@@ -3177,10 +3362,10 @@ EndFunction
 String Function GetSelectedDaedricPathLabel()
     PDV_DaedricPathBase path = GetSelectedDaedricPath()
     if !path
-        return "None"
+        return "No Daedric path selected"
     endIf
 
-    return path.DeityName + " [" + _selectedDaedricPathIndex + "]"
+    return GetDebugDeityDisplayName(path) + " [" + _selectedDaedricPathIndex + "]"
 EndFunction
 
 String Function GetSelectedDaedricProofSummary()
@@ -3189,7 +3374,7 @@ String Function GetSelectedDaedricProofSummary()
         return "No Daedric path is available."
     endIf
 
-    return path.DeityName + ": " + path.GetContractSummary() + "; activePact=" + BoolToYesNo(path.IsActiveDaedricPact()) + "; " + path.GetDaedricSpellSummary() + "; exit=" + path.GetExitDifficultyForPlayer()
+    return GetDebugDeityDisplayName(path) + ": " + path.GetContractSummary() + "; activePact=" + BoolToYesNo(path.IsActiveDaedricPact()) + "; " + path.GetDaedricSpellSummary() + "; exit=" + path.GetExitDifficultyForPlayer()
 EndFunction
 
 Function DebugShowSelectedDaedricSummary()
@@ -3203,7 +3388,7 @@ Function DebugResetSelectedDaedricPath()
         return
     endIf
 
-    if ShowMessage("Reset " + path.DeityName + " to a clean Daedric proof baseline?", True, "$Yes", "$No")
+    if ShowMessage("Reset " + GetDebugDeityDisplayName(path) + " to a clean Daedric proof baseline?", True, "$Yes", "$No")
         path.ResetDaedricForDebug()
         path.SetStoredPiety(0.0, "mcm_daedric_reset")
         ShowMessage(GetSelectedDaedricProofSummary(), False, "$OK", "")
@@ -3218,7 +3403,7 @@ Function DebugAddSelectedDaedricSignal()
         return
     endIf
 
-    if ShowMessage("Add one controlled Daedric commitment signal to " + path.DeityName + "?", True, "$Yes", "$No")
+    if ShowMessage("Add one controlled Daedric commitment signal to " + GetDebugDeityDisplayName(path) + "?", True, "$Yes", "$No")
         path.AddCommitmentSignal("mcm_daedric_controlled_signal")
         ShowMessage(GetSelectedDaedricProofSummary(), False, "$OK", "")
         ForcePageReset()
@@ -3233,7 +3418,7 @@ Function DebugForceSelectedDaedricTier(Int tierValue)
     endIf
 
     String tierLabel = GetDaedricProofTierLabel(tierValue)
-    if ShowMessage("Force " + path.DeityName + " to " + tierLabel + " for controlled display proof?", True, "$Yes", "$No")
+    if ShowMessage("Force " + GetDebugDeityDisplayName(path) + " to " + tierLabel + " for controlled display proof?", True, "$Yes", "$No")
         PDV__ManagerQuest manager = GetManagerService()
         if tierValue == 3
             ; The authored Champion message (Msg_ChampionEntry) cannot display while the
@@ -3281,7 +3466,7 @@ Function DebugAddSelectedDaedricStigma()
         return
     endIf
 
-    if ShowMessage("Add one controlled stigma event to " + path.DeityName + "?", True, "$Yes", "$No")
+    if ShowMessage("Add one controlled stigma event to " + GetDebugDeityDisplayName(path) + "?", True, "$Yes", "$No")
         path.AddStigma(path.StigmaPerEvent, "mcm_daedric_controlled_stigma")
         ShowMessage(GetSelectedDaedricProofSummary(), False, "$OK", "")
         ForcePageReset()
@@ -3328,7 +3513,7 @@ Function DebugRouteSelectedDaedricLiveSender()
         return
     endIf
 
-    if ShowMessage("Route a curated live sender cue to " + path.DeityName + "?", True, "$Yes", "$No")
+    if ShowMessage("Route a curated live sender cue to " + GetDebugDeityDisplayName(path) + "?", True, "$Yes", "$No")
         PDV_EventBusService.RouteDaedricPrinceSignal(_selectedDaedricPathIndex, "mcm_live_curated")
         ShowMessage(GetSelectedDaedricProofSummary(), False, "$OK", "")
         ForcePageReset()
@@ -3394,15 +3579,23 @@ String Function GetDeveloperPageStateLabel()
     return "Locked"
 EndFunction
 
+String Function GetRuntimeLifecycleLabel()
+    if PDV_Manager
+        return PDV_Manager.GetRuntimeLifecycleLabel()
+    endIf
+
+    return "UNAVAILABLE"
+EndFunction
+
 String Function GetActivePatronLabel()
     Int activeDeityIndex = GetActiveDeityIndexValue()
     if activeDeityIndex < 0 || !PDV_Manager
-        return "None"
+        return "No active patron"
     endIf
 
     PDV_DeityBase deity = PDV_Manager.LedgerRuntime.GetDeityByIndex(activeDeityIndex)
     if deity
-        return deity.DeityName + " [" + deity.DeityIndex + "]"
+        return GetDebugDeityDisplayName(deity) + " [" + deity.DeityIndex + "]"
     endIf
 
     return "Unknown [" + activeDeityIndex + "]"
@@ -3416,8 +3609,17 @@ String Function GetPatronStateLabel()
     return "Unknown"
 EndFunction
 
+String Function GetActiveOriginLabel()
+    if PDV_Manager && PDV_Manager.OriginRuntime
+        Int originRace = PDV_Manager.GetPlayerOriginRaceIndex()
+        return PDV_Manager.OriginRuntime.GetOriginRaceLabel(originRace)
+    endIf
+
+    return "Unknown"
+EndFunction
+
 String Function GetOriginDiagnosticLabel()
-    if PDV_Manager
+    if PDV_Manager && PDV_Manager.DebugRuntime
         return PDV_Manager.DebugRuntime.DebugGetOriginDiagnostic()
     endIf
 
@@ -3623,11 +3825,7 @@ Function RunPatternAction(String promptText, Int actionId)
             manager.DebugRuntime.DebugRecordDunmerAncestorHomeBonus()
         endIf
     elseIf actionId == 9
-        if PDV_EventBusService
-            PDV_EventBusService.RouteKhajiitMoonObservance(0)
-        else
-            manager.DebugRuntime.DebugRecordKhajiitMoonObservance()
-        endIf
+        manager.DebugRuntime.DebugAdvanceKhajiitLunarPhase()
     elseIf actionId == 10
         if PDV_EventBusService
             PDV_EventBusService.RouteKhajiitRoadHome()
@@ -3760,8 +3958,7 @@ Function RunPatternAction(String promptText, Int actionId)
     ForcePageReset()
 EndFunction
 
-; Compact post-action feedback: just the player's race section (or global state
-; if the race has none) in a single box, so action feedback never overflows.
+; Compact post-action feedback: the active adapter's origin summary in one box.
 Function ShowPatternSummaryBrief()
     PDV__ManagerQuest manager = GetManagerService()
     if !manager
@@ -3813,9 +4010,8 @@ String Function GetPatternSummaryString()
     return "Pattern proving summary unavailable."
 EndFunction
 
-; Pages the pattern summary one section per screen so it never overflows the
-; message box. Leads with the player's origin-race section, then the rest in
-; order; Next advances, Close stops. Section 0..13 map in the manager.
+; Pages the active-origin and shared-state summary one section per screen so it
+; never overflows the message box. Next advances, Close stops.
 Function ShowPatternSummaryPaged()
     PDV__ManagerQuest manager = GetManagerService()
     if !manager
@@ -3884,7 +4080,7 @@ String Function GetSelectedCommitmentSummary(PDV__ManagerQuest manager)
         refused = 1
     endIf
 
-    return "selected=" + selectedDeity.DeityName + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.LedgerRuntime.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.LedgerRuntime.GetPiety(selectedDeity)) + ";offered=" + offered + ";refused=" + refused
+    return "selected=" + GetDebugDeityDisplayName(selectedDeity) + "[" + selectedDeity.DeityIndex + "]" + ";formal=" + usesFormal + ";ready=" + ready + ";days=" + manager.LedgerRuntime.GetRecentCommitmentSignalDayCount(selectedDeity, 7) + ";piety=" + FormatFloat(manager.LedgerRuntime.GetPiety(selectedDeity)) + ";offered=" + offered + ";refused=" + refused
 EndFunction
 
 PDV__ManagerQuest Function GetManagerService()
@@ -4132,7 +4328,7 @@ EndFunction
 
 String Function GetIndexLabel(Int indexValue)
     if indexValue < 0
-        return "None"
+        return "No active deity"
     endIf
     return "" + indexValue
 EndFunction
@@ -4172,6 +4368,13 @@ EndFunction
     If a control is added, add its reset here too.
    ===================================================================== /;
 Function ResetAllOptionIds()
+    _oidRunbookSuite = -1
+    _oidRunbookPrevious = -1
+    _oidRunbookNext = -1
+    _oidRunbookRun = -1
+    _oidRunbookShowState = -1
+    _oidRunbookReset = -1
+    _oidRunbookRefresh = -1
     _oidAcceptCommitmentOffer = -1
     _oidAddBretonCurated = -1
     _oidAddBretonRenewable = -1

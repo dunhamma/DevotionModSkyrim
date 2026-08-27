@@ -6,7 +6,7 @@
   <title>Devotion</title>
   <!-- Cache-bust: bump BOTH ?v= strings (here and the app.js script tag at the
        bottom) together whenever app.js or styles.css changes. -->
-  <link rel="stylesheet" href="styles.css?v=pdv-d72c540e662c953d">
+  <link rel="stylesheet" href="styles.css?v=pdv-1b6109a55f3adc33">
 </head>
 <body>
   <main class="devotion-shell" aria-label="Devotion status">
@@ -164,6 +164,8 @@
               <div class="bod-rule"></div>
               <p class="bod-standing-label">Standing</p>
               <div class="bod-instrument" id="pdv-journal-instrument" aria-hidden="true"></div>
+              <p class="bod-standing-label bod-culture-label" id="pdv-journal-culture-label" hidden></p>
+              <div class="bod-instrument bod-culture" id="pdv-journal-culture" aria-hidden="true" hidden></div>
             </div>
           </div>
         </div>
@@ -233,6 +235,6 @@
     <button type="button" data-demo-toast="substrate_thin">Substrate (thin)</button>
   </aside>
 
-  <script src="app.js?v=pdv-d72c540e662c953d"></script>
+  <script src="app.js?v=pdv-1b6109a55f3adc33"></script>
 </body>
 </html>

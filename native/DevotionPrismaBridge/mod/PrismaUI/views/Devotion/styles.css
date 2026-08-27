@@ -1990,6 +1990,17 @@ h1 {
   background: #ece0c2;
 }
 #pdv-journal-modal .bod-gauge__pip.full { background: #9a7c44; }
+#pdv-journal-modal .bod-culture-label {
+  margin-top: 14px;
+  font-size: 16px;
+}
+#pdv-journal-modal .bod-culture-label.is-tiered {
+  font-size: 16px;
+}
+#pdv-journal-modal .bod-culture .bod-gauge {
+  height: 22px;
+  margin-top: 4px;
+}
 
 /* ---- Instruments re-tinted for parchment ---- */
 #pdv-journal-modal .instrument-svg {

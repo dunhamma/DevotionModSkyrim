@@ -118,3 +118,21 @@ The remaining 22 descriptions already contain the deity's public name. No Messag
 changed in the module-closeout tranche: the owner rewrite is the authority for this copy pass.
 - **Status:** INVENTORY COMPLETE; OPEN -- owner to draft 23 descriptions, Codex to apply and
   read back the Message records.
+
+## 2026-08-26 -- Book of Days keeper-voice pass (backlog)
+
+- **Contraction in shipped journal copy:** `BuildStartupRoadJournalLine`
+  (`PDV_PrismaPresenter.psc`, V3Dev live tree) emits "You've chosen your road: <path>." --
+  a modern contraction, PDV_STANDARDS Section 3.5 breach, pre-existing. Reaches 5 call sites
+  (Nord, Bosmer, Orc, Redguard, Breton startup roads). Owner rewrite wanted; "You have
+  chosen your road" is the mechanical fix if no better line comes.
+- **Toast-echo family (12 sites):** journal bodies that restate the adjacent toast in past
+  tense, headed by the deed family in `PDV_DevotionLedger.psc` (A deed noticed / ill-received
+  / weighed). Full target list with composition classes and toast pairing now lives in the
+  prose workbook, sheet `Book of Days Inventory` (ECHO rows, sorted first). Subsumes the
+  overlap half of issue #107. Rewrite goal per the Keeper-voice ruling (see
+  `race-sheets/PDV_ContentDestinationMatrix.md` Section 5): say what the toast did not --
+  consequence, standing, accumulation.
+- **Status:** OPEN -- owner drafts in the inventory sheet; a later pass applies. Application
+  caveat: `AppendBookOfDaysEntry` de-dupes on exact final string, so reworded lines can
+  produce one duplicate-looking day/tone pair on saves that already hold the old wording.

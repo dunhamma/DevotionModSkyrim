@@ -430,6 +430,8 @@
     journalBy: document.getElementById("pdv-journal-by"),
     journalEmblem: document.getElementById("pdv-journal-emblem"),
     journalInstrument: document.getElementById("pdv-journal-instrument"),
+    journalCulture: document.getElementById("pdv-journal-culture"),
+    journalCultureLabel: document.getElementById("pdv-journal-culture-label"),
     journalFoot: document.getElementById("pdv-journal-foot"),
     journalEntries: document.getElementById("pdv-journal-entries"),
     journalClose: document.getElementById("pdv-journal-close"),
@@ -1363,6 +1365,50 @@
     return "a record kept since the path began";
   };
 
+  // Shared normalized gauge geometry for the Book of Days. However different
+  // the underlying scales and rates, the K marker points render evenly across
+  // the track and the fill interpolates within the segment the value occupies,
+  // so the standing and culture gauges read as siblings.
+  const journalGaugeFraction = (value, cap, points) => {
+    const safeCap = cap > 0 ? cap : 1;
+    const v = clamp(numberOrZero(value), 0, safeCap);
+    if (!points.length) return v / safeCap;
+    let prev = 0;
+    for (let i = 0; i < points.length; i += 1) {
+      if (v < points[i]) {
+        const span = points[i] - prev;
+        const within = span > 0 ? (v - prev) / span : 1;
+        return (i + clamp01(within)) / points.length;
+      }
+      prev = points[i];
+    }
+    return 1;
+  };
+
+  const journalGaugeNode = (value, cap, points, isPipFull, waning) => {
+    const pts = asArray(points)
+      .map(numberOrZero)
+      .filter((p) => p > 0 && p <= cap)
+      .sort((a, b) => a - b);
+    const gauge = document.createElement("div");
+    gauge.className = "bod-gauge";
+    gauge.setAttribute("aria-hidden", "true");
+    const track = document.createElement("div");
+    track.className = "bod-gauge__track";
+    const fill = document.createElement("span");
+    fill.className = waning ? "bod-gauge__fill is-waning" : "bod-gauge__fill";
+    fill.style.width = `${Math.round(journalGaugeFraction(value, cap, pts) * 1000) / 10}%`;
+    track.appendChild(fill);
+    gauge.appendChild(track);
+    pts.forEach((point, index) => {
+      const pip = document.createElement("span");
+      pip.className = isPipFull(point, index) ? "bod-gauge__pip full" : "bod-gauge__pip";
+      pip.style.left = `${Math.round(((index + 1) / pts.length) * 1000) / 10}%`;
+      gauge.appendChild(pip);
+    });
+    return gauge;
+  };
+
   const renderJournalPietyGauge = (slot, inst = {}) => {
     const instData = inst.data || {};
     const kind = text(inst.kind, "piety").toLowerCase();
@@ -1384,24 +1430,13 @@
     }
     const standing = clamp(value, 0, cap);
     const tier = numberOrZero(inst.tier !== undefined ? inst.tier : state.tier);
-    const pct = (point) => `${Math.round((point / cap) * 1000) / 10}%`;
-    const gauge = document.createElement("div");
-    gauge.className = "bod-gauge";
-    gauge.setAttribute("aria-hidden", "true");
-    const track = document.createElement("div");
-    track.className = "bod-gauge__track";
-    const fill = document.createElement("span");
-    fill.className = isWaning(inst) ? "bod-gauge__fill is-waning" : "bod-gauge__fill";
-    fill.style.width = pct(standing);
-    track.appendChild(fill);
-    gauge.appendChild(track);
-    gaugeThresholds.forEach((threshold, index) => {
-      const pip = document.createElement("span");
-      pip.className = tier >= index + 1 ? "bod-gauge__pip full" : "bod-gauge__pip";
-      pip.style.left = pct(threshold.value);
-      gauge.appendChild(pip);
-    });
-    slot.append(gauge);
+    slot.append(journalGaugeNode(
+      standing,
+      cap,
+      gaugeThresholds.map((threshold) => threshold.value),
+      (point, index) => tier >= index + 1,
+      isWaning(inst)
+    ));
   };
 
   // The Book of Days always uses its book-styled standing gauge; cultural lane
@@ -1423,6 +1458,37 @@
       labelEl.appendChild(em);
     }
     renderJournalPietyGauge(nodes.journalInstrument, inst);
+  };
+
+  // Culture lane: a second gauge, independent of the deity instrument, fed by
+  // journal.culture {posture, value, max, pips[]}. Every race reports a real,
+  // bounded measurement; an empty payload hides the row entirely.
+  const renderJournalCulture = (culture) => {
+    if (!nodes.journalCulture || !nodes.journalCultureLabel) return;
+    clear(nodes.journalCulture);
+    const data = culture && typeof culture === "object" ? culture : null;
+    const posture = data ? text(data.posture, "") : "";
+    const max = data ? numberOrZero(data.max) : 0;
+    if (!posture || max <= 0) {
+      nodes.journalCultureLabel.hidden = true;
+      nodes.journalCulture.hidden = true;
+      return;
+    }
+    const value = clamp(numberOrZero(data.value), 0, max);
+    nodes.journalCultureLabel.hidden = false;
+    nodes.journalCulture.hidden = false;
+    clear(nodes.journalCultureLabel);
+    nodes.journalCultureLabel.classList.add("is-tiered");
+    const em = document.createElement("em");
+    em.textContent = posture;
+    nodes.journalCultureLabel.appendChild(em);
+    nodes.journalCulture.append(journalGaugeNode(
+      value,
+      max,
+      data.pips,
+      (point) => value >= point,
+      false
+    ));
   };
 
   const journalEntryNode = (entry) => {
@@ -1496,6 +1562,7 @@
     }
     if (nodes.journalEmblem) nodes.journalEmblem.innerHTML = buildJournalSun();
     renderJournalStanding(journal.instrument || journal.standing);
+    renderJournalCulture(journal.culture);
 
     const entries = asArray(journal.entries).filter(Boolean);
     clear(nodes.journalEntries);
@@ -2244,8 +2311,17 @@
 
   const traceToast = (phase, toastPayload = {}) => {
     const correlation = text(toastPayload && toastPayload.correlation, "");
-    if (correlation && typeof console !== "undefined" && typeof console.debug === "function") {
-      console.debug(`[PDV_TOAST_TRACE] ${phase} correlation=${correlation}`);
+    const trace = [
+      phase,
+      `event=${text(toastPayload && toastPayload.event, "-")}`,
+      `deity=${text(toastPayload && toastPayload.deity, "-")}`,
+      `tier=${text(toastPayload && toastPayload.tierLabel, "-")}`,
+      `correlation=${correlation || "-"}`,
+    ].join("|");
+    if (typeof window.PDVToastTrace === "function") {
+      window.PDVToastTrace(trace);
+    } else if (correlation && typeof console !== "undefined" && typeof console.debug === "function") {
+      console.debug(`[PDV_TOAST_TRACE] ${trace}`);
     }
   };
 
@@ -2307,6 +2383,10 @@
     toast.append(mark, body);
     nodes.toasts.prepend(toast);
     traceToast("render", copy);
+    window.requestAnimationFrame(() => {
+      const bounds = toast.getBoundingClientRect();
+      traceToast(bounds.width > 0 && bounds.height > 0 ? "visible" : "hidden", copy);
+    });
     while (nodes.toasts.childElementCount > MAX_ACTIVE_TOASTS) {
       removeToast(nodes.toasts.lastElementChild);
     }

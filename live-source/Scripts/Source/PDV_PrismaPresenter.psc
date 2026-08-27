@@ -66,6 +66,7 @@ Bool Function SendPrismaToastPayloadOrFallback(String payload, String fallbackTi
 
     if !sent && allowFallback
         ShowToastFallbackNotification(fallbackTitle, fallbackMessage)
+        sent = BuildToastFallbackText(fallbackTitle, fallbackMessage) != ""
     endIf
     return sent
 EndFunction
@@ -147,6 +148,25 @@ Bool Function SendPrismaEventToast(String eventName, PDV_DeityBase deity, String
     return SendPrismaToastPayloadOrFallback(j, "", BuildPrismaEventFallbackText(eventName, deityName, context, tierLabel, rival), allowFallback)
 EndFunction
 
+Bool Function SendPrismaTierMilestone(PDV_DeityBase deity, Int tier, String correlation)
+    String deityName = ""
+    String tierLabel = ""
+    String symbolName = ""
+    String j = ""
+    if !deity || tier <= Manager.LedgerRuntime.TIER_NONE || correlation == ""
+        return False
+    endIf
+    deityName = GetPublicDeityDisplayName(deity)
+    tierLabel = GetTierStandingLabel(tier)
+    symbolName = GetPrismaSymbolForDeity(deity)
+    j = "{\"mode\":\"toast\",\"correlation\":\"" + PDV_DevotionRules.JsonSafeString(correlation) + "\",\"toast\":{\"event\":\"tier\""
+    j = j + ",\"deity\":\"" + PDV_DevotionRules.JsonSafeString(deityName) + "\""
+    j = j + ",\"symbol\":\"" + PDV_DevotionRules.JsonSafeString(symbolName) + "\""
+    j = j + ",\"tierLabel\":\"" + PDV_DevotionRules.JsonSafeString(tierLabel) + "\""
+    j = j + ",\"correlation\":\"" + PDV_DevotionRules.JsonSafeString(correlation) + "\"}}"
+    return SendPrismaToastPayloadOrFallback(j, "", BuildPrismaEventFallbackText("tier", deityName, "", tierLabel, ""), True)
+EndFunction
+
 Function RequestPanelRefresh()
     Manager.SetPanelDirty(True)
 EndFunction
@@ -179,6 +199,13 @@ Function SurfaceTransition(String eventClass, String surfaceKey, String directio
     endIf
     surfaceKey = Manager.NormalizePublicDeityDisplayText(surfaceKey)
     if Manager.IsRaceSetupQuietPresentationActive()
+        return
+    endIf
+
+    ; Tier milestones are admitted, persisted, and replayed only by the ledger.
+    ; Refuse legacy callers instead of reviving the independent Surfaced.tier guard.
+    if eventClass == "tier"
+        Manager.Trace(1, "Legacy tier SurfaceTransition refused; use HandleTierTransition.")
         return
     endIf
 
@@ -350,7 +377,7 @@ Bool Function PushDevotionPanel(Bool playerRequested = false)
         ; identity (not just the text fields) reflects it. Manager.GetActiveDeity() is None here
         ; (severed under exclusivity), so without this the header/bar would fall to the
         ; race substrate at piety 0.
-        titleText = Manager.NormalizePublicDeityDisplayText(panelPact.DeityName)
+        titleText = GetCanonicalDeityDisplayName(panelPact)
         symbolName = GetPrismaSymbolForDeity(panelPact)
         if symbolName == "journal"
             symbolName = "daedric"
@@ -713,7 +740,7 @@ String Function GetPanelPatronNote()
     PDV_DaedricPathBase pactPath = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if pactPath
         if Manager.GetPlayerOriginRaceIndex() == Manager.ORIGIN_BRETON && Manager.OriginRuntime.GetBretonTraditionValue() == Manager.BRETON_TRADITION_HIDDEN_ART && Manager.DaedricRuntime.IsBretonHiddenArtDaedricOfferDeity(pactPath)
-            return "The " + pactPath.DeityName + " pact stands within the Hidden Art; the tradition remains your practiced road."
+            return "The " + GetCanonicalDeityDisplayName(pactPath) + " pact stands within the Hidden Art; the tradition remains your practiced road."
         endIf
         return "A pact binds you; lesser devotions fall quiet."
     endIf
@@ -757,7 +784,7 @@ String Function GetPanelActsJson()
     String items = ""
     PDV_DaedricPathBase actsPact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if actsPact
-        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("daedric", "neutral", "Keep the pact", "Act in keeping with " + actsPact.DeityName + " to hold this pact."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("daedric", "neutral", "Keep the pact", "Act in keeping with " + GetCanonicalDeityDisplayName(actsPact) + " to hold this pact."))
     elseIf Manager.GetActiveDeity()
         Float today = Manager.LedgerRuntime.GetPietyToday(Manager.GetActiveDeity())
         if today != 0.0
@@ -792,7 +819,7 @@ String Function GetPanelRitesJson()
     String items = PanelPlainObject("journal", "", "Survey your devotion", "Call on the Survey Devotion power to read where your path stands.")
     PDV_DaedricPathBase ritesPact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if ritesPact
-        String pactName = Manager.NormalizePublicDeityDisplayText(ritesPact.DeityName)
+        String pactName = GetCanonicalDeityDisplayName(ritesPact)
         items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("daedric", "", "Keep " + pactName + "'s pact", "Act in keeping with " + pactName + " to hold this pact."))
     elseIf Manager.GetActiveDeity()
         String activeName = GetPublicDeityDisplayName(Manager.GetActiveDeity())
@@ -820,7 +847,7 @@ String Function GetPanelRelationsJson()
         elseIf dstate >= relsPact.DAEDRIC_STATE_TABOO
             dstateTone = "warning"
         endIf
-        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("", dstateTone, "", Manager.NormalizePublicDeityDisplayText(relsPact.DeityName) + "'s pact stands " + relsPact.GetDaedricStateLabel(dstate) + " among your people."))
+        items = PDV_DevotionRules.AppendJsonItem(items, PanelPlainObject("", dstateTone, "", GetCanonicalDeityDisplayName(relsPact) + "'s pact stands " + relsPact.GetDaedricStateLabel(dstate) + " among your people."))
     elseIf Manager.GetActiveDeity()
         Int stance = Manager.GetActiveDeity().GetStanceForPlayer()
         String stanceText = ""
@@ -845,10 +872,16 @@ String Function GetPanelRelationsJson()
 
         Quest[] rivals = Manager.GetActiveDeity().RivalDeities
         if rivals && rivals.Length > 0
-            PDV_DeityBase rivalDeity = rivals[0] as PDV_DeityBase
-            if rivalDeity
-                items = PDV_DevotionRules.AppendJsonItem(items, PanelEventObject("rivalry", Manager.GetActiveDeity(), "", "", "", "", "", rivalDeity.DeityName))
-            endIf
+            Int rivalIndex = 0
+            Bool relevantRivalFound = False
+            while rivalIndex < rivals.Length && !relevantRivalFound
+                PDV_DeityBase rivalDeity = rivals[rivalIndex] as PDV_DeityBase
+                if rivalDeity && Manager.LedgerRuntime.IsDeityReachableForCurrentOrigin(rivalDeity)
+                    items = PDV_DevotionRules.AppendJsonItem(items, PanelEventObject("rivalry", Manager.GetActiveDeity(), "", "", "", "", "", GetPublicDeityDisplayName(rivalDeity)))
+                    relevantRivalFound = True
+                endIf
+                rivalIndex += 1
+            endWhile
         endIf
     endIf
 
@@ -1039,15 +1072,29 @@ String Function GetTierStandingLabel(Int tier)
     return "Unrecognized"
 EndFunction
 
-String Function GetPublicTierBand(Int tier)
-    if tier >= Manager.LedgerRuntime.TIER_CHAMPION
-        return "Devoted"
-    elseIf tier >= Manager.LedgerRuntime.TIER_DEVOTED
+String Function GetBroadStandingBand(Int tier)
+    if tier >= Manager.LedgerRuntime.TIER_DEVOTED
         return "Faithful"
     elseIf tier >= Manager.LedgerRuntime.TIER_SEEKER
         return "Observant"
     endIf
     return "Distant"
+EndFunction
+
+String Function GetPublicTierBand(Int tier)
+    return GetBroadStandingBand(tier)
+EndFunction
+
+String Function GetMilestoneStandingLabel(PDV_DeityBase deity, Int tier)
+    if deity
+        if deity == Manager.GetActiveDeity()
+            return GetTierStandingLabel(tier)
+        endIf
+        if Manager.OriginRuntime.IsKhajiitOrigin() && deity == Manager.OriginRuntime.GetKhajiitEmphasisDeity(Manager.OriginRuntime.GetKhajiitFocusedEmphasis())
+            return GetTierStandingLabel(tier)
+        endIf
+    endIf
+    return GetBroadStandingBand(tier)
 EndFunction
 
 Function RunDawnBookOfDays()
@@ -2008,7 +2055,7 @@ String Function GetBookOfDaysPathStatusLabel(Int originRace)
 
     PDV_DaedricPathBase activePact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if activePact
-        return Manager.NormalizePublicDeityDisplayText(activePact.DeityName) + " Pact"
+        return GetCanonicalDeityDisplayName(activePact) + " Pact"
     endIf
 
     if Manager.GetActiveDeity() && Manager.LedgerRuntime.GetPatronState() == Manager.LedgerRuntime.PATRON_STATE_ACTIVE
@@ -2109,6 +2156,7 @@ String Function BuildJournalPayloadJson()
     Int titleCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Titles")
     Int magnitudeCount = StorageUtil.IntListCount(None, "PDV.Diegetic.Journal.Magnitudes")
     Int sourceCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources")
+    Int keyCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Keys")
     String entries = ""
     Int i = 0
     while i < count
@@ -2137,6 +2185,12 @@ String Function BuildJournalPayloadJson()
         entry = entry + ",\"valence\":\"" + valence + "\""
         entry = entry + ",\"magnitude\":" + magnitude
         entry = entry + ",\"title\":\"" + entryTitle + "\""
+        if i < keyCount
+            String entryKey = PDV_DevotionRules.JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Keys", i))
+            if entryKey != ""
+                entry = entry + ",\"eventKey\":\"" + entryKey + "\""
+            endIf
+        endIf
         if i < sourceCount
             String sourceText = PDV_DevotionRules.JsonSafeString(StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Sources", i))
             if sourceText != ""
@@ -2159,17 +2213,106 @@ String Function BuildJournalPayloadJson()
     j = j + ",\"survey\":\"" + PDV_DevotionRules.JsonSafeString(pathInfo) + "\""
     j = j + ",\"foot\":\"Press your Book of Days key again to close.\""
     j = j + ",\"instrument\":" + BuildBookOfDaysInstrumentJson(originRace)
+    j = j + ",\"culture\":" + BuildJournalCultureJson(originRace)
     j = j + ",\"entries\":[" + entries + "]"
     j = j + "}}"
     return j
 EndFunction
 
-Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "", Bool allowDuringRaceSetup = False, String sourceText = "")
+String Function BuildJournalCultureJson(Int originRace)
+    {Culture-lane gauge for the Book of Days header: the race's cultural practice
+    measured against fixed, race-appropriate points. Independent of the deity
+    instrument -- a patron does not hide the culture lane. Labels reuse existing
+    player-facing vocabulary only; empty object means nothing real to measure.}
+    Float cultureValue = 0.0
+    Float cultureMax = 75.0
+    String pips = "1,25,75"
+    String posture = ""
+    if originRace == Manager.ORIGIN_NORD && Manager.PDV_NordAncestorSubstrate
+        cultureValue = Manager.PDV_NordAncestorSubstrate.GetAncestorStanding()
+        posture = Manager.OriginRuntime.GetNordAncestorLayerLabel()
+    elseIf originRace == Manager.ORIGIN_IMPERIAL && Manager.PDV_ImperialAncestorSubstrate
+        cultureValue = Manager.PDV_ImperialAncestorSubstrate.GetCivicStanding()
+        posture = Manager.OriginRuntime.GetImperialCivicTierName()
+    elseIf originRace == Manager.ORIGIN_ALTMER && Manager.PDV_AltmerAncestorSubstrate
+        cultureValue = Manager.PDV_AltmerAncestorSubstrate.GetHeritageStanding()
+        posture = Manager.OriginRuntime.GetAltmerHeritageTierName()
+    elseIf originRace == Manager.ORIGIN_DUNMER && Manager.PDV_DunmerAncestorSubstrate
+        cultureValue = Manager.PDV_DunmerAncestorSubstrate.GetMetric()
+        posture = Manager.OriginRuntime.GetDunmerAncestorLayerLabel()
+    elseIf originRace == Manager.ORIGIN_KHAJIIT && Manager.PDV_KhajiitLunarSubstrate
+        cultureValue = Manager.PDV_KhajiitLunarSubstrate.GetMetric()
+        posture = Manager.OriginRuntime.GetKhajiitLunarTierLabel(Manager.PDV_KhajiitLunarSubstrate.GetSubstrateTier())
+    elseIf originRace == Manager.ORIGIN_ARGONIAN && Manager.PDV_ArgonianHistSubstrate
+        cultureValue = Manager.PDV_ArgonianHistSubstrate.GetMetric()
+        posture = Manager.OriginRuntime.GetArgonianCulturalPracticeLabel()
+    elseIf originRace == Manager.ORIGIN_BOSMER
+        cultureValue = Manager.OriginRuntime.GetBosmerGreenPactCompliance() as Float
+        cultureMax = 100.0
+        pips = "20,50,80"
+        posture = Manager.OriginRuntime.GetBosmerComplianceBand()
+    elseIf originRace == Manager.ORIGIN_BRETON
+        Int practiceCount = Manager.OriginRuntime.GetBretonPracticeCount(Manager.OriginRuntime.GetBretonTraditionValue())
+        cultureValue = practiceCount as Float
+        cultureMax = 85.0
+        pips = "25,50"
+        posture = GetPublicTierBand(Manager.OriginRuntime.GetBretonPracticeTier(Manager.OriginRuntime.GetBretonTraditionValue()))
+    elseIf originRace == Manager.ORIGIN_ORC
+        Float strongholdWeight = StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.Stronghold")
+        Float cityWeight = StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.City")
+        Float legionWeight = StorageUtil.GetFloatValue(None, "PDV.Orc.LifeMode.LegionExile")
+        cultureValue = ComputeDominantShare(strongholdWeight, cityWeight, legionWeight)
+        cultureMax = 100.0
+        pips = ""
+        posture = Manager.OriginRuntime.GetOrcLifeModeLabel()
+    elseIf originRace == Manager.ORIGIN_REDGUARD
+        Float crownWeight = StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Crown")
+        Float forebearWeight = StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.Forebear")
+        Float ashabahWeight = StorageUtil.GetFloatValue(None, "PDV.Redguard.Sect.AshAbah")
+        cultureValue = ComputeDominantShare(crownWeight, forebearWeight, ashabahWeight)
+        cultureMax = 100.0
+        pips = ""
+        posture = Manager.OriginRuntime.GetRedguardSectLabel()
+    endIf
+    if posture == ""
+        return "{}"
+    endIf
+    if cultureValue < 0.0
+        cultureValue = 0.0
+    elseIf cultureValue > cultureMax
+        cultureValue = cultureMax
+    endIf
+    String j = "{\"posture\":\"" + PDV_DevotionRules.JsonSafeString(posture) + "\""
+    j = j + ",\"value\":" + PDV_DevotionRules.FormatTwoDecimals(cultureValue)
+    j = j + ",\"max\":" + PDV_DevotionRules.FormatTwoDecimals(cultureMax)
+    j = j + ",\"pips\":[" + pips + "]"
+    j = j + "}"
+    return j
+EndFunction
+
+Float Function ComputeDominantShare(Float firstWeight, Float secondWeight, Float thirdWeight)
+    {Share of the largest of three accumulating weights, as 0-100. Reads existing
+    StorageUtil state only; zero total reads as zero commitment.}
+    Float total = firstWeight + secondWeight + thirdWeight
+    if total <= 0.0
+        return 0.0
+    endIf
+    Float dominant = firstWeight
+    if secondWeight > dominant
+        dominant = secondWeight
+    endIf
+    if thirdWeight > dominant
+        dominant = thirdWeight
+    endIf
+    return dominant / total * 100.0
+EndFunction
+
+Bool Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String symbol, Bool headlinePinned, Int magnitude = 1, String titleText = "", Bool allowDuringRaceSetup = False, String sourceText = "", String entryKey = "")
     if Manager.IsRaceSetupQuietPresentationActive() && !allowDuringRaceSetup
-        return
+        return False
     endIf
     if line == ""
-        return
+        return False
     endIf
     line = Manager.NormalizePublicDeityDisplayText(line)
     if tone == ""
@@ -2180,14 +2323,27 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     endIf
     sourceText = Manager.NormalizePublicDeityDisplayText(sourceText)
 
-    ; De-dupe: skip when the newest entry is the same day + tone + line, so an
-    ; immediate event and the dawn digest cannot restate the same beat, and a
-    ; re-entrant dawn cannot double-write.
+    ; Existing development saves predate event keys. Pad the parallel list before
+    ; reading or appending so a key can never attach to an older journal line.
     Int count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
-    if count > 0
+    while StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Keys") < count
+        StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Keys", "", True)
+    endWhile
+
+    ; Keyed entries deduplicate by event identity. Unkeyed callers retain the old
+    ; newest-entry content guard.
+    if entryKey != ""
+        Int keyIndex = 0
+        while keyIndex < count
+            if StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Keys", keyIndex) == entryKey
+                return False
+            endIf
+            keyIndex += 1
+        endWhile
+    elseIf count > 0
         Int last = count - 1
         if StorageUtil.IntListGet(None, "PDV.Diegetic.Journal.Days", last) == gameDay && StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Tones", last) == tone && StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Lines", last) == line
-            return
+            return False
         endIf
     endIf
 
@@ -2208,16 +2364,156 @@ Function AppendBookOfDaysEntry(String line, Int gameDay, String tone, String sym
     endIf
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Titles", titleText, True)
     StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Sources", sourceText, True)
+    StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Keys", entryKey, True)
 
     PruneBookOfDays()
-
+    return True
 EndFunction
 
-String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
+Bool Function AppendTierMilestoneEntry(PDV_DeityBase deity, Int tier, String entryKey)
+    String surfaceKey = ""
+    String line = ""
+    if !deity || tier <= Manager.LedgerRuntime.TIER_NONE || entryKey == ""
+        return False
+    endIf
+    surfaceKey = GetCanonicalDeityDisplayName(deity) + " " + GetTierStandingLabel(tier)
+    line = BuildTierReachJournalLine(surfaceKey, deity.DeityIndex)
+    return AppendBookOfDaysEntry(line, Utility.GetCurrentGameTime() as Int, "tier.reach", GetPrismaSymbolForDeity(deity), tier >= Manager.LedgerRuntime.TIER_CHAMPION, GetJournalMagnitudeForTone("tier.reach"), BuildJournalEventTitle("tier.reach", ""), False, "", entryKey)
+EndFunction
+
+Bool Function RemoveBookOfDaysEntryByKey(String entryKey)
+    Int count = 0
+    Int i = 0
+    Bool removed = False
+    if entryKey == ""
+        return False
+    endIf
+    count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
+    while StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Keys") < count
+        StorageUtil.StringListAdd(None, "PDV.Diegetic.Journal.Keys", "", True)
+    endWhile
+    i = count - 1
+    while i >= 0
+        if StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Keys", i) == entryKey
+            RemoveBookOfDaysEntryAt(i)
+            removed = True
+        endIf
+        i -= 1
+    endWhile
+    return removed
+EndFunction
+
+Bool Function HasBookOfDaysEntryKey(String entryKey)
+    Int count = 0
+    Int keyCount = 0
+    Int i = 0
+    if entryKey == ""
+        return False
+    endIf
+    count = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Lines")
+    keyCount = StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Keys")
+    while i < count && i < keyCount
+        if StorageUtil.StringListGet(None, "PDV.Diegetic.Journal.Keys", i) == entryKey
+            return True
+        endIf
+        i += 1
+    endWhile
+    return False
+EndFunction
+
+String Function GetCanonicalDeityDisplayName(PDV_DeityBase deity)
     if !deity
         return ""
     endIf
-    return Manager.NormalizePublicDeityDisplayText(deity.DeityName)
+
+    PDV_DaedricPathBase daedricPath = deity as PDV_DaedricPathBase
+    if daedricPath
+        return NormalizeExternalDeityText(Manager.DaedricRuntime.CanonicalDaedricPathName(daedricPath))
+    endIf
+
+    ; DeityIndex is a persistence/routing identifier, not a dense display-name
+    ; ordinal (for example, the shared Azurah record is index 40). Resolve the
+    ; bound form instead so display identity cannot drift when indices change.
+    if deity == Manager.PDV_Kyne
+        return NormalizeExternalDeityText("Kyne")
+    elseIf deity == Manager.PDV_Talos
+        return NormalizeExternalDeityText("Talos")
+    elseIf deity == Manager.PDV_Yffre
+        return NormalizeExternalDeityText("Y'ffre")
+    elseIf deity == Manager.LedgerRuntime.PDV_Zen
+        return NormalizeExternalDeityText("Z'en")
+    elseIf deity == Manager.PDV_BaanDar
+        return NormalizeExternalDeityText("Baan Dar")
+    elseIf deity == Manager.PDV_Azura
+        return NormalizeExternalDeityText("Azurah")
+    elseIf deity == Manager.PDV_Khenarthi
+        return NormalizeExternalDeityText("Khenarthi")
+    elseIf deity == Manager.PDV_Rajhin
+        return NormalizeExternalDeityText("Rajhin")
+    elseIf deity == Manager.PDV_Alkosh
+        return NormalizeExternalDeityText("Alkosh")
+    elseIf deity == Manager.PDV_Boethiah
+        return NormalizeExternalDeityText("Boethiah")
+    elseIf deity == Manager.PDV_Mephala
+        return NormalizeExternalDeityText("Mephala")
+    elseIf deity == Manager.PDV_Hist
+        return NormalizeExternalDeityText("The Hist")
+    elseIf deity == Manager.PDV_Sithis
+        return NormalizeExternalDeityText("Sithis")
+    elseIf deity == Manager.PDV_Malacath
+        return NormalizeExternalDeityText("Malacath")
+    elseIf deity == Manager.PDV_Trinimac
+        return NormalizeExternalDeityText("Trinimac")
+    elseIf deity == Manager.PDV_Tuwhacca
+        return NormalizeExternalDeityText("Tu'whacca")
+    elseIf deity == Manager.PDV_HoonDing
+        return NormalizeExternalDeityText("HoonDing")
+    elseIf deity == Manager.PDV_Leki
+        return NormalizeExternalDeityText("Leki")
+    elseIf deity == Manager.PDV_Shor
+        return NormalizeExternalDeityText("Shor")
+    elseIf deity == Manager.PDV_Tsun
+        return NormalizeExternalDeityText("Tsun")
+    elseIf deity == Manager.PDV_Stuhn
+        return NormalizeExternalDeityText("Stuhn")
+    elseIf deity == Manager.LedgerRuntime.PDV_Akatosh
+        return NormalizeExternalDeityText("Akatosh")
+    elseIf deity == Manager.LedgerRuntime.PDV_Mara
+        return NormalizeExternalDeityText("Mara")
+    elseIf deity == Manager.LedgerRuntime.PDV_Arkay
+        return NormalizeExternalDeityText("Arkay")
+    elseIf deity == Manager.LedgerRuntime.PDV_Stendarr
+        return NormalizeExternalDeityText("Stendarr")
+    elseIf deity == Manager.LedgerRuntime.PDV_Zenithar
+        return NormalizeExternalDeityText("Zenithar")
+    elseIf deity == Manager.LedgerRuntime.PDV_Dibella
+        return NormalizeExternalDeityText("Dibella")
+    elseIf deity == Manager.LedgerRuntime.PDV_Julianos
+        return NormalizeExternalDeityText("Julianos")
+    elseIf deity == Manager.LedgerRuntime.PDV_Kynareth
+        return NormalizeExternalDeityText("Kynareth")
+    elseIf deity == Manager.PDV_AuriEl
+        return NormalizeExternalDeityText("Auri-El")
+    elseIf deity == Manager.PDV_Magnus
+        return NormalizeExternalDeityText("Magnus")
+    elseIf deity == Manager.PDV_Xarxes
+        return NormalizeExternalDeityText("Xarxes")
+    elseIf deity == Manager.PDV_Syrabane
+        return NormalizeExternalDeityText("Syrabane")
+    endIf
+    ; A saved quest instance may retain an older property binding even after the
+    ; current plugin record is corrected. The raw VMAD name is still a valid
+    ; identity, so pass it through the exhaustive display normalizer instead of
+    ; leaking its saved casing or reporting a false unknown.
+    return NormalizeExternalDeityText(deity.DeityName)
+EndFunction
+
+String Function NormalizeExternalDeityText(String sourceText)
+    return Manager.NormalizeExternalDeityDisplayText(sourceText)
+EndFunction
+
+String Function GetPublicDeityDisplayName(PDV_DeityBase deity)
+    return GetCanonicalDeityDisplayName(deity)
 EndFunction
 
 Function PruneBookOfDays()
@@ -2255,6 +2551,9 @@ Function RemoveBookOfDaysEntryAt(Int index)
     endIf
     if index < StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Sources")
         StorageUtil.StringListRemoveAt(None, "PDV.Diegetic.Journal.Sources", index)
+    endIf
+    if index < StorageUtil.StringListCount(None, "PDV.Diegetic.Journal.Keys")
+        StorageUtil.StringListRemoveAt(None, "PDV.Diegetic.Journal.Keys", index)
     endIf
 EndFunction
 
@@ -2742,7 +3041,7 @@ String Function GetPlayerMcmSummaryLine()
 
     PDV_DaedricPathBase summaryPact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if summaryPact
-        return Manager.NormalizePublicDeityDisplayText(summaryPact.DeityName) + " | Pact | " + GetCurrentStandingLabel()
+        return GetCanonicalDeityDisplayName(summaryPact) + " | Pact | " + GetCurrentStandingLabel()
     endIf
 
     String summary = Manager.OriginRuntime.GetMcmSummaryLine(GetCurrentStandingLabel())
@@ -2757,7 +3056,7 @@ String Function GetPlayerMcmPatronLine()
     ; surface it here so the Prisma panel "patron" field matches the Survey.
     PDV_DaedricPathBase pactPath = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if pactPath
-        return Manager.NormalizePublicDeityDisplayText(pactPath.DeityName)
+        return GetCanonicalDeityDisplayName(pactPath)
     endIf
 
     if Manager.GetActiveDeity()
@@ -2794,7 +3093,29 @@ String Function GetPlayerMcmCurseLine()
     return curseLabel
 EndFunction
 
-String Function GetCurrentStandingLabel()
+String Function GetFocusedStandingLabel(PDV_DeityBase deity)
+    if !deity
+        return "Unproven"
+    endIf
+    if Manager.OriginRuntime.IsFocusedPantheonBoonSuspended()
+        return "Wavering"
+    endIf
+
+    PDV_DaedricPathBase focusedPact = deity as PDV_DaedricPathBase
+    if focusedPact
+        return GetTierStandingLabel(focusedPact.GetStoredTier())
+    endIf
+
+    Float focusedPiety = Manager.LedgerRuntime.GetPiety(deity)
+    if focusedPiety >= 85.0
+        return "Champion"
+    elseIf focusedPiety >= 50.0
+        return "Devoted"
+    endIf
+    return "Wavering"
+EndFunction
+
+String Function GetPlayerStandingLabel()
     if Manager.OriginRuntime.IsFocusedPantheonBoonSuspended()
         return "Wavering"
     endIf
@@ -2814,21 +3135,22 @@ String Function GetCurrentStandingLabel()
         return Manager.OriginRuntime.GetBroadLaneStandingLabel(Manager.GetPlayerOriginRaceIndex(), tierValue)
     endIf
 
-    if tierValue >= Manager.LedgerRuntime.TIER_CHAMPION
-        return "Champion"
-    elseIf tierValue == Manager.LedgerRuntime.TIER_DEVOTED
-        return "Devoted"
-    elseIf tierValue == Manager.LedgerRuntime.TIER_SEEKER
-        return "Seeker"
+    PDV_DeityBase focusedDeity = Manager.GetActiveDeity()
+    if standingPact
+        focusedDeity = standingPact as PDV_DeityBase
+    endIf
+    if focusedDeity
+        return GetFocusedStandingLabel(focusedDeity)
     endIf
 
     return "Unproven"
 EndFunction
 
+String Function GetCurrentStandingLabel()
+    return GetPlayerStandingLabel()
+EndFunction
+
 String Function GetCurrentStandingBand()
-    if Manager.OriginRuntime.IsFocusedPantheonBoonSuspended()
-        return "Distant"
-    endIf
     Int tierValue = Manager.LedgerRuntime.TIER_NONE
     PDV_DaedricPathBase standingPact = Manager.DaedricRuntime.GetActiveDaedricPactPath()
     if standingPact
@@ -2840,7 +3162,7 @@ String Function GetCurrentStandingBand()
     elseIf Manager.LedgerRuntime.PDV_GLO_ActiveTier
         tierValue = Manager.LedgerRuntime.PDV_GLO_ActiveTier.GetValueInt()
     endIf
-    return GetPublicTierBand(tierValue)
+    return GetBroadStandingBand(tierValue)
 EndFunction
 
 String Function GetPrismaSymbolForDeity(PDV_DeityBase deity)

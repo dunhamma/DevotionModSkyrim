@@ -183,6 +183,12 @@ remains out of scope unless future adopted content explicitly adds him.
 | Survey Devotion readout (status SPEL) | Narrator | 240 / 180 chars |
 | Dialogue topic (player line) | Player-2nd | 120 / 80 chars; planned V2 only |
 | Prisma overlay toast | symbol-led, minimal | 60 / 40 chars |
+| Book of Days entry (heading + body) | Keeper -- the Book records deeds and standings about the bearer as a chronicle-witness; it never claims the bearer's thoughts and never says "I" (first person stays the gods' register) | heading 40 / 30 chars; body 200 / 140 chars |
+
+Book of Days note (owner ruling 2026-08-26): the tense-pair exception in
+PDV_STANDARDS.md Section 3.5 (past-tense report + present-tense consequence)
+stays valid under Keeper voice, and an entry must add something the paired
+toast did not say -- consequence, standing, or accumulation -- never restate it.
 
 Rules that bite regardless of surface (race manifest Section 7):
 
