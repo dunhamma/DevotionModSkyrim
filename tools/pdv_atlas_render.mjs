@@ -248,7 +248,11 @@ function render(atlas) {
   const daedricLane = lane({ name: "", nodes: atlas.daedric.nodes })
     .replace(`<div class="lanehead"><b></b></div>\n`, "");
 
-  return `<title>${atlas.meta.title}</title>
+  return `<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${atlas.meta.title}</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>${CSS}</style>
 

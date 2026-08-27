@@ -192,7 +192,11 @@ ${(j.survey.base || []).map((t) => `<div class="txt">&ldquo;${esc(t)}&rdquo;</di
 ${(j.survey.conditional || []).map((t) => `<div class="txt">&ldquo;${esc(t)}&rdquo;</div>`).join("\n")}
 </div></section>` : "";
 
-  return `<title>${esc(j.meta.title)}</title>
+  return `<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(j.meta.title)}</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>${CSS}</style>
 <div class="wrap">
