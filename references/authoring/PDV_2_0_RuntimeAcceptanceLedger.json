@@ -1,11 +1,11 @@
 {
   "schema": "pdv.v3-runtime-acceptance-ledger.v1",
-  "manifestRevision": 1,
+  "manifestRevision": 2,
   "testedCommit": "",
   "profile": "Devotion Dev",
   "enabledMod": "Devotion-V3Dev",
   "startedAtLocal": "",
-  "updatedAtLocal": "20/08/2026, 21:09:21",
+  "updatedAtLocal": "26/08/2026, 17:29:27",
   "cases": [
     {
       "id": "preflight",
@@ -138,6 +138,13 @@
           "note": "",
           "artifacts": []
         },
+        "culture_bar": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
         "save_load": {
           "status": "pending",
           "observedAtLocal": "",
@@ -215,6 +222,13 @@
           "note": "",
           "artifacts": []
         },
+        "culture_bar": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
         "save_load": {
           "status": "pending",
           "observedAtLocal": "",
@@ -279,6 +293,13 @@
           "artifacts": []
         },
         "surfaces": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "culture_bar": {
           "status": "pending",
           "observedAtLocal": "",
           "commit": "",
@@ -376,6 +397,13 @@
           "note": "",
           "artifacts": []
         },
+        "culture_bar": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
         "log_safety": {
           "status": "pending",
           "observedAtLocal": "",
@@ -433,6 +461,13 @@
           "artifacts": []
         },
         "no_double_dip": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "culture_bar_switch": {
           "status": "pending",
           "observedAtLocal": "",
           "commit": "",
@@ -503,6 +538,13 @@
           "artifacts": []
         },
         "source_labels": {
+          "status": "pending",
+          "observedAtLocal": "",
+          "commit": "",
+          "note": "",
+          "artifacts": []
+        },
+        "gauge_sync": {
           "status": "pending",
           "observedAtLocal": "",
           "commit": "",

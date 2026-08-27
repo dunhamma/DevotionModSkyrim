@@ -71,6 +71,10 @@ gate. Every PASS records the tested commit and a concrete observation; do not bu
    finish once with no duplicate Book entry.
 7. Open Survey and the Prisma panel. Confirm correct patron/today/status content and no blank `None`
    field.
+8. `culture_bar`: open the Book of Days. Below Standing, confirm a second gauge with the Nord
+   ancestor posture label (forgotten/remembered/honored family), pips at even thirds, and a fill
+   consistent with the ancestor substrate seeded state. The bar must stay present while a patron is
+   committed. (Added 2026-08-26; if Session A already ran, bank this during the final regression.)
 
 ## Session B: fresh Khajiit thick adapter
 
@@ -79,7 +83,12 @@ gate. Every PASS records the tested commit and a concrete observation; do not bu
 3. Use Observe the Moons outdoors at night. Wait for the delayed completion and reject a stale-token
    marker or silent no-op.
 4. Sleep outdoors and confirm the road-home/outdoor-rest route fires once.
-5. Save/load on the final state and reconfirm lunar/focus state plus player surfaces.
+5. `culture_bar`: with the lunar metric seeded to 25 (step 2), open the Book of Days. Below
+   Standing, the culture gauge must show the lunar tier label and its fill must sit exactly ON the
+   second pip (25 is the mid threshold; the gauges use segment geometry, so 25/75 renders at the
+   2/3 mark, not at one third). Raise the metric past 25 and confirm the second pip renders filled.
+6. Save/load on the final state and reconfirm lunar/focus state plus player surfaces, including the
+   culture gauge value and posture label.
 
 ## Session C: fresh Imperial thin adapter
 
@@ -88,6 +97,10 @@ gate. Every PASS records the tested commit and a concrete observation; do not bu
    direction and committed state changes only at its contracted boundary.
 3. Run Talos shrine defiance. Confirm Talos piety and Imperial Concordat pressure both move.
 4. Exercise one eligible formal offer and save/load the decision state.
+5. `culture_bar`: open the Book of Days at each Concordat posture touched above. The civic culture
+   gauge (Civic Steadiness/Discipline/Exemplar label) must be present and unchanged by Concordat
+   moves alone -- the culture lane is independent of both the deity instrument and the Concordat
+   track. Confirm a civic act, not a Concordat move, is what moves the bar.
 
 ## Session D: Altmer regression
 
@@ -100,6 +113,9 @@ gate. Every PASS records the tested commit and a concrete observation; do not bu
 4. Repeat with Baan Dar. No Altmer formal offer may surface. A tier-reach toast caused by controlled
    piety is classified separately and is not an offer failure.
 5. Check Auri-El, Talos, Tu'whacca, Z'en, and Baan Dar public casing anywhere they surface.
+6. `culture_bar`: open the Book of Days before and after the Auri-El -> Magnus reward swap. The
+   heritage culture gauge (Ordered/Disciplined/Exemplar Heritage label) must be identical across
+   the swap -- patron and reward changes must not move or hide the culture lane.
 
 ## Session E: race-change reconciliation
 
@@ -110,6 +126,9 @@ gate. Every PASS records the tested commit and a concrete observation; do not bu
 3. Activate an Altmer reward, change to Khajiit, rerun detection/reconciliation, and prove the same
    prior-race cleanup.
 4. Save/load the Khajiit state and confirm no stripped effect returns and no reward double-dips.
+5. `culture_bar_switch`: open the Book of Days after each rebind. The culture gauge must re-label
+   and re-scale to the new race (Nord ancestor -> Altmer heritage -> Khajiit lunar) with no stale
+   posture text and no carried-over fill from the prior race's metric.
 
 ## Cross-session presentation and recognition
 
@@ -120,6 +139,10 @@ gate. Every PASS records the tested commit and a concrete observation; do not bu
 - With recognition disabled, identity/band changes are silent. Enable friendly and hostile
   recognition and observe one transition of each kind, then disable and reconfirm silence after
   save/load.
+- `gauge_sync`: in the Book of Days, the Standing gauge and the culture gauge share one visual
+  geometry -- pips at even positions on both tracks, no raw numeral on either, and a posture label
+  (existing vocabulary only, never the word "Spine") on the culture gauge. A race whose culture
+  payload is empty hides the culture row entirely rather than showing an empty track.
 
 ## Compatibility and package acceptance
 

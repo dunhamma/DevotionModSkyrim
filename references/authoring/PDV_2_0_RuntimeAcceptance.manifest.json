@@ -1,6 +1,6 @@
 {
   "schema": "pdv.v3-runtime-acceptance-manifest.v1",
-  "revision": 1,
+  "revision": 2,
   "claim": "feature/v3-big-update is safe to merge after module runtime acceptance, the isolated MCM revamp, and final regression",
   "branch": "feature/v3-big-update",
   "profile": "Devotion Dev",
@@ -74,32 +74,32 @@
         {
           "id": "nord_core",
           "title": "Nord bootstrap, Ledger, reward, neglect, dawn, and Quest Reaction",
-          "slots": ["bootstrap", "ledger_direct", "ledger_organic", "dawn", "reward", "neglect_apply", "neglect_recover", "qr_controlled", "qr_organic", "surfaces", "save_load", "log_safety"]
+          "slots": ["bootstrap", "ledger_direct", "ledger_organic", "dawn", "reward", "neglect_apply", "neglect_recover", "qr_controlled", "qr_organic", "surfaces", "culture_bar", "save_load", "log_safety"]
         },
         {
           "id": "khajiit_origin",
           "title": "Khajiit thick-adapter and delayed-query proof",
-          "slots": ["bootstrap", "debug_pages", "moon_observance", "lunar_posture", "lunar_budget", "observe_moons", "outdoor_rest", "surfaces", "save_load", "log_safety"]
+          "slots": ["bootstrap", "debug_pages", "moon_observance", "lunar_posture", "lunar_budget", "observe_moons", "outdoor_rest", "surfaces", "culture_bar", "save_load", "log_safety"]
         },
         {
           "id": "imperial_origin",
           "title": "Imperial thin-adapter and Concordat query proof",
-          "slots": ["bootstrap", "debug_pages", "concordat_defiance", "concordat_compliance", "talos_dual_route", "formal_offer", "surfaces", "save_load", "log_safety"]
+          "slots": ["bootstrap", "debug_pages", "concordat_defiance", "concordat_compliance", "talos_dual_route", "formal_offer", "surfaces", "culture_bar", "save_load", "log_safety"]
         },
         {
           "id": "altmer_regression",
           "title": "Altmer reward, Favor, offer, and negative reachability regression",
-          "slots": ["bootstrap", "auriel_reward", "magnus_replacement", "favor_activate", "favor_clear", "favor_cooldown", "auriel_offer", "baandar_no_offer", "tier_toast_classified", "surfaces", "log_safety"]
+          "slots": ["bootstrap", "auriel_reward", "magnus_replacement", "favor_activate", "favor_clear", "favor_cooldown", "auriel_offer", "baandar_no_offer", "tier_toast_classified", "surfaces", "culture_bar", "log_safety"]
         },
         {
           "id": "race_change",
           "title": "Nord to Altmer to Khajiit reconciliation",
-          "slots": ["nord_seed", "altmer_rebind", "nord_state_removed", "altmer_seed", "khajiit_rebind", "altmer_state_removed", "no_double_dip", "save_load", "log_safety"]
+          "slots": ["nord_seed", "altmer_rebind", "nord_state_removed", "altmer_seed", "khajiit_rebind", "altmer_state_removed", "no_double_dip", "culture_bar_switch", "save_load", "log_safety"]
         },
         {
           "id": "presentation",
           "title": "Toast, Chronicle, Book, Survey, panel, and public-name cardinality",
-          "slots": ["one_toast", "one_book_entry", "chronicle_only_on_milestone", "survey", "panel", "public_names", "source_labels", "log_safety"]
+          "slots": ["one_toast", "one_book_entry", "chronicle_only_on_milestone", "survey", "panel", "public_names", "source_labels", "gauge_sync", "log_safety"]
         },
         {
           "id": "recognition",
