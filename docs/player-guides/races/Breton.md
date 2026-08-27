@@ -225,7 +225,7 @@ Werewolf:
 
 ## Quick Reference
 
-- Gods: Knight's Road - Stendarr, Akatosh, Mara, Arkay (and Julianos, Zenithar, Kynareth, Dibella). Hidden Art - Magnus and Julianos, plus the Daedric Princes (Hermaeus Mora, Hircine, Namira, Nocturnal). Green Way - Y'ffre, Kynareth, Magnus, Phynaster.
+- Gods: Knight's Road - Stendarr, Akatosh, Mara, Arkay (and Julianos, Zenithar, Kynareth, Dibella). Hidden Art - Magnus and Julianos; the four legible Princes (Hermaeus Mora, Hircine, Namira, Nocturnal) are reached through the Daedric track with the Hidden Art waiver, not as tradition patrons. Green Way - Y'ffre, Kynareth, Magnus. Phynaster is honored as heritage, not held as a patron.
 - Starting choice: pick one tradition - Knight's Road, Hidden Art, or Green Way. Required, no fallback, and locked for the playthrough.
 - Top ways to gain: (Knight's Road) put down the undead and the Daedra, heal and cure the hurt, serve your bounty, study for Julianos. (Hidden Art) read the three forbidden texts, learn the master spells, keep up the quiet study, serve a Prince. (Green Way) gather the covenant's four harvests, sleep under the open sky, hunt and cook with respect.
 - Main ways to lose: harming the innocent and raising the undead; theft and Daedric bargains (for the Divines); letting five days pass without practicing your tradition; honoring several gods at once, which holds you at Devoted; and your hidden measure - a fallen vow, a blown cover, or the beast-blood - costing you your standing or your blessings.

@@ -1,4 +1,6 @@
 # PDV Race Design — Breton
+
+> **Lore authority:** `references/authoring/PDV_BretonLoreBaseline.md` (LIVING, sourced, 4E 201-anchored). Champion is a patron property; the moment comes from the shared champion architecture in tradition dress. Phynaster is Hidden Art culture-voice texture, proof-gated.
 **Last updated:** 2026-05-19
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.3)

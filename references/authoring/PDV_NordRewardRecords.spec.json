@@ -2,9 +2,31 @@
   "schema": "pdv-nord-records.v1",
   "status": "superseded in part 2026-07-13; focused effect records retained; both broad baselines governed by the parity contract",
   "contractOverride": {
-    "authority": ["PDV_BroadPantheonContracts.json", "PDV_SubstratePacingContracts.json"],
-    "oldWaysRoster": ["Kyne", "Shor", "Tsun", "Stuhn", "Mara", "Orkey", "Dibella", "Talos"],
-    "nineDivinesRoster": ["Akatosh", "Arkay", "Dibella", "Julianos", "Kynareth", "Mara", "Stendarr", "Zenithar", "Talos"],
+    "authority": [
+      "PDV_BroadPantheonContracts.json",
+      "PDV_SubstratePacingContracts.json"
+    ],
+    "oldWaysRoster": [
+      "Kyne",
+      "Shor",
+      "Tsun",
+      "Stuhn",
+      "Mara",
+      "Orkey",
+      "Dibella",
+      "Talos"
+    ],
+    "nineDivinesRoster": [
+      "Akatosh",
+      "Arkay",
+      "Dibella",
+      "Julianos",
+      "Kynareth",
+      "Mara",
+      "Stendarr",
+      "Zenithar",
+      "Talos"
+    ],
     "broadParity": "Both baselines use manager-owned signed pools at 25/50, cap 50, mirrored decay and transition; Nine Divines uses distinct Faith of the Holds records",
     "focusedGrant": "T1 records are compatibility-only; accepting at deity piety 50 begins T2; T3 begins at 85",
     "substrate": "Nord cultural practice is a separate 1/25/75 substrate with first approved act per devotional day granting +4"
@@ -16,9 +38,24 @@
     "recordFormId": "07159C:Devotion.esp",
     "sourceAuthority": "Direct houseCARL readback 2026-08-07",
     "slots": [
-      { "slotProperty": "Substrate_Always", "spellEditorId": "PDV_Bless_Nord_Substrate_Always", "spellFormId": "071595:Devotion.esp", "displayName": "Nord Ancestor's Steadiness" },
-      { "slotProperty": "Substrate_Mid", "spellEditorId": "PDV_Bless_Nord_Substrate_Mid", "spellFormId": "071598:Devotion.esp", "displayName": "Nord Ancestor's Regard" },
-      { "slotProperty": "Substrate_High", "spellEditorId": "PDV_Bless_Nord_Substrate_High", "spellFormId": "07159B:Devotion.esp", "displayName": "Nord Ancestor's Honor" }
+      {
+        "slotProperty": "Substrate_Always",
+        "spellEditorId": "PDV_Bless_Nord_Substrate_Always",
+        "spellFormId": "071595:Devotion.esp",
+        "displayName": "Nord Ancestor's Steadiness"
+      },
+      {
+        "slotProperty": "Substrate_Mid",
+        "spellEditorId": "PDV_Bless_Nord_Substrate_Mid",
+        "spellFormId": "071598:Devotion.esp",
+        "displayName": "Nord Ancestor's Regard"
+      },
+      {
+        "slotProperty": "Substrate_High",
+        "spellEditorId": "PDV_Bless_Nord_Substrate_High",
+        "spellFormId": "07159B:Devotion.esp",
+        "displayName": "Nord Ancestor's Honor"
+      }
     ]
   },
   "notes": "Authoritative record spec for the Nord state-gated reference race. Nord is the runtime-proven faucet (Kyne already scores humanoid/beast kills; Talos defiance +3 signal exists). DECISION 2026-06-07 (supersedes the old R5 'broad-only Shor/Tsun/Stuhn, Nord owns zero new deities'): Nord can FOCUS ANY GOD IN ITS CHOSEN PANTHEON. Per PDV_Phase2_DeityRoster_and_ArchitectureRulings.md the two pantheon lanes are: OldWays = Kyne(reuse) + Talos(reuse) + Shor/Tsun/Stuhn(NEW, Nord-owned); NineDivines = the 8 Divines(reuse, Imperial-owned: Akatosh/Mara/Arkay/Stendarr/Zenithar/Dibella/Julianos/Kynareth) + Talos(reuse). Nord now OWNS THREE NEW deity records (Shor, Tsun, Stuhn). GATE TYPE = state-enum-gated (R7): rewards gate on PDV_State_NordPantheonBaseline (OldWays|NineDivines) plus the focused patron's piety tier within that state; the focused patron is offer-like via the dawn-only offer gate, one active focus at a time. PROGRESSION CURRENCY = active-patron faucet (Kyne humanoid kills + Talos defiance) -- this is the reference pace, ~12 days to Devoted. Broad worship is a STATE on PATRON_STATE_BROAD (R1), NOT a deity -- there is NO PDV_Deity_OldWays / PDV_Deity_NineDivines. Broad OldWays T1 fills the FIXED manager property PDV_Bless_Nord_OldWays_T1 (R2); broad OldWays T2 is PDV_Bless_Nord_OldWays_T2, capped at Faithful. NineDivines is the alternate pantheon-baseline state (PDV_State_NordPantheonBaseline=NineDivines); its broad lane reuses the same PATRON_STATE_BROAD reward path with Nine-Divines naming/framing. Broad blended favors stay SOFTER than focused patron rewards and are SUPPRESSED when a patron is focused (R8). Hircine routes through the Phase 20C Daedric system (R6), NOT a new record here. Themes: Kyne = open-sky/weather/stamina/beast-calm; Talos = martial resolve/defiance; Shor = Sovngarde hero-god, martial honor, max-health hardiness, and once/day last-stand; Tsun = god of trials/adversity, stamina + block + endurance; Stuhn = shield-thane, ransom/justice, armor + block. Shor intentionally has max Health but no Health Regeneration effect; the Champion save is the only Shor restore/heal-adjacent mechanic. T3 Champion abilities additionally carry a scripted SIGNATURE on top of the stat half (signature design lives in PDV_Phase2_CapstoneSignatures.md; do NOT duplicate it here). T3 recognition = V1 Survey/status text only (Greybeard/Kyne/Nord status voiced topics are V2). Player-facing text is ASCII-only and uses Skyrim ActorValue names. No combat magnitude exceeds 12%.",
@@ -854,5 +891,6 @@
     "verify": "housecarl/readback (profile Devotion Dev): the 3 new deity QUSTs (Shor/Tsun/Stuhn) exist with FormVersion 44, SGE flag, correct VMAD script + DeityName/DeityIndex/Stance_Nord=0, and appear in the SEQ; FLST 017E47 grew by exactly 3 (Shor/Tsun/Stuhn) and Kyne/Talos/Divines are present once each; the Old Ways focused SPEL (Kyne/Shor/Tsun/Stuhn/Talos T1/T2/T3) and broad T2 exist with correct MGEF actor-values/magnitudes (no combat magnitude > 12%); the Nine Divines focused Divine lane resolves to the existing Imperial reward SPELs with manager VMAD properties filled; the 8 Divines carry Stance_Nord=NATIVE (reconciled, not recreated); PDV_Bless_Nord_OldWays_T1 and PDV_SPEL_Neglect_Kyne are unchanged/reused; PDV_State_NordPantheonBaseline enum resolves; broad-T2 suppression and focused/lane gates resolve. Then runtime smoke (QASmoke routes 70-73 per the costing manifest; RouteNordOldWaysState / RouteNordHircineArkayEdge markers per PDV_BetaTestPacket_Nord.md)."
   },
   "cumulativeRebalanceApplied": "2026-06-11 highest-tier-only guard applied; magnitudes are current absolute tier values, do not re-run",
-  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec."
+  "ceilingReviewApplied20260614": "Percent-mult crossings clamped to Requiem ceilings (Magicka/Stamina/ResistMagic T2 10/T3 20; HealRateMult T2 15/T3 30; ResistDisease T2 30/T3 50). DamageResist rescaled to the armor-points ladder T1 15/T2 30/T3 50 (armor points are exempt from the flat ~12 magnitude ceiling because +4 AR is ~0.3% damage reduction in Requiem). Per the 2026-06-14 Requiem ceiling review; mirrors the Orc spec.",
+  "focusRosterRule": "RULE (R5-equivalent), reconfirmed by owner 2026-08-27; original decision 2026-06-07. A Nord may focus any god of their CHOSEN BASELINE LANE, exactly as IsNordOfferEligibleDeity ships it. OldWays lane: Kyne, Shor, Tsun, Stuhn, Mara, Arkay (presented as Orkey per orKeyDisplayAliasLock), Dibella, plus Talos. NineDivines lane: the nine Divines - Akatosh, Arkay, Dibella, Julianos, Kynareth, Mara, Stendarr, Zenithar, Talos. Talos is focusable in both lanes. Old Ways gods grant Nord-named reward families (PDV_Bless_Nord_*); Divines-shared gods REUSE the Imperial records (PDV_Bless_Imperial_*) via SyncNordRewardFamily - no Nord-named Divine records exist or will. All 14 offer records stand; the formal-offer guard must assert exactly these 14. The notes field's older OldWays list (Kyne+Talos+Shor/Tsun/Stuhn only) is SUPERSEDED by this rule where they differ. Authority: references/authoring/PDV_NordLoreBaseline.md."
 }

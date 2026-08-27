@@ -1,4 +1,6 @@
 # PDV Race Design — Imperial
+
+> **Lore authority:** `references/authoring/PDV_ImperialLoreBaseline.md` (LIVING, sourced, 4E 201-anchored). Surveyed clean 2026-08-27: docs, guard, spec, and code agree 1:1.
 **Last updated:** 2026-05-19
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.2)

@@ -1,4 +1,6 @@
 # PDV Race Design — Nord
+
+> **Lore authority:** `references/authoring/PDV_NordLoreBaseline.md` (LIVING, sourced, 4E 201-anchored). Roster: lane-split per the focusRosterRule in PDV_NordRewardRecords.spec.json - eight Old Ways gods, nine Divines, Talos in both; Divines-shared gods reuse Imperial records.
 **Last updated:** 2026-07-08
 **Status:** Implementation locked for 1.0 experience shape; reward numbers remain tunable
 **Architecture status:** LOCKED (see PDV_RaceArchitecture_DesignReference.md §10.1)

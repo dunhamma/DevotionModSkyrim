@@ -80,7 +80,7 @@ Your tradition is the druidic covenant — Y'ffre worship through nature-site ri
 
 **Druidic Standing** — Your relationship with Y'ffre's covenant, tested most dramatically by curse states (see below).
 
-**Focused deity options within the Green Way:** Y'ffre (primary), Magnus (magical heritage), Phynaster (elven longevity)
+**Focused deity options within the Green Way:** Y'ffre (primary), Magnus (magical heritage). Phynaster is not focusable - he is the culture's voice for elven heritage, credited in Hidden Art and heritage copy the way an honored ancestor is, never a patron (proof-gated; see PDV_BretonLoreBaseline.md).
 
 ## The Daedric Question
 

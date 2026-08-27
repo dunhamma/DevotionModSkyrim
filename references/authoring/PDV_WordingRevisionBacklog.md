@@ -136,3 +136,38 @@ changed in the module-closeout tranche: the owner rewrite is the authority for t
 - **Status:** OPEN -- owner drafts in the inventory sheet; a later pass applies. Application
   caveat: `AppendBookOfDaysEntry` de-dupes on exact final string, so reworded lines can
   produce one duplicate-looking day/tone pair on saves that already hold the old wording.
+
+## Wave 1 lore-rebaseline copy adoptions (owner-adopted 2026-08-27)
+
+Four copy threads adopted during the Wave 1 ratification (authorities: the three
+Wave 1 lore baselines). These are DIRECTION, not drafts - the owner writes the words.
+
+1. **Orkey register (Nord, Old Ways death copy).** Wary duty owed the Old Knocker - not a
+   warm keeper, not a demon (a 2E priesthood tended Halls of the Dead). Applies wherever
+   Old Ways presentation shows Arkay-as-Orkey.
+2. **Breton Talos dissident texture.** Breton Talos devotion at 4E 201 is suppressed and
+   dissident (banned; no Daggerfall temple tradition) - the offer and its copy should read
+   as quiet conscience, not open temple worship.
+3. **Shezarr / empty alcove rhyme (Imperial).** The sourced pairing of the Missing Sibling
+   and Solitude's empty Talos alcove is a copy thread for the civic lane - the absence the
+   Empire practices around, twice.
+4. **Coven-broker flavor (Breton, Hidden Art).** Where it fits, Hidden Art copy may nod to
+   the sourced Daggerfall frame: Princes summoned as a priced service, stigma real - the
+   waiver is legibility, not innocence.
+
+### Preserved draft prose: Breton champion-voice reference (2026-08-27)
+Salvaged from the deleted phantom per-deity T3 review rows. NOT live copy and NOT the
+records' text - reference material for writing the shared champion beat's Breton
+dressing (deity's own voice, 3-4 sentences, per tradition). Note four are Daedric-path
+deities whose champion voice belongs to that system, kept here for tone only.
+
+- **Stendarr:** Stendarr's Aegis is yours. Protecting an ally grants 15% damage resistance; Vigilants treat you as a peer; Daedra and undead take heavier hits.
+- **Akatosh:** Akatosh keeps the order. Unbroken devotion of fourteen days at high Integrity returns a growing dawn blessing of magicka and stamina regeneration; the Amulet of Akatosh doubles its effect.
+- **Mara:** Mara holds the community. Helping a family restores full health on next rest; her temple grants full recognition; companions heal better near you.
+- **HermaeusMora:** Hermaeus Mora prices your scholarship. Alteration, Conjuration, and Illusion spells cost 10% less to cast; the deeper you are seen, the more he gives.
+- **Hircine:** Hircine bonds the beast. Beast form lasts longer; the hunt scores stronger; the change comes smoother.
+- **Nocturnal:** Nocturnal marks the shadow. Sneak attacks deal 15% more; a theft from a notable target opens a brief unseen window.
+- **Namira:** Namira's corruption is yours. Squalor and hunger press lighter; she notices the things others will not name.
+- **Yffre:** Y'ffre's Living Story runs through you. In forest, your armor rises by 10; hunting shots strike deep; nature-site quests count double.
+- **Magnus:** Magnus opens the Elder Way. All spells cost 10% less and Alteration costs 15% less; Psijic-adjacent study scores strongly.
+- **Phynaster:** Phynaster's long life is in your blood. Your resistance to magic rises by 15% over your Breton birthright, and elven-heritage acts return piety.
