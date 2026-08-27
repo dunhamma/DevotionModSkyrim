@@ -966,7 +966,7 @@ Ancestor reverence carries all three Redguard Champions -- it's the ground they 
 - **Forebear dressing (any of the three gods):** Pragmatic dignity rewarded. You've maintained Redguard identity while living in mixed society, negotiating, surviving, making a way through impossible obstacles (HoonDing). Road copy has the culture crediting Tava -- journeys feel guided rather than endured -- without Tava ever being a patron.
 - **Ash'abah Champion:** Emotionally the most resonant in the whole mod. You've borne the impurity obligation for others -- cleansing the undead, tending the dead properly, doing the work that makes your own people uncomfortable. Tu'whacca's blessing at death-sites at Champion level should feel personal and earned. You did what others wouldn't. The god of the Far Shores noticed.
 
-**HoonDing note:** "Making a way" -- impossible-odds victories -- should be something Forebear and Crown Champions can access in different flavors. This is the Redguard theological truth about surviving in Skyrim as an exile.
+**HoonDing note (RESOLVED 2026-08-26, pan-sect ruling):** "Making a way" -- impossible-odds victories -- is accessible to ALL three sects in different dressings: sacred survival (Crown), passage through a mixed world (Forebear), the way cut through the unclean (Ash'abah). No sect owns HoonDing. See references/authoring/PDV_RedguardLoreBaseline.md.
 
 Crown may receive rare make-way favor, but only as Ruptga/HoonDing-adjacent sacred survival through honorable adversity. It is not Forebear improvisation, road pragmatism, or social adaptation.
 
